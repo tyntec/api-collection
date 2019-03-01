@@ -1,0 +1,515 @@
+openapi: '3.0.0'
+info:
+  title: Chat API - Sending Messages
+  description: |
+    This document describes how to send messages via the Chat API of tyntec.
+
+    It defines how you can send messages to different channels and use others as fallbacks in case a delivery
+    via one channel does not work.
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '1.0'
+servers:
+  - url: https://api.tyntec.com/messaging/v1/chat
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: "Messaging"
+  - name: "Media"
+paths:
+  /messages:
+    post:
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send chat messages via this path.
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        '202':
+          description: The message is accepted by our system
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+        '400':
+          description: The request does not match our expectations. Please check the Problems object for details
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /messages/{message-id}/status:
+    get:
+      summary: Check message status
+      tags:
+        - "Messaging"
+      description: Check status of the message
+      parameters:
+        - name: message-id
+          in: path
+          required: true
+          description: The id of the message
+          schema:
+            type: string
+            format: uuid
+            example: 77185196-664a-43ec-b14a-fe97036c697f
+      responses:
+        '200':
+          description: The message id requested exists.
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/MessageStatus'
+        '404':
+          description: The message id does not exists in our system
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /messages/{message-id}/history:
+    get:
+      summary: View message history
+      tags:
+        - "Messaging"
+      description: |
+        Get the history of the message.
+
+        This will give you detailed information about the delivery flow of the message.
+      parameters:
+        - name: message-id
+          in: path
+          required: true
+          description: The id of the message
+          schema:
+            type: string
+            format: uuid
+            example: 77185196-664a-43ec-b14a-fe97036c697f
+      responses:
+        '200':
+          description: The history of the message id.
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/MessageHistory'
+        '404':
+          description: The message id does not exists in our system
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /media/{media-id}:
+    parameters:
+      - name: media-id
+        in: path
+        required: true
+        description: The id of the media to be downloaded
+        schema:
+          type: string
+          format: uuid
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+    get:
+      summary: Retrieve media
+      tags:
+        - "Media"
+      description: Retrieve the media associated with the id
+      responses:
+        '200':
+          description: The media associated with the id requested exists.
+          content:
+            'audio/*':
+              schema:
+                type: string
+                format: binary
+            'application/*':
+              schema:
+                type: string
+                format: binary
+            'text/*':
+              schema:
+                type: string
+                format: binary
+            'video/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: The media associated with the id does not exists in our system
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+  schemas:
+    MessageRequest:
+      type: object
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          pattern: '^(00|\+)\d{,15}$'
+          description: |
+            The receipient phone number in international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+          example: '+1233423454'
+        channels:
+          $ref: '#/components/schemas/Channels'
+        defaultContent:
+          $ref: '#/components/schemas/DefaultContent'
+        sms:
+          $ref: '#/components/schemas/SMSRequest'
+        whatsapp:
+          $ref: '#/components/schemas/WhatsappMessageRequest'
+        tyntecEcho:
+          $ref: '#/components/schemas/TyntecEchoRequest'
+    DefaultContent:
+      description: |
+        The default content that is applied to all channels.
+
+        Each component might be overrwritten or extended by channel specific settings.
+
+        This can be used to specify the text for a message once, but the _from_ per used channel.
+      type: object
+      required:
+        - contentType
+        - from
+      properties:
+        from:
+          type: string
+          description: The sender of the message
+          example: 1233423454
+        contentType:
+          type: string
+          enum:
+            - template
+            - text
+            - url
+            - media
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          description: The text to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        url:
+          type: string
+          description: the URL you would like to send. Must be a valid http(s) URL
+          example: https://www.tyntec.com
+        media:
+          $ref: '#/components/schemas/Media'
+        template:
+          $ref: '#/components/schemas/Template'
+    SMSRequest:
+      type: object
+      description: |
+        Normal SMS to be send.
+
+        If Content is used as well this will override the specification made there.
+
+        In case URL type is specified the recipient will receive the plain URL as SMS.
+      required:
+        - content_type
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+            - url
+          description: What kind of payload should be sent
+          example: text
+        from:
+          type: string
+          description: The sender of the message
+          example: 1233423454
+        text:
+          type: string
+          maxLength: 3000
+          description: The message to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        url:
+          type: string
+          description: the URL you would like to send. Must be a valid http(s) URL
+          example: https://www.tyntec.com
+    WhatsappMessageRequest:
+      description: |
+        Whatsapp message to be send.
+
+        This will override defaults from DefaultContent
+      type: object
+      required:
+        - contentType
+        - from
+      properties:
+        from:
+          type: string
+          description: The sending whatsapp account
+          example: 1233423454
+        contentType:
+          type: string
+          enum:
+            - template
+            - text
+            - url
+            - media
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          maxLength: 4096
+          description: The text to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        url:
+          type: string
+          description: the URL you would like to send. Must be a valid http(s) URL
+          example: https://www.tyntec.com
+        media:
+          $ref: '#/components/schemas/Media'
+        template:
+          $ref: '#/components/schemas/Template'
+    TyntecEchoRequest:
+      type: object
+      description: |
+        This channel can be used for integration purposes without sending any message to an actual device.
+
+        It has two modes
+
+          - only send the delivered dlr back
+          - send additionally a message back
+
+        The messages send back follow these rules :
+
+          - media, text and url are send back as they are
+          - templates are formatted as
+            `TemplateId[templateId] LanguagePolicy[language.policy] LanguageCode[language.code] Parameter<N>[parameters[N]]`
+          - from and to switch positions
+          - messageId will be the same as for the request
+
+      required:
+        - contentType
+        - from
+      properties:
+        from:
+          type: string
+          description: The sending tyntecEcho account
+          example: 1233423454
+        contentType:
+          type: string
+          enum:
+            - template
+            - text
+            - url
+            - media
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          maxLength: 100
+          description: The text to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        url:
+          type: string
+          description: the URL you would like to send. Must be a valid http(s) URL
+          example: https://www.tyntec.com
+        media:
+          $ref: '#/components/schemas/Media'
+        template:
+          $ref: '#/components/schemas/Template'
+        replyBack:
+          type: boolean
+          description: Should the channel reply back the send message
+          default: false
+    Media:
+      type: object
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
+            - image
+            - document
+            - audio
+          example: audio
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+        caption:
+          type: string
+          description: additional caption for the media. is shown on the uploaded media when the channel supports this
+          example: Tyntec Logo
+    Template:
+      type: object
+      description: The message template to be send.
+      required:
+        - templateId
+        - language
+      properties:
+        templateId:
+          type: string
+          description: the identifier of the template that should be used
+          example: welcome_message
+        language:
+          $ref: '#/components/schemas/Language'
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateParameter'
+    Language:
+      type: object
+      properties:
+        policy:
+          type: string
+          enum:
+            - fallback
+            - deterministic
+          default: deterministic
+        code:
+          description: |
+            The code of the language or locale to use —
+            Accepts both language and language_locale formats (e.g., en and en_US).
+          type: string
+          example: en
+    TemplateParameter:
+      type: object
+      properties:
+        default:
+          type: string
+          example: Mr. Doe
+    Channels:
+      type: array
+      example:
+        - sms
+        - whatsapp
+      items:
+        type: string
+        enum:
+          - sms
+          - whatsapp
+          - tyntecEcho
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+    MessageStatus:
+      type: object
+      required:
+        - messageId
+        - status
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        deliveryChannel:
+          type: string
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        status:
+          description: Indicates the status of the message. Be aware that not all channels support all status. For details please check https://www.tyntec.com/docs/delivery_channels
+          type: string
+          example: seen
+          enum:
+            - accepted
+            - delivered
+            - seen
+            - failed
+            - unknown
+    MessageHistory:
+      type: object
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryItem'
+    HistoryItem:
+      type: object
+      properties:
+        deliveryChannel:
+          type: string
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        happendAt:
+          type: string
+          format: date-time
+        state:
+          type: string
+          example: accepted
+          enum:
+            - accepted
+            - dispatched
+            - dispatching_failed
+            - success
+            - failed
+            - unknown
+        details:
+          type: object
+          additionalProperties: true
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parseable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
