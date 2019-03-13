@@ -1,29 +1,45 @@
 openapi: '3.0.0'
 info:
-  title: Chat API - Sending Messages
+  title: Chat API
   description: |
-    This document describes how to send messages via the Chat API of tyntec.
+    Welcome to tyntecs Chat API.
 
-    It defines how you can send messages to different channels and use others as fallbacks in case a delivery
-    via one channel does not work.
+    It enables you to easily send messages to your customers via messaging services like WhatsApp or Viber and still address customers with classic SMS.
+
+    In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '1.0'
+  version: '1.1'
 servers:
   - url: https://api.tyntec.com/messaging/v1/chat
 security:
   - ApiKeyAuth: []
 tags:
-  - name: "Messaging"
-  - name: "Media"
+  - name: "Send messages"
+    description: |
+      sdfdsf
+  - name: "Receive messages"
+    description: |
+      In order to receive messages send by the user you need to configure first an public available endpoint.
+      
+      We will send you messages as defined in MoMessage.
+      
+      Media send by the user can be downloaded by 
+        - either by following the link in the MoMedia object or 
+        - by using the received media id and query our system via _/media/{media-id}_ (see below)
+  - name: "Notifications"
+    description: |
+      Notifications are send to your system when a message reaches a final state.
+      
+      The notification message is the same as for the message status you can query MessageStatus.
 paths:
   /messages:
     post:
       summary: Send a message
       tags:
-        - "Messaging"
+        - "Send messages"
       description: Send chat messages via this path.
       requestBody:
         content:
@@ -50,11 +66,46 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/Problem'
+  /messages/{message-id}:
+    get:
+      summary: Retrieve the message
+      tags:
+        - "Send messages"
+      description: |
+      
+        Returns back a message previously send by you.
+        
+        **Please note** After a final status notification (delivered, read or failed) the message 
+        is only available for the next 48 hours. After this period we delete the message in our system.
+      parameters:
+        - name: message-id
+          in: path
+          required: true
+          description: The id of the message
+          schema:
+            type: string
+            format: uuid
+            example: 77185196-664a-43ec-b14a-fe97036c697f
+      responses:
+        '200':
+          description: The message id requested exists.
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/StoredMessage'
+        '404':
+          description: The message id does not exists in our system
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
   /messages/{message-id}/status:
     get:
       summary: Check message status
       tags:
-        - "Messaging"
+        - "Send messages"
       description: Check status of the message
       parameters:
         - name: message-id
@@ -84,7 +135,7 @@ paths:
     get:
       summary: View message history
       tags:
-        - "Messaging"
+        - "Send messages"
       description: |
         Get the history of the message.
 
@@ -124,9 +175,9 @@ paths:
           format: uuid
           example: 77185196-664a-43ec-b14a-fe97036c697f
     get:
-      summary: Retrieve media
+      summary: Download received media
       tags:
-        - "Media"
+        - "Receive messages"
       description: Retrieve the media associated with the id
       responses:
         '200':
@@ -185,7 +236,36 @@ components:
         whatsapp:
           $ref: '#/components/schemas/WhatsappMessageRequest'
         tyntecEcho:
-          $ref: '#/components/schemas/TyntecEchoRequest'
+          description: |
+            This channel can be used for integration purposes without sending any message to an actual device.
+            A detailed description is provided on the object definition.
+          allOf:
+            - $ref: '#/components/schemas/TyntecEchoRequest'
+    StoredMessage:
+      type: object
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          pattern: '^(00|\+)\d{,15}$'
+          description: |
+            The receipient phone number in international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+          example: '+1233423454'
+        channels:
+          $ref: '#/components/schemas/Channels'
+        sms:
+          $ref: '#/components/schemas/SMSRequest'
+        whatsapp:
+          $ref: '#/components/schemas/WhatsappMessageRequest'
+        tyntecEcho:
+          description: |
+            This channel can be used for integration purposes without sending any message to an actual device.
+            A detailed description is provided on the object definition.
+          allOf:
+            - $ref: '#/components/schemas/TyntecEchoRequest'
     DefaultContent:
       description: |
         The default content that is applied to all channels.
@@ -439,7 +519,7 @@ components:
             - whatsapp
             - tyntecEcho
         status:
-          description: Indicates the status of the message. Be aware that not all channels support all status. For details please check https://www.tyntec.com/docs/delivery_channels
+          description: Indicates the status of the message. Be aware that not all channels support all status.
           type: string
           example: seen
           enum:
@@ -513,3 +593,122 @@ components:
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MoMessage:
+      type: object
+      required:
+        - messageId
+        - channel
+        - from
+        - content
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: the sender of the message
+          example: 49123512314
+        channel:
+          type: string
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        content:
+          $ref: '#/components/schemas/MoContent'
+        sms:
+          $ref: '#/components/schemas/SMS'
+        whatsapp:
+          $ref: '#/components/schemas/Whatsapp'
+    MoContent:
+      type: object
+      required:
+        - contentType
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+            - url
+            - media
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          description: The received text
+          example: hi, thanks for your support message
+        url:
+          type: string
+          description: the URL received
+          example: https://www.tyntec.com
+        media:
+          $ref: '#/components/schemas/MoMedia'
+    MoMedia:
+      type: object
+      properties:
+        type:
+          type: string
+          description: What kind of media was received
+          enum:
+            - image
+            - document
+            - audio
+            - voice
+          example: audio
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
+        mediaId:
+          type: string
+          description: plain id of the media to download
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+    SMS:
+      type: object
+      description: specifics of the sms channel
+      properties:
+        origin:
+          $ref: '#/components/schemas/SMSOrigin'
+        totalPrice:
+          type: number
+        size:
+          type: number
+        missingParts:
+          type: boolean
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SMSContent'
+    SMSOrigin:
+      type: object
+      properties:
+        mcc:
+          type: string
+        mnc:
+          type: string
+        ttId:
+          type: string
+    SMSContent:
+      type: object
+      properties:
+        messageId:
+          type: string
+        sentDate:
+          type: string
+          format: date-time
+        price:
+          type: number
+        currency:
+          type: string
+        priceEffective:
+          type: string
+          format: date-time
+        sequenceNumber:
+          type: number
+    Whatsapp:
+      type: object
+      description: specifics of the whatsapp channel
+      additionalProperties: true
