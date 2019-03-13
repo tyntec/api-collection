@@ -102,36 +102,6 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/Problem'
-  /messages/{message-id}/status:
-    get:
-      summary: Check message status
-      tags:
-        - "Send messages"
-      description: Check status of the message
-      parameters:
-        - name: message-id
-          in: path
-          required: true
-          description: The id of the message
-          schema:
-            type: string
-            format: uuid
-            example: 77185196-664a-43ec-b14a-fe97036c697f
-      responses:
-        '200':
-          description: The message id requested exists.
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/MessageStatus'
-        '404':
-          description: The message id does not exists in our system
-        default:
-          description: For all other error cases please check the problem object
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/Problem'
   /messages/{message-id}/history:
     get:
       summary: View message history
@@ -202,6 +172,36 @@ paths:
                 format: binary
         '404':
           description: The media associated with the id does not exists in our system
+        default:
+          description: For all other error cases please check the problem object
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /messages/{message-id}/status:
+    get:
+      summary: Check message status
+      tags:
+        - "Notifications"
+      description: Check status of the message
+      parameters:
+        - name: message-id
+          in: path
+          required: true
+          description: The id of the message
+          schema:
+            type: string
+            format: uuid
+            example: 77185196-664a-43ec-b14a-fe97036c697f
+      responses:
+        '200':
+          description: The message id requested exists.
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/MessageStatus'
+        '404':
+          description: The message id does not exists in our system
         default:
           description: For all other error cases please check the problem object
           content:
