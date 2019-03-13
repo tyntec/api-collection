@@ -47,13 +47,6 @@ paths:
           'application/json':
             schema:
               $ref: '#/components/schemas/MessageRequest'
-            example:
-              to: "+123234234"
-              channels: ["whatsapp"]
-              whatsapp:
-                from: 545345345
-                contentType: text
-                text: A simple text message
       responses:
         '202':
           description: The message is accepted by our system
@@ -101,14 +94,6 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StoredMessage'
-              example:
-                messageId: 77185196-664a-43ec-b14a-fe97036c697f
-                to: "+123234234"
-                channels: ["whatsapp"]
-                whatsapp:
-                  from: 545345345
-                  contentType: text
-                  text: A simple text message
         '404':
           description: The message id does not exists in our system
         default:
@@ -142,13 +127,6 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/MessageHistory'
-              example:
-                messageId: 77185196-664a-43ec-b14a-fe97036c697f
-                history:
-                  - deliveryChannel: sms
-                    happendAt: '2019-03-13T12:57:27.048Z'
-                    state: accepted
-              
         '404':
           description: The message id does not exists in our system
         default:
@@ -222,10 +200,6 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/MessageStatus'
-              example:
-                messageId: 77185196-664a-43ec-b14a-fe97036c697f
-                deliveryChannel: whatsapp
-                status: seen
         '404':
           description: The message id does not exists in our system
         default:
@@ -268,6 +242,13 @@ components:
             A detailed description is provided on the object definition.
           allOf:
             - $ref: '#/components/schemas/TyntecEchoRequest'
+      example:
+        to: "+123234234"
+        channels: ["whatsapp"]
+        whatsapp:
+          from: 545345345
+          contentType: text
+          text: A simple text message
     StoredMessage:
       type: object
       required:
@@ -293,6 +274,14 @@ components:
             A detailed description is provided on the object definition.
           allOf:
             - $ref: '#/components/schemas/TyntecEchoRequest'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        to: "+123234234"
+        channels: ["whatsapp"]
+        whatsapp:
+          from: 545345345
+          contentType: text
+          text: A simple text message
     DefaultContent:
       description: |
         The default content that is applied to all channels.
@@ -330,6 +319,16 @@ components:
           $ref: '#/components/schemas/Media'
         template:
           $ref: '#/components/schemas/Template'
+      example:
+        from: 1233423454
+        contentType: template
+        template:
+          templateId: welcome_message
+          language:
+            policy: deterministic
+            code: en
+          parameters:
+            - default: Mr. Doe
     SMSRequest:
       type: object
       description: |
@@ -361,6 +360,10 @@ components:
           type: string
           description: the URL you would like to send. Must be a valid http(s) URL
           example: https://www.tyntec.com
+      example:
+        contentType: text
+        from: 1233423454
+        text: Thanks for contacting our support. We will get back to you in 5 minutes.
     WhatsappMessageRequest:
       description: |
         Whatsapp message to be send.
@@ -397,6 +400,13 @@ components:
           $ref: '#/components/schemas/Media'
         template:
           $ref: '#/components/schemas/Template'
+      example:
+        from: 1233423454
+        contentType: media
+        media:
+          type: audio
+          url: 'https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg'
+          caption: Tyntec Logo
     TyntecEchoRequest:
       type: object
       description: |
@@ -449,6 +459,11 @@ components:
           type: boolean
           description: Should the channel reply back the send message
           default: false
+      example:
+        from: 1233423454
+        contentType: url
+        url: 'https://www.tyntec.com'
+        replyBack: false
     Media:
       type: object
       properties:
@@ -459,7 +474,7 @@ components:
             - image
             - document
             - audio
-          example: audio
+          example: image
         url:
           type: string
           description: the url of the location where the media is stored
@@ -560,6 +575,10 @@ components:
             - seen
             - failed
             - unknown
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        deliveryChannel: whatsapp
+        status: seen
     MessageHistory:
       type: object
       properties:
@@ -572,12 +591,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HistoryItem'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        history:
+        - deliveryChannel: whatsapp
+          happendAt: '2019-03-13T12:57:27.048Z'
+          state: accepted
     HistoryItem:
       type: object
       properties:
         deliveryChannel:
           type: string
-          example: sms
+          example: whatsapp
           enum:
             - sms
             - whatsapp
@@ -598,6 +623,10 @@ components:
         details:
           type: object
           additionalProperties: true
+      example:
+        deliveryChannel: whatsapp
+        happendAt: '2019-03-13T13:15:22Z'
+        state: accepted
     Problem:
       type: object
       additionalProperties: true
@@ -655,6 +684,28 @@ components:
           $ref: '#/components/schemas/SMS'
         whatsapp:
           $ref: '#/components/schemas/Whatsapp'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        from: 49123512314
+        channel: sms
+        content:
+          contentType: text
+          text: 'hi, thanks for your support message'
+        sms:
+          origin:
+            mcc: string
+            mnc: string
+            ttId: string
+          totalPrice: 0
+          size: 1
+          missingParts: false
+          parts:
+            - messageId: string
+              sentDate: '2019-03-13T13:15:22Z'
+              price: 0
+              currency: string
+              priceEffective: '2019-03-13T13:15:22Z'
+              sequenceNumber: 1
     MoContent:
       type: object
       required:
@@ -667,7 +718,7 @@ components:
             - url
             - media
           description: What kind of payload is used
-          example: template
+          example: media
         text:
           type: string
           description: The received text
@@ -678,6 +729,12 @@ components:
           example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/MoMedia'
+      example:
+        contentType: media
+        media:
+          type: audio
+          url: 'https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f'
+          mediaId: 77185196-664a-43ec-b14a-fe97036c697f
     MoMedia:
       type: object
       properties:
@@ -706,40 +763,72 @@ components:
           $ref: '#/components/schemas/SMSOrigin'
         totalPrice:
           type: number
+          example: 0.1
         size:
           type: number
+          minimum: 1
+          maximum: 255
+          example: 1
         missingParts:
           type: boolean
+          default: false
+          example: false
         parts:
           type: array
           items:
             $ref: '#/components/schemas/SMSContent'
+      example:
+        origin:
+          mcc: 49
+          mnc: 176
+          ttId: 25
+        totalPrice: 0.1
+        size: 1
+        missingParts: false
+        parts:
+          - messageId: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
+            sentDate: '2019-03-13T13:15:22Z'
+            price: 0
+            currency: EUR
+            priceEffective: '2019-03-13T13:15:22Z'
+            sequenceNumber: 1
+        
     SMSOrigin:
       type: object
       properties:
         mcc:
           type: string
+          example: 49
         mnc:
           type: string
+          example: 176
         ttId:
           type: string
+          example: 25
     SMSContent:
       type: object
       properties:
         messageId:
           type: string
+          example: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
         sentDate:
           type: string
           format: date-time
         price:
           type: number
+          minimum: 0
+          example: 0.1
         currency:
           type: string
+          example : EUR
         priceEffective:
           type: string
           format: date-time
         sequenceNumber:
           type: number
+          minimum: 1
+          maximum: 255
+          example: 1
     Whatsapp:
       type: object
       description: specifics of the whatsapp channel
