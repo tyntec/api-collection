@@ -32,7 +32,7 @@ tags:
         - by using the received media id and query our system via _/media/{media-id}_ (see below)
   - name: "Notifications"
     description: |
-      Notifications are send to your system when a message reaches a final state.
+      Notifications or DLRs are send to your system when a message reaches a final state.
       
       The notification message is the same as for the message status you can query MessageStatus.
 paths:
@@ -47,6 +47,13 @@ paths:
           'application/json':
             schema:
               $ref: '#/components/schemas/MessageRequest'
+            example:
+              to: "+123234234"
+              channels: ["whatsapp"]
+              whatsapp:
+                from: 545345345
+                contentType: text
+                text: A simple text message
       responses:
         '202':
           description: The message is accepted by our system
@@ -54,7 +61,7 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/MessageResponse'
-
+              
         '400':
           description: The request does not match our expectations. Please check the Problems object for details
           content:
@@ -94,6 +101,14 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StoredMessage'
+              example:
+                messageId: 77185196-664a-43ec-b14a-fe97036c697f
+                to: "+123234234"
+                channels: ["whatsapp"]
+                whatsapp:
+                  from: 545345345
+                  contentType: text
+                  text: A simple text message
         '404':
           description: The message id does not exists in our system
         default:
@@ -127,6 +142,13 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/MessageHistory'
+              example:
+                messageId: 77185196-664a-43ec-b14a-fe97036c697f
+                history:
+                  - deliveryChannel: sms
+                    happendAt: '2019-03-13T12:57:27.048Z'
+                    state: accepted
+              
         '404':
           description: The message id does not exists in our system
         default:
@@ -200,6 +222,10 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/MessageStatus'
+              example:
+                messageId: 77185196-664a-43ec-b14a-fe97036c697f
+                deliveryChannel: whatsapp
+                status: seen
         '404':
           description: The message id does not exists in our system
         default:
@@ -495,12 +521,17 @@ components:
       type: object
       required:
         - messageId
+        - acceptedAt
       properties:
         messageId:
           type: string
           format: uuid
           description: Global Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the Chat API service confirms that the message request was accepted
     MessageStatus:
       type: object
       required:
