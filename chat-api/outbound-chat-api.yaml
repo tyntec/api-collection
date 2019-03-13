@@ -19,7 +19,8 @@ security:
 tags:
   - name: "Send messages"
     description: |
-      sdfdsf
+      In this section we guide you on how to send messages, get information about the status and the events happening 
+      during the delivery
   - name: "Receive messages"
     description: |
       In order to receive messages send by the user you need to configure first an public available endpoint.
