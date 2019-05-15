@@ -7,11 +7,13 @@ info:
     It enables you to easily send messages to your customers via messaging services like WhatsApp or Viber and still address customers with classic SMS.
 
     In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
+
+    Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '1.1'
+  version: '2.0'
 servers:
   - url: https://api.tyntec.com/messaging/v1/chat
 security:
@@ -25,14 +27,27 @@ tags:
     description: |
       In order to receive messages send by the user you need to configure first an public available endpoint.
       
-      We will send you messages as defined in MoMessage.
+      We will use HTTP ```POST``` method to send the user messages to your system as defined in MoMessage.
       
       Media send by the user can be downloaded by 
         - either by following the link in the MoMedia object or 
         - by using the received media id and query our system via _/media/{media-id}_ (see below)
   - name: "Notifications"
     description: |
-      Notifications or DLRs are send to your system when a message reaches a final state.
+      Notifications or DLRs are **send** to your system when
+
+       - a message reaches a final state or
+       - a user decides to delete a message previously send **to** you.
+
+      We treat
+
+        - delivered
+        - seen / read
+        - finally failed
+
+      as final states for message send by you.
+
+      We will use HTTP ```POST``` method to send the notifications to your system.
       
       The notification message is the same as for the message status you can query MessageStatus.
 paths:
@@ -43,6 +58,8 @@ paths:
         - "Send messages"
       description: Send chat messages via this path.
       requestBody:
+        description: The message you would like to send
+        required: true
         content:
           'application/json':
             schema:
@@ -96,6 +113,10 @@ paths:
                 $ref: '#/components/schemas/StoredMessage'
         '404':
           description: The message id does not exists in our system
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
         default:
           description: For all other error cases please check the problem object
           content:
@@ -129,6 +150,10 @@ paths:
                 $ref: '#/components/schemas/MessageHistory'
         '404':
           description: The message id does not exists in our system
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
         default:
           description: For all other error cases please check the problem object
           content:
@@ -172,6 +197,10 @@ paths:
                 format: binary
         '404':
           description: The media associated with the id does not exists in our system
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
         default:
           description: For all other error cases please check the problem object
           content:
@@ -202,6 +231,10 @@ paths:
                 $ref: '#/components/schemas/MessageStatus'
         '404':
           description: The message id does not exists in our system
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Problem'
         default:
           description: For all other error cases please check the problem object
           content:
@@ -217,6 +250,7 @@ components:
   schemas:
     MessageRequest:
       type: object
+      description: The message you would like to send
       required:
         - to
         - channels
@@ -229,7 +263,17 @@ components:
             of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
           example: '+1233423454'
         channels:
-          $ref: '#/components/schemas/Channels'
+          type: array
+          description: Channels selected for delivery.
+          example:
+           - sms
+           - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
         defaultContent:
           $ref: '#/components/schemas/DefaultContent'
         sms:
@@ -263,7 +307,17 @@ components:
             of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
           example: '+1233423454'
         channels:
-          $ref: '#/components/schemas/Channels'
+          type: array
+          description: Channels selected for delivery.
+          example:
+           - sms
+           - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
         sms:
           $ref: '#/components/schemas/SMSRequest'
         whatsapp:
@@ -466,6 +520,7 @@ components:
         replyBack: false
     Media:
       type: object
+      description: Media to be send
       properties:
         type:
           type: string
@@ -502,9 +557,11 @@ components:
             $ref: '#/components/schemas/TemplateParameter'
     Language:
       type: object
+      description: Language settings for the template
       properties:
         policy:
           type: string
+          description: Used for multi-language template resolution.
           enum:
             - fallback
             - deterministic
@@ -517,21 +574,12 @@ components:
           example: en
     TemplateParameter:
       type: object
+      description: Parameters for replacement in the template
       properties:
         default:
           type: string
+          description: Variable substitution
           example: Mr. Doe
-    Channels:
-      type: array
-      example:
-        - sms
-        - whatsapp
-      items:
-        type: string
-        enum:
-          - sms
-          - whatsapp
-          - tyntecEcho
     MessageResponse:
       type: object
       required:
@@ -549,17 +597,26 @@ components:
           description: Point in time when the Chat API service confirms that the message request was accepted
     MessageStatus:
       type: object
+      description: |
+        The current status of a message.
+
+        It is used for messages send and received by you.
+
+        In case you send a message the status will inform you about the delivery process.
+
+        In the case that you receive a message from a user, the user may decide to delete the message.
+        Then and only then status deleted is triggered.
       required:
         - messageId
         - status
       properties:
         messageId:
           type: string
-          format: uuid
           description: Global Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         deliveryChannel:
           type: string
+          description: Channel which was used for delivery
           example: sms
           enum:
             - sms
@@ -575,6 +632,7 @@ components:
             - seen
             - failed
             - unknown
+            - deleted
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         deliveryChannel: whatsapp
@@ -589,6 +647,7 @@ components:
           example: 77185196-664a-43ec-b14a-fe97036c697f
         history:
           type: array
+          description: Ordered list of current available events for your message
           items:
             $ref: '#/components/schemas/HistoryItem'
       example:
@@ -599,9 +658,11 @@ components:
           state: accepted
     HistoryItem:
       type: object
+      description: Contains information about a specific event occuring in the delivery process
       properties:
         deliveryChannel:
           type: string
+          description: The channel triggering this event
           example: whatsapp
           enum:
             - sms
@@ -609,9 +670,11 @@ components:
             - tyntecEcho
         happendAt:
           type: string
+          description: When did the event happen
           format: date-time
         state:
           type: string
+          description: State of the message delivery
           example: accepted
           enum:
             - accepted
@@ -622,40 +685,20 @@ components:
             - unknown
         details:
           type: object
+          description: Further information available for this event
           additionalProperties: true
       example:
         deliveryChannel: whatsapp
         happendAt: '2019-03-13T13:15:22Z'
         state: accepted
     Problem:
-      type: object
-      additionalProperties: true
-      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
-      required:
-        - type
-        - title
-        - status
-        - detail
-      properties:
-        type:
-          description: A URI reference [RFC3986] that identifies the problem type
-          example: https://docs.tyntec.com/problems/DataNotParseable
-          type: string
-        title:
-          type: string
-          example: Data given was not parseable
-          description: A short, human-readable summary of the problem type.
-        status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
-          type: string
-          example: 400
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-          example: |
-            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+      $ref: 'https://raw.githubusercontent.com/tyntec/api-collection/master/common/problem.yaml#/components/schemas/Problem'
     MoMessage:
       type: object
+      description: |
+        Message received by us and delivered to your system via a webhook provided by your system.
+
+        MoMessages are transferred by using HTTP ```POST``` method.
       required:
         - messageId
         - channel
@@ -671,8 +714,13 @@ components:
           type: string
           description: the sender of the message
           example: 49123512314
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific
+          example: 49123512314
         channel:
           type: string
+          description: Channel which delivered the message to us
           example: sms
           enum:
             - sms
@@ -680,6 +728,8 @@ components:
             - tyntecEcho
         content:
           $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
         sms:
           $ref: '#/components/schemas/SMS'
         whatsapp:
@@ -708,6 +758,7 @@ components:
               sequenceNumber: 1
     MoContent:
       type: object
+      description: Content of the mobile originated message
       required:
         - contentType
       properties:
@@ -735,8 +786,17 @@ components:
           type: audio
           url: 'https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f'
           mediaId: 77185196-664a-43ec-b14a-fe97036c697f
+    MoContext:
+      type: object
+      description: Contextual information of the mobile originated message
+      properties:
+        messageId:
+          type: string
+          description: The message id the MoMessage refers to. Usualy set when the sender replies to a specific message
+          example: 77185196-664a-43ec-b14a-fe97036c697a
     MoMedia:
       type: object
+      description: Media information
       properties:
         type:
           type: string
@@ -746,6 +806,7 @@ components:
             - document
             - audio
             - voice
+            - video
           example: audio
         url:
           type: string
@@ -763,18 +824,24 @@ components:
           $ref: '#/components/schemas/SMSOrigin'
         totalPrice:
           type: number
+          description: The sum of prices for each message part listed in “contentList”.
           example: 0.1
         size:
           type: number
+          description: The amount of respective concatenated SMS parts.
           minimum: 1
           maximum: 255
           example: 1
         missingParts:
           type: boolean
+          description: True in case a part of an over-length was not received by the tyntec platform and the forwarded message text is incomplete.
           default: false
           example: false
         parts:
           type: array
+          description: |
+            tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver.
+            Information for each individual part are collected here
           items:
             $ref: '#/components/schemas/SMSContent'
       example:
@@ -795,41 +862,68 @@ components:
         
     SMSOrigin:
       type: object
+      description: Origin Information of the message
       properties:
         mcc:
           type: string
+          description: A representative MCC (Mobile Network Code) of the originating network.
           example: 49
         mnc:
           type: string
+          description: A representative MNC (Mobile Network Code) of the originating network.
           example: 176
         ttId:
           type: string
+          description: The respective tyntec ID of the originating network.
           example: 25
     SMSContent:
       type: object
+      description: SMS channel specific information      
       properties:
         messageId:
           type: string
+          description: The unique identifier provided by tyntec for each message part.
           example: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
         sentDate:
           type: string
+          description: |
+            The time stamp when the SMS has been received by the sending MSC (if available).
+            
+            or
+            
+            The time stamp when the respective message was received by tyntec.
           format: date-time
         price:
           type: number
-          minimum: 0
+          description: |
+            The price per message from the respective network. 
+            
+            Negative prices represent payout in favor of tyntec’s customer.
           example: 0.1
         currency:
           type: string
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
           example : EUR
         priceEffective:
           type: string
+          description: The date when the “price” became effective.
           format: date-time
         sequenceNumber:
           type: number
+          description: |
+            In case an over-length message is received tyntec recomposes the full message text before forwarding. 
+            The “sequenceNumber” indicates the order of the message part.
           minimum: 1
           maximum: 255
           example: 1
     Whatsapp:
       type: object
       description: specifics of the whatsapp channel
+      properties:
+        senderName:
+          type: string
+          description: Name of the sender, set in his or her profile
+          example: Peter
+      example:
+        senderName: Peter
       additionalProperties: true
