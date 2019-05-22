@@ -2,9 +2,8 @@ openapi: '3.0.0'
 info:
   title: Chat API
   description: |
-    Welcome to tyntecs Chat API.
-
-    It enables you to easily send messages to your customers via messaging services like WhatsApp or Viber and still address customers with classic SMS.
+    The Chat API enables you to easily send messages to your customers via messaging services like WhatsApp or
+    Viber and still address customers with classic SMS.
 
     In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
 
@@ -13,7 +12,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.0'
+  version: '2.1'
 servers:
   - url: https://api.tyntec.com/messaging/v1/chat
 security:
@@ -552,6 +551,7 @@ components:
         language:
           $ref: '#/components/schemas/Language'
         parameters:
+          description: Parameter for replacement in the template.
           type: array
           items:
             $ref: '#/components/schemas/TemplateParameter'
@@ -574,11 +574,20 @@ components:
           example: en
     TemplateParameter:
       type: object
-      description: Parameters for replacement in the template
+      description: |
+        Parameter for replacement in the template.
+
+        The value can contain any character except of :
+
+          - newline
+          - tabulator
+          - more then 4 consecutive spaces.
+
+        It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
       properties:
         default:
           type: string
-          description: Variable substitution
+          description: Variable substitution.
           example: Mr. Doe
     MessageResponse:
       type: object
@@ -684,13 +693,24 @@ components:
             - failed
             - unknown
         details:
-          type: object
-          description: Further information available for this event
-          additionalProperties: true
+          $ref: '#/components/schemas/HistoryDetails'
       example:
         deliveryChannel: whatsapp
         happendAt: '2019-03-13T13:15:22Z'
         state: accepted
+    HistoryDetails:
+      description: Further information available for this event
+      type: object
+      additionalProperties: true
+      properties:
+        code:
+          type: string
+          description: Code specific to the details
+          example: tyntec::error:noFurtherChannelAvailable
+        message:
+          type: string
+          description: Textual representation of the code, containing further information
+          example: No further channel after Channel[whatsapp] available
     Problem:
       $ref: 'https://raw.githubusercontent.com/tyntec/api-collection/master/common/problem.yaml#/components/schemas/Problem'
     MoMessage:
