@@ -52,6 +52,7 @@ tags:
 paths:
   /messages:
     post:
+      operationId: sendMessage
       summary: Send a message
       tags:
         - "Send messages"
@@ -85,6 +86,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
   /messages/{message-id}:
     get:
+      operationId: retrieveMessage
       summary: Retrieve the message
       tags:
         - "Send messages"
@@ -124,6 +126,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
   /messages/{message-id}/history:
     get:
+      operationId: getMessageHistory
       summary: View message history
       tags:
         - "Send messages"
@@ -170,6 +173,7 @@ paths:
           format: uuid
           example: 77185196-664a-43ec-b14a-fe97036c697f
     get:
+      operationId: downloadMedia
       summary: Download received media
       tags:
         - "Receive messages"
@@ -208,6 +212,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
   /messages/{message-id}/status:
     get:
+      operationId: checkMessageStatus
       summary: Check message status
       tags:
         - "Notifications"
@@ -256,11 +261,11 @@ components:
       properties:
         to:
           type: string
-          pattern: '^(00|\+)\d{,15}$'
+          pattern: '^(00|\+)\d{1,15}$'
           description: |
             The receipient phone number in international format. It should follow the guidelines
             of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
-          example: '+1233423454'
+          example: "+1233423454"
         channels:
           type: array
           description: Channels selected for delivery.
@@ -289,7 +294,7 @@ components:
         to: "+123234234"
         channels: ["whatsapp"]
         whatsapp:
-          from: 545345345
+          from: "545345345"
           contentType: text
           text: A simple text message
     StoredMessage:
@@ -300,7 +305,7 @@ components:
       properties:
         to:
           type: string
-          pattern: '^(00|\+)\d{,15}$'
+          pattern: '^(00|\+)\d{1,15}$'
           description: |
             The receipient phone number in international format. It should follow the guidelines
             of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
@@ -332,7 +337,7 @@ components:
         to: "+123234234"
         channels: ["whatsapp"]
         whatsapp:
-          from: 545345345
+          from: "545345345"
           contentType: text
           text: A simple text message
     DefaultContent:
@@ -350,7 +355,7 @@ components:
         from:
           type: string
           description: The sender of the message
-          example: 1233423454
+          example: "1233423454"
         contentType:
           type: string
           enum:
@@ -373,7 +378,7 @@ components:
         template:
           $ref: '#/components/schemas/Template'
       example:
-        from: 1233423454
+        from: "1233423454"
         contentType: template
         template:
           templateId: welcome_message
@@ -391,7 +396,7 @@ components:
 
         In case URL type is specified the recipient will receive the plain URL as SMS.
       required:
-        - content_type
+        - contentType
       properties:
         contentType:
           type: string
@@ -403,7 +408,7 @@ components:
         from:
           type: string
           description: The sender of the message
-          example: 1233423454
+          example: "1233423454"
         text:
           type: string
           maxLength: 3000
@@ -415,7 +420,7 @@ components:
           example: https://www.tyntec.com
       example:
         contentType: text
-        from: 1233423454
+        from: "1233423454"
         text: Thanks for contacting our support. We will get back to you in 5 minutes.
     WhatsappMessageRequest:
       description: |
@@ -430,7 +435,7 @@ components:
         from:
           type: string
           description: The sending whatsapp account
-          example: 1233423454
+          example: "1233423454"
         contentType:
           type: string
           enum:
@@ -454,7 +459,7 @@ components:
         template:
           $ref: '#/components/schemas/Template'
       example:
-        from: 1233423454
+        from: "1233423454"
         contentType: media
         media:
           type: audio
@@ -485,7 +490,7 @@ components:
         from:
           type: string
           description: The sending tyntecEcho account
-          example: 1233423454
+          example: "1233423454"
         contentType:
           type: string
           enum:
@@ -513,7 +518,7 @@ components:
           description: Should the channel reply back the send message
           default: false
       example:
-        from: 1233423454
+        from: "1233423454"
         contentType: url
         url: 'https://www.tyntec.com'
         replyBack: false
@@ -733,11 +738,11 @@ components:
         from:
           type: string
           description: the sender of the message
-          example: 49123512314
+          example: "49123512314"
         to:
           type: string
           description: Receiving account of the message. The format is channel specific
-          example: 49123512314
+          example: "49123512314"
         channel:
           type: string
           description: Channel which delivered the message to us
@@ -756,7 +761,7 @@ components:
           $ref: '#/components/schemas/Whatsapp'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        from: 49123512314
+        from: "49123512314"
         channel: sms
         content:
           contentType: text
@@ -866,9 +871,9 @@ components:
             $ref: '#/components/schemas/SMSContent'
       example:
         origin:
-          mcc: 49
-          mnc: 176
-          ttId: 25
+          mcc: "49"
+          mnc: "176"
+          ttId: "25"
         totalPrice: 0.1
         size: 1
         missingParts: false
@@ -887,15 +892,15 @@ components:
         mcc:
           type: string
           description: A representative MCC (Mobile Network Code) of the originating network.
-          example: 49
+          example: "49"
         mnc:
           type: string
           description: A representative MNC (Mobile Network Code) of the originating network.
-          example: 176
+          example: "176"
         ttId:
           type: string
           description: The respective tyntec ID of the originating network.
-          example: 25
+          example: "25"
     SMSContent:
       type: object
       description: SMS channel specific information      
