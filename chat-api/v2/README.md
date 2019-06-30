@@ -26,6 +26,16 @@ the documentation states now the correctly that the message id is just astring.
 
 ## 2.1
 
+### Features
 
+#### History object provides details about the status
+
+The history object provides now details why a certain state was reached. For example the error code and reason
+
+### Fixes
+
+#### Documentation improved
+
+Some explainatory texts are improved.
 
 ## 2.0
