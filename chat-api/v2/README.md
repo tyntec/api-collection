@@ -39,3 +39,23 @@ The history object provides now details why a certain state was reached. For exa
 Some explainatory texts are improved.
 
 ## 2.0
+
+### Breaking changes
+
+#### Mo Message Id data type changed from UUID to plain string.
+
+In order to support the delete status without introducing a new model element, we decided to relax the data type definition of the Mo Message Id from UUID to plain string.
+
+### Features
+
+#### Support of video media type
+
+#### Mo Messages provide profile information of the sender
+
+#### Mo Messages provide reply message id
+
+The Mo Messages transfer as well the message id the message replies to. Works only in case of WhatsApp right now.
+
+#### Delete status added to notifications
+
+When the client deletes a message previously send the delete notification is send.
