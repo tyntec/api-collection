@@ -23,6 +23,10 @@ The same rules as for the default notification endpoint applies
 The previous versions stated that the message id on MO messages is a UUID. As this has changed with release 2.0,
 the documentation states now the correctly that the message id is just astring.
 
+#### base url pointing to the correct major version
+
+The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/ve/chat)
+
 
 ## 2.1
 
