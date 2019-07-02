@@ -1,0 +1,274 @@
+openapi: '3.0.0'
+info:
+  title: WhatsApp Management
+  description: |
+    The WhatsApp Management API allows you to control different features of the WhatsApp channel
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '2.2'
+  x-github-repository: https://github.com/tyntec/api-collection/management/whatsapp
+  x-major-version: v2
+servers:
+  - url: https://api.tyntec.com/management/channels/whatsapp
+tags:
+  - name: "General group management"
+  - name: "Group settings"
+  - name: "Manage group invites"
+paths:
+  /accounts/{account-id}/groups:
+    parameters:
+      - name: account-id
+        in: path
+        required: true
+        description: WhatsApp account id
+        schema:
+          type: string
+    post:
+      summary: Create new group
+      tags:
+        - "General group management"
+      requestBody:
+        description: Information in order to create the group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupCreationRequest'
+      responses:
+        200:
+          description: Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupCreationResponse'
+    get:
+      summary: List all groups the account is member of
+      description: List all groups the account is member of
+      tags:
+        - "General group management"
+      responses:
+        200:
+          description: List of group ids. Can be empty if no group exists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupId'
+  /accounts/{account-id}/groups/{group-id}:
+    parameters:
+      - name: account-id
+        in: path
+        required: true
+        description: WhatsApp account id
+        schema:
+          type: string
+      - name: group-id
+        in: path
+        required: true
+        description: Group id
+        schema:
+          type: string
+    get:
+      summary: Describe selected group
+      tags:
+        - "General group management"
+      responses:
+        200:
+          description: Group exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInformation'
+    delete:
+      tags:
+        - "General group management"
+      summary: Remove group
+      description: Will remove all participants from the group. Effectively that means no one can access the group anymore
+      operationId: Delete Group
+      responses:
+        200:
+          description: Group deleted
+  /accounts/{account-id}/groups/{group-id}/settings/icon:
+    parameters:
+      - name: account-id
+        in: path
+        required: true
+        description: WhatsApp account id
+        schema:
+          type: string
+      - name: group-id
+        in: path
+        required: true
+        description: Group id
+        schema:
+          type: string
+    get:
+      summary: Retrieve the icon currently set for the group
+      tags:
+        - "Group settings"
+      operationId: Get group icon
+      responses:
+        200:
+          description: The current icon
+          content:
+            application/*:
+              schema:
+                type: string
+                format: binary
+    put:
+      summary: Update the group icon
+      tags:
+        - "Group settings"
+      operationId: Update group icon
+      requestBody:
+        required: true
+        content:
+          application/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        202:
+          description: Image successfully updated
+  /accounts/{account-id}/groups/{group-id}/settings/profile:
+    parameters:
+      - name: account-id
+        in: path
+        required: true
+        description: WhatsApp account id
+        schema:
+          type: string
+      - name: group-id
+        in: path
+        required: true
+        description: Group id
+        schema:
+          type: string
+    get:
+      summary: Retrieve the profile currently set for the group
+      tags:
+        - "Group settings"
+      operationId: Get group profile
+      responses:
+        200:
+          description: The current profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupProfile'
+    put:
+      summary: Update the group profile
+      tags:
+        - "Group settings"
+      operationId: Update group profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupProfile'
+      responses:
+        202:
+          description: Profile successfully updated
+  /accounts/{account-id}/groups/{group-id}/invites/link:
+    parameters:
+      - name: account-id
+        in: path
+        required: true
+        description: WhatsApp account id
+        schema:
+          type: string
+      - name: group-id
+        in: path
+        required: true
+        description: Group id
+        schema:
+          type: string
+    get:
+      summary: Get an invite link
+      tags:
+        - "Manage group invites"
+      operationId: Get invite link
+      responses:
+        200:
+          description: The current invite link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInviteLink'
+    put:
+      summary: Creates an invite link if no one was available
+      tags:
+        - "Manage group invites"
+      operationId: Create invite link
+      responses:
+        200:
+          description: Invite link created if not
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInviteLink'
+    delete:
+      summary: Delete the current invite link
+      tags:
+        - "Manage group invites"
+      operationId: Delete invite link
+      responses:
+        200:
+          description: The current invite link was deleted
+components:
+  schemas:
+    GroupCreationRequest:
+      type: object
+      required:
+        - subject
+      properties:
+        subject:
+          type: string
+    GroupCreationResponse:
+      type: object
+      properties:
+        groupId:
+          type: string
+        creationTime:
+          type: integer
+    GroupId:
+      type: object
+      properties:
+        groupId:
+          type: string
+    GroupInformation:
+      type: object
+      properties:
+        admins:
+          type: array
+          items:
+            type: string
+        creationTime:
+          type: integer
+        creator:
+          type: string
+        participants:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+    GroupProfile:
+      type: object
+      required:
+        - subject
+      properties:
+        subject:
+          type: string
+    GroupInviteLink:
+      type: object
+      required:
+        - inviteLink
+      properties:
+        inviteLink:
+          type: string
+
