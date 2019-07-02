@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: Mobile Inbound SMS API
+  description: "The **REST** API (**R**epresentational **S**tate **T**ransfer **A**pplication **P**rogramming **I**nterface) enables quick and easy access to tyntec’s messaging platform. \n\nThe communication is established via HTTPS (**H**ypertext **T**ransfer **P**rotocol **S**ecure) connections. The\nexchanged object type is JSON (**J**ava**S**cript **O**bject **N**otation). \n\ntyntec’s webserver uses 'content-type'='application/json' and 'charset'='utf-8' in the http header."
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '1.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/mobile-inboud-api
+  x-major-version: v1
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
+paths:
+  /inboundmessages:
+    post:
+      summary: Inboundmessages_POST
+      description: "The mobile inbound SMS service forwards incoming SMS addressed to your numbers via an HTTPS request to your webserver.\nFor this service you will need to provide tyntec with the URL ($callbackUrl) of your webserver, e.g.,\nhttps://rest.customer.com/inboundmessages/ \n\n###Retries: \n\ntyntec's application will retry delivery every 10 seconds in case your application does not accept the inbound message. Retries are paused for 10 minutes after every 100 consecutive unsuccessful delivery attempts. tyntec's application will retry for a maximum of 48 hours."
+      operationId: InboundmessagesPost
+      parameters: []
+      requestBody:
+        description: the inbound message
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboundMessage'
+        required: true
+      responses:
+        200:
+          description: Interpreted as "Message accepted"
+          headers: {}
+        default:
+          description: Any other than the above will cause retries.
+      deprecated: false
+components:
+  schemas:
+    InboundMessage:
+      title: InboundMessage
+      required:
+      - from
+      - to
+      - message
+      - requestId
+      - missingParts
+      - contentList
+      type: object
+      properties:
+        from:
+          type: string
+          description: This parameter gives the phone number of the sending party in international format if available.
+        to:
+          type: string
+          description: This parameter gives your number provided by tyntec that has received the respective message in international format.
+        message:
+          type: string
+          description: 'The received message will be sent to you as a UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message'
+        originMCC:
+          type: string
+          description: A representative MCC (Mobile Country Code) of the originating network.
+        originMNC:
+          type: string
+          description: A representative MNC (Mobile Network Code) of the originating network.
+        originTtId:
+          type: string
+          description: The tyntec id of the operator.    The mapping can be found in the customer lounge under   “home>resource center>network lists>mobile outbound sms”   (https://customerlounge.tyntec.com/resource-centre.html).
+        totalPrice:
+          type: number
+          description: The sum of prices for each message part listed in “contentList”.
+        requestId:
+          type: string
+          description: The unique identifier provided for each request.
+        size:
+          type: integer
+          description: The amount of respective concatenated SMS parts.
+          format: int32
+        missingParts:
+          type: boolean
+          description: This flag marks if tyntec has received all parts of a concat message within a time limit of 10 minutes
+        contentList:
+          type: array
+          items:
+            $ref: '#/components/schemas/content'
+          description: 'tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as an individual message!'
+    content:
+      title: content
+      required:
+      - msgId
+      - sentDate
+      - sequenceNumber
+      type: object
+      properties:
+        msgId:
+          type: string
+          description: The unique identifier provided for each message part.
+        sentDate:
+          type: string
+          description: >-
+            The time stamp when the SMS has been received by the sending MSC (if available).
+
+            or
+
+            The time stamp when the respective message was received by tyntec.
+        sequenceNumber:
+          type: integer
+          description: The sequenceNumber orders the respective message parts of an overlength message.
+          format: int32
+        price:
+          type: number
+          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
+        currency:
+          type: string
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+        priceEffective:
+          type: string
+          description: The date when the “price” became effective.
+tags: []
