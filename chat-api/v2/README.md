@@ -16,6 +16,10 @@ Our system will send notifications than to this endpoint instead of the default 
 
 The same rules as for the default notification endpoint applies
 
+#### Video media type support
+
+The video media type can now be send to users.
+
 ### Fixes
 
 #### message id on MO messages

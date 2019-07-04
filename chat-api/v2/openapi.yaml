@@ -541,6 +541,7 @@ components:
             - image
             - document
             - audio
+            - video
           example: image
         url:
           type: string
