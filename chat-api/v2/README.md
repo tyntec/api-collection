@@ -29,7 +29,7 @@ the documentation states now the correctly that the message id is just astring.
 
 #### base url pointing to the correct major version
 
-The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/ve/chat)
+The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/v2/chat)
 
 
 ## 2.1
