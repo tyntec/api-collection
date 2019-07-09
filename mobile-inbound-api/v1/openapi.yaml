@@ -24,11 +24,6 @@ info:
   version: '1.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/mobile-inboud-api
   x-major-version: v1
-servers:
-  - url: https://{defaultHost}
-    variables:
-      defaultHost:
-        default: www.example.com
 paths:
 components:
   schemas:
