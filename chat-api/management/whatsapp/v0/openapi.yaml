@@ -11,7 +11,7 @@ info:
   x-github-repository: https://github.com/tyntec/api-collection/management/whatsapp
   x-major-version: v2
 servers:
-  - url: https://api.tyntec.com/management/channels/whatsapp
+  - url: https://api.tyntec.com/chat-api/self-service/v1/channels/whatsapp
 tags:
   - name: "General group management"
   - name: "Group settings"
