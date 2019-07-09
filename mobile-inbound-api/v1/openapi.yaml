@@ -61,7 +61,6 @@ components:
         originTtId:
           type: string
           description: The tyntec id of the operator.
-            The mapping can be found in the customer lounge under   “home>resource center>network lists>mobile outbound sms”   (https://customerlounge.tyntec.com/resource-centre.html).
           example: 77292
         totalPrice:
           type: number
