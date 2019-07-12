@@ -893,6 +893,10 @@ components:
           type: string
           description: plain id of the media to download
           example: 77185196-664a-43ec-b14a-fe97036c697f
+        caption:
+          type: string
+          description: caption specified by the user
+          example: This is an picture of my cat!
     SMS:
       type: object
       description: specifics of the sms channel
