@@ -895,7 +895,7 @@ components:
           example: 77185196-664a-43ec-b14a-fe97036c697f
         caption:
           type: string
-          description: caption specified by the user
+          description: caption specified by the user or the file name of the document
           example: This is an picture of my cat!
     SMS:
       type: object
