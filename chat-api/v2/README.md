@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.3
+
+### Fixes
+
+#### Missing caption support on MoMedia
+
+The MoMedia object transfers now the caption set by the user.
+
 ## 2.2
 
 ### Features
