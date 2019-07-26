@@ -24,7 +24,7 @@ security:
 tags:
   - name: "Send messages"
     description: |
-      In this section we guide you on how to send messages, get information about the status and the events happening 
+      In this section we guide you on how to send messages, get information about the status and the events happening
       during the delivery
   - name: "Receive messages"
     description: |
@@ -32,8 +32,8 @@ tags:
 
       We will use HTTP ```POST``` method to send the user messages to your system as defined in MoMessage.
 
-      Media send by the user can be downloaded by 
-        - either by following the link in the MoMedia object or 
+      Media send by the user can be downloaded by
+        - either by following the link in the MoMedia object or
         - by using the received media id and query our system via _/media/{media-id}_ (see below)
   - name: "Notifications"
     description: |
@@ -72,6 +72,8 @@ tags:
 
        - When sending messages to the group you need to use the group id as *to*. Not the normal phone number of your user.
        - There are no limits on the number of groups you can create.
+
+      Events genereated from groups are send out as a notification of type _WhatsAppGroupEvent_
 paths:
   /messages:
     post:
@@ -281,15 +283,67 @@ paths:
           $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
         default:
           $ref: '#/components/responses/Default'
-    delete:
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/participants:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getGroupParticipants
+      summary: Get group participants
+      description: Returns current participants of a group
       tags:
         - "WA Group management"
-      summary: Remove a group
-      description: Will remove all participants from the group. Effectively that means no one can access the group anymore
-      operationId: deleteWhatsAppGroup
       responses:
         200:
-          description: Group deleted
+          description: List of participants, can be empty
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupParticipants'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: removeParticipantsFromGroup
+      summary: Remove participants from group
+      description: Removes all specified participants from the group.
+      requestBody:
+        required: true
+        description: List of participants to be removed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupParticipants'
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: Participants removed from group
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/participants/self:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    delete:
+      operationId: removeSelfFromGroup
+      summary: Remove yourself from the group
+      description: |
+        Removes the whatsapp account from it's own group.
+
+        **Note**: The account can **not** rejoin the group afterwards
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: Participants removed from group
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -578,11 +632,11 @@ components:
         to:
           type: string
           description: |
-              The receipient of the message.
+            The receipient of the message.
 
-              Could be one of
-                - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
-                - group id create via the WA Group management
+            Could be one of
+              - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+              - group id create via the WA Group management
           example: "+1233423454"
         channels:
           type: array
@@ -663,12 +717,16 @@ components:
           contentType: text
           text: A simple text message
     DefaultContent:
+      deprecated: true
       description: |
         The default content that is applied to all channels.
 
         Each component might be overrwritten or extended by channel specific settings.
 
         This can be used to specify the text for a message once, but the _from_ per used channel.
+
+        **Note** The default content will be discontinued in a future release, please migrate to the channel
+        specific properties _whatsapp_, _sms_ and/or _tyntecEcho_
       type: object
       required:
         - contentType
@@ -765,6 +823,7 @@ components:
             - text
             - url
             - media
+            - location
           description: What kind of payload is used
           example: template
         text:
@@ -780,6 +839,8 @@ components:
           $ref: '#/components/schemas/Media'
         template:
           $ref: '#/components/schemas/Template'
+        location:
+          $ref: '#/components/schemas/Location'
       example:
         from: "1233423454"
         contentType: media
@@ -917,6 +978,37 @@ components:
           type: string
           description: Variable substitution.
           example: Mr. Doe
+    Location:
+      type: object
+      description: Location received or send
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+          format: double
+          description: Longitude part of the coordinate
+          example:
+            7.4954884
+        latitude:
+          type: integer
+          format: double
+          description: Latitude part of the coordinate
+          example:
+            51.5005765
+        name:
+          type: string
+          maxLength: 256
+          description: Optional name
+          example:
+            tyntec GmbH
+        address:
+          type: string
+          maxLength: 256
+          description: Optional address, will only be rendered if name is set
+          example:
+            tyntec GmbH, Semerteichstraße, Dortmund
     MessageResponse:
       type: object
       required:
@@ -932,6 +1024,51 @@ components:
           type: string
           format: date-time
           description: Point in time when the Chat API service confirms that the message request was accepted
+    APIEvent:
+      type: object
+      description: Basic type for events produced by the ChatAPI such as MessageStatus, InboundMessage and GroupEvent
+      required:
+        - event
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent
+          enum:
+            - MessageStatus::accepted
+            - MessageStatus::delivered
+            - MessageStatus::seen
+            - MessageStatus::failed
+            - MessageStatus::unknown
+            - MessageStatus::deleted
+            - MoMessage
+            - WhatsAppGroupEvent::userJoined
+            - WhatsAppGroupEvent::userLeft
+            - WhatsAppGroupEvent::subjectChanged
+            - WhatsAppGroupEvent::descriptionChanged
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:00
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+      example:
+        event: MessageStatus::accepted
+        channel: sms
+        from: 491672634678
+        timestamp: 2019-06-26T11:41:00
     MessageStatus:
       type: object
       description: |
@@ -945,22 +1082,53 @@ components:
         Then and only then status deleted is triggered.
       required:
         - messageId
+        - event
         - status
+        - from
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
       properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::accepted
+            - MessageStatus::delivered
+            - MessageStatus::seen
+            - MessageStatus::failed
+            - MessageStatus::unknown
+            - MessageStatus::deleted
         messageId:
           type: string
           description: Global Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
         deliveryChannel:
           type: string
-          description: Channel which was used for delivery
+          deprecated: true
+          description:  |
+            Channel which was used for delivery.
+
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
           example: sms
           enum:
             - sms
             - whatsapp
             - tyntecEcho
         status:
-          description: Indicates the status of the message. Be aware that not all channels support all status.
+          description: |
+            Indicates the status of the message. Be aware that not all channels support all status.
+
+            **Note** This property will be replaced by the property _event_ in a future release.
+          deprecated: true
           type: string
           example: seen
           enum:
@@ -987,8 +1155,9 @@ components:
           example:
             491672634678
       example:
+        event: MessageStatus::seen
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        deliveryChannel: whatsapp
+        channel: whatsapp
         status: seen
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
@@ -1023,6 +1192,15 @@ components:
       description: Contains information about a specific event occuring in the delivery process
       properties:
         deliveryChannel:
+          type: string
+          deprecated: true
+          description: The channel triggering this event
+          example: whatsapp
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        channel:
           type: string
           description: The channel triggering this event
           example: whatsapp
@@ -1079,10 +1257,37 @@ components:
         MoMessages are transferred by using HTTP ```POST``` method.
       required:
         - messageId
+        - event
         - channel
         - from
         - content
       properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Is always _MoMessage_
+          enum:
+            - MoMessage
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        receivedAt:
+          deprecated: true
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
+          example:
+            2019-06-26T11:41:00
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
         messageId:
           type: string
           description: Message Id reference
@@ -1095,14 +1300,11 @@ components:
           type: string
           description: Receiving account of the message. The format is channel specific
           example: "49123512314"
-        channel:
+        groupId:
           type: string
-          description: Channel which delivered the message to us
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
+          description: Group id from which the event originates from. Only present if the message was send into a group
+          example:
+            4923147790717-1564134658
         content:
           $ref: '#/components/schemas/MoContent'
         context:
@@ -1113,7 +1315,9 @@ components:
           $ref: '#/components/schemas/Whatsapp'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: MoMessage
         from: "49123512314"
+        timestamp: 2019-06-26T11:41:00
         channel: sms
         content:
           contentType: text
@@ -1145,6 +1349,7 @@ components:
             - text
             - url
             - media
+            - location
           description: What kind of payload is used
           example: media
         text:
@@ -1157,6 +1362,8 @@ components:
           example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/MoMedia'
+        location:
+          $ref: '#/components/schemas/Location'
       example:
         contentType: media
         media:
@@ -1428,6 +1635,18 @@ components:
           description: Group subject, used as display name
           example:
             This is a test group
+    WhatsAppGroupParticipants:
+      type: object
+      description: Participants of a whatsapp group
+      properties:
+        participants:
+          type: array
+          description: List of participants in the group
+          items:
+            type: string
+          example:
+            - 4923147790717
+            - 4923147790718
     WhatsAppGroupProfile:
       type: object
       description: Profile of the WhatsApp group
@@ -1455,16 +1674,74 @@ components:
           description: The invite link as URL
           example:
             https://chat.whatsapp.com/EVZpTCb8xmB1KSoZlyDgU1
-    PhoneNumber:
-      type: string
-      pattern: '^(00|\+)\d{1,15}$'
+    WhatsAppGroupEvent:
+      type: object
       description: |
-          The receipient phone number in international format. It should follow the guidelines
-          of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
-      example: "+1233423454"
-    WhatsAppGroupId:
-      type: string
-      description: |
-          The group id of the target group
+        This events are send out for WhatsApp groups your account is member of.
+
+        The details of a certain event are stored in dedicated properties, please refer to the documentation below which
+        eventType will fill which property.
+      required:
+        - event
+        - groupId
+        - eventType
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - WhatsAppGroupEvent::userJoined
+            - WhatsAppGroupEvent::userLeft
+            - WhatsAppGroupEvent::subjectChanged
+            - WhatsAppGroupEvent::descriptionChanged
+        channel:
+          type: string
+          description: Channel which triggered the event. Is always _whatsapp_
+          example: whatsapp
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:00
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+        operator:
+          type: string
+          description: Phone number or whatsapp account id of the initiating user. May not be the same as _from_.
+        groupId:
+          type: string
+          description: originating group id
+        subject:
+          type: string
+          description: The changed subject of the group. Will only be present on _subjectChanged_
+          example:
+            Test Group
+        description:
+          type: string
+          description: The changed description of the group. Will only be present on _descriptionChanged_
+          example:
+            This is an example description
+        users:
+          type: array
+          description: Accounts left or joined the group. Will only be present on _userJoined_ or _userLeft_
+          items:
+            type: string
+          example:
+            - 491672634671
+            - 491672634672
       example:
-          4923147790717-1564131378
+        event: WhatsAppGroupEvent::userJoined
+        channel: whatsapp
+        timestamp: 2019-06-26T11:41:00
+        from: 491672634678
+        operator: 491672634652
+        groupId: 4923147790717-1564131378
+        users:
+          - 491672634672
+          - 491672634673

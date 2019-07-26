@@ -4,35 +4,112 @@
 
 ### General
 
-In order to enable the group management capabilities and be extensible in the future the api is extended with a new path pattern
+#### New resources
+
+In order to enable the group management capabilities and be extensible in the future the CHAT API  is extended with a new path pattern
 
     channels/<channel name>
 
-below this base path all channel specific capabilities will reside.
+All channel-specific capabilities will reside under this base path.
+
+#### URL move
+
+The Chat API has been moved to https://api.tyntec.com/chat-api/v2. The old base URL is still accessible, but will not get any further major upgrades.
+
+#### Inbound messages are events
+
+With this release we start to treat the objects send to your API, eg. MoMessage or MessageStatus, as events. In order to support this shift in the model all objects 
+pushed actively to your system will contain - from this release on - a property named _event_. This property indicates not only the object type, but as well event details.
+For example, if a message was delivered, the event will be: _MessageStatus::delivered_.
+
+This enables your systems to easily filter out unwanted events without the needs to have a deep look into the data transferred.
 
 ### Features
 
 #### WhatsApp Group Chat support
 
-Starting with this release the Chat API makes the WhatsApp group chat available.
+Starting with this release the Chat API makes the WhatsApp group chat functionality available.
 
-The current release supports
+The current release supports:
 
  - listing all groups
  - creating a new group
+ - getting list of participants and remove them from the group
  - getting information about the group
  - updating the group profile and icon
  - maintaining the invite link
- - group chat itself via the normal messageing api
- - group specific events, like _user has joined group_ or _user has left group_
+ - group chat itself via the normal messaging API
+ - group specific events, such as _user has joined the group_ or _user has left the group_
+
+#### Location support
+
+On inbound and outbound messages locations can be shared.
+
+They are of contentType _location_ and are represented as shown in this example
+
+    "location" : {
+      "longitude": 7.4954884,
+      "latitude": 51.5005765,
+      "name": "tyntec GmbH",
+      "address": "tyntec GmbH, Semerteichstraße, Dortmund"
+    }
+
+### Deprecations
+
+#### ``deliveryChannel`` property
+
+In order to make the consumption of the API simpler and as a preparation for a future release, we decided to deprecate the property ``deliveryChannel`` on the MessageStatus and HistoryItem object and replace it with the property ``channel``. 
+
+Until the property ``deliveryChannel`` is removed both properties are provided with the same data.
+
+#### ``status`` property on MessageStatus
+
+As a preparation for a future release, we decided to deprecate the property ``status`` on the MessageStatus object and replace it with the property ``event``. 
+
+Until the property ``status`` is removed both properties are provided.
+
+#### ``receivedAt`` property on MoMessage
+
+As a preparation for a future release, we decided to deprecate the property ``receivedAt`` on the MoMessage object and replace it with the property ``timestamp``. 
+
+Until the property ``receivedAt`` is removed both properties are provided.
+
+#### ``DefaultContent`` object
+
+In order to make the consumption of the API simpler (and as it was not being used) we decided to drop the support of the default content in the next major release.
+
+Please migrate to the channel specific objects _WhatsappMessageRequest_, _SMSRequest_ and/or _TyntecEchoRequest_.
 
 ### Fixes
 
-Minor fixes that clarifies documentation.
+Minor fixes that clarify documentation.
 
 ### Improvements
 
-In order to ease the maintenance and readability the open api specification file is a little bit rearranged and makes more use of common properties etc. pp. .
+#### ``from`` property on History and StatusNotification
+
+In alignment with the Group Chat support both, History and StatusNotification, transfer as well the id of the sender that triggers the event in the property ``from``.
+
+On Group Chats this is usefull to understand if all members of a group have received and/or read the message send. And which member has joined, left, ... the group
+
+#### ``event`` property on MoMessage and MessageStatus 
+
+As a preparation for a future release we introduced the property _event on the MoMessage and MessageStatus object. This property holds the type of event consisting of classification and, if applicable, detail.
+
+For the MoMessage the event is always _MoMessage_.
+
+For the MessageStatus it can be one of:
+
+  - MessageStatus::accepted
+  - MessageStatus::delivered
+  - MessageStatus::seen
+  - MessageStatus::failed
+  - MessageStatus::unknown
+  - MessageStatus::deleted
+
+#### Documentation
+
+In order to ease the maintenance and improve readability the open API specification file has been slightly rearranged and contains other improvements including the use of more common properties, etc..
 
 ## 2.3
 
@@ -40,7 +117,7 @@ In order to ease the maintenance and readability the open api specification file
 
 #### Missing caption support on MoMedia
 
-The MoMedia object transfers now the caption set by the user.
+The MoMedia object now transfers the caption set by the user.
 
 ## 2.2
 
@@ -48,13 +125,13 @@ The MoMedia object transfers now the caption set by the user.
 
 #### User Context support
 
-You can now set a user context, which is transfered back on notifications.
+You can now set a user context, which is transferred back to notifications.
 
 #### Notification Callback URL override
 
-You can now override the default notification callback url per message request.
+You can now override the default notification callback URL per message request.
 
-Our system will send notifications than to this endpoint instead of the default one.
+Our system will then send notifications to this endpoint instead of the default one.
 
 The same rules as for the default notification endpoint applies
 
@@ -64,14 +141,14 @@ The video media type can now be send to users.
 
 ### Fixes
 
-#### message id on MO messages
+#### message ID on MO messages
 
-The previous versions stated that the message id on MO messages is a UUID. As this has changed with release 2.0,
-the documentation states now the correctly that the message id is just astring.
+The previous versions stated that the message ID on MO messages is a UUID. As this has changed with Release 2.0,
+the documentation has now been updated with the correct information: the message id is just a string.
 
-#### base url pointing to the correct major version
+#### base URL pointing to the correct major version
 
-The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/v2/chat)
+Here's the previous version that's pointed to a deprecated base url: (https://api.tyntec.com/messaging/v1/chat). The correct version is: (https://api.tyntec.com/messaging/v2/chat)
 
 
 ## 2.1
@@ -80,21 +157,21 @@ The previous versions pointed to a deprecated base url (https://api.tyntec.com/m
 
 #### History object provides details about the status
 
-The history object provides now details why a certain state was reached. For example the error code and reason
+The history object now provides details why a certain state was reached. For example the error code and reason.
 
 ### Fixes
 
 #### Documentation improved
 
-Some explainatory texts are improved.
+A few improvements to  explanatory texts were made.
 
 ## 2.0
 
 ### Breaking changes
 
-#### Mo Message Id data type changed from UUID to plain string.
+#### Mo Message ID data type changed from UUID to plain string.
 
-In order to support the delete status without introducing a new model element, we decided to relax the data type definition of the Mo Message Id from UUID to plain string.
+In order to support the delete status without introducing a new model element, we decided to relax the data type definition of the Mo Message ID from UUID to plain string.
 
 ### Features
 
@@ -102,10 +179,10 @@ In order to support the delete status without introducing a new model element, w
 
 #### Mo Messages provide profile information of the sender
 
-#### Mo Messages provide reply message id
+#### Mo Messages provide reply message ID
 
-The Mo Messages transfer as well the message id the message replies to. Works only in case of WhatsApp right now.
+The Mo Messages transfer the message ID the message replies to. Currently it works only for WhatsApp.
 
 #### Delete status added to notifications
 
-When the client deletes a message previously send the delete notification is send.
+When the client deletes a message that was previously sent, a delete notification is sent.
