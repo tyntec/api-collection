@@ -54,9 +54,9 @@ tags:
       We will use HTTP ```POST``` method to send the notifications to your system.
 
       The notification message is the same as for the message status you can query MessageStatus.
-  - name: "Group management"
+  - name: "WA Group management"
     description: |
-      The group management enables you to interact with WhatsApps Group API.
+      The WA Group management enables you to interact with WhatsApps Group API.
 
       It allows you to list all created groups, create, update and delete a group and generate invite links.
 
@@ -213,19 +213,17 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getAllWhatsAppGroups
-      summary: List all groups the phone number is member of
+      summary: List groups
       description: List all groups the phone number is member of
       tags:
-        - "Group management"
+        - "WA Group management"
       responses:
         200:
           description: List of group ids. Can be empty if no group exists
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WhatsAppGroupId'
+                $ref: '#/components/schemas/WhatsAppGroups'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -234,10 +232,10 @@ paths:
           $ref: '#/components/responses/Default'
     post:
       operationId: createNewWhatsAppGroup
-      summary: Create new group
+      summary: Create a new group
       description: Creates a new group with the given subject
       tags:
-        - "Group management"
+        - "WA Group management"
       requestBody:
         description: Information in order to create the group
         required: true
@@ -266,17 +264,17 @@ paths:
       - $ref: '#/components/parameters/GroupId'
     get:
       operationId: getWhatsappGroupInformation
-      summary: Retrieve information about the group
-      description: Retrivies informatoin about the group specified by the group id
+      summary: Get details about a group
+      description: Returns information about the group specified by the group id
       tags:
-        - "Group management"
+        - "WA Group management"
       responses:
         200:
           description: Information about the group
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WhatsAppGroupInformation'
+                $ref: '#/components/schemas/WhatsAppGroupDetails'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -285,8 +283,8 @@ paths:
           $ref: '#/components/responses/Default'
     delete:
       tags:
-        - "Group management"
-      summary: Remove group
+        - "WA Group management"
+      summary: Remove a group
       description: Will remove all participants from the group. Effectively that means no one can access the group anymore
       operationId: deleteWhatsAppGroup
       responses:
@@ -303,10 +301,10 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
       - $ref: '#/components/parameters/GroupId'
     get:
-      summary: Retrieve the actual icon
-      description: Retrieves the actual icon for the given group
+      summary: Get the group icon
+      description: Returns the actual icon for the given group
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: getWhatsAppGroupIcon
       responses:
         200:
@@ -337,10 +335,11 @@ paths:
 
         The icon must have a minimal edge size of 192 pixel and must not exceed 5 MB in size
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: updateWhatsappGroupIcon
       requestBody:
         required: true
+        description: Image that should be used as a group icon
         content:
           image/png:
             schema:
@@ -366,10 +365,10 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
       - $ref: '#/components/parameters/GroupId'
     get:
-      summary: Retrieve the actual profile
+      summary: Get the group profile
       description: Retrieve the actual profile for the given group
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: getWhatsAppGroupProfile
       responses:
         200:
@@ -388,7 +387,7 @@ paths:
       summary: Update the group profile
       description: Update the actual profile for the given group
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: updateWhatsAppGroupProfile
       requestBody:
         required: true
@@ -411,11 +410,30 @@ paths:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
       - $ref: '#/components/parameters/GroupId'
+    put:
+      summary: Create an invite link
+      description: Creates an invite link if necessary
+      tags:
+        - "WA Group management"
+      operationId: createWhatsAppGroupInviteLink
+      responses:
+        200:
+          description: Invite link created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
     get:
       summary: Get the invite link
       description: Get the current active invite link for the given group
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: getWhatsAppGroupInviteLink
       responses:
         200:
@@ -430,30 +448,11 @@ paths:
           $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
         default:
           $ref: '#/components/responses/Default'
-    put:
-      summary: Creates an invite link if no one was available
-      description: Creates an invite link if no one was available for the given group
-      tags:
-        - "Group management"
-      operationId: createWhatsAppGroupInviteLink
-      responses:
-        200:
-          description: Invite link created if not
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
     delete:
       summary: Delete the current invite link
       description: This operation invalidates the previously generated invite link
       tags:
-        - "Group management"
+        - "WA Group management"
       operationId: deleteInviteLink
       responses:
         200:
@@ -578,10 +577,12 @@ components:
       properties:
         to:
           type: string
-          pattern: '^(00|\+)\d{1,15}$'
           description: |
-            The receipient phone number in international format. It should follow the guidelines
-            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+              The receipient of the message.
+
+              Could be one of
+                - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+                - group id create via the WA Group management
           example: "+1233423454"
         channels:
           type: array
@@ -1346,7 +1347,11 @@ components:
           description: When was the group created. Time is given in seconds since 01.01.1970
           example:
             1564131378
-    WhatsAppGroupId:
+    WhatsAppGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/WhatsAppGroup'
+    WhatsAppGroup:
       type: object
       description: Basic information about a group
       properties:
@@ -1367,7 +1372,7 @@ components:
           description: When was the group created. Time is given in seconds since 01.01.1970
           example:
             1564131378
-    WhatsAppGroupInformation:
+    WhatsAppGroupDetails:
       type: object
       description: Information about a dedicated WhatsApp group
       properties:
@@ -1434,3 +1439,16 @@ components:
           description: The invite link as URL
           example:
             https://chat.whatsapp.com/EVZpTCb8xmB1KSoZlyDgU1
+    PhoneNumber:
+      type: string
+      pattern: '^(00|\+)\d{1,15}$'
+      description: |
+          The receipient phone number in international format. It should follow the guidelines
+          of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+      example: "+1233423454"
+    WhatsAppGroupId:
+      type: string
+      description: |
+          The group id of the target group
+      example:
+          4923147790717-1564131378
