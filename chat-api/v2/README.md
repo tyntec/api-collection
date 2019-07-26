@@ -58,6 +58,10 @@ Our system will send notifications than to this endpoint instead of the default 
 
 The same rules as for the default notification endpoint applies
 
+#### Video media type support
+
+The video media type can now be send to users.
+
 ### Fixes
 
 #### message id on MO messages
@@ -67,7 +71,7 @@ the documentation states now the correctly that the message id is just astring.
 
 #### base url pointing to the correct major version
 
-The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/ve/chat)
+The previous versions pointed to a deprecated base url (https://api.tyntec.com/messaging/v1/chat). This version provides now the correct url (https://api.tyntec.com/messaging/v2/chat)
 
 
 ## 2.1
