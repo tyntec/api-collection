@@ -28,6 +28,8 @@ The current release supports
 
 ### Fixes
 
+Minor fixes that clarifies documentation.
+
 ### Improvements
 
 In order to ease the maintenance and readability the open api specification file is a little bit rearranged and makes more use of common properties etc. pp. .
