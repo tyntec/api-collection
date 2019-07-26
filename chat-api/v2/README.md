@@ -1,6 +1,6 @@
 # Release notes
 
-## 2.3
+## 2.4
 
 ### General
 
@@ -33,6 +33,14 @@ Minor fixes that clarifies documentation.
 ### Improvements
 
 In order to ease the maintenance and readability the open api specification file is a little bit rearranged and makes more use of common properties etc. pp. .
+
+## 2.3
+
+### Fixes
+
+#### Missing caption support on MoMedia
+
+The MoMedia object transfers now the caption set by the user.
 
 ## 2.2
 
