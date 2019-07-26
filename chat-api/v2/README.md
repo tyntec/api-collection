@@ -1,5 +1,37 @@
 # Release notes
 
+## 2.3
+
+### General
+
+In order to enable the group management capabilities and be extensible in the future the api is extended with a new path pattern
+
+    channels/<channel name>
+
+below this base path all channel specific capabilities will reside.
+
+### Features
+
+#### WhatsApp Group Chat support
+
+Starting with this release the Chat API makes the WhatsApp group chat available.
+
+The current release supports
+
+ - listing all groups
+ - creating a new group
+ - getting information about the group
+ - updating the group profile and icon
+ - maintaining the invite link
+ - group chat itself via the normal messageing api
+ - group specific events, like _user has joined group_ or _user has left group_
+
+### Fixes
+
+### Improvements
+
+In order to ease the maintenance and readability the open api specification file is a little bit rearranged and makes more use of common properties etc. pp. .
+
 ## 2.2
 
 ### Features
