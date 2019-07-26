@@ -980,12 +980,18 @@ components:
           description: Contextual information set on the message request
           example:
             my-message-reference
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         deliveryChannel: whatsapp
         status: seen
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
+        from: 491672634678
     MessageHistory:
       type: object
       properties:
@@ -1057,6 +1063,11 @@ components:
           type: string
           description: Textual representation of the code, containing further information
           example: No further channel after Channel[whatsapp] available
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
     Problem:
       $ref: 'https://raw.githubusercontent.com/tyntec/api-collection/master/common/problem.yaml#/components/schemas/Problem'
     MoMessage:
