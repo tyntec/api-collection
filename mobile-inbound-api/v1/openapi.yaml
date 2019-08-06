@@ -22,7 +22,7 @@ info:
     url: http://www.tyntec.com/support
     email: support@tyntec.com
   version: '1.0'
-  x-repository: https://github.com/tyntec/api-collection/blob/master/mobile-inboud-api
+  x-repository: https://github.com/tyntec/api-collection/blob/master/mobile-inbound-api
   x-major-version: v1
 paths:
 components:
