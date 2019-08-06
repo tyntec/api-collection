@@ -86,9 +86,9 @@ Minor fixes that clarify documentation.
 
 ### Improvements
 
-#### ``from`` property on History and StatusNotification
+#### ``from`` property on History and MessageStatus
 
-In alignment with the Group Chat support both, History and StatusNotification, transfer as well the id of the sender that triggers the event in the property ``from``.
+In alignment with the Group Chat feature the message History and MessageStatus, are enhanced with the property ``from``. This property contains the id of the issuer of the event.
 
 On Group Chats this is usefull to understand if all members of a group have received and/or read the message send. And which member has joined, left, ... the group
 
