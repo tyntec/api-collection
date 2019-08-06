@@ -88,7 +88,7 @@ Minor fixes that clarify documentation.
 
 #### ``from`` property on History and MessageStatus
 
-In alignment with the Group Chat feature the message History and MessageStatus, are enhanced with the property ``from``. This property contains the id of the issuer of the event.
+In alignment with the Group Chat feature the message History and MessageStatus are enhanced with the property ``from``. This property contains the id of the issuer of the event.
 
 On Group Chats this is usefull to understand if all members of a group have received and/or read the message send. And which member has joined, left, ... the group
 
