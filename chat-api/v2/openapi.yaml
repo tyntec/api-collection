@@ -841,7 +841,7 @@ components:
           $ref: '#/components/schemas/Template'
         location:
           $ref: '#/components/schemas/Location'
-        previewUrl:
+        urlPreviewDisplayed:
           type: boolean
           default: false
           description: Should a preview of the url rendered. This will only have an effect on text messages
