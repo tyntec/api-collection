@@ -6,7 +6,7 @@
 
 #### WhatsApp preview url support
 
-With this release you can toggle if an url in a text messages has a preview rendered.
+With this release you can toggle if an url in a text messages has a preview rendered. The property to control this behavior is called ``urlPreviewDisplayed`` and is of type ``boolean``. It defaults to ``false``.
 
 ## 2.4
 
