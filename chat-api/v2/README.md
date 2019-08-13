@@ -8,6 +8,14 @@
 
 With this release you can toggle if an url in a text messages has a preview rendered. The property to control this behavior is called ``urlPreviewDisplayed`` and is of type ``boolean``. It defaults to ``false``.
 
+### Deprecations
+
+#### content type ``url``
+
+As the content type is not used and in order to make the consumption of the API simpler we will drop the support of content type ``url`` on WhatsApp and SMS in a future release. Starting with this release the url will be translated on WhatsApp messages to content type ``text`` with ``urlPreviewDisplayed`` enabled.
+
+Please use contentType ``text`` on both WhatsApp and SMS.
+
 ## 2.4
 
 ### General
