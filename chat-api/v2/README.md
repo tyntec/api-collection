@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.5
+
+### Features
+
+#### WhatsApp preview url support
+
+With this release you can toggle if an url in a text messages has a preview rendered.
+
 ## 2.4
 
 ### General
