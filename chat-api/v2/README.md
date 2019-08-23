@@ -8,6 +8,18 @@
 
 With this release you can toggle if an url in a text messages has a preview rendered. The property to control this behavior is called ``urlPreviewDisplayed`` and is of type ``boolean``. It defaults to ``false``.
 
+#### Failure details on MessageStatus events
+
+The MessageStatus is extended with ``details`` property. This property provides information about ``code`` and ``message`` in case of an errornous situation which lead to a failure.
+
+#### Additional MessageStatus events
+
+Additional MessageStatus events are defined
+
+- MessageStatus::accepted - send out after we have accepted your message
+- MessageStatus::channelFailed - send out after a failure occur on the delivery channel. contains the specific information about the error in the property ``details``
+  
+
 ### Deprecations
 
 #### content type ``url``
@@ -15,6 +27,14 @@ With this release you can toggle if an url in a text messages has a preview rend
 As the content type is not used and in order to make the consumption of the API simpler we will drop the support of content type ``url`` on WhatsApp and SMS in a future release. Starting with this release the url will be translated on WhatsApp messages to content type ``text`` with ``urlPreviewDisplayed`` enabled.
 
 Please use contentType ``text`` on both WhatsApp and SMS.
+
+### Improvements
+
+#### Documentation
+
+##### WhatsAppGroupInviteLink
+
+Align the described property ``inviteLink`` with the actual property ``link`` 
 
 ## 2.4
 
