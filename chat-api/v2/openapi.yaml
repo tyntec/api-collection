@@ -1097,7 +1097,6 @@ components:
         - messageId
         - event
         - status
-        - from
         - timestamp
       allOf:
         - $ref: '#/components/schemas/APIEvent'
