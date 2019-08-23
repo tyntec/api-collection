@@ -28,13 +28,17 @@ As the content type is not used and in order to make the consumption of the API 
 
 Please use contentType ``text`` on both WhatsApp and SMS.
 
-### Improvements
+### Fixes
 
 #### Documentation
 
-##### WhatsAppGroupInviteLink
+##### Fix mistake in WhatsAppGroupInviteLink
 
-Align the described property ``inviteLink`` with the actual property ``link`` 
+Align the described property ``inviteLink`` with the actual property ``link`` produced by the system
+
+##### Fix mistake in MessageStatus
+
+Remove mandatory flag of property ``from`` as one event (``MessageStatus::failed``) does not support it since the beginning.
 
 ## 2.4
 
