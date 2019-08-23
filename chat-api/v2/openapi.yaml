@@ -1167,6 +1167,8 @@ components:
           description: Who triggered this event. Usually the phonenumber or whatsapp account id
           example:
             491672634678
+        details:
+          $ref: '#/components/schemas/HistoryDetails'
       example:
         event: MessageStatus::seen
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
@@ -1679,9 +1681,9 @@ components:
 
         Needs to be send to all participants of the group either by template or normal text message
       required:
-        - inviteLink
+        - link
       properties:
-        inviteLink:
+        link:
           type: string
           readOnly: true
           description: The invite link as URL
