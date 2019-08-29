@@ -2,6 +2,10 @@
 
 ## 2.5
 
+This release introduces the first intermediate event type. These event types are meant for informational purposes during the message delivery processes. They will always be followed by a final event (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
+
+In order not to break existing clients, you need to opt-in for the new event(s) before we start pushing them to us.
+
 ### Features
 
 #### WhatsApp preview url support
@@ -17,7 +21,7 @@ The MessageStatus is extended with ``details`` property. This property provides 
 Additional MessageStatus events are defined
 
 - MessageStatus::accepted - send out after we have accepted your message
-- MessageStatus::channelFailed - send out after a failure occur on the delivery channel. contains the specific information about the error in the property ``details``
+- MessageStatus::channelFailed - send out after a failure occur on the delivery channel. contains the specific information about the error in the property ``details``. This event is an **intermediate** event and will be followed by one of the final events (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
   
 
 ### Deprecations
