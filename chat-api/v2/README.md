@@ -32,6 +32,12 @@ As the content type is not used and in order to make the consumption of the API 
 
 Please use contentType ``text`` on both WhatsApp and SMS.
 
+#### language policy ``fallback``
+
+We got notified by WhatsApp that they will drop the ``fallback`` policy on template messages. As we need to stay up-2-date with the WhatsApp API, we will drop this policy as well in the next month.
+
+Please switch to language policy ``deterministic``.
+
 ### Fixes
 
 #### Documentation
