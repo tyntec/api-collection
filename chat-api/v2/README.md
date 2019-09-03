@@ -23,6 +23,9 @@ Additional MessageStatus events are defined
 - MessageStatus::accepted - send out after we have accepted your message
 - MessageStatus::channelFailed - send out after a failure occur on the delivery channel. contains the specific information about the error in the property ``details``. This event is an **intermediate** event and will be followed by one of the final events (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
   
+#### ``to`` on MessageStatus::deleted
+
+When a user deletes a message he has sent previously, the ChatAPI transports now as well the receiving account id in the property ``to``.
 
 ### Deprecations
 
