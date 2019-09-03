@@ -1110,7 +1110,6 @@ components:
             - MessageStatus::seen
             - MessageStatus::failed
             - MessageStatus::unknown
-            - MessageStatus::deleted
         messageId:
           type: string
           description: Global Message Id reference
@@ -1149,7 +1148,6 @@ components:
             - seen
             - failed
             - unknown
-            - deleted
         timestamp:
           type: string
           format: 'date-time'
@@ -1176,6 +1174,90 @@ components:
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
         from: 491672634678
+    MessageStatusDeletedEvent:
+      type: object
+      description: |
+        Indicates that a previously send inbound MOMessage is deleted by the user.
+      required:
+        - messageId
+        - event
+        - status
+        - channel
+        - from
+        - to
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::deleted
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        deliveryChannel:
+          type: string
+          deprecated: true
+          description:  |
+            Channel which was used for delivery.
+
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        status:
+          description: |
+            Indicates the status of the message. Be aware that not all channels support all status.
+
+            **Note** This property will be replaced by the property _event_ in a future release.
+          deprecated: true
+          type: string
+          example: seen
+          enum:
+            - deleted
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+        to:
+          type: string
+          description: Which channel specific account id is the receiver of this event
+          example:
+            4923147790813
+      example:
+        event: MessageStatus::deleted
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        status: deleted
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+        from: 491672634678
+        to: 4923147790813
     MessageHistory:
       type: object
       properties:
