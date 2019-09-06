@@ -1,5 +1,58 @@
 # Release notes
 
+## 2.5
+
+This release introduces the first intermediate event type. These event types are meant for informational purposes during the message delivery processes. They will always be followed by a final event (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
+
+In order not to break existing clients, you need to opt-in for the new event(s) before we start pushing them to you.
+
+### Features
+
+#### WhatsApp preview url support
+
+With this release you can toggle if an url in a text messages has a preview rendered. The property to control this behavior is called ``urlPreviewDisplayed`` and is of type ``boolean``. It defaults to ``false``.
+
+#### Failure details on MessageStatus events
+
+The MessageStatus is extended with the ``details`` property. This property provides information about ``code`` and ``message`` in case of an errorneous situation which lead to a failure.
+
+#### Additional MessageStatus events
+
+Additional MessageStatus events are defined
+
+- MessageStatus::accepted - send out after we have accepted your message
+- MessageStatus::channelFailed - send out after a failure occured on the delivery channel. Contains the specific information about the error in the property ``details``. This event is an **intermediate** event and will be followed by one of the final events (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
+  
+#### ``to`` on MessageStatus::deleted
+
+When a user deletes a message he has sent previously, the ChatAPI now also transports the receiving account id in the property ``to``.
+
+### Deprecations
+
+#### content type ``url``
+
+As the content type is not used and in order to make the consumption of the API simpler we will drop the support of content type ``url`` on WhatsApp and SMS in a future release. Starting with this release the url will be translated on WhatsApp messages to content type ``text`` with ``urlPreviewDisplayed`` enabled.
+
+Please use the contentType ``text`` on both WhatsApp and SMS.
+
+#### language policy ``fallback``
+
+We got notified by WhatsApp that they will drop the ``fallback`` policy on template messages. As we need to stay up-to-date with the WhatsApp API, we will also drop this policy in the next month.
+
+Please switch to language policy ``deterministic``.
+
+### Fixes
+
+#### Documentation
+
+##### Fix mistake in WhatsAppGroupInviteLink
+
+Align the described property ``inviteLink`` with the actual property ``link`` produced by the system.
+
+##### Fix mistake in MessageStatus
+
+Remove mandatory flag of property ``from`` as one event (``MessageStatus::failed``) never supported it.
+
 ## 2.4
 
 ### General

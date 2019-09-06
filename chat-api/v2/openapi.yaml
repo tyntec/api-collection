@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.4'
+  version: '2.5'
   x-repository: https://github.com/tyntec/api-collection/blob/master/chat-api
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -40,6 +40,7 @@ tags:
       Notifications or DLRs are **send** to your system when
 
        - a message reaches a final state or
+       - a message reaches an intermediate state and you opt-in to receive this
        - a user decides to delete a message previously send **to** you.
        - a user interacts with a group, such as joining or leaving the group
 
@@ -50,6 +51,8 @@ tags:
         - finally failed
 
       as final states for message send by you.
+      
+      All other states are treated as intermediate states.
 
       We will use HTTP ```POST``` method to send the notifications to your system.
 
@@ -796,7 +799,11 @@ components:
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
-          description: the URL you would like to send. Must be a valid http(s) URL
+          deprecated: true
+          description: |
+           The URL you would like to send. Must be a valid http(s) URL.
+            
+           **Note** This property will be removed in a future release. Please use ``text`` instead.
           example: https://www.tyntec.com
       example:
         contentType: text
@@ -833,7 +840,12 @@ components:
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
-          description: the URL you would like to send. Must be a valid http(s) URL
+          deprecated: true
+          description: |
+            The URL you would like to send. Must be a valid http(s) URL.
+            
+            **Note** This property will be removed in a future release. 
+            Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
           example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/Media'
@@ -841,6 +853,11 @@ components:
           $ref: '#/components/schemas/Template'
         location:
           $ref: '#/components/schemas/Location'
+        urlPreviewDisplayed:
+          type: boolean
+          default: false
+          description: Should a preview of the url be rendered. This will only have an effect on text messages.
+          example: true
       example:
         from: "1233423454"
         contentType: media
@@ -1084,7 +1101,6 @@ components:
         - messageId
         - event
         - status
-        - from
         - timestamp
       allOf:
         - $ref: '#/components/schemas/APIEvent'
@@ -1098,7 +1114,6 @@ components:
             - MessageStatus::seen
             - MessageStatus::failed
             - MessageStatus::unknown
-            - MessageStatus::deleted
         messageId:
           type: string
           description: Global Message Id reference
@@ -1137,7 +1152,6 @@ components:
             - seen
             - failed
             - unknown
-            - deleted
         timestamp:
           type: string
           format: 'date-time'
@@ -1154,6 +1168,8 @@ components:
           description: Who triggered this event. Usually the phonenumber or whatsapp account id
           example:
             491672634678
+        details:
+          $ref: '#/components/schemas/HistoryDetails'
       example:
         event: MessageStatus::seen
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
@@ -1162,6 +1178,90 @@ components:
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
         from: 491672634678
+    MessageStatusDeletedEvent:
+      type: object
+      description: |
+        Indicates that a previously send inbound MOMessage is deleted by the user.
+      required:
+        - messageId
+        - event
+        - status
+        - channel
+        - from
+        - to
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::deleted
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        deliveryChannel:
+          type: string
+          deprecated: true
+          description:  |
+            Channel which was used for delivery.
+
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        status:
+          description: |
+            Indicates the status of the message. Be aware that not all channels support all status.
+
+            **Note** This property will be replaced by the property _event_ in a future release.
+          deprecated: true
+          type: string
+          example: seen
+          enum:
+            - deleted
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id.
+          example:
+            491672634678
+        to:
+          type: string
+          description: Which channel specific account id is the receiver of this event.
+          example:
+            4923147790813
+      example:
+        event: MessageStatus::deleted
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        status: deleted
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+        from: 491672634678
+        to: 4923147790813
     MessageHistory:
       type: object
       properties:
@@ -1666,9 +1766,9 @@ components:
 
         Needs to be send to all participants of the group either by template or normal text message
       required:
-        - inviteLink
+        - link
       properties:
-        inviteLink:
+        link:
           type: string
           readOnly: true
           description: The invite link as URL
