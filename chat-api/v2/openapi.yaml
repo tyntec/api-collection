@@ -803,7 +803,7 @@ components:
           description: |
            The URL you would like to send. Must be a valid http(s) URL.
             
-           **Note** This property will be removed in a future release. Please use ``text`` instead
+           **Note** This property will be removed in a future release. Please use ``text`` instead.
           example: https://www.tyntec.com
       example:
         contentType: text
@@ -844,7 +844,8 @@ components:
           description: |
             The URL you would like to send. Must be a valid http(s) URL.
             
-            **Note** This property will be removed in a future release. Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``
+            **Note** This property will be removed in a future release. 
+            Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
           example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/Media'
@@ -855,7 +856,7 @@ components:
         urlPreviewDisplayed:
           type: boolean
           default: false
-          description: Should a preview of the url rendered. This will only have an effect on text messages
+          description: Should a preview of the url be rendered. This will only have an effect on text messages.
           example: true
       example:
         from: "1233423454"
@@ -1203,7 +1204,7 @@ components:
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source
+          description: Channel which triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -1215,7 +1216,7 @@ components:
           description:  |
             Channel which was used for delivery.
 
-            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent.
           example: sms
           enum:
             - sms
@@ -1244,12 +1245,12 @@ components:
             my-message-reference
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id.
           example:
             491672634678
         to:
           type: string
-          description: Which channel specific account id is the receiver of this event
+          description: Which channel specific account id is the receiver of this event.
           example:
             4923147790813
       example:
