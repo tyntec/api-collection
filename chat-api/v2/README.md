@@ -4,7 +4,7 @@
 
 This release introduces the first intermediate event type. These event types are meant for informational purposes during the message delivery processes. They will always be followed by a final event (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
 
-In order not to break existing clients, you need to opt-in for the new event(s) before we start pushing them to us.
+In order not to break existing clients, you need to opt-in for the new event(s) before we start pushing them to you.
 
 ### Features
 
