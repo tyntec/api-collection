@@ -40,6 +40,7 @@ tags:
       Notifications or DLRs are **send** to your system when
 
        - a message reaches a final state or
+       - a message reaches an intermediate state and you opt-in to receive this
        - a user decides to delete a message previously send **to** you.
        - a user interacts with a group, such as joining or leaving the group
 
@@ -50,6 +51,8 @@ tags:
         - finally failed
 
       as final states for message send by you.
+      
+      All other states are treated as intermediate states.
 
       We will use HTTP ```POST``` method to send the notifications to your system.
 
