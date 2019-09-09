@@ -51,7 +51,7 @@ tags:
         - finally failed
 
       as final states for message send by you.
-      
+
       All other states are treated as intermediate states.
 
       We will use HTTP ```POST``` method to send the notifications to your system.
@@ -801,9 +801,9 @@ components:
           type: string
           deprecated: true
           description: |
-           The URL you would like to send. Must be a valid http(s) URL.
-            
-           **Note** This property will be removed in a future release. Please use ``text`` instead.
+            The URL you would like to send. Must be a valid http(s) URL.
+
+            **Note** This property will be removed in a future release. Please use ``text`` instead.
           example: https://www.tyntec.com
       example:
         contentType: text
@@ -843,8 +843,8 @@ components:
           deprecated: true
           description: |
             The URL you would like to send. Must be a valid http(s) URL.
-            
-            **Note** This property will be removed in a future release. 
+
+            **Note** This property will be removed in a future release.
             Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
           example: https://www.tyntec.com
         media:
@@ -967,7 +967,12 @@ components:
       properties:
         policy:
           type: string
-          description: Used for multi-language template resolution.
+          description: |
+            Used for multi-language template resolution.
+
+            **Note** We got notified by WhatsApp that they will drop the fallback policy on template messages.
+            As we need to stay up-to-date with the WhatsApp API, we will also drop this policy in the next month.
+            Please switch to language policy _deterministic_.
           enum:
             - fallback
             - deterministic
@@ -1055,6 +1060,7 @@ components:
             - MessageStatus::delivered
             - MessageStatus::seen
             - MessageStatus::failed
+            - MessageStatus::channelFailed
             - MessageStatus::unknown
             - MessageStatus::deleted
             - MoMessage
@@ -1178,6 +1184,84 @@ components:
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
         from: 491672634678
+    MessageStatusChannelFailed:
+      type: object
+      description: |
+        Indicates that a channel delivery has failed.
+
+        This is an _intermediate_ event. It might  be followed by additional intermediate events.
+        But finally the message status will reach one of the final states.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - details
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::channelFailed
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        deliveryChannel:
+          type: string
+          deprecated: true
+          description:  |
+            Channel which was used for delivery.
+
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        status:
+          description: |
+            Indicates the status of the message. Be aware that not all channels support all status.
+
+            **Note** This property will be replaced by the property _event_ in a future release.
+          deprecated: true
+          type: string
+          example: seen
+          enum:
+            - channelFailed
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        details:
+          $ref: '#/components/schemas/HistoryDetails'
+      example:
+        event: MessageStatus::channelFailed
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        status: channelFailed
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+        details:
+          code: whatsapp::error::noValidContact
+          message: No valid contact for msisdn +123234234
     MessageStatusDeletedEvent:
       type: object
       description: |
@@ -1348,7 +1432,32 @@ components:
           example:
             491672634678
     Problem:
-      $ref: 'https://raw.githubusercontent.com/tyntec/api-collection/master/common/problem.yaml#/components/schemas/Problem'
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parseable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
     MoMessage:
       type: object
       description: |
@@ -1583,7 +1692,7 @@ components:
         price:
           type: number
           description: |
-            The price per message from the respective network. 
+            The price per message from the respective network.
 
             Negative prices represent payout in favor of tyntec’s customer.
           example: 0.1
@@ -1598,7 +1707,7 @@ components:
         sequenceNumber:
           type: number
           description: |
-            In case an over-length message is received tyntec recomposes the full message text before forwarding. 
+            In case an over-length message is received tyntec recomposes the full message text before forwarding.
             The “sequenceNumber” indicates the order of the message part.
           minimum: 1
           maximum: 255
