@@ -290,13 +290,17 @@ paths:
                 $ref: '#/components/schemas/Problem'
   /incoming:
     post:
+      operationId: receiveMessage
+      summary: Receive SMS
       servers: 
         - url: 'https://example.com'
       security: []
       tags: 
         - "Receive SMS"
       description: |
-         Receive a SMS **Note** the path is only an example.
+         Receive a SMS 
+         
+         **Note** the path is only an example.
          
          You can choose freely the callback url.
       requestBody:
