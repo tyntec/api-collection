@@ -288,6 +288,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
+  /incoming:
+    post:
+      servers: 
+        - url: 'https://example.com'
+      security: []
+      tags: 
+        - "Receive SMS"
+      description: |
+         Receive a SMS **Note** the path is only an example.
+         
+         You can choose freely the callback url.
+      requestBody:
+        description: The message tyntec delivers to your system.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboundMessage'
+      responses:
+        '2XX':
+          description: Message was accepted by your system.
+        'default':
+          description: |
+            Message was not accepted by your system. 
+            
+            tyntec's inbound system will retry the delivery
 servers:
   - url: 'https://api.tyntec.com/'
 components:
