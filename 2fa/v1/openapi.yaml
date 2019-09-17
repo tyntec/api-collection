@@ -1,0 +1,787 @@
+swagger: '2.0'
+info:
+  description: 2FA API
+  version: '1.0'
+  title: 2FA API
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/2fa
+  x-major-version: v1
+host: api.tyntec.com
+schemes:
+  - https
+security:
+  - APIKeyHeader: []
+basePath: /
+tags:
+  - name: 2fa-application-service
+    description: 2FA Application Service
+  - name: 2fa-otp-service
+    description: 2fa Otp Service
+securityDefinitions:
+  APIKeyHeader:
+    type: apiKey
+    in: header
+    name: apiKey
+paths:
+  /2fa/v1/application/:
+    get:
+      tags:
+        - 2fa-application-service
+      summary: Returns all applications created.
+      description: You can get the application id from the list to edit it
+      operationId: getTwoFactorAuthApplicationsUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: The list of applications
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '204':
+          description: Empty list. No applications found for your account
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - 2fa-application-service
+      summary: Creates a 2fa application
+      description: Creates an application instance. Values that are not defined will be populated with default values.
+      operationId: createTwoFactorAuthApplicationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: application
+          description: The application to be created.
+          required: false
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+      responses:
+        '200':
+          description: The new application created
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '400':
+          description: Not valid configuration provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            Wrong PIN length:
+              message: PIN length should be between 4 to 10 digits
+              code: '1006'
+              timestamp: 1498730218449
+            Wrong expiration time:
+              message: Number of expiration should be between 30 and 7200
+              code: '1008'
+              timestamp: 1498730687525
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/2fa/v1/application/{applicationId}':
+    get:
+      tags:
+        - 2fa-application-service
+      summary: Get a 2fa application
+      operationId: getTwoFactorAuthApplicationUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: applicationId
+          in: path
+          description: applicationId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The application is included in the response
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: The id for this application is not valid
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - 2fa-application-service
+      summary: Edit a 2fa application
+      description: Define the parameters that you would like to change
+      operationId: updateTwoFactorAuthApplicationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: applicationId
+          in: path
+          description: applicationId
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: name
+          required: false
+          type: string
+        - name: pinLength
+          in: query
+          description: pinLength
+          required: false
+          type: integer
+          format: int32
+        - name: alphaNumeric
+          in: query
+          description: alphaNumeric
+          required: false
+          type: boolean
+        - name: attempts
+          in: query
+          description: attempts
+          required: false
+          type: integer
+          format: int32
+        - name: expire
+          in: query
+          description: expire
+          required: false
+          type: integer
+          format: int64
+        - name: sender
+          in: query
+          description: sender
+          required: false
+          type: string
+        - name: caller
+          in: query
+          description: caller
+          required: false
+          type: string
+        - name: deleteCaller
+          in: query
+          description: deleteCaller
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: The application is included in the response
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '201':
+          description: Created
+        '400':
+          description: Not valid configuration provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: The id for this application is not valid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+    delete:
+      tags:
+        - 2fa-application-service
+      summary: Delete a 2fa application
+      description: Existing Otps will still be valid but resend and verify them will not be possible
+      operationId: deleteTwoFactorAuthApplicationUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: applicationId
+          in: path
+          description: applicationId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The application was deleted
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: The id for this application is not valid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+  '/2fa/v1/application/{applicationId}/language':
+    post:
+      tags:
+        - 2fa-application-service
+      summary: Add or update a language template
+      description: Existing Otps will still be valid but resend and verify them will not be possible
+      operationId: saveLanguageTwoFactorAuthApplicationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: applicationId
+          in: path
+          description: applicationId
+          required: true
+          type: string
+        - name: language
+          in: query
+          description: language
+          required: true
+          type: string
+        - name: text
+          in: query
+          description: text
+          required: true
+          type: string
+        - name: channel
+          in: query
+          required: false
+          description: SMS/VOICE specific language template
+          type: string
+      responses:
+        '200':
+          description: The application language template has been saved
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '201':
+          description: Created
+        '400':
+          description: Wrong arguments provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: The id for this application is not valid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - 2fa-application-service
+      summary: Delete a language template
+      description: The existing language will be deleted. Template for 'en' can not be deleted as it is the default one
+      operationId: deleteLanguageTwoFactorAuthApplicationUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: applicationId
+          in: path
+          description: applicationId
+          required: true
+          type: string
+        - name: language
+          in: query
+          description: language
+          required: true
+          type: string
+        - name: channel
+          in: query
+          required: false
+          description: SMS/VOICE specific language template
+          type: string
+      responses:
+        '200':
+          description: The language template was deleted
+          schema:
+            $ref: '#/definitions/TwoFactorAuthApplicationEntity'
+        '204':
+          description: No Content
+        '400':
+          description: Wrong arguments provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: 'The id for this application is not valid, or language does not exist'
+        '500':
+          description: 'Something went wrong :-('
+  /2fa/v1/otp:
+    get:
+      tags:
+        - 2fa-otp-service
+      summary: Returns all OTP instances for a specific number
+      description: You can get the application id from the list to edit it
+      operationId: getOtpsForNumberUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: number
+          in: query
+          description: number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The list of OTPs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OtpStatusEntity'
+        '204':
+          description: Empty list. No OTPs found for this account
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OtpStatusEntity'
+        '400':
+          description: Invalid number format provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - 2fa-otp-service
+      summary: Sends OTP for a number
+      description: Send an OTP based on your application configuration. Modify the request based on the optional parameters.
+      operationId: sendOtpForNumberUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - '*/*'
+      parameters:
+        - name: number
+          in: query
+          description: The number you want to use in E164 format
+          required: true
+          type: string
+        - name: applicationId
+          in: query
+          description: 'The UUID of the application you want to use. If not specified, the default will be used.'
+          required: false
+          type: string
+        - name: via
+          in: query
+          description: SMS/VOICE/AUTO. The channel to deliver the OTP
+          required: false
+          type: string
+          default: AUTO
+        - name: country
+          in: query
+          description: 'Optional if you provided a number without country code, it will add automatically. If the country code is included but doesn''t match the country specified, it will result to an error'
+          required: false
+          type: string
+        - name: language
+          in: query
+          description: 'The language template to be used in ISO 639-1 codes. If not specified it will auto detect based on number.If a language template does not exist, it will default to english'
+          required: false
+          type: string
+        - name: text
+          in: query
+          description: 'Text to override the default template. Placeholder {{OTP}} must exist for auto generation of OTP, otherwise otpCode should be specified'
+          required: false
+          type: string
+        - name: referenceId
+          in: query
+          description: Set your custom reference ID
+          required: false
+          type: string
+        - name: otpCode
+          in: query
+          description: Override the auto generated OTP code
+          required: false
+          type: string
+        - name: sender
+          in: query
+          description: Override the applications sender
+          required: false
+          type: string
+        - name: caller
+          in: query
+          description: Override the applicaitons caller
+          required: false
+          type: string
+        - name: pinLength
+          in: query
+          description: Override the pin length setting of the application
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The result of the OTP with a unique ID
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '201':
+          description: Created
+        '400':
+          description: Invalid parameters provided. Look at the response for the specific error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/2fa/v1/otp/{otpId}':
+    get:
+      tags:
+        - 2fa-otp-service
+      summary: Returns the status for this OTP
+      operationId: getOtpStatusUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: otpId
+          in: path
+          description: otpId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The OTP status
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: OTP code not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - 2fa-otp-service
+      summary: Resend an OTP
+      description: The same OTP code will be delivered as the original one if the OTP is still valid
+      operationId: resendOtpStatusUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: otpId
+          in: path
+          description: otpId
+          required: true
+          type: string
+        - name: via
+          in: query
+          description: via
+          required: false
+          type: string
+          default: AUTO
+        - name: sender
+          in: query
+          description: Override the applications sender
+          required: false
+          type: string
+        - name: caller
+          in: query
+          description: Override the applicaitons caller
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OTP resend
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '201':
+          description: Created
+        '400':
+          description: Not valid parameter provided
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: OTP is not valid anymore
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+        '404':
+          description: OTP not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - 2fa-otp-service
+      summary: Delete an OTP
+      operationId: deleteOtpStatusUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: otpId
+          in: path
+          description: otpId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OTP deleted
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: OTP not found
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/2fa/v1/otp/{otpId}/events':
+    get:
+      tags:
+        - 2fa-otp-service
+      summary: Returns the status events for this OTP
+      operationId: getOtpEventsUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - '*/*'
+      parameters:
+        - name: otpId
+          in: path
+          description: otpId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The OTP status
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/StatusEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: OTP code not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/2fa/v1/otp/{otpId}/check':
+    post:
+      tags:
+        - 2fa-otp-service
+      summary: Check an OTP
+      description: Provide the OTP that you received to validate it
+      operationId: checkOtpUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: otpId
+          in: path
+          description: otpId
+          required: true
+          type: string
+        - name: otpCode
+          in: query
+          description: otpCode
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '201':
+          description: Created
+        '202':
+          description: OTP provided is valid
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '401':
+          description: OTP code provided is not valid
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '403':
+          description: OTP has been expired of too many attempts already
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '404':
+          description: OTP not found
+        '410':
+          description: OTP is not active anymore
+          schema:
+            $ref: '#/definitions/OtpStatusEntity'
+        '500':
+          description: 'Something went wrong :-('
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+definitions:
+  OtpStatusEntity:
+    type: object
+    title: Otp Status
+    properties:
+      accountId:
+        type: string
+      applicationId:
+        type: string
+      attemptCount:
+        type: integer
+        format: int32
+      created:
+        type: integer
+        format: int64
+      expire:
+        type: integer
+        format: int64
+      number:
+        type: string
+      otpId:
+        type: string
+      otpStatus:
+        type: string
+      referenceId:
+        type: string
+      timestampCreated:
+        type: string
+      timestampExpire:
+        type: string
+  StatusEvent:
+    type: object
+    properties:
+      created:
+        type: integer
+        format: int64
+      status:
+        type: string
+      statusText:
+        type: string
+      timestampCreated:
+        type: string
+      type:
+        type: string
+  TwoFactorAuthApplicationEntity:
+    type: object
+    title: 2FA applicaiton
+    properties:
+      alphanumeric:
+        type: boolean
+        example: false
+        description: If the OTP is alphanumeric or not
+      attempts:
+        type: integer
+        format: int32
+        example: 3
+        description: How many attempts the user can have for this OTP
+      expire:
+        type: integer
+        format: int64
+        example: 300
+        description: How many seconds until OTP expires
+      name:
+        type: string
+        description: Custom application name
+      pinLength:
+        type: integer
+        format: int32
+        description: The length of a pin
+        example: 4
+      sender:
+        type: string
+        example: VERIFY
+        description: The sender used for SMS delivery
+      caller:
+        type: string
+        example: VERIFY
+        description: The caller used for TTS delivery. Using a valid number will improve filtering issues caused by anonymous calls
+  ErrorResponse:
+    type: object
+    title: ErrorResponse
+    properties:
+      code:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+      timestamp:
+        type: integer
+        format: int64
