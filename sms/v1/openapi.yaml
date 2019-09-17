@@ -17,7 +17,7 @@ tags:
  - name: "Receive SMS"
    description: |
     The Messaging API enables you to receive messages from your
-    customers sent to phone numbers you have registered with Tyntec.
+    customers sent to phone numbers you have registered with tyntec.
     
     For this service you will need to provide tyntec with the URL
     (`callbackUrl`) of your webserver, e.g.
