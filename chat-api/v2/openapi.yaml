@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.5'
+  version: '2.6'
   x-repository: https://github.com/tyntec/api-collection/blob/master/chat-api
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -77,6 +77,18 @@ tags:
        - There are no limits on the number of groups you can create.
 
       Events genereated from groups are send out as a notification of type _WhatsAppGroupEvent_
+  - name: "WA Settings management"
+    description: |
+      The WA Settings management enabled you to change the following settings of 
+      your WhatsApp profile
+      
+      - icon
+      - status / about
+      - company address
+      - description
+      - contact email
+      - business category
+      - websites
 paths:
   /messages:
     post:
@@ -518,6 +530,112 @@ paths:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/profile:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getCurrentWAProfile
+      summary: Current profile
+      description: Current profile settings
+      tags:
+        - "WA Settings management"
+      responses:
+        200:
+          description: Current profile settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppProfile'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    patch:
+      operationId: updateCurrentWAProfile
+      summary: updates the profile
+      description: |
+        Updates the WhatsApp client profile. This can be done as well only 
+        partially
+      tags:
+        - "WA Settings management"
+      requestBody:
+        description: Information in order to create the group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppProfile'
+      responses:
+        200:
+          description: Updated profile settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppProfileUpdateResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/logo:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getCurrentWALogo
+      summary: Current logo
+      description: Current logo
+      tags:
+        - "WA Settings management"
+      responses:
+        200:
+          description: Current logo
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    put:
+      operationId: updateCurrentWALogo
+      summary: Updates the logo
+      description: Updates the logo
+      tags:
+        - "WA Settings management"
+      requestBody:
+        required: true
+        description: Image that should be used as a profile logo
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        202:
+          description: Logo successfully updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
 components:
@@ -1962,3 +2080,55 @@ components:
         users:
           - 491672634672
           - 491672634673
+    WhatsAppProfile:
+      type: object
+      properties:
+        address:
+          type: string
+          example: Hofmannstrasse 25 - 27, 81379 Munich, Germany
+        description:
+          type: string
+          maxLength: 256
+          example: tyntec WhatsApp Business API Demo
+        email:
+          type: string
+          example: support@tyntec.com
+        websites:
+          type: array
+          maxLength: 3
+          items:
+            type: string
+            pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          example:
+            - https://www.tyntec.com
+            - https://api.tyntec.com/reference
+        vertical:
+          type: string
+          enum:
+           - Automotive
+           - Beauty, Spa and Salon
+           - Clothing and Apparel
+           - Education
+           - Entertainment
+           - Event Planning and Service
+           - Finance and Banking
+           - Food and Grocery
+           - Public Service
+           - Hotel and Lodging
+           - Medical and Health
+           - Non-profit
+           - Professional Services
+           - Shopping and Retail
+           - Travel and Transportation
+           - Restaurant
+           - Other
+          example: Professional Services
+        about:
+          type: string
+          maxLength: 139
+          example: Hey there! I am using WhatsApp.
+    WhatsAppProfileUpdateResponse:
+     type: object
+     properties:
+       hello:
+         type: string
