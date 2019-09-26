@@ -79,16 +79,20 @@ tags:
       Events genereated from groups are send out as a notification of type _WhatsAppGroupEvent_
   - name: "WA Settings management"
     description: |
-      The WA Settings management enabled you to change the following settings of 
-      your WhatsApp profile
+      The WA Settings management enables you to change the following settings of 
+      your WhatsApp instance
       
-      - icon
-      - status / about
+      - logo
+      - profile information
+      
+      Profile information consists of
       - company address
       - description
       - contact email
       - business category
       - websites
+      - about
+      
 paths:
   /messages:
     post:
@@ -371,7 +375,7 @@ paths:
       - $ref: '#/components/parameters/GroupId'
     get:
       summary: Get the group icon
-      description: Returns the actual icon for the given group
+      description: Returns the current icon for the given group
       tags:
         - "WA Group management"
       operationId: getWhatsAppGroupIcon
@@ -558,8 +562,9 @@ paths:
       operationId: updateCurrentWAProfile
       summary: updates the profile
       description: |
-        Updates the WhatsApp client profile. This can be done as well only 
-        partially
+        Updates the WhatsApp client profile. 
+        
+        This can be done as well only partially
       tags:
         - "WA Settings management"
       requestBody:
@@ -570,12 +575,8 @@ paths:
             schema:
               $ref: '#/components/schemas/WhatsAppProfile'
       responses:
-        200:
-          description: Updated profile settings
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppProfileUpdateResponse'
+        204:
+          description: Profile updated
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -587,8 +588,8 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getCurrentWALogo
-      summary: Current logo
-      description: Current logo
+      summary: Get the logo
+      description: Returns the current logo
       tags:
         - "WA Settings management"
       responses:
@@ -612,7 +613,12 @@ paths:
     put:
       operationId: updateCurrentWALogo
       summary: Updates the logo
-      description: Updates the logo
+      description: | 
+        Updates the logo
+        
+        The logo must have a minimal edge size of 500 pixel and must not exceed 5 MB in size.
+        
+        Recommended size is 640x640 pixel
       tags:
         - "WA Settings management"
       requestBody:
@@ -2085,20 +2091,27 @@ components:
       properties:
         address:
           type: string
+          maxLength: 256
+          description: Address of the business
           example: Hofmannstrasse 25 - 27, 81379 Munich, Germany
         description:
           type: string
           maxLength: 256
+          description: Brief introduction of the business
           example: tyntec WhatsApp Business API Demo
         email:
           type: string
+          maxLength: 128
+          description: Contact mail address
           example: support@tyntec.com
         websites:
           type: array
-          maxLength: 3
+          maxLength: 2
           items:
             type: string
             pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+            maxLength: 256
+          description: Websites of the business
           example:
             - https://www.tyntec.com
             - https://api.tyntec.com/reference
@@ -2122,11 +2135,22 @@ components:
            - Travel and Transportation
            - Restaurant
            - Other
+          description: Industry of the business
           example: Professional Services
         about:
           type: string
           maxLength: 139
+          description: Text to display in your profile's About section
           example: Hey there! I am using WhatsApp.
+      example:
+        address: Hofmannstrasse 25 - 27, 81379 Munich, Germany
+        description: tyntec WhatsApp Business API Demo
+        email: support@tyntec.com
+        websites:
+          - https://www.tyntec.com
+          - https://api.tyntec.com/reference
+        vertical: Professional Services
+        about: Hey there! I am using WhatsApp.
     WhatsAppProfileUpdateResponse:
      type: object
      properties:
