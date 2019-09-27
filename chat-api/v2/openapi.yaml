@@ -634,7 +634,7 @@ paths:
               type: string
               format: binary
       responses:
-        202:
+        204:
           description: Logo successfully updated
         400:
           $ref: '#/components/responses/BadRequest'
