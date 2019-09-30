@@ -564,7 +564,7 @@ paths:
       description: |
         Updates the WhatsApp client profile. 
         
-        This can be done as well only partially
+        This can be done also partially
       tags:
         - "WA Settings management"
       requestBody:
