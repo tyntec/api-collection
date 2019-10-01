@@ -1,5 +1,25 @@
 # Release notes
 
+## 2.6
+
+This release introduces the WhatsApp profile API.
+
+### Features
+
+#### WhatsApp profile API
+
+This self-service API enables you to change the following information of your WhatsApp account:
+
+ - logo
+ - about
+ - description
+ - e-mail
+ - address
+ - vertical
+ - websites
+
+The API supports patching of single / specific information if needed.
+
 ## 2.5
 
 This release introduces the first intermediate event type. These event types are meant for informational purposes during the message delivery processes. They will always be followed by a final event (_MessageStatus::failed_, _MessageStatus::delivered_, _MessageStatus::seen_).
