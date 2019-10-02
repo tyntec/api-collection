@@ -564,7 +564,10 @@ paths:
       description: |
         Updates the WhatsApp client profile. 
         
-        This can be done also partially
+        Supports also selective updates.
+        
+        Removal of an information is done by setting its value to an empty
+        string.
       tags:
         - "WA Settings management"
       requestBody:
@@ -579,6 +582,8 @@ paths:
           description: Profile updated
         403:
           $ref: '#/components/responses/Forbidden'
+        400:
+          $ref: '#/components/responses/WhatsAppProfileUpdateFailed'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
@@ -668,6 +673,27 @@ components:
             $ref: '#/components/schemas/Problem'
           example:
             status: 404
+    WhatsAppProfileUpdateFailed:
+      description: | 
+        Updating the whatsapp profile failed.
+        
+        In case a 
+        partial update failed please retrieve the current profile,
+        change the required information and retry with the whole
+        profile.
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Problem'
+            properties:
+              code: 
+                type : string
+                description: error code
+          example:
+            status: 400
+            title: Updating profile failed
+            code: 1009
     PhoneNumberUnknown:
       description: The phone number does not exists
       content:
@@ -2151,8 +2177,3 @@ components:
           - https://api.tyntec.com/reference
         vertical: Professional Services
         about: Hey there! I am using WhatsApp.
-    WhatsAppProfileUpdateResponse:
-     type: object
-     properties:
-       hello:
-         type: string
