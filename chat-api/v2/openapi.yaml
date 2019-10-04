@@ -86,6 +86,7 @@ tags:
       - profile information
       
       Profile information consists of
+      
       - company address
       - description
       - contact email
@@ -541,13 +542,13 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getCurrentWAProfile
-      summary: Current profile
-      description: Current profile settings
+      summary: Get the current profile
+      description: Get the current profile settings
       tags:
         - "WA Settings management"
       responses:
         200:
-          description: Current profile settings
+          description: The current profile settings
           content:
             application/json:
               schema:
@@ -560,7 +561,7 @@ paths:
           $ref: '#/components/responses/Default'
     patch:
       operationId: updateCurrentWAProfile
-      summary: updates the profile
+      summary: Update the profile
       description: |
         Updates the WhatsApp client profile. 
         
@@ -617,7 +618,7 @@ paths:
           $ref: '#/components/responses/Default'
     put:
       operationId: updateCurrentWALogo
-      summary: Updates the logo
+      summary: Update the logo
       description: | 
         Updates the logo
         
@@ -674,13 +675,7 @@ components:
           example:
             status: 404
     WhatsAppProfileUpdateFailed:
-      description: | 
-        Updating the whatsapp profile failed.
-        
-        In case a 
-        partial update failed please retrieve the current profile,
-        change the required information and retry with the whole
-        profile.
+      description: Updating the whatsapp profile failed. In case a partial update failed please retrieve the current profile, change the required information and retry with the whole profile.
       content:
         application/problem+json:
           schema:
