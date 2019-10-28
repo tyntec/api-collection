@@ -25,8 +25,12 @@ tags:
      - to query the status of a previously sent SMS
 
      `tyntec stores the status details for up to three months after the final delivery state is known.`
-
  - name: "Message Status"
+   description: |
+     You have the posibility to query the status of a message you sent through our systems.
+     In case that that call-back URL is configured, we will POST the status to the defined URL
+
+     `The message status is available for three month after the final state is reached.`
  - name: "Receive SMS"
    description: |
      The Messaging API enables you to receive messages from your
@@ -43,7 +47,6 @@ tags:
      application does not accept the inbound message. Retries are paused for
      10 minutes after every 100 consecutive unsuccessful delivery attempts.
      tyntec's application will retry for a maximum of 48 hours.
-
 paths:
   '/messaging/v1/messages/{requestId}':
     get:
@@ -52,10 +55,7 @@ paths:
       summary: Get status of a message
       operationId: getMessageInfoUsingGET
       description: |
-        You have the posibility to search the status of a message you sent through our systems.
-        In case that that call-back URL is configured, we will POST the status to the defined URL
-
-        `tyntec stores message notifications for three months.`
+        Query the status of a message.
       parameters:
         - name: requestId
           in: path
@@ -103,7 +103,7 @@ paths:
       parameters:
         - name: to
           in: query
-          description: Destination phone number in international phone format
+          description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
           schema:
             type: string
         - name: from
@@ -173,7 +173,7 @@ paths:
             default: '2880'
         - name: reference
           in: query
-          description: A custom reference that will mark the Delivery Report
+          description: A customer reference attached to the Delivery Reports
           schema:
             type: string
         - name: callbackUrl
@@ -196,26 +196,24 @@ paths:
         - name: trate
           in: query
           description: >-
-            Up to how much you allow the transcoder to replace original
-            characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible in order for it to fit in less parts.
-            Possible decimal values from 0 to 1. (0.5 would mean 50% or the original content can be replaced)
+            Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+            compatible characters. This can be used to compress the message.
           schema:
             type: number
             format: double
+            minimum: 0
+            maximum: 1
             default: 1
         - name: mrate
           in: query
           description: >-
-            Up to how much you allow the transcoder to skip original
-            characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible. Skipped character will be replaced with '.'.
-            Possible decimal values from 0 to 1.
-            (0.5 would mean tht 50% of the original message can be skipped
-            in order to be fitting to less parts)
+            Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
+            They're replaced with '.'.
           schema:
             type: number
             format: double
+            minimum: 0
+            maximum: 1
             default: 0
         - name: upperCased
           in: query
@@ -505,7 +503,7 @@ components:
   schemas:
     RestMessagePart:
       type: object
-      description: The message you would like to send
+      description: The part of the message request that the message is split
       properties:
         currency:
           type: string
@@ -574,7 +572,7 @@ components:
           description: A custom reference that will mark the Delivery Report
         requestId:
           type: string
-          description: The unique identifier provided for each request.
+          description: The unique identifier provided for each messaging request.
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         sentDate:
           type: string
@@ -722,44 +720,3 @@ components:
           type: string
           description: The date when the “price” became effective.
           example: '2018-06-01T00:00:00+0200'
-    errorCode:
-      title: InboundContent
-      required:
-        - msgId
-        - sentDate
-        - sequenceNumber
-      type: object
-      properties:
-        msgId:
-          type: string
-          description: The unique identifier provided for each message part.
-          example: '48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6'
-        sentDate:
-          type: string
-          description: >-
-            The time when the SMS has been received by the sending MSC
-            (if available)
-            or
-            the time when the respective message was received by tyntec.
-          example: '2019-07-02T16:47:39+0200'
-        sequenceNumber:
-          type: integer
-          description: The sequenceNumber orders the respective message parts of an overlength message.
-          format: int32
-          example: 1
-        price:
-          type: number
-          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
-          example: -0.005
-        currency:
-          type: string
-          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
-          example: EUR
-        priceEffective:
-          type: string
-          description: The date when the “price” became effective.
-          example: '2018-06-01T00:00:00+0200'
-
-
-
-
