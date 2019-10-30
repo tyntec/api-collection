@@ -2,34 +2,51 @@ openapi: 3.0.0
 info:
   version: '1.0'
   title: Messaging API
+  description: |
+    The Messaging API enables you to sent messages to your customers or
+    to receive messages from your customers to phone numbers registered with tyntec.
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
   x-repository: https://github.com/tyntec/api-collection/blob/master/sms
   x-major-version: v1
+servers:
+  - url: 'https://api.tyntec.com/'
 security:
   - APIKeyHeader: []
 tags:
  - name: "Send SMS"
+   description: |
+     tyntec’s sending SMS service is governed by two operations that allow you:
+
+     - to send an SMS and
+     - to query the status of a previously sent SMS
+
+     `tyntec stores the status details for up to three months after the final delivery state is known.`
  - name: "Message Status"
    description: |
+     You have the posibility to query the status of a message you sent through our systems.
+     In case that that call-back URL is configured, we will POST the status to the defined URL
+
+     `The message status is available for three month after the final state is reached.`
  - name: "Receive SMS"
    description: |
-    The Messaging API enables you to receive messages from your
-    customers sent to phone numbers you have registered with tyntec.
+     The Messaging API enables you to receive messages from your
+     customers sent to phone numbers you have registered with tyntec.
     
-    For this service you will need to provide tyntec with the URL
-    (`callbackUrl`) of your webserver, e.g.
-    `https://rest.customer.com/inboundmessages/`.
+     For this service you will need to provide tyntec with the URL
+     (`callbackUrl`) of your webserver, e.g.
+     `https://rest.customer.com/inboundmessages/`.
     
-    tyntec's application will do either a `POST` or `GET` call to you
-    server; this can be configured by tyntec.
+     tyntec's application will do either a `POST` or `GET` call to you
+     server; this can be configured by tyntec.
     
-    tyntec's application will retry delivery every 10 seconds in case your
-    application does not accept the inbound message. Retries are paused for
-    10 minutes after every 100 consecutive unsuccessful delivery attempts.
-    tyntec's application will retry for a maximum of 48 hours.
+     tyntec's application will retry delivery every 10 seconds in case your
+     application does not accept the inbound message. Retries are paused for
+     10 minutes after every 100 consecutive unsuccessful delivery attempts.
+     tyntec's application will retry for a maximum of 48 hours.
 paths:
   '/messaging/v1/messages/{requestId}':
     get:
@@ -37,10 +54,12 @@ paths:
         - "Message Status"
       summary: Get status of a message
       operationId: getMessageInfoUsingGET
+      description: |
+        Query the status of a message.
       parameters:
         - name: requestId
           in: path
-          description: The request ID for this message.
+          description: The unique identifier provided for each request.
           required: true
           schema:
             type: string
@@ -81,6 +100,144 @@ paths:
         - "Send SMS"
       summary: Sends SMS via POST HTTP method
       operationId: sendSmsUsingPOST
+      parameters:
+        - name: to
+          in: query
+          description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: |
+            This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+
+            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.`
+          required: true
+          schema:
+            type: string
+        - name: message
+          in: query
+          description: |
+            The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 153 characters
+            per concatenated message.
+            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
+            per concatenated message.
+
+            tyntec automatically splits the sent message into concatenated messages if the message
+            exceeds the given limits. These concatenated messages are unified by the handset once again and
+            they are displayed as one message (if supported by the handset).
+
+            `tyntec will charge for each part of the concatenated message as an individual message.`
+
+          required: true
+          schema:
+            type: string
+        - name: encoding
+          in: query
+          description: Encoding selection between GSM7, UNICODE or the default AUTO selection
+          schema:
+            type: string
+            enum:
+              - AUTO
+              - GSM7
+              - UNICODE
+            default: AUTO
+        - name: gateway
+          in: query
+          description: Which gateway to use for the delivery of the message
+          schema:
+            type: string
+            default: DEFAULT
+        - name: conversion
+          in: query
+          description: Is this message subject to conversion ratio
+          schema:
+            type: boolean
+            default: false
+        - name: sendDateTime
+          in: query
+          description: >-
+            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+            If not set, message will be sent immediately.
+            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+          schema:
+            type: string
+        - name: validity
+          in: query
+          description: Validity in minutes for this message
+          schema:
+            type: string
+            default: '2880'
+        - name: reference
+          in: query
+          description: A customer reference attached to the Delivery Reports
+          schema:
+            type: string
+        - name: callbackUrl
+          in: query
+          description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
+          schema:
+            type: string
+        - name: callbackMethod
+          in: query
+          description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
+          schema:
+            type: string
+        - name: partLimit
+          in: query
+          description: Up to how many parts you allow this message to be concatenated
+          schema:
+            type: integer
+            format: int32
+            default: 4
+        - name: trate
+          in: query
+          description: >-
+            Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+            compatible characters. This can be used to compress the message.
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+            default: 1
+        - name: mrate
+          in: query
+          description: >-
+            Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
+            They're replaced with '.'.
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+            default: 0
+        - name: upperCased
+          in: query
+          description: >-
+            If you allow the transcoder to try an upper case version of
+            the content in case this improves the produced parts of the
+            message
+          schema:
+            type: boolean
+            default: true
+        - name: keepEmojis
+          in: query
+          description: >-
+            Instructs the transcoder to keep emojis or to replace the with text.
+            By default the transcoder will keep emojis; thus text will result to UNICODE.
+          schema:
+            type: boolean
+            default: true
+        - name: flash
+          in: query
+          description: If this sms will be delivered as flash. Some networks do not support this.
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: The messageIds of your request
@@ -130,25 +287,42 @@ paths:
       parameters:
         - name: to
           in: query
-          description: Destination number
+          description: This parameter represents the receiving party’s phone number in international phone format
           required: true
           schema:
             type: string
         - name: from
           in: query
-          description: Originator number
+          description: |
+            This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+
+            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.`
           required: true
           schema:
             type: string
         - name: message
           in: query
-          description: Message to be sent
+          description: |
+            The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 153 characters
+            per concatenated message.
+            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
+            per concatenated message.
+
+            tyntec automatically splits the sent message into concatenated messages if the message
+            exceeds the given limits. These concatenated messages are unified by the handset once again and
+            they are displayed as one message (if supported by the handset).
+
+            `tyntec will charge for each part of the concatenated message as an individual message.`
+
           required: true
           schema:
             type: string
         - name: encoding
           in: query
-          description: One of AUTO/GSM7/UNICODE
+          description: Encoding selection between GSM7, UNICODE or the default AUTO selection
           schema:
             type: string
             enum:
@@ -171,8 +345,9 @@ paths:
         - name: sendDateTime
           in: query
           description: >-
-            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm”
-            (according to ISO 8601)
+            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+            If not set, message will be sent immediately.
+            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
           schema:
             type: string
         - name: validity
@@ -183,17 +358,17 @@ paths:
             default: '2880'
         - name: reference
           in: query
-          description: A custom reference that will mark the DLR
+          description: A custom reference that will mark the Delivery Report
           schema:
             type: string
         - name: callbackUrl
           in: query
-          description: Your URL for delivering the DLRs. Leave empty for no DLR
+          description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
           schema:
             type: string
         - name: callbackMethod
           in: query
-          description: Your prefered HTTP method for the DLR callback. Possible values POST/GET
+          description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
           schema:
             type: string
         - name: partLimit
@@ -207,8 +382,8 @@ paths:
           in: query
           description: >-
             Up to how much you allow the transcoder to replace original
-            characters to make it GSM7 compatible. Possible decimal values
-            from 0 to 1.
+            characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+            compatible. Possible decimal values from 0 to 1.
           schema:
             type: number
             format: double
@@ -217,8 +392,8 @@ paths:
           in: query
           description: >-
             Up to how much you allow the transcoder to skip original
-            characters to make it GSM7 compatible. Possible decimal values
-            from 0 to 1.
+            characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+            compatible. Possible decimal values from 0 to 1.
           schema:
             type: number
             format: double
@@ -226,7 +401,7 @@ paths:
         - name: upperCased
           in: query
           description: >-
-            If you allow the transcoder to try an uppercased version of
+            If you allow the transcoder to try an upper case version of
             the content in case this improves the produced parts of the
             message
           schema:
@@ -235,17 +410,14 @@ paths:
         - name: keepEmojis
           in: query
           description: >-
-            If transcoder is not allowed to replace emojis with a text translation.
-            By default the transcoder will not be allowed to replace them, thus text
-            will result to UNICODE.
+            Instructs the transcoder to keep emojis or to replace the with text.
+            By default the transcoder will keep emojis; thus text will result to UNICODE.
           schema:
             type: boolean
             default: true
         - name: flash
           in: query
-          description: >-
-            If this sms will be delivered as flash. Some networks do not
-            support his.
+          description: If this sms will be delivered as flash. Some networks do not support this.
           schema:
             type: boolean
             default: false
@@ -300,7 +472,7 @@ paths:
       description: |
          Receive a SMS 
          
-         **Note** the path is only an example.
+         `The path is only an example.`
          
          You can choose freely the callback url.
       requestBody:
@@ -318,270 +490,119 @@ paths:
             Message was not accepted by your system. 
             
             tyntec's inbound system will retry the delivery
-servers:
-  - url: 'https://api.tyntec.com/'
+
 components:
-  requestBodies:
-    sendSmsUsingPOST:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              to:
-                description: Destination number
-                type: string
-              from:
-                description: Originator number
-                type: string
-              message:
-                description: Message to be sent
-                type: string
-              encoding:
-                description: One of AUTO/GSM7/UNICODE
-                type: string
-                enum:
-                  - AUTO
-                  - GSM7
-                  - UNICODE
-                default: AUTO
-              gateway:
-                description: Which gateway to use for the delivery of the message
-                type: string
-                default: DEFAULT
-              conversion:
-                description: Is this message subject to conversion ratio
-                type: boolean
-                default: false
-              sendDateTime:
-                description: >-
-                  Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm”
-                  (according to ISO 8601)
-                type: string
-              validity:
-                description: Validity in minutes for this message
-                type: string
-                default: '2880'
-              reference:
-                description: A custom reference that will mark the Dlrs
-                type: string
-              callbackUrl:
-                description: Your URL for delivering the DLRs. Leave empty for no DLR
-                type: string
-              callbackMethod:
-                description: Your prefered HTTP method for the DLR callback. Possible values POST/GET
-                type: string
-              partLimit:
-                description: Up to how many parts you allow this message to be concatenated
-                type: integer
-                format: int32
-                default: 4
-              trate:
-                description: >-
-                  Up to how much you allow the transcoder to replace original
-                  characters to make it GSM7 compatible. Possible decimal values
-                  from 0 to 1.
-                type: number
-                format: double
-                default: 0
-              mrate:
-                description: >-
-                  Up to how much you allow the transcoder to skip original
-                  characters to make it GSM7 compatible. Possible decimal values
-                  from 0 to 1.
-                type: number
-                format: double
-                default: 0
-              upperCased:
-                description: >-
-                  If you allow the transcoder to try an uppercased version of
-                  the content in case this improves the produced parts of the
-                  message
-                type: boolean
-                default: true
-              keepEmojis:
-                description: >-
-                  If transcoder is not allowed to replace emojis with a text translation.
-                  By default the transcoder will not be allowed to replace them, thus text
-                  will result to UNICODE.
-                type: boolean
-                default: true
-              flash:
-                description: >-
-                  If this sms will be delivered as flash. Some networks do not
-                  support his.
-                type: boolean
-                default: false
-            required:
-              - to
-              - from
-              - message
-        application/x-www-form-urlencoded:
-          schema:
-            type: object
-            properties:
-              to:
-                description: Destination number
-                type: string
-              from:
-                description: Originator number
-                type: string
-              message:
-                description: Message to be sent
-                type: string
-              encoding:
-                description: One of AUTO/GSM7/UNICODE
-                type: string
-                enum:
-                  - AUTO
-                  - GSM7
-                  - UNICODE
-                default: AUTO
-              gateway:
-                description: Which gateway to use for the delivery of the message
-                type: string
-                default: DEFAULT
-              conversion:
-                description: Is this message subject to conversion ratio
-                type: boolean
-                default: false
-              sendDateTime:
-                description: >-
-                  Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm”
-                  (according to ISO 8601)
-                type: string
-              validity:
-                description: Validity in minutes for this message
-                type: string
-                default: '2880'
-              reference:
-                description: A custom reference that will mark the Dlrs
-                type: string
-              callbackUrl:
-                description: Your URL for delivering the DLRs. Leave empty for no DLR
-                type: string
-              callbackMethod:
-                description: Your prefered HTTP method for the DLR callback. Possible values POST/GET
-                type: string
-              partLimit:
-                description: Up to how many parts you allow this message to be concatenated
-                type: integer
-                format: int32
-                default: 4
-              trate:
-                description: >-
-                  Up to how much you allow the transcoder to replace original
-                  characters to make it GSM7 compatible in order for it to fit
-                  in less parts. Possible decimal values from 0 to 1. (0.5 would
-                  mean 50% or the original content can be replaced)
-                type: number
-                format: double
-                default: 0
-              mrate:
-                description: >-
-                  Up to how much you allow the transcoder to skip original
-                  characters to make it GSM7 compatible. Skipped character will
-                  be replaced with '.'. Possible decimal values from 0 to 1.
-                  (0.5 would mean tht 50% of the original message can be skipped
-                  in order to be fitting to less parts)
-                type: number
-                format: double
-                default: 0
-              upperCased:
-                description: >-
-                  If you allow the transcoder to try an uppercased version of
-                  the content in case this improves the produced parts of the
-                  message
-                type: boolean
-                default: true
-              keepEmojis:
-                description: >-
-                  If transcoder is not allowed to replace emojis with a text translation.
-                  By default the transcoder will not be allowed to replace them, thus text
-                  will result to UNICODE.
-                type: boolean
-                default: true
-              flash:
-                description: >-
-                  If this sms will be delivered as flash. Some networks do not
-                  support his.
-                type: boolean
-                default: false
-            required:
-              - to
-              - from
-              - message
   securitySchemes:
-    APIKeyHeader:
+    ApiKeyAuth:
       type: apiKey
       in: header
-      name: apiKey
+      name: apikey
+      description: |
+        The API key used for this operation. We check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
   schemas:
     RestMessagePart:
       type: object
+      description: The part of the message request that the message is split
       properties:
         currency:
           type: string
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+          example: EUR
         deliveryState:
           type: string
+          description: The delivery status of this specific part. Possible values are given in a following table.
         doneDate:
           type: string
+          description: The time stamp when the message was successfully delivered.
         errorCode:
           type: string
+          description: The reason for an unsuccessful delivery attempt.
         partId:
           type: string
+          description: The identification number of the specific part of the message
         price:
-          type: string
+          type: number
+          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
+          example: -0.005
         priceEffective:
           type: string
+          description: The date when the “price” became effective.
+          format: date-time
+          example: '2018-06-01T00:00:00+0200'
         sentDate:
           type: string
+          description: The time stamp when the message was sent out by tyntec for delivery.
+          example: '2019-07-02T16:47:39+0200'
         statusText:
           type: string
+          description: The first 20 characters of the sent message.
     RestMessageResponse:
       type: object
       properties:
         doneDate:
           type: string
+          description: The time stamp when the message was successfully delivered.
         errorCode:
           type: string
+          description: The error code.
         errorReason:
           type: string
+          description: The reason for an unsuccessful attempt.
         from:
           type: string
+          description: The phone number of the sending party in international format if available.
+          example: '+49123456789'
         href:
           type: string
+          description: The URL of the message accepted.
         mccmnc:
           type: string
+          description: A representative IMSI prefix of the target network. The respective mapping can be found at [http://mcc-mnc.com/](http://mcc-mnc.com/)
         parts:
           type: array
           items:
             $ref: '#/components/schemas/RestMessagePart'
         priceEffective:
           type: string
+          description: The date when the “price” became active.
           format: date-time
         reference:
           type: string
+          description: A custom reference that will mark the Delivery Report
         requestId:
           type: string
+          description: The unique identifier provided for each messaging request.
+          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         sentDate:
           type: string
+          description: The time stamp when the message was sent out by tyntec for delivery.
+          example: '2019-07-02T16:47:39+0200'
         size:
           type: integer
+          description: The amount of respective concatenated SMS parts.
           format: int32
+          example: 1
         status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
           type: string
+          example: 400
         submitDate:
+          description: The date when the message was sent out by tyntec for delivery.
           type: string
           format: date-time
         to:
           type: string
+          description: Your number provided by tyntec that has received the respective message in international format.
+          example: '+1987654321'
         ttid:
           type: string
+          description: The tyntec id of the operator.
+          example: 77292
     Problem:
       type: object
       additionalProperties: true
-      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      description: The problem object follows the [RFC-7807](https://tools.ietf.org/html/rfc7807)
       required:
         - type
         - title
@@ -593,9 +614,9 @@ components:
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
+          description: A short, human-readable summary of the problem type.
           type: string
           example: Data given was not parseable
-          description: A short, human-readable summary of the problem type.
         status:
           description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
           type: string
