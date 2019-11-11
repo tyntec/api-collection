@@ -1069,25 +1069,83 @@ components:
         replyBack: false
     Media:
       type: object
-      description: Media to be send
+      oneOf:
+        - $ref: '#/components/schemas/AudioMedia'
+        - $ref: '#/components/schemas/ImageMedia'
+        - $ref: '#/components/schemas/DocumentMedia'
+        - $ref: '#/components/schemas/VideoMedia'
+    AudioMedia:
+      type: object
+      description: Audio to be send
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
+            - audio
+          example: image
+        url:
+          type: string
+          description: the url of the location where the audio file is stored
+          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+    ImageMedia:
+      type: object
+      description: Image to be send
       properties:
         type:
           type: string
           description: What kind of media should be send
           enum:
             - image
+          example: image
+        url:
+          type: string
+          description: the url of the location where the image is stored
+          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+        caption:
+          type: string
+          description: additional caption for the image. is shown on the uploaded image when the channel supports this
+          example: Tyntec Logo
+    DocumentMedia:
+      type: object
+      description: Document to be send
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
             - document
-            - audio
+          example: document
+        url:
+          type: string
+          description: the url of the location where the document is stored
+          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+        caption:
+          type: string
+          description: additional caption for the document. is shown on the uploaded document when the channel supports this
+          example: Tyntec Pricelist
+        filename:
+          type: string
+          description: File name of the document to be shown. It's shown on the uploaded document when the cahnnel supports this
+          example: tyntec_pricelist.pdf
+    VideoMedia:
+      type: object
+      description: Video to be send
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
             - video
           example: image
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: the url of the location where the video is stored
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
         caption:
           type: string
-          description: additional caption for the media. is shown on the uploaded media when the channel supports this
-          example: Tyntec Logo
+          description: additional caption for the video. is shown on the uploaded video when the channel supports this
+          example: Tyntec Party
     Template:
       type: object
       description: The message template to be send.
@@ -1101,8 +1159,20 @@ components:
           example: welcome_message
         language:
           $ref: '#/components/schemas/Language'
-        parameters:
+        components:
           description: Parameter for replacement in the template.
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/HeaderComponent'
+              - $ref: '#/components/schemas/BodyComponent'
+        parameters:
+          description: |
+            Parameter for replacement in the template.
+            
+            **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
+            Use instead components.
+          deprecated: true
           type: array
           items:
             $ref: '#/components/schemas/TemplateParameter'
@@ -1138,6 +1208,7 @@ components:
           example: en
     TemplateParameter:
       type: object
+      deprecated: true
       description: |
         Parameter for replacement in the template.
 
@@ -1148,11 +1219,83 @@ components:
           - more then 4 consecutive spaces.
 
         It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
+        
+        **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
+            Use instead components.
       properties:
         default:
           type: string
           description: Variable substitution.
           example: Mr. Doe
+    HeaderComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          default: header
+          enum:
+            - header
+        parameters:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/TemplateMediaParameter'
+              - $ref: '#/components/schemas/TextParameter'
+          maxItems: 1
+    BodyComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          default: body
+          enum:
+            - body
+        parameters:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/TextParameter'
+    TextParameter:
+      type: object
+      properties:
+        type:
+          type: string
+          default: text
+          enum:
+            - text
+        text:
+          type: string
+          minLength: 1
+    TemplateMediaParameter:
+      type: object
+      properties:
+        type:
+          type: string
+          default: media
+          enum:
+            - media
+        media:
+          oneOf:
+            - $ref: '#/components/schemas/ImageMedia'
+            - $ref: '#/components/schemas/TemplateDocumentMedia'
+    TemplateDocumentMedia:
+      type: object
+      description: Media to be send
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
+            - document
+          example: image
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
+        filename:
+          type: string
+          description: Additional info for the filename to be displayed.
+          example: Tyntec Logo
     Location:
       type: object
       description: Location received or send
