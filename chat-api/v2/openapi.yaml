@@ -1094,7 +1094,7 @@ components:
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: What kind of media should be send. Can only be png or jpeg
           enum:
             - image
           example: image
@@ -1104,7 +1104,7 @@ components:
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
         caption:
           type: string
-          description: additional caption for the image. is shown on the uploaded image when the channel supports this
+          description: additional caption for the image. It is shown on the uploaded image when the channel supports this
           example: Tyntec Logo
     DocumentMedia:
       type: object
@@ -1122,11 +1122,11 @@ components:
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
         caption:
           type: string
-          description: additional caption for the document. is shown on the uploaded document when the channel supports this
+          description: Additional caption for the document. It is shown on the uploaded document when the channel supports this
           example: Tyntec Pricelist
         filename:
           type: string
-          description: File name of the document to be shown. It's shown on the uploaded document when the cahnnel supports this
+          description: File name of the document to be shown. It is shown on the uploaded document when the channel supports this
           example: tyntec_pricelist.pdf
     VideoMedia:
       type: object
@@ -1144,7 +1144,7 @@ components:
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
         caption:
           type: string
-          description: additional caption for the video. is shown on the uploaded video when the channel supports this
+          description: Additional caption for the video. It is shown on the uploaded video when the channel supports this
           example: Tyntec Party
     Template:
       type: object
@@ -1160,7 +1160,10 @@ components:
         language:
           $ref: '#/components/schemas/Language'
         components:
-          description: Parameter for replacement in the template.
+          description: |
+            Parameter for replacement in the template.
+
+            Header and body components can only be used once.
           type: array
           items:
             anyOf:
@@ -1171,7 +1174,7 @@ components:
             Parameter for replacement in the template.
             
             **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
-            Use instead components.
+            Instead use components.
           deprecated: true
           type: array
           items:
@@ -1181,7 +1184,7 @@ components:
         language:
           policy: deterministic
           example: en
-        parameters:
+        components:
           - default: Peter
           - default: tyntec
     Language:
@@ -1221,7 +1224,7 @@ components:
         It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
         
         **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
-            Use instead components.
+            Instead use components.
       properties:
         default:
           type: string
@@ -1240,8 +1243,15 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/TemplateMediaParameter'
-              - $ref: '#/components/schemas/TextParameter'
           maxItems: 1
+          minItems: 1
+      example:
+        type: header
+        parameters:
+          - type: media
+            media:
+              type: image
+              url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     BodyComponent:
       type: object
       properties:
@@ -1255,6 +1265,14 @@ components:
           items:
             anyOf:
               - $ref: '#/components/schemas/TextParameter'
+          minItems: 0
+      example:
+        type: body
+        parameters:
+          - type: text
+            text: Sam
+          - type: text
+            text: nice replacement
     TextParameter:
       type: object
       properties:
@@ -1265,7 +1283,20 @@ components:
             - text
         text:
           type: string
+          description: |
+            Text for replacement in the template.
+
+            The value can contain any character except of :
+
+              - newline
+              - tabulator
+              - more then 4 consecutive spaces.
+
+            It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
           minLength: 1
+      example:
+        type: text
+        text: Hi! Cool replacement
     TemplateMediaParameter:
       type: object
       properties:
@@ -1278,6 +1309,12 @@ components:
           oneOf:
             - $ref: '#/components/schemas/ImageMedia'
             - $ref: '#/components/schemas/TemplateDocumentMedia'
+      example:
+        type: media
+        media:
+          type: image
+          url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+          caption: Tyntec Logo
     TemplateDocumentMedia:
       type: object
       description: Media to be send
@@ -1296,6 +1333,10 @@ components:
           type: string
           description: Additional info for the filename to be displayed.
           example: Tyntec Logo
+      example:
+        type: document
+        url: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
+        filename: Test document
     Location:
       type: object
       description: Location received or send
