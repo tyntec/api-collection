@@ -1077,6 +1077,9 @@ components:
     AudioMedia:
       type: object
       description: Audio file to be send
+      required:
+        - type
+        - url
       properties:
         type:
           type: string
@@ -1088,9 +1091,15 @@ components:
           type: string
           description: the url of the location where the audio file is stored
           example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
+      example:
+        type: audio
+        url: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
     ImageMedia:
       type: object
       description: Image to be send
+      required:
+        - type
+        - url
       properties:
         type:
           type: string
@@ -1106,9 +1115,15 @@ components:
           type: string
           description: additional caption for the image. It is shown on the uploaded image when the channel supports this
           example: Tyntec Logo
+      example:
+        type: image
+        url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     DocumentMedia:
       type: object
       description: Document to be send
+      required:
+        - type
+        - url
       properties:
         type:
           type: string
@@ -1128,9 +1143,17 @@ components:
           type: string
           description: File name of the document to be shown. It is shown on the uploaded document when the channel supports this
           example: tyntec_pricelist.pdf
+      example:
+        type: document
+        url: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+        caption: Tyntec Pricelist
+        filename: tyntec_pricelist.pdf
     VideoMedia:
       type: object
       description: Video file to be send
+      required:
+        - type
+        - url
       properties:
         type:
           type: string
@@ -1146,6 +1169,10 @@ components:
           type: string
           description: Additional caption for the video. It is shown on the uploaded video when the channel supports this
           example: Tyntec Party
+      example:
+        type: video
+        url: http://techslides.com/demos/sample-videos/small.mp4
+        caption: Tyntec Party
     Template:
       type: object
       description: The message template to be send.
@@ -1185,8 +1212,16 @@ components:
           policy: deterministic
           example: en
         components:
-          - default: Peter
-          - default: tyntec
+          - type: header
+            parameters:
+              - type: media
+                media:
+                  type: image
+                  url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+          - type: body
+            parameters:
+              - type: text
+                text: Hi!
     Language:
       type: object
       description: Language settings for the template
