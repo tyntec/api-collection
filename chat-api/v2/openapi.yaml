@@ -1076,18 +1076,18 @@ components:
         - $ref: '#/components/schemas/VideoMedia'
     AudioMedia:
       type: object
-      description: Audio to be send
+      description: Audio file to be send
       properties:
         type:
           type: string
           description: What kind of media should be send
           enum:
             - audio
-          example: image
+          example: audio
         url:
           type: string
           description: the url of the location where the audio file is stored
-          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+          example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
     ImageMedia:
       type: object
       description: Image to be send
@@ -1119,7 +1119,7 @@ components:
         url:
           type: string
           description: the url of the location where the document is stored
-          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+          example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
         caption:
           type: string
           description: Additional caption for the document. It is shown on the uploaded document when the channel supports this
@@ -1130,18 +1130,18 @@ components:
           example: tyntec_pricelist.pdf
     VideoMedia:
       type: object
-      description: Video to be send
+      description: Video file to be send
       properties:
         type:
           type: string
           description: What kind of media should be send
           enum:
             - video
-          example: image
+          example: video
         url:
           type: string
           description: the url of the location where the video is stored
-          example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg
+          example: http://techslides.com/demos/sample-videos/small.mp4
         caption:
           type: string
           description: Additional caption for the video. It is shown on the uploaded video when the channel supports this
