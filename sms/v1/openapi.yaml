@@ -121,7 +121,7 @@ paths:
           description: |
             The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 153 characters
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
             per concatenated message.
             - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
             per concatenated message.
@@ -306,7 +306,7 @@ paths:
           description: |
             The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 153 characters
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
             per concatenated message.
             - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
             per concatenated message.
