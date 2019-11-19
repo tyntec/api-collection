@@ -215,7 +215,7 @@ paths:
       - $ref: '#/components/parameters/MoMessageId'
     put:
       operationId: markMessageAsRead
-      summary: Marks a previously received message as read
+      summary: Mark received message as read
       description: Marks a previously received message as read
       tags:
         - "Receive messages"
