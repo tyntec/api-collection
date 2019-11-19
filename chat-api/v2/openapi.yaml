@@ -222,8 +222,6 @@ paths:
       responses:
         200:
           description: Message was successfully marked as read
-        403:
-          $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/MoMessageNotFound'
         default:
