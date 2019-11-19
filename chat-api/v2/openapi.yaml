@@ -210,6 +210,24 @@ paths:
                 status: 404
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/messages/{message-id}:
+    parameters:
+      - $ref: '#/components/parameters/MoMessageId'
+    put:
+      operationId: markMessageAsRead
+      summary: Marks a previously received message as read
+      description: Marks a previously received message as read
+      tags:
+        - "Receive messages"
+      responses:
+        200:
+          description: Message was successfully marked as read
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/MoMessageNotFound'
+        default:
+          $ref: '#/components/responses/Default'
   /messages/{message-id}/status:
     get:
       operationId: checkMessageStatus
@@ -698,6 +716,15 @@ components:
           example:
             status: 404
             title: Phone number unknown
+    MoMessageNotFound:
+      description: No MO Message found for the given id
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 404
+            title: Not Found
     PhoneNumberOrGroupIdUnknown:
       description: The phone number or group id does not exists
       content:
@@ -759,6 +786,14 @@ components:
         type: string
         format: uuid
         example: 77185196-664a-43ec-b14a-fe97036c697f
+    MoMessageId:
+      name: message-id
+      in: path
+      required: true
+      description: The id of the mo message
+      schema:
+        type: string
+        example: ABEGSRcolTdUAhCDTh0Viu2YwDb751d6V33t
     PhoneNumber:
       name: phone-number
       in: path
