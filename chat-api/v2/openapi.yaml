@@ -220,7 +220,7 @@ paths:
       - $ref: '#/components/parameters/MoMessageId'
     put:
       operationId: markWhatsAppMessageAsRead
-      summary: Mark received whatsapp message as read
+      summary: Mark whatsapp message as read
       description: Marks a previously received whatsapp message as read
       tags:
         - "Receive messages"
