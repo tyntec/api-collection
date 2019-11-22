@@ -254,7 +254,7 @@ paths:
       parameters:
         - name: applicationId
           in: path
-          description: applicationId to be deleted
+          description: Application ID to be deleted
           required: true
           type: string
       responses:
@@ -391,7 +391,7 @@ paths:
       parameters:
         - name: number
           in: query
-          description: number
+          description: The destination telephone number in [E.164](https://en.wikipedia.org/wiki/E.164) format
           required: true
           type: string
       responses:
@@ -435,7 +435,7 @@ paths:
       parameters:
         - name: number
           in: query
-          description: The number you want to use in E164 format
+          description: The destination telephone number in [E.164](https://en.wikipedia.org/wiki/E.164) format
           required: true
           type: string
         - name: applicationId
@@ -488,7 +488,7 @@ paths:
           type: string
         - name: pinLength
           in: query
-          description: Override the pin length setting of the application
+          description: The length of the auto generated PIN length. PIN length can be between 4-11 digits.
           required: false
           type: string
       responses:
@@ -526,7 +526,7 @@ paths:
       parameters:
         - name: otpId
           in: path
-          description: otpId
+          description: The OTP ID that the code should be resent
           required: true
           type: string
       responses:
@@ -618,7 +618,7 @@ paths:
       parameters:
         - name: otpId
           in: path
-          description: otpId
+          description: The OTP ID that the code should be resent
           required: true
           type: string
       responses:
@@ -653,7 +653,7 @@ paths:
       parameters:
         - name: otpId
           in: path
-          description: otpId
+          description: The OTP ID that the code should be resent
           required: true
           type: string
       responses:
@@ -693,7 +693,7 @@ paths:
       parameters:
         - name: otpId
           in: path
-          description: otpId
+          description: The OTP ID that the code should be resent
           required: true
           type: string
         - name: otpCode
@@ -733,46 +733,63 @@ paths:
 definitions:
   OtpStatusEntity:
     type: object
-    title: Otp Status
     properties:
       accountId:
+        description: This is your 2FA accountId in the tyntec system. You cannot change this value
         type: string
       applicationId:
+        description: The Universally Unique ID (UUID) that identifies the specific application used to deliver this OTP
         type: string
       attemptCount:
+        description: The number of attempts made for this OTP to be validated
         type: integer
         format: int32
       created:
+        description: The time that the OTP request was created in milliseconds
         type: integer
         format: int64
       expire:
+        description: The time that the OTP will expire in milliseconds
         type: integer
         format: int64
       number:
+        description: The destination telephone number in [E.164](https://en.wikipedia.org/wiki/E.164) format
         type: string
       otpId:
+        description: The OTP ID that the code should be resent
         type: string
       otpStatus:
+        description: |
+          The OTP status. Possible values, ACTIVE, when the OTP is still active; VERIFIED, when the OTP was verified successfully;
+          EXPIRED, when the OTP expired; TOO_MANY_ATTEMPTS, when the OTP validation requests exceeded the maximum allowed by the application configuration.
         type: string
       referenceId:
+        description: Set your custom reference ID
         type: string
       timestampCreated:
+        description: The string timestamp “created” representation in UTC Z format
         type: string
       timestampExpire:
+        description: The string timestamp “expire” representation in UTC Z format
         type: string
   StatusEvent:
     type: object
     properties:
       created:
+        description: Timestamp in [Epoch/Unix time](https://en.wikipedia.org/wiki/Unix_time)
         type: integer
         format: int64
       status:
+        description: Event status. Possible values success/failed/null
         type: string
       statusText:
+        description: The status reported by the deivery system
         type: string
       timestampCreated:
+        description: The string timestamp “created” representation in UTC Z format
         type: string
       type:
+        description: Refere to the next table regarding all event types
         type: string
   TwoFactorAuthApplicationEntity:
     type: object
@@ -798,7 +815,7 @@ definitions:
       pinLength:
         type: integer
         format: int32
-        description: The length of a pin
+        description: The length of the auto generated PIN length. PIN length can be between 4-11 digits.
         example: 4
       sender:
         type: string
@@ -813,11 +830,15 @@ definitions:
     title: ErrorResponse
     properties:
       code:
+        description: The reason for an unsuccessful attempt
         type: string
       id:
+        description: Error code ID
         type: string
       message:
+        description: Textual representation of the code, containing further information
         type: string
       timestamp:
+        description: Timestamp in [Epoch/Unix time](https://en.wikipedia.org/wiki/Unix_time)
         type: integer
         format: int64
