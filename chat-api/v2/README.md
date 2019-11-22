@@ -2,13 +2,17 @@
 
 ## 2.7
 
-This release introduces rich template to the WhatsApp API.
+This release introduces rich media notifications to the WhatsApp API as well the support of the read indicator.
 
-Rich templates allow you to send apart from the classic text templates as well image and pdf files as templated messages to your customers.
+Rich media notifications allow you to send apart from the classic text templates as well image and pdf files as templated messages to your customers.
 
 **Note** Please be aware that the rich templates require to request a specific template **per** file type you want to send.
 
 ### Features
+
+#### Read indicator on user messages
+
+You can now set the read indicator (double blue check mark on WhatsApp) on messages received by your user.
 
 #### Support of rich templates via WhatsApp
 
