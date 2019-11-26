@@ -251,6 +251,21 @@ paths:
           $ref: '#/components/responses/MessageIdUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers:
+    get:
+      operationId: listAllPhoneNumbers
+      summary: Lists phone numbers
+      description: Lists all phone numbers accessible for the given credentials
+
+      responses:
+        200:
+          description: Phone numbers assigned to the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppPhoneNumbers'
+        default:
+          $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/groups:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -2429,3 +2444,21 @@ components:
           - https://api.tyntec.com/reference
         vertical: Professional Services
         about: Hey there! I am using WhatsApp.
+    WhatsAppPhoneNumbers:
+      type: array
+      items:
+        $ref: '#/components/schemas/WhatsAppPhoneNumber'
+    WhatsAppPhoneNumber:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+        displayPhoneNumber:
+          type: string
+        verifiedName:
+          type: string
+        qualityRating:
+          type: string
+        status:
+          type: string
+
