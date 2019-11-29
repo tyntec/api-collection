@@ -1014,6 +1014,7 @@ components:
             - url
             - media
             - location
+            - contact
           description: What kind of payload is used
           example: template
         text:
@@ -1041,6 +1042,8 @@ components:
           default: false
           description: Should a preview of the url be rendered. This will only have an effect on text messages.
           example: true
+        contact:
+          $ref: '#/components/schemas/Contact'
       example:
         from: "1233423454"
         contentType: media
@@ -1441,6 +1444,122 @@ components:
           description: Optional address, will only be rendered if name is set
           example:
             tyntec GmbH, Semerteichstraße, Dortmund
+    Contact:
+      type: object
+      description: Contact object
+      properties:
+        birthday:
+          type: String
+          description: Birthday of the contact
+          example:
+            2018-01-01
+        addresses:
+          type: array
+          description: List of addresses assigned to the contact
+          items:
+            - $ref: '#/components/schemas/Address'
+        emails:
+          type: array
+          description: List of emails assigned to the contact
+          items:
+            - $ref: '#/components/schemas/Email'
+        ims:
+          type: array
+          description: List of IMS accounts assigned to the contact
+          items:
+            - $ref: '#/components/schemas/IMS'
+        name:
+          $ref: '#/components/schemas/Name'
+        org:
+          $ref: '#/components/schemas/Organisation'
+        phones:
+          type: array
+          description: List of phone numbers assigned to the contact
+          items:
+            - $ref: '#/components/schemas/ContactPhone'
+        urls:
+          type: array
+          description: List of urls assigned to the contact
+          items:
+            - $ref: '#/components/schemas/ContactUrl'
+    Address:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        countryCode:
+          type: string
+        state:
+          type: string
+        street:
+          type: string
+        type:
+          type: string
+        zip:
+          type: string
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
+        type:
+          type: string
+    IMS:
+      type: object
+      properties:
+        service:
+          type: string
+        userId:
+          type: string
+    Name:
+      type: object
+      properties:
+        prefix:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        suffix:
+          type: string
+        formattedName:
+          type: string
+    Organisation:
+      type: object
+      properties:
+        company:
+          type: string
+        department:
+          type: string
+        title:
+          type: string
+    ContactPhone:
+      type: object
+      description: Phone entry of a contact
+      properties:
+        phone:
+          type: string
+          description: Phone number
+        type:
+          type: string
+          description: Type of phone number
+        whatsAppId:
+          type: string
+          description: WhatsApp id of the contact
+    ContactUrl:
+      type: object
+      description: URL of a contact
+      properties:
+        url:
+          type: string
+          description: URL of a contact
+        type:
+          type: string
+          description: Type of URL
     MessageResponse:
       type: object
       required:
@@ -1969,6 +2088,7 @@ components:
             - url
             - media
             - location
+            - contact
           description: What kind of payload is used
           example: media
         text:
@@ -1983,6 +2103,8 @@ components:
           $ref: '#/components/schemas/MoMedia'
         location:
           $ref: '#/components/schemas/Location'
+        contact:
+          $ref: '#/components/schemas/Contact'
       example:
         contentType: media
         media:
