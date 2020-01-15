@@ -391,6 +391,66 @@ paths:
           $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getGroupAdmins
+      summary: Get group admins
+      description: Returns current admins of a group
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: List of admins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupParticipants'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins/{whats-app-id}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+      - $ref: '#/components/parameters/WhatsAppId'
+    put:
+      summary: Promote a participant
+      description: |
+        Promotes the user identified by the id to a group admin.
+
+        **Note** : This operation enables the user to manage the group participants.
+      operationId: promoteToGroupAdmin
+      responses:
+        200:
+          description: User was successfully promoted
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: demoteAsGroupAdmin
+      summary: Demotes the user as a group admin
+      description: |
+        Demotes the user identified by the id from a group admin.
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: User was successfully demoted as a group admin
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/settings/icon:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -807,6 +867,14 @@ components:
         minLength: 4
         maxLength: 15
       example: 4923147790717
+    WhatsAppId:
+      name: whats-app-id
+      in: path
+      required: true
+      description: Whatsapp id of a user
+      schema:
+        type: string
+        example: 4923147790717
   schemas:
     MessageRequest:
       type: object
