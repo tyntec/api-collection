@@ -12,7 +12,21 @@ You can now send a contact to a WhatsApp user as well receive an Inbound Message
 
 You can now promote and demote participants of a group to group admins.
 
-This change adds as well two events indicating the promotion and demotion of a user.
+This change adds as well the events 
+
+ - ``WhatsAppGroupEvent::userPromoted`` and
+ - ``WhatsAppGroupEvent::userDemoted``
+
+indicating the promotion and demotion of a user.
+
+#### WhatsApp group icon events
+
+When a user modifies the group icon, you can now receive the events 
+
+ - ``WhatsAppGroupEvent::iconChanged`` and 
+ - ``WhatsAppGroupEvent::iconDeleted``
+ 
+to get aware of this situation
 
 #### Deletion of WhatsApp profile logo
 
