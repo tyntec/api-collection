@@ -224,6 +224,14 @@ paths:
       description: Marks a previously received whatsapp message as read
       tags:
         - "Receive messages"
+      requestBody:
+        requestBody:
+          description: The status change to execute
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppMessageStatusUpdate'
       responses:
         200:
           description: Message was successfully marked as read
@@ -2429,3 +2437,11 @@ components:
           - https://api.tyntec.com/reference
         vertical: Professional Services
         about: Hey there! I am using WhatsApp.
+    WhatsAppMessageStatusUpdate:
+      type: object
+      description: Change of the message status of an previously send WhatsApp message
+      properties:
+        status:
+          type: string
+          enum:
+            - read
