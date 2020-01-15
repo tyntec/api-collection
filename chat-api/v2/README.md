@@ -1,13 +1,5 @@
 # Release notes
 
-## 2.8
-
-### Features
-
-#### Support for sending and receiving contacts
-
-You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contact``.  
-
 ## 2.7
 
 This release introduces rich media notifications to the WhatsApp API as well the support of the read indicator.
