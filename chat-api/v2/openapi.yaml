@@ -225,13 +225,12 @@ paths:
       tags:
         - "Receive messages"
       requestBody:
-        requestBody:
-          description: The status change to execute
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppMessageStatusUpdate'
+        description: The status change to execute
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppMessageStatusUpdate'
       responses:
         200:
           description: Message was successfully marked as read
