@@ -2381,6 +2381,10 @@ components:
             - WhatsAppGroupEvent::userLeft
             - WhatsAppGroupEvent::subjectChanged
             - WhatsAppGroupEvent::descriptionChanged
+            - WhatsAppGroupEvent::userPromoted
+            - WhatsAppGroupEvent::userDemoted
+            - WhatsAppGroupEvent::iconChanged
+            - WhatsAppGroupEvent::iconDeleted
         channel:
           type: string
           description: Channel which triggered the event. Is always _whatsapp_
@@ -2416,7 +2420,13 @@ components:
             This is an example description
         users:
           type: array
-          description: Accounts left or joined the group. Will only be present on _userJoined_ or _userLeft_
+          description: |
+             Accounts left or joined the group. Will only be present on
+
+             - _userJoined_
+             - _userLeft_
+             - _userPromoted_
+             - _userDemoted_
           items:
             type: string
           example:
