@@ -12,6 +12,8 @@ You can now send a contact to a WhatsApp user as well receive an Inbound Message
 
 You can now promote and demote participants of a group to group admins.
 
+This change adds as well two events indicating the promotion and demotion of a user.
+
 #### Deletion of WhatsApp profile logo
 
 The logo of the profile can now removed
