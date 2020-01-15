@@ -1596,9 +1596,6 @@ components:
           type: string
           description: Type of phone number
           example: WORK
-        whatsAppId:
-          type: string
-          description: WhatsApp id of the contact
     ContactUrl:
       type: object
       description: URL of a contact
