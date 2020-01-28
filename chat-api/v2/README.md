@@ -1,5 +1,49 @@
 # Release notes
 
+## 2.8
+
+### Features
+
+#### Support for sending and receiving contacts
+
+You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contacts``.  
+
+#### WhatsApp group admin management
+
+You can now promote and demote participants of a group to group admins.
+
+This change also adds the events 
+
+ - ``WhatsAppGroupEvent::userPromoted`` and
+ - ``WhatsAppGroupEvent::userDemoted``
+
+indicating the promotion and demotion of a user.
+
+#### WhatsApp group icon events
+
+When a user modifies the group icon, you can now receive the events 
+
+ - ``WhatsAppGroupEvent::iconChanged`` and 
+ - ``WhatsAppGroupEvent::iconDeleted``
+ 
+to get aware of this situation
+
+#### Deletion of WhatsApp profile logo
+
+The logo of the profile can now removed
+
+#### Public WhatsApp profile logo link 
+
+The logo resource supports now retrieval of the profile logo via the public WhatsApp link.
+
+### Fixes
+
+#### Mark message as read not working without body
+
+The documentation of mark message as read capability of WhatsApp missed the required body
+
+    { "status" : "read" } 
+
 ## 2.7
 
 This release introduces rich media notifications to the WhatsApp API as well the support of the read indicator.
