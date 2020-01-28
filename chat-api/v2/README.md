@@ -6,13 +6,13 @@
 
 #### Support for sending and receiving contacts
 
-You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contact``.  
+You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contacts``.  
 
 #### WhatsApp group admin management
 
 You can now promote and demote participants of a group to group admins.
 
-This change adds as well the events 
+This change also adds the events 
 
  - ``WhatsAppGroupEvent::userPromoted`` and
  - ``WhatsAppGroupEvent::userDemoted``
