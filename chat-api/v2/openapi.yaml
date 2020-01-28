@@ -1014,7 +1014,7 @@ components:
             - url
             - media
             - location
-            - contact
+            - contacts
           description: What kind of payload is used
           example: template
         text:
@@ -1042,8 +1042,10 @@ components:
           default: false
           description: Should a preview of the url be rendered. This will only have an effect on text messages.
           example: true
-        contact:
-          $ref: '#/components/schemas/Contact'
+        contacts:
+          type: array
+          items:
+           - $ref: '#/components/schemas/Contact'
       example:
         from: "1233423454"
         contentType: media
@@ -2136,7 +2138,7 @@ components:
             - url
             - media
             - location
-            - contact
+            - contacts
           description: What kind of payload is used
           example: media
         text:
@@ -2151,8 +2153,10 @@ components:
           $ref: '#/components/schemas/MoMedia'
         location:
           $ref: '#/components/schemas/Location'
-        contact:
-          $ref: '#/components/schemas/Contact'
+        contacts:
+          type: array
+          items:
+            - $ref: '#/components/schemas/Contact'
       example:
         contentType: media
         media:
