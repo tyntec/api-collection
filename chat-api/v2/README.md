@@ -16,7 +16,7 @@ Applications will allow you to control which events should be delivered to your 
 The level of control is down to the single event. This enables you to route different event to
  different webhooks.
  
-This release only contains a default application. The default application acts as the global fallback
+This release only provides the default application. The default application acts as the global fallback
 in case no other application is configured and was attached to the messaging request.
 
 In the future custom applications will be introduced. These are bound to a channel. A channel is combination of channel type 
