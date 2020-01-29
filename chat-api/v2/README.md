@@ -2,7 +2,25 @@
 
 ## 2.8
 
+This release introduces the support of WhatsApp contact messages, the WhatsApp group admin API.
+And also the first release of the applications API. 
+
 ### Features
+
+#### Applications API - First release
+
+This release starts with the introduction of the concept of applications.
+
+Applications will allow you to control which events should be delivered to your webhook.
+
+The level of control is down to the single event. This enables you to route different event to
+ different webhooks.
+ 
+This release only contains a default application. The default application acts as the global fallback
+in case no other application is configured and was attached to the messaging request.
+
+In the future custom applications will be introduced. These are bound to a channel. A channel is combination of channel type 
+(SMS, WhatsApp, ..) and sender id. 
 
 #### Support for sending and receiving contacts
 
