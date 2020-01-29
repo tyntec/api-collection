@@ -796,6 +796,10 @@ paths:
       responses:
         201:
           description: Webhooks have been successfully saved.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   securitySchemes:
     ApiKeyAuth:
