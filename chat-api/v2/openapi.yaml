@@ -756,13 +756,14 @@ paths:
       description: Lists all applications configured for the APIKey
       responses:
         200:
-          description: List of applications. May be empty
+          description: List of applications. Will never be empty
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/DefaultApplicationResponse'
+                minItems: 1
   /applications/default:
     get:
       tags:
@@ -794,7 +795,7 @@ paths:
             schema:
               $ref: "#/components/schemas/DefaultApplicationUpdate"
       responses:
-        201:
+        204:
           description: Webhooks have been successfully saved.
         400:
           $ref: '#/components/responses/BadRequest'
