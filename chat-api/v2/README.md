@@ -19,8 +19,7 @@ The level of control is down to the single event. This enables you to route diff
 This release only provides the default application. The default application acts as the global fallback
 in case no other application is configured and was attached to the messaging request.
 
-In the future custom applications will be introduced. These are bound to a channel. A channel is combination of channel type 
-(SMS, WhatsApp, ..) and sender id. 
+In a future release custom applications will be introduced. They will allow to specify webhooks per set of channels.
 
 #### Support for sending and receiving contacts
 
