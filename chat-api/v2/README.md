@@ -7,59 +7,59 @@ And also the first release of the applications API.
 
 ### Features
 
-#### Applications API - First release
+#### Applications API - First Release
 
-This release starts with the introduction of the concept of applications.
+This release starts with an introduction of applications.
 
 Applications will allow you to control which events should be delivered to your webhook.
 
-The level of control is down to the single event. This enables you to route different event to
- different webhooks.
- 
-This release only provides the default application. The default application acts as the global fallback
-in case no other application is configured and was attached to the messaging request.
+The level of control is down to the single event. This enables you to route different events to
+different webhooks.
 
-In a future release custom applications will be introduced. They will allow to specify webhooks per set of channels.
+This release only provides the default application, which acts as the global fallback
+in case no other application was configured and attached to the messaging request.
 
-#### Support for sending and receiving contacts
+In the future, custom applications will be introduced. These will allow specific webhooks to be used for each set of channels.
+
+#### Support for Sending and Receiving Contacts
 
 You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contacts``.  
 
-#### WhatsApp group admin management
+#### WhatsApp Group Admin Management
 
 You can now promote and demote participants of a group to group admins.
 
 This change also adds the events 
 
- - ``WhatsAppGroupEvent::userPromoted`` and
- - ``WhatsAppGroupEvent::userDemoted``
+- ``WhatsAppGroupEvent::userPromoted`` and
+- ``WhatsAppGroupEvent::userDemoted``
 
 indicating the promotion and demotion of a user.
 
-#### WhatsApp group icon events
+#### WhatsApp Group Icon Events
 
-When a user modifies the group icon, you can now receive the events 
+When a user modifies the group icon, you can now receive the following events: 
 
- - ``WhatsAppGroupEvent::iconChanged`` and 
+- ``WhatsAppGroupEvent::iconChanged`` and 
  - ``WhatsAppGroupEvent::iconDeleted``
- 
-to get aware of this situation
 
-#### Deletion of WhatsApp profile logo
+to stay informed of any changes.
 
-The logo of the profile can now removed
+#### Deletion of WhatsApp Profile Logo
 
-#### Public WhatsApp profile logo link 
+The logo of the profile can now be removed
+
+#### Public WhatsApp Profile Logo Link 
 
 The logo resource supports now retrieval of the profile logo via the public WhatsApp link.
 
 ### Fixes
 
-#### Mark message as read not working without body
+#### Marking a message as read will not work without the following body
 
-The documentation of mark message as read capability of WhatsApp missed the required body
+The documentation of marking a message as read, which is a capability of WhatsApp, missed the required body:
 
-    { "status" : "read" } 
+    { "status" : "read" }
 
 ## 2.7
 
