@@ -1090,7 +1090,8 @@ components:
             policy: deterministic
             code: en
           parameters:
-            - default: Mr. Doe
+            - default: Mr.
+            - default: Doe
     SMSRequest:
       type: object
       description: |
@@ -1183,7 +1184,7 @@ components:
         contacts:
           type: array
           items:
-           - $ref: '#/components/schemas/Contact'
+            $ref: '#/components/schemas/Contact'
       example:
         from: "1233423454"
         contentType: media
@@ -1387,6 +1388,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TemplateParameter'
+          example:
+           - default: Mr.
+           - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -1589,7 +1593,7 @@ components:
       description: Contact object
       properties:
         birthday:
-          type: String
+          type: string
           description: Birthday of the contact
           example:
             2018-01-01
@@ -1597,17 +1601,17 @@ components:
           type: array
           description: List of addresses assigned to the contact
           items:
-            - $ref: '#/components/schemas/Address'
+            $ref: '#/components/schemas/Address'
         emails:
           type: array
           description: List of emails assigned to the contact
           items:
-            - $ref: '#/components/schemas/Email'
+            $ref: '#/components/schemas/Email'
         ims:
           type: array
           description: List of IMS accounts assigned to the contact
           items:
-            - $ref: '#/components/schemas/IMS'
+            $ref: '#/components/schemas/IMS'
         name:
           $ref: '#/components/schemas/Name'
         org:
@@ -1616,12 +1620,12 @@ components:
           type: array
           description: List of phone numbers assigned to the contact
           items:
-            - $ref: '#/components/schemas/ContactPhone'
+            $ref: '#/components/schemas/ContactPhone'
         urls:
           type: array
           description: List of urls assigned to the contact
           items:
-            - $ref: '#/components/schemas/ContactUrl'
+            $ref: '#/components/schemas/ContactUrl'
     Address:
       type: object
       description: Address of a contact
@@ -2296,7 +2300,7 @@ components:
         contacts:
           type: array
           items:
-            - $ref: '#/components/schemas/Contact'
+            $ref: '#/components/schemas/Contact'
       example:
         contentType: media
         media:
@@ -2786,6 +2790,17 @@ components:
           items:
             $ref: '#/components/schemas/Webhook'
           minLength: 1
+      example:
+        id: default
+        name: Default Application
+        webhooks:
+          - events:
+            - MoMessage
+            callbackUrl: https://some-call-back.service.com
+          - events:
+            - MessageStatus::deleted
+            - MessageStatus::accepted
+            callbackUrl: https://some-other-call-back.service.com
     Webhook:
       description: >
         A webhook associates one or more event types to a callback URL. In other words,
@@ -2807,3 +2822,8 @@ components:
           description: The URL to forward the event to. Callback URLs should start with 'https://'.
           example:
             https://some-call-back.service.com
+      example:
+        events:
+          - MessageStatus::deleted
+          - MessageStatus::accepted
+        callbackUrl: https://some-other-call-back.service.com
