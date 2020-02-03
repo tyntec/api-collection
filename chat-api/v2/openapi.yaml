@@ -98,7 +98,16 @@ tags:
       - business category
       - websites
       - about
-      
+  - name: "Applications"
+    description: |
+      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
+      implementation.
+
+      **Please note**:
+
+       - By now, only a default application is supported. The extension to custom applications is planned for future releases
+       - The API merges events pointing to the same callback URL into one set.
+       - When an update of a callback URL is executed, the whole webhook definition must be restated.
 paths:
   /messages:
     post:
@@ -224,6 +233,13 @@ paths:
       description: Marks a previously received whatsapp message as read
       tags:
         - "Receive messages"
+      requestBody:
+        description: The status change to execute
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppMessageStatusUpdate'
       responses:
         200:
           description: Message was successfully marked as read
@@ -385,6 +401,68 @@ paths:
       responses:
         200:
           description: Participants removed from group
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getGroupAdmins
+      summary: Get group admins
+      description: Returns current admins of a group
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: List of admins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupParticipants'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins/{whats-app-id}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+      - $ref: '#/components/parameters/WhatsAppId'
+    put:
+      summary: Promote a participant
+      description: |
+        Promotes the participant identified by the id to a group admin.
+
+        **Note** : This operation enables the user to manage the group participants.
+      operationId: promoteToGroupAdmin
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: User was successfully promoted.
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: demoteAsGroupAdmin
+      summary: Demote the admin
+      description: |
+        Demotes the admin identified by the id to a participant.
+      tags:
+        - "WA Group management"
+      responses:
+        200:
+          description: Admin was successfully demoted to a participant.
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -671,6 +749,61 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /applications:
+    get:
+      tags:
+        - "Applications"
+      summary: List all applications
+      operationId: listApplications
+      description: Lists all applications configured for the APIKey
+      responses:
+        200:
+          description: List of applications. Will never be empty
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DefaultApplicationResponse'
+                minItems: 1
+  /applications/default:
+    get:
+      tags:
+        - "Applications"
+      summary: Get default application
+      operationId: getDefaultApplication
+      description: Returns default application configured for the APIKey
+      responses:
+        200:
+          description: Current definition of the default application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultApplicationResponse'
+    patch:
+      tags:
+        - "Applications"
+      summary: Update default application
+      operationId: updateDefaultApplication
+      description: |
+        The operation will save the specified webhooks. Makes merge(replacement)
+        operation on existing event types for newly defined webhooks.
+        Any other event type of the existing webhooks will remain associated
+        with the previous callback URL.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DefaultApplicationUpdate"
+      responses:
+        204:
+          description: Webhooks have been successfully saved.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -807,6 +940,14 @@ components:
         minLength: 4
         maxLength: 15
       example: 4923147790717
+    WhatsAppId:
+      name: whats-app-id
+      in: path
+      required: true
+      description: Whatsapp id of a user
+      schema:
+        type: string
+        example: 4923147790717
   schemas:
     MessageRequest:
       type: object
@@ -952,7 +1093,8 @@ components:
             policy: deterministic
             code: en
           parameters:
-            - default: Mr. Doe
+            - default: Mr.
+            - default: Doe
     SMSRequest:
       type: object
       description: |
@@ -1014,6 +1156,7 @@ components:
             - url
             - media
             - location
+            - contacts
           description: What kind of payload is used
           example: template
         text:
@@ -1041,6 +1184,10 @@ components:
           default: false
           description: Should a preview of the url be rendered. This will only have an effect on text messages.
           example: true
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
       example:
         from: "1233423454"
         contentType: media
@@ -1244,6 +1391,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TemplateParameter'
+          example:
+           - default: Mr.
+           - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -1441,6 +1591,170 @@ components:
           description: Optional address, will only be rendered if name is set
           example:
             tyntec GmbH, Semerteichstraße, Dortmund
+    Contact:
+      type: object
+      description: Contact object
+      properties:
+        birthday:
+          type: string
+          description: Birthday of the contact
+          example:
+            2018-01-01
+        addresses:
+          type: array
+          description: List of addresses assigned to the contact
+          items:
+            $ref: '#/components/schemas/Address'
+        emails:
+          type: array
+          description: List of emails assigned to the contact
+          items:
+            $ref: '#/components/schemas/Email'
+        ims:
+          type: array
+          description: List of IMS accounts assigned to the contact
+          items:
+            $ref: '#/components/schemas/IMS'
+        name:
+          $ref: '#/components/schemas/Name'
+        org:
+          $ref: '#/components/schemas/Organisation'
+        phones:
+          type: array
+          description: List of phone numbers assigned to the contact
+          items:
+            $ref: '#/components/schemas/ContactPhone'
+        urls:
+          type: array
+          description: List of urls assigned to the contact
+          items:
+            $ref: '#/components/schemas/ContactUrl'
+    Address:
+      type: object
+      description: Address of a contact
+      properties:
+        city:
+          type: string
+          description: City name
+          example: Dortmund
+        country:
+          type: string
+          description: Full country name
+          example: Germany
+        countryCode:
+          type: string
+          description: Two-letter code abbreviation
+          example: de
+        state:
+          type: string
+          description: State abbreviation
+          example: NRW
+        street:
+          type: string
+          description: Street name and number
+        type:
+          type: string
+          description: Type of the address
+          example: WORK
+        zip:
+          type: string
+          description: ZIP or postal code
+          example: 44231
+    Email:
+      type: object
+      description: Email of the contact
+      properties:
+        email:
+          type: string
+          description: Email address
+          example: whatsapp@tyntec.com
+        type:
+          type: string
+          description: Type of the email
+          example: WORK
+    IMS:
+      type: object
+      description: IMS of the contact
+      properties:
+        service:
+          type: string
+          description: Type of the email
+          example: WhatsApp
+        userId:
+          type: string
+          description: IMS user id
+          example: 123123123
+    Name:
+      type: object
+      description: |
+        The name of a contact. Apart from the property ``formattedName`` at least one of the other must be set
+      required:
+        - formattedName
+      properties:
+        prefix:
+          type: string
+          description: Prefix of the contacts name
+          example: Mr.
+        firstName:
+          type: string
+          description: First name of the contact
+          example: Peter
+        middleName:
+          type: string
+          description: Middle name of the contact
+          example: Michael
+        lastName:
+          type: string
+          description: Last name of the contact
+          example: Tyntec
+        suffix:
+          type: string
+          description: Suffix of the contacts name
+          example: senior
+        formattedName:
+          type: string
+          description: Completely formatted name
+          example: Mr. Peter Michael Tyntec senior
+    Organisation:
+      type: object
+      description: Organisation associated with the contact
+      properties:
+        company:
+          type: string
+          description: Name of the contact's company
+          example: tyntec GmbH
+        department:
+          type: string
+          description: Name of the contact's department
+          example: Development
+        title:
+          type: string
+          description: Contact's business title
+          example: API Guardian
+    ContactPhone:
+      type: object
+      description: Phone entry of a contact
+      properties:
+        phone:
+          type: string
+          description: Phone number
+          example: +49 231 477 90 813
+        type:
+          type: string
+          description: Type of phone number
+          example: WORK
+    ContactUrl:
+      type: object
+      description: URL of a contact
+      properties:
+        url:
+          type: string
+          description: URL of a contact
+          example: https://www.tyntec.com
+        type:
+          type: string
+          description: Type of URL
+          example: WORK
     MessageResponse:
       type: object
       required:
@@ -1463,21 +1777,7 @@ components:
         - event
       properties:
         event:
-          type: string
-          description: Determines which kind of event is sent
-          enum:
-            - MessageStatus::accepted
-            - MessageStatus::delivered
-            - MessageStatus::seen
-            - MessageStatus::failed
-            - MessageStatus::channelFailed
-            - MessageStatus::unknown
-            - MessageStatus::deleted
-            - MoMessage
-            - WhatsAppGroupEvent::userJoined
-            - WhatsAppGroupEvent::userLeft
-            - WhatsAppGroupEvent::subjectChanged
-            - WhatsAppGroupEvent::descriptionChanged
+          $ref: '#/components/schemas/EventTypes'
         channel:
           type: string
           description: Channel which triggered the event. Can be empty in case of an internal source
@@ -1502,6 +1802,22 @@ components:
         channel: sms
         from: 491672634678
         timestamp: 2019-06-26T11:41:00
+    EventTypes:
+      type: string
+      description: Determines which kind of event is emitted by the API
+      enum:
+        - MoMessage
+        - MessageStatus::accepted
+        - MessageStatus::channelFailed
+        - MessageStatus::deleted
+        - MessageStatus::delivered
+        - MessageStatus::failed
+        - MessageStatus::seen
+        - MessageStatus::unknown
+        - WhatsAppGroupEvent::descriptionChanged
+        - WhatsAppGroupEvent::subjectChanged
+        - WhatsAppGroupEvent::userJoined
+        - WhatsAppGroupEvent::userLeft
     MessageStatus:
       type: object
       description: |
@@ -1969,6 +2285,7 @@ components:
             - url
             - media
             - location
+            - contacts
           description: What kind of payload is used
           example: media
         text:
@@ -1983,6 +2300,10 @@ components:
           $ref: '#/components/schemas/MoMedia'
         location:
           $ref: '#/components/schemas/Location'
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
       example:
         contentType: media
         media:
@@ -2313,6 +2634,10 @@ components:
             - WhatsAppGroupEvent::userLeft
             - WhatsAppGroupEvent::subjectChanged
             - WhatsAppGroupEvent::descriptionChanged
+            - WhatsAppGroupEvent::userPromoted
+            - WhatsAppGroupEvent::userDemoted
+            - WhatsAppGroupEvent::iconChanged
+            - WhatsAppGroupEvent::iconDeleted
         channel:
           type: string
           description: Channel which triggered the event. Is always _whatsapp_
@@ -2348,7 +2673,13 @@ components:
             This is an example description
         users:
           type: array
-          description: Accounts left or joined the group. Will only be present on _userJoined_ or _userLeft_
+          description: |
+             Accounts left or joined the group. Will only be present on
+
+             - _userJoined_
+             - _userLeft_
+             - _userPromoted_
+             - _userDemoted_
           items:
             type: string
           example:
@@ -2429,3 +2760,81 @@ components:
           - https://api.tyntec.com/reference
         vertical: Professional Services
         about: Hey there! I am using WhatsApp.
+    WhatsAppMessageStatusUpdate:
+      type: object
+      description: Change of the message status of a previously send WhatsApp message
+      properties:
+        status:
+          type: string
+          enum:
+            - read
+    DefaultApplicationUpdate:
+      type: object
+      description: Update of the default application
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+      example:
+        - events:
+            - MoMessage
+          callbackUrl: https://some-call-back.service.com
+        - events:
+            - MessageStatus::deleted
+            - MessageStatus::accepted
+          callbackUrl: https://some-other-call-back.service.com
+    DefaultApplicationResponse:
+      type: object
+      description: The default application
+      properties:
+        id:
+          type: string
+          enum:
+            - default
+        name:
+          type: string
+          enum:
+            - Default Application
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+          minLength: 1
+      example:
+        id: default
+        name: Default Application
+        webhooks:
+          - events:
+            - MoMessage
+            callbackUrl: https://some-call-back.service.com
+          - events:
+            - MessageStatus::deleted
+            - MessageStatus::accepted
+            callbackUrl: https://some-other-call-back.service.com
+    Webhook:
+      description: >
+        A webhook associates one or more event types to a callback URL. In other words,
+        it specifies where the events of those types should be forwarded to.
+      type: object
+      properties:
+        events:
+          description: >
+            The types of events that this webhook should be triggered. Note that, although mandatory,
+            the array can be empty. In such a case, the webhook will be triggerred on every
+            event, if no other webhook specific to the type of the event exists.
+          type: array
+          items:
+            $ref: "#/components/schemas/EventTypes"
+          minLength: 0
+        callbackUrl:
+          type: string
+          pattern: "^https://.*"
+          description: The URL to forward the event to. Callback URLs should start with 'https://'.
+          example:
+            https://some-call-back.service.com
+      example:
+        events:
+          - MessageStatus::deleted
+          - MessageStatus::accepted
+        callbackUrl: https://some-other-call-back.service.com
