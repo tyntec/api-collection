@@ -100,14 +100,14 @@ tags:
       - about
   - name: "Applications"
     description: |
-      The Chat API allows you to freely define which events should be send via a callback URL to your webhook
+      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
       implementation.
 
       **Please note**:
 
-       - By now only a default application is supported. The extension to custom applications is planned for future releases
+       - By now, only a default application is supported. The extension to custom applications is planned for future releases
        - The API merges events pointing to the same callback URL into one set.
-       - When an update of a callback URL is executed the whole webhook definition must be restated.
+       - When an update of a callback URL is executed, the whole webhook definition must be restated.
 paths:
   /messages:
     post:
@@ -438,7 +438,7 @@ paths:
     put:
       summary: Promote a participant
       description: |
-        Promotes the user identified by the id to a group admin.
+        Promotes the participant identified by the id to a group admin.
 
         **Note** : This operation enables the user to manage the group participants.
       operationId: promoteToGroupAdmin
@@ -446,7 +446,7 @@ paths:
         - "WA Group management"
       responses:
         200:
-          description: User was successfully promoted
+          description: User was successfully promoted.
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -455,14 +455,14 @@ paths:
           $ref: '#/components/responses/Default'
     delete:
       operationId: demoteAsGroupAdmin
-      summary: Demotes the user as a group admin
+      summary: Demote the admin
       description: |
-        Demotes the user identified by the id from a group admin.
+        Demotes the admin identified by the id to a participant.
       tags:
         - "WA Group management"
       responses:
         200:
-          description: User was successfully demoted as a group admin
+          description: Admin was successfully demoted to a participant.
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -786,10 +786,11 @@ paths:
       summary: Update default application
       operationId: updateDefaultApplication
       description: |
-        The operation will save the specified webhooks. If any of the events types of the
-        new webhooks are also specified for the existing ones, those event types
-        (and only those) will be replaced. Any other event type of the existing webhooks
-        will remain associated with the previous callback URLs.
+        The operation will save the specified webhooks. Makes merge(replacement)
+        operation on existing event types for newly defined webhooks.
+        Any other event type of the existing webhooks will remain associated
+        with the previous callback URL.
+
       requestBody:
         required: true
         content:
@@ -1716,7 +1717,7 @@ components:
           example: Mr. Peter Michael Tyntec senior
     Organisation:
       type: object
-      description: Organisation assoziated with the contact
+      description: Organisation associated with the contact
       properties:
         company:
           type: string
@@ -2761,7 +2762,7 @@ components:
         about: Hey there! I am using WhatsApp.
     WhatsAppMessageStatusUpdate:
       type: object
-      description: Change of the message status of an previously send WhatsApp message
+      description: Change of the message status of a previously send WhatsApp message
       properties:
         status:
           type: string
