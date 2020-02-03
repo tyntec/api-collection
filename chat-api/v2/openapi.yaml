@@ -442,6 +442,8 @@ paths:
 
         **Note** : This operation enables the user to manage the group participants.
       operationId: promoteToGroupAdmin
+      tags:
+        - "WA Group management"
       responses:
         200:
           description: User was successfully promoted
@@ -2773,6 +2775,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Webhook'
+      example:
+        - events:
+            - MoMessage
+          callbackUrl: https://some-call-back.service.com
+        - events:
+            - MessageStatus::deleted
+            - MessageStatus::accepted
+          callbackUrl: https://some-other-call-back.service.com
     DefaultApplicationResponse:
       type: object
       description: The default application
