@@ -2777,13 +2777,14 @@ components:
           items:
             $ref: '#/components/schemas/Webhook'
       example:
-        - events:
-            - MoMessage
-          callbackUrl: https://some-call-back.service.com
-        - events:
-            - MessageStatus::deleted
-            - MessageStatus::accepted
-          callbackUrl: https://some-other-call-back.service.com
+        webhooks:
+          - events:
+              - MoMessage
+            callbackUrl: https://some-call-back.service.com
+          - events:
+              - MessageStatus::deleted
+              - MessageStatus::accepted
+            callbackUrl: https://some-other-call-back.service.com
     DefaultApplicationResponse:
       type: object
       description: The default application
