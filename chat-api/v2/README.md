@@ -1,5 +1,66 @@
 # Release notes
 
+## 2.8
+
+This release introduces the support of WhatsApp contact messages, the WhatsApp group admin API.
+And also the first release of the applications API. 
+
+### Features
+
+#### Applications API - First Release
+
+This release starts with an introduction of applications.
+
+Applications will allow you to control which events should be delivered to your webhook.
+
+The level of control is down to the single event. This enables you to route different events to
+different webhooks.
+
+This release only provides the default application, which acts as the global fallback
+in case no other application was configured and attached to the messaging request.
+
+In the future, custom applications will be introduced. These will allow specific webhooks to be used for each set of channels.
+
+#### Support for Sending and Receiving Contacts
+
+You can now send a contact to a WhatsApp user as well receive an Inbound Message with content type ``contacts``.  
+
+#### WhatsApp Group Admin Management
+
+You can now promote and demote participants of a group to group admins.
+
+This change also adds the events 
+
+- ``WhatsAppGroupEvent::userPromoted`` and
+- ``WhatsAppGroupEvent::userDemoted``
+
+indicating the promotion and demotion of a user.
+
+#### WhatsApp Group Icon Events
+
+When a user modifies the group icon, you can now receive the following events: 
+
+- ``WhatsAppGroupEvent::iconChanged`` and 
+ - ``WhatsAppGroupEvent::iconDeleted``
+
+to stay informed of any changes.
+
+#### Deletion of WhatsApp Profile Logo
+
+The logo of the profile can now be removed
+
+#### Public WhatsApp Profile Logo Link 
+
+The logo resource supports now retrieval of the profile logo via the public WhatsApp link.
+
+### Fixes
+
+#### Marking a message as read will not work without the following body
+
+The documentation of marking a message as read, which is a capability of WhatsApp, missed the required body:
+
+    { "status" : "read" }
+
 ## 2.7
 
 This release introduces rich media notifications to the WhatsApp API as well the support of the read indicator.
