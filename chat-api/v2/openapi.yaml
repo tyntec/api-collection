@@ -96,6 +96,14 @@ tags:
 
       It also provides *read* access to the templates usable by the phone number.
 x-tagGroups:
+  - name: Messaging
+    tags:
+      - "Send messages"
+      - "Receive messages"
+      - "Notifications"
+  - name: General
+    tags:
+      - "Applications"
   - name: WhatsApp
     tags:
       - "WA Account management"
