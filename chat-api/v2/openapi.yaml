@@ -72,42 +72,30 @@ tags:
        - By now, only a default application is supported. The extension to custom applications is planned for future releases
        - The API merges events pointing to the same callback URL into one set.
        - When an update of a callback URL is executed, the whole webhook definition must be restated.
-  - name: "WA Group management"
+  - name: "WA Account management"
     description: |
-      The WA Group management enables you to interact with WhatsApps Group API.
+      The WA Account management grants you access to information about the WhatsApp accounts
+      provisioned for you.
 
-      It allows you to list all created groups, create, update and delete a group and generate invite links.
+      At the moment it does not support requesting new WhatsApp accounts or editing existing ones.
 
-      The general flow for groups is
+      The WhatsApp account and it's subresources can *only* be managed by one of your CPaaS API Account.
 
-      1. Create a new group
-      2. Update the details, eg. the group icon
-      3. Get the invite link to the group
-      4. Send the invite link to the users that should join your group
-      5. Start interacting with the users in the group
-
-      **Note**
-
-       - When sending messages to the group you need to use the group id as *to*. Not the normal phone number of your user.
-       - There are no limits on the number of groups you can create.
-
-      Events genereated from groups are send out as a notification of type _WhatsAppGroupEvent_
-  - name: "WA Settings management"
+      Read access to an account is available for all accounts that are associated with a phone number and thus eligible
+      for sending messages.
+  - name: "WA Template management"
     description: |
-      The WA Settings management enables you to change the following settings of 
-      your WhatsApp instance
-      
-      - logo
-      - profile information
-      
-      Profile information consists of
-      
-      - company address
-      - description
-      - contact email
-      - business category
-      - websites
-      - about
+      The WA Template management enables you to interact with the templates defined for your WhatsApp account.
+
+      We support creating or deleting templates and adding new localizations to an existing template.
+
+      Due to restrictions by WhatsApp editing is not support yet.
+  - name: "WA Phone Number insights"
+    description: |
+      The WA Phone Number insights allows you to get information about the status of a phone number.
+
+      It also provides *read* access to the templates usable by the phone number.
+
 paths:
   /messages:
     post:
@@ -265,6 +253,248 @@ paths:
                 $ref: '#/components/schemas/MessageStatus'
         404:
           $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts:
+    get:
+      operationId: listAllWhatsAppAccounts
+      summary: List WhatsApp accounts
+      tags:
+        - "WA Account management"
+      description: List all WhatsApp accounts managed by this access credentials
+      responses:
+        200:
+          description: WhatsApp accounts managed by this access credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppAccounts'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+    get:
+      operationId: getWhatsAppAccount
+      summary: Get details of an account
+      tags:
+        - "WA Account management"
+      description: Get WhatsApp account
+      responses:
+        200:
+          description: WhatsApp account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppAccount'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/phone-numbers:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+    get:
+      operationId: listPhoneNumbersOfWhatsAppAccount
+      summary: List accounts phone numbers
+      tags:
+        - "WA Account management"
+      description: List all phone numbers of a WhatsApp account
+      responses:
+        200:
+          description: Phone numbers of a WhatsApp account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppPhoneNumbers'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+    get:
+      operationId: listTemplatesOfWhatsAppAccount
+      summary: List accounts templates
+      tags:
+        - "WA Template management"
+      description: List all templates of a WhatsApp account
+      responses:
+        200:
+          description: Templates of a WhatsApp account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppTemplates'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: waSubmitTemplateForReview
+      summary: Submit a template for review
+      description: Creates a new template that is submitted for review
+      tags:
+        - "WA Template management"
+      requestBody:
+        description: |
+          The template for review by Facebook
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppTemplateRequest'
+      responses:
+        201:
+          $ref: '#/components/responses/ResourceCreated'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-name}:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/TemplateName'
+    get:
+      operationId: waGetTemplate
+      summary: Get details of a template
+      description: Get details of a template
+      tags:
+        - "WA Template management"
+      responses:
+        200:
+          description: Specified template of the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppTemplateResponse'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: waDeleteTemplate
+      summary: Delete a template
+      description: |
+        Deletes the template.
+
+        After deleting the template a 30 days grace period is starting.
+        This is indicated by the `expiresAt` property of the localizations
+      tags:
+        - "WA Template management"
+      responses:
+        204:
+          description: Deletion of the template is pendind now
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-name}/localizations:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/TemplateName'
+    get:
+      operationId: waListLocalizations
+      summary: List localizations of a template
+      description: List localizations of a template
+      tags:
+        - "WA Template management"
+      responses:
+        200:
+          description: Localizations of a template.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocalizationResponse'
+                minItems: 1
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      summary: Add a localization
+      operationId: waTemplateAddLocalization
+      description: Adds a localizations to the template. Will be separately reviewed by Facebook
+      tags:
+        - "WA Template management"
+      requestBody:
+        description: |
+          The localization for review @ facebook
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocalizationRequest'
+      responses:
+        201:
+          $ref: '#/components/responses/ResourceCreated'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers:
+    get:
+      tags:
+        - "WA Phone Number insights"
+      operationId: listAllWhatsAppPhoneNumbers
+      summary: Lists phone numbers
+      description: Lists all phone numbers accessible for the given credentials
+
+      responses:
+        200:
+          description: Phone numbers assigned to the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppPhoneNumbers'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWhatsAppPhoneNumber
+      summary: Get details of a phone number
+      tags:
+        - "WA Phone Number insights"
+      description: Retrieves information about the phone number
+
+      responses:
+        200:
+          description: Information about the phone number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppPhoneNumber'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/templates:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getAvailableWhatsAppTemplates
+      summary: List templates available to a phone number
+      tags:
+        - "WA Phone Number insights"
+      description: Lists all available templates for a phone number
+      responses:
+        200:
+          description: Available templates for a phone number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppTemplates'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/groups:
@@ -662,10 +892,10 @@ paths:
       operationId: updateCurrentWAProfile
       summary: Update the profile
       description: |
-        Updates the WhatsApp client profile. 
-        
+        Updates the WhatsApp client profile.
+
         Supports also selective updates.
-        
+
         Removal of an information is done by setting its value to an empty
         string.
       tags:
@@ -722,11 +952,11 @@ paths:
     put:
       operationId: updateCurrentWALogo
       summary: Update the logo
-      description: | 
+      description: |
         Updates the logo
-        
+
         The logo must have a minimal edge size of 500 pixel and must not exceed 5 MB in size.
-        
+
         Recommended size is 640x640 pixel
       tags:
         - "WA Settings management"
@@ -837,13 +1067,22 @@ components:
             allOf:
               - $ref: '#/components/schemas/Problem'
             properties:
-              code: 
-                type : string
+              code:
+                type: string
                 description: error code
           example:
             status: 400
             title: Updating profile failed
             code: 1009
+    WhatsAppAccountUnknown:
+      description: The WhatsApp account does not exists
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 404
+            title: WhatsApp account unknown
     PhoneNumberUnknown:
       description: The phone number does not exists
       content:
@@ -896,6 +1135,13 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    ResourceCreated:
+      description: The requested resource was created
+      headers:
+        Location:
+          schema:
+            type: string
+          description: Location URI of the newly created resource
   parameters:
     GroupId:
       name: group-id
@@ -956,8 +1202,25 @@ components:
       schema:
         type: string
         enum:
-        - link
-        - binary
+          - link
+          - binary
+    WhatsAppAccountId:
+      name: whatsapp-account-id
+      in: path
+      required: true
+      description: WhatsApp account id
+      schema:
+        type: string
+      example: 132923147790717
+    TemplateName:
+      name: template-name
+      in: path
+      required: true
+      description: Referenced template
+      schema:
+        type: string
+        pattern: "[a-z_0-9]+"
+      example: welcome_message
   schemas:
     MessageRequest:
       type: object
@@ -1394,7 +1657,7 @@ components:
         parameters:
           description: |
             Parameter for replacement in the template.
-            
+
             **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
             Instead use components.
           deprecated: true
@@ -1402,8 +1665,8 @@ components:
           items:
             $ref: '#/components/schemas/TemplateParameter'
           example:
-           - default: Mr.
-           - default: Doe
+            - default: Mr.
+            - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -1455,7 +1718,7 @@ components:
           - more then 4 consecutive spaces.
 
         It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
-        
+
         **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
             Instead use components.
       properties:
@@ -2440,7 +2703,7 @@ components:
         currency:
           type: string
           description: The currency in which the pricing is given; corresponding to the currency of the invoice.
-          example : EUR
+          example: EUR
         priceEffective:
           type: string
           description: The date when the “price” became effective.
@@ -2684,12 +2947,12 @@ components:
         users:
           type: array
           description: |
-             Accounts left or joined the group. Will only be present on
+            Accounts left or joined the group. Will only be present on
 
-             - _userJoined_
-             - _userLeft_
-             - _userPromoted_
-             - _userDemoted_
+            - _userJoined_
+            - _userLeft_
+            - _userPromoted_
+            - _userDemoted_
           items:
             type: string
           example:
@@ -2707,6 +2970,8 @@ components:
           - 491672634673
     WhatsAppProfile:
       type: object
+      description: |
+        The current profile of a WhatsApp number.
       properties:
         address:
           type: string
@@ -2737,23 +3002,23 @@ components:
         vertical:
           type: string
           enum:
-           - Automotive
-           - Beauty, Spa and Salon
-           - Clothing and Apparel
-           - Education
-           - Entertainment
-           - Event Planning and Service
-           - Finance and Banking
-           - Food and Grocery
-           - Public Service
-           - Hotel and Lodging
-           - Medical and Health
-           - Non-profit
-           - Professional Services
-           - Shopping and Retail
-           - Travel and Transportation
-           - Restaurant
-           - Other
+            - Automotive
+            - Beauty, Spa and Salon
+            - Clothing and Apparel
+            - Education
+            - Entertainment
+            - Event Planning and Service
+            - Finance and Banking
+            - Food and Grocery
+            - Public Service
+            - Hotel and Lodging
+            - Medical and Health
+            - Non-profit
+            - Professional Services
+            - Shopping and Retail
+            - Travel and Transportation
+            - Restaurant
+            - Other
           description: Industry of the business
           example: Professional Services
         about:
@@ -2824,11 +3089,11 @@ components:
         name: Default Application
         webhooks:
           - events:
-            - MoMessage
+              - MoMessage
             callbackUrl: https://some-call-back.service.com
           - events:
-            - MessageStatus::deleted
-            - MessageStatus::accepted
+              - MessageStatus::deleted
+              - MessageStatus::accepted
             callbackUrl: https://some-other-call-back.service.com
     Webhook:
       description: >
@@ -2865,3 +3130,529 @@ components:
           description: Link to the profile logo
           required: true
           example: https://pps.whatsapp.net/v/123123
+    WhatsAppAccounts:
+      type: array
+      description: List of WhatsApp Business Accounts. Might be empty
+      items:
+        $ref: '#/components/schemas/WhatsAppAccount'
+    WhatsAppAccount:
+      type: object
+      description: A WhatsApp Business Account
+      required:
+        - whatsAppAccountId
+      properties:
+        whatsAppAccountId:
+          type: string
+          description: Id of the WhatsApp Business Account
+          format: uuid
+          example:
+            5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        name:
+          type: string
+          description: Name of the WhatsApp Business Account
+          example:
+            swagger_sample
+        templateNamespace:
+          description: |
+            Template namespace assigned to the WhatsApp Business Account.
+
+            This is used internally and here stated for completeness
+          type: string
+          example:
+            c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        managedBy:
+          type: string
+          description: API account that manages this account
+          example: tynteccpaas
+      example:
+        whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        name: swagger_sample
+        templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        managedBy: tynteccpaas
+    WhatsAppPhoneNumbers:
+      type: array
+      description: List of phone numbers at WhatsApp. Might be empty
+      items:
+        $ref: '#/components/schemas/WhatsAppPhoneNumber'
+    WhatsAppPhoneNumber:
+      type: object
+      description: A phone number assigned to a WhatsApp Business Account
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number
+          example:
+            49123456789
+        displayPhoneNumber:
+          type: string
+          description: The phone number as it is displayed on the app
+          example:
+            +49 123 456789
+        verifiedName:
+          type: string
+          description: |
+            The name shown aside to the number.
+
+            This name will be shown immediately for Official Business Accounts
+          example:
+            Swagger Sample
+        qualityRating:
+          type: string
+          description: |
+            Whats the current quality rating of phone number
+
+            A RED rating will lead to status flagged if the number still receives
+            negative feedback from the users.
+          enum:
+            - GREEN
+            - RED
+            - YELLOW
+          example:
+            GREEN
+        status:
+          type: string
+          description: Status of the number
+          enum:
+            - CONNECTED
+            - PENDING
+            - FLAGGED
+            - RESTRICTED
+            - OFFLINE
+          example:
+            CONNECTED
+        templateNamespace:
+          type: string
+          description: |
+            Template namespace available for this phone number
+
+            This is used internally and here stated for completeness
+          example:
+            c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        whatsAppAccountId:
+          type: string
+          description: Id of the WhatsApp Business Account the number belongs to.
+          format: uuid
+          example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+      example:
+        phoneNumber: 4912345678
+        displayPhonenumber: +49 123 45678
+        verifiedName: Swagger Sample
+        qualityRating: YELLOW
+        status: FLAGGED
+        templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+    WhatsAppTemplateRequest:
+      type: object
+      description: Definition of additional WhatsApp Template
+      properties:
+        name:
+          type: string
+        category:
+          $ref: '#/components/schemas/TemplateCategory'
+        localizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocalizationRequest'
+          minItems: 1
+    LocalizationRequest:
+      type: object
+      description: Request of a localization of a template
+      properties:
+        language:
+          $ref: '#/components/schemas/LanguageCode'
+        components:
+          oneOf:
+            - $ref: '#/components/schemas/NotificationTemplateRequest'
+            - $ref: '#/components/schemas/RichMediaTemplateRequest'
+    NotificationTemplateRequest:
+      type: array
+      items:
+        type: object
+        description: Standard template request without rich media parts
+        required:
+          - type
+          - text
+        properties:
+          type:
+            type: string
+            enum:
+              - BODY
+            default:
+              - BODY
+          text:
+            type: string
+            description: |
+              Template text.
+            maxLength: 1024
+            minLength: 1
+      maxLength: 1
+      minLength: 1
+    RichMediaTemplateRequest:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
+    WhatsAppTemplateHeaderComponentRequest:
+      type: object
+      description: Header component of a template
+      required:
+        - type
+        - format
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - HEADER
+        format:
+          type: string
+          description: Which kind of header
+          enum:
+            - IMAGE
+            - DOCUMENT
+          example:
+            IMAGE
+    WhatsAppTemplateBodyComponentRequest:
+      type: object
+      description: Body component of a template
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - BODY
+        text:
+          type: string
+          description: Specification of the body text
+          maxLength: 160
+          minLength: 1
+          example:
+            Hi {{1}}! Enjoy the spec!
+    WhatsAppTemplateFooterComponentRequest:
+      type: object
+      description: Footer component of a template
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - FOOTER
+        text:
+          type: string
+          description: Specification of the footer text
+          maxLength: 60
+          minLength: 1
+          example:
+            The specification team
+    WhatsAppTemplates:
+      type: array
+      description: List of WhatsApp templates
+      items:
+        $ref: '#/components/schemas/WhatsAppTemplateResponse'
+    WhatsAppTemplateResponse:
+      type: object
+      description: WhatsApp template
+      properties:
+        whatsAppAccountId:
+          type: string
+          description: Id of the WhatsApp Business Account the template belongs to.
+          format: uuid
+          example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        name:
+          type: string
+          description: Name of the template
+          example:
+            swagger_test
+        category:
+          $ref: '#/components/schemas/TemplateCategory'
+        localízations:
+          type: array
+          description: List of localizations of this templates
+          items:
+            $ref: '#/components/schemas/LocalizationResponse'
+          example:
+            status: REJECTED
+            rejectionReason: For this example
+            language: en
+            components:
+              - type: BODY
+                text: Hello {{1}}! How is going?
+              - type: FOOTER
+                text: Your specification team!
+      example:
+        whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        name: swagger_test
+        category: TICKET_UPDATE
+        localizations:
+          - status: REJECTED
+            rejectionReason: For this example
+            language: en
+            components:
+              - type: BODY
+                text: Hello {{1}}! How is going?
+              - type: FOOTER
+                text: Your specification team!
+    LocalizationResponse:
+      type: object
+      description: Localization of a template
+      required:
+        - status
+        - language
+        - components
+      properties:
+        status:
+          type: string
+          description: |
+            Status the localization.
+          enum:
+            - REQUESTED
+            - SUBMIT_FAILED
+            - PENDING
+            - APPROVED
+            - REJECTED
+            - DELETE_PENDING
+            - DELETED
+          example:
+            APPROVED
+        rejectionReason:
+          type: string
+          description: Descriptive text in case of status REJECTED
+          example:
+            not yet
+        language:
+          $ref: '#/components/schemas/LanguageCode'
+        components:
+          type: array
+          description: Set of components defining a template
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentResponse'
+              - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentResponse'
+              - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentResponse'
+          example:
+            - type: BODY
+              text: Hello {{1}}! How is going?
+        lastUpdated:
+          type: string
+          description: At which point in time the last update happen
+          format: date-time
+        expiresAt:
+          type: string
+          description: |
+            When does the localization expire.
+            Only present, when a template is deleted
+          format: date-time
+    WhatsAppTemplateHeaderComponentResponse:
+      type: object
+      description: Header component of a template
+      required:
+        - type
+        - format
+      properties:
+        type:
+          type: string
+          description: Components type
+          enum:
+            - HEADER
+        format:
+          type: string
+          description: Which kind of header
+          enum:
+            - IMAGE
+            - DOCUMENT
+          example:
+            IMAGE
+    WhatsAppTemplateBodyComponentResponse:
+      type: object
+      description: Body component of a template
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Components type
+          enum:
+            - BODY
+        text:
+          type: string
+          description: Specification of the body text
+          example:
+            Hi {{1}}! Enjoy the spec!
+    WhatsAppTemplateFooterComponentResponse:
+      type: object
+      description: Footer component of a template
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Components type
+          enum:
+            - FOOTER
+        text:
+          type: string
+          description: Specification of the footer text
+          example:
+            The specification team
+    TemplateCategory:
+      type: string
+      description: Category of the template
+      enum:
+        - ACCOUNT_UPDATE
+        - ALERT_UPDATE
+        - APPOINTMENT_UPDATE
+        - AUTO_REPLY
+        - ISSUE_RESOLUTION
+        - PAYMENT_UPDATE
+        - PERSONAL_FINANCE_UPDATE
+        - RESERVATION_UPDATE
+        - SHIPPING_UPDATE
+        - TICKET_UPDATE
+        - TRANSPORTATION_UPDATE
+    LanguageCode:
+      type: string
+      description: |
+        Supported language codes
+        * `af` - Afrikaans
+        * `sq` - Albanian
+        * `ar` - Arabic
+        * `az` - Azerbaijani
+        * `bn` - Bengali
+        * `bg` - Bulgarian
+        * `ca` - Catalan
+        * `zh_CN` - Chinese (CHN)
+        * `zh_HK` - Chinese (HKG)
+        * `zh_TW` - Chinese (TAI)
+        * `hr` - Croatian
+        * `cs` - Czech
+        * `da` - Danish
+        * `nl` - Dutch
+        * `en` - English
+        * `en_GB` - English (UK)
+        * `en_US` - English (US)
+        * `et` - Estonian
+        * `fil` - Filipino
+        * `fi` - Finnish
+        * `fr` - French
+        * `de` - German
+        * `el` - Greek
+        * `gu` - Gujarati
+        * `he` - Hebrew
+        * `hi` - Hindi
+        * `hu` - Hungarian
+        * `id` - Indonesian
+        * `ga` - Irish
+        * `it` - Italian
+        * `ja` - Japanese
+        * `kn` - Kannada
+        * `kk` - Kazakh
+        * `ko` - Korean
+        * `lo` - Lao
+        * `lv` - Latvian
+        * `lt` - Lithuanian
+        * `mk` - Macedonian
+        * `ms` - Malay
+        * `mr` - Marathi
+        * `nb` - Norwegian
+        * `fa` - Persian
+        * `pl` - Polish
+        * `pt_BR` - Portuguese (BR)
+        * `pt_PT` - Portuguese (POR)
+        * `pa` - Punjabi
+        * `ro` - Romanian
+        * `ru` - Russian
+        * `sr` - Serbian
+        * `sk` - Slovak
+        * `sl` - Slovenian
+        * `es` - Spanish
+        * `es_AR` - Spanish (ARG)
+        * `es_ES` - Spanish (SPA)
+        * `es_MX` - Spanish (MEX)
+        * `sw` - Swahili
+        * `sv` - Swedish
+        * `ta` - Tamil
+        * `te` - Telugu
+        * `th` - Thai
+        * `tr` - Turkish
+        * `uk` - Ukrainian
+        * `ur` - Urdu
+        * `uz` - Uzbek
+        * `vi` - Vietnamese
+      enum:
+        - af
+        - sq
+        - ar
+        - az
+        - bn
+        - bg
+        - ca
+        - zh_CN
+        - zh_HK
+        - zh_TW
+        - hr
+        - cs
+        - da
+        - nl
+        - en
+        - en_GB
+        - en_US
+        - et
+        - fil
+        - fi
+        - fr
+        - de
+        - el
+        - gu
+        - he
+        - hi
+        - hu
+        - id
+        - ga
+        - it
+        - ja
+        - kn
+        - kk
+        - ko
+        - lo
+        - lv
+        - lt
+        - mk
+        - ms
+        - mr
+        - nb
+        - fa
+        - pl
+        - pt_BR
+        - pt_PT
+        - pa
+        - ro
+        - ru
+        - sr
+        - sk
+        - sl
+        - es
+        - es_AR
+        - es_ES
+        - es_MX
+        - sw
+        - sv
+        - ta
+        - te
+        - th
+        - tr
+        - uk
+        - ur
+        - uz
+        - vi
+      example:
+        en
