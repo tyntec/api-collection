@@ -62,6 +62,16 @@ tags:
       We will use HTTP ```POST``` method to send the notifications to your system.
 
       The notification message is the same as for the message status you can query MessageStatus.
+  - name: "Applications"
+    description: |
+      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
+      implementation.
+
+      **Please note**:
+
+       - By now, only a default application is supported. The extension to custom applications is planned for future releases
+       - The API merges events pointing to the same callback URL into one set.
+       - When an update of a callback URL is executed, the whole webhook definition must be restated.
   - name: "WA Group management"
     description: |
       The WA Group management enables you to interact with WhatsApps Group API.
@@ -98,16 +108,6 @@ tags:
       - business category
       - websites
       - about
-  - name: "Applications"
-    description: |
-      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
-      implementation.
-
-      **Please note**:
-
-       - By now, only a default application is supported. The extension to custom applications is planned for future releases
-       - The API merges events pointing to the same callback URL into one set.
-       - When an update of a callback URL is executed, the whole webhook definition must be restated.
 paths:
   /messages:
     post:
@@ -691,6 +691,7 @@ paths:
   /channels/whatsapp/phone-numbers/{phone-number}/settings/logo:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
       operationId: getCurrentWALogo
       summary: Get the logo
@@ -709,6 +710,9 @@ paths:
               schema:
                 type: string
                 format: binary
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppProfileLogoLink'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -762,10 +766,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DefaultApplicationResponse'
-                minItems: 1
+                $ref: '#/components/schemas/ApplicationList'
   /applications/default:
     get:
       tags:
@@ -948,6 +949,15 @@ components:
       schema:
         type: string
         example: 4923147790717
+    WhatsAppProfileLogoFormat:
+      name: format
+      in: query
+      description: The format the icon should be returned
+      schema:
+        type: string
+        enum:
+        - link
+        - binary
   schemas:
     MessageRequest:
       type: object
@@ -2785,6 +2795,13 @@ components:
               - MessageStatus::deleted
               - MessageStatus::accepted
             callbackUrl: https://some-other-call-back.service.com
+    ApplicationList:
+      type: array
+      description: List of configured applications. Never be empty
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/DefaultApplicationResponse'
+      minItems: 1
     DefaultApplicationResponse:
       type: object
       description: The default application
@@ -2839,3 +2856,12 @@ components:
           - MessageStatus::deleted
           - MessageStatus::accepted
         callbackUrl: https://some-other-call-back.service.com
+    WhatsAppProfileLogoLink:
+      type: object
+      description: Link to the profile logo
+      properties:
+        link:
+          type: string
+          description: Link to the profile logo
+          required: true
+          example: https://pps.whatsapp.net/v/123123
