@@ -473,7 +473,6 @@ paths:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
       - $ref: '#/components/parameters/GroupId'
-      - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
       summary: Get the group icon
       description: Returns the current icon for the given group
@@ -492,10 +491,6 @@ paths:
               schema:
                 type: string
                 format: binary
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppProfileLogoLink'
-
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -696,6 +691,7 @@ paths:
   /channels/whatsapp/phone-numbers/{phone-number}/settings/logo:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
       operationId: getCurrentWALogo
       summary: Get the logo
@@ -714,6 +710,9 @@ paths:
               schema:
                 type: string
                 format: binary
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppProfileLogoLink'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
