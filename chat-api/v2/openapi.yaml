@@ -95,7 +95,14 @@ tags:
       The WA Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
-
+x-tagGroups:
+  - name: WhatsApp
+    tags:
+      - "WA Account management"
+      - "WA Template management"
+      - "WA Phone Number insights"
+      - "WA Group management"
+      - "WA Settings management"
 paths:
   /messages:
     post:
