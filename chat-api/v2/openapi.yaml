@@ -334,6 +334,7 @@ paths:
       summary: List accounts templates
       tags:
         - "WA Template management"
+        - "WA Account management"
       description: List all templates of a WhatsApp account
       responses:
         200:
