@@ -2244,7 +2244,7 @@ components:
         to:
           type: string
           description: Receiving account of the message. The format is channel specific
-          example: "49123512314"
+          example: "49123512315"
         groupId:
           type: string
           description: Group id from which the event originates from. Only present if the message was send into a group
@@ -2262,6 +2262,7 @@ components:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
         event: MoMessage
         from: "49123512314"
+        to: "49123512315"
         timestamp: 2019-06-26T11:41:00
         channel: sms
         content:
