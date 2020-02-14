@@ -370,10 +370,10 @@ paths:
           $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
           $ref: '#/components/responses/Default'
-  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-name}:
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-id}:
     parameters:
       - $ref: '#/components/parameters/WhatsAppAccountId'
-      - $ref: '#/components/parameters/TemplateName'
+      - $ref: '#/components/parameters/TemplateId'
     get:
       operationId: waGetTemplate
       summary: Get details of a template
@@ -408,10 +408,10 @@ paths:
           $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
           $ref: '#/components/responses/Default'
-  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-name}/localizations:
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-id}/localizations:
     parameters:
       - $ref: '#/components/parameters/WhatsAppAccountId'
-      - $ref: '#/components/parameters/TemplateName'
+      - $ref: '#/components/parameters/TemplateId'
     get:
       operationId: waListLocalizations
       summary: List localizations of a template
@@ -1228,8 +1228,8 @@ components:
       schema:
         type: string
       example: 132923147790717
-    TemplateName:
-      name: template-name
+    TemplateId:
+      name: template-id
       in: path
       required: true
       description: Referenced template
@@ -3263,10 +3263,12 @@ components:
       properties:
         name:
           type: string
+          description: Name of the template
         category:
           $ref: '#/components/schemas/TemplateCategory'
         localizations:
           type: array
+          description: Localizations of the template
           items:
             $ref: '#/components/schemas/LocalizationRequest'
           minItems: 1
@@ -3277,6 +3279,7 @@ components:
         language:
           $ref: '#/components/schemas/LanguageCode'
         components:
+          description: Components the template is defined of
           oneOf:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
@@ -3382,9 +3385,9 @@ components:
           description: Id of the WhatsApp Business Account the template belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name:
+        templateId:
           type: string
-          description: Name of the template
+          description: Id of the template
           example:
             swagger_test
         category:
