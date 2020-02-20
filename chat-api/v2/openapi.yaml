@@ -3177,7 +3177,9 @@ components:
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         managedBy:
-          $ref: '#/components/schemas/ManagingAccount'
+          description: Account that can manage (edit, ..) an entity
+          allOf:
+            - $ref: '#/components/schemas/CPaaSAccount'
       example:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         name: swagger_sample
