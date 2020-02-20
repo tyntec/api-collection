@@ -3385,6 +3385,11 @@ components:
           description: Id of the WhatsApp Business Account the template belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        templateName:
+          type: string
+          description: Name of the template
+          example:
+            swagger_test
         templateId:
           type: string
           description: Id of the template
