@@ -3184,7 +3184,8 @@ components:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         name: swagger_sample
         templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
-        managedBy: tynteccpaas
+        managedBy:
+          accountName: tynteccpaas
     WhatsAppPhoneNumbers:
       type: array
       description: List of phone numbers at WhatsApp. Might be empty
@@ -3265,13 +3266,19 @@ components:
         status: FLAGGED
         templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        managedBy:
+          accountName: tyntecscpaas
+        messagingVia:
+          accountName: messagingcpaas
     CPaaSAccount:
       type: object
       description: The CPaaS account behind the API key
       properties:
-        name:
+        accountName:
           type: string
           description: Name of the CPaaSAccount
+      example:
+        name: someaccount
     WhatsAppTemplateRequest:
       type: object
       description: Definition of additional WhatsApp Template
