@@ -3250,9 +3250,13 @@ components:
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         managedBy:
-          $ref: '#/components/schemas/ManagingAccount'
+          description: Account that can manage (edit, ..) an entity
+          allOf:
+            - $ref: '#/components/schemas/CPaaSAccount'
         messagingVia:
-          $ref: '#/components/schemas/MessagingAccount'
+          description: Account that must be used for messaging
+          allOf:
+            - $ref: '#/components/schemas/CPaaSAccount'
       example:
         phoneNumber: 4912345678
         displayPhonenumber: +49 123 45678
@@ -3261,16 +3265,6 @@ components:
         status: FLAGGED
         templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-    ManagingAccount:
-      type: object
-      description: Account that can manage (edit, ..) an entity
-      allOf:
-        - $ref: '#/components/schemas/CPaaSAccount'
-    MessagingAccount:
-      type: object
-      description: Account that can be used for messaging
-      allOf:
-        - $ref: '#/components/schemas/CPaaSAccount'
     CPaaSAccount:
       type: object
       description: The CPaaS account behind the API key
