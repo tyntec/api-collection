@@ -3251,14 +3251,6 @@ components:
             - OFFLINE
           example:
             CONNECTED
-        templateNamespace:
-          type: string
-          description: |
-            Template namespace available for this phone number
-
-            This is used internally and here stated for completeness
-          example:
-            c9468969-a3a3-4c17-95f7-1e8b2902ed74
         whatsAppAccountId:
           type: string
           description: Id of the WhatsApp Business Account the number belongs to.
@@ -3278,7 +3270,6 @@ components:
         verifiedName: Swagger Sample
         qualityRating: YELLOW
         status: FLAGGED
-        templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         managedBy:
           accountName: tyntecscpaas
