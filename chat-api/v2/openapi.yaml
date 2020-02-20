@@ -3163,11 +3163,16 @@ components:
           format: uuid
           example:
             5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name:
+        whatsAppAccountName:
           type: string
           description: Name of the WhatsApp Business Account
           example:
-            swagger_sample
+            Swagger Sample Account
+        businessName:
+          type: string
+          description: Name of the business owning the facebook business manager
+          example:
+            Swagger Sample business
         templateNamespace:
           description: |
             Template namespace assigned to the WhatsApp Business Account.
@@ -3176,14 +3181,23 @@ components:
           type: string
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        facebookBusinessManagerId:
+          type: string
+          example: 1791147717848878
+        accountStatus:
+          $ref: '#/components/schemas/WhatsAppAccountStatus'
         managedBy:
           description: Account that can manage (edit, ..) an entity
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
       example:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name: swagger_sample
+        whatsAppAccountName: Swagger Sample Account
+        businessName: Swagger Sample business
         templateNamespace: c9468969-a3a3-4c17-95f7-1e8b2902ed74
+        facebookBusinessManagerId: 1791147717848878
+        accountStatus:
+          messageOnBehalf: PENDING
         managedBy:
           accountName: tynteccpaas
     WhatsAppPhoneNumbers:
@@ -3702,3 +3716,16 @@ components:
         - vi
       example:
         en
+    WhatsAppAccountStatus:
+      type: object
+      description: Status information for the WhatsApp account
+      properties:
+        messageOnBehalf:
+          type: string
+          description: Indicates the status of message on behalf request
+          enum:
+            - PENDING
+            - APPROVED
+            - DENIED
+      example:
+        messageOnBehalf: APPROVED
