@@ -3472,7 +3472,7 @@ components:
             - DELETE_PENDING
             - DELETED
           example:
-            APPROVED
+            DELETED
         rejectionReason:
           type: string
           description: Descriptive text in case of status REJECTED
@@ -3495,12 +3495,14 @@ components:
           type: string
           description: At which point in time the last update happen
           format: date-time
+          example: 2020-02-15T23:28:34.442Z
         expiresAt:
           type: string
           description: |
             When does the localization expire.
             Only present, when a template is deleted
           format: date-time
+          example: 2020-02-15T23:28:34.442Z
     WhatsAppTemplateHeaderComponentResponse:
       type: object
       description: Header component of a template
