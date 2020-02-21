@@ -3565,6 +3565,10 @@ components:
             - DOCUMENT
           example:
             IMAGE
+        text:
+          type: string
+          description: Text based part of format "TEXT
+          example: Hi {{1}}!
     WhatsAppTemplateBodyComponentResponse:
       type: object
       description: Body component of a template
