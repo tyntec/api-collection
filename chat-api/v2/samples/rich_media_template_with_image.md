@@ -33,7 +33,7 @@ The matching request would look like this
   "whatsapp": {
     "from": "{{whatsappPhoneNumber}}",
     "template": {
-      "templateId": "checkin_voucher",
+      "templateId": "received_damaged_parcel_notification",
       "language": {
         "policy": "deterministic",
         "code": "en"
