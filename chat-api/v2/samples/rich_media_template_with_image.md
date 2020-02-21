@@ -20,7 +20,7 @@ Contact us for a free of charge replacement of your order.
 
 *Footer* :
 
-tyntec customer care
+    tyntec customer care
 
 The matching request would look like this
 
