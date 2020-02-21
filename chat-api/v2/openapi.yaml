@@ -3335,12 +3335,46 @@ components:
       minLength: 1
     RichMediaTemplateRequest:
       type: array
+      description: Rich media template definition. Must contain at least body component
       items:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
+      minItems: 1
     WhatsAppTemplateHeaderComponentRequest:
+      type: object
+      description: Header component of a template
+      oneOf:
+        - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequest'
+        - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
+    WhatsAppTemplateTextHeaderComponentRequest:
+      type: object
+      description: Header component of a template
+      required:
+        - type
+        - format
+        - text
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - HEADER
+          example: HEADER
+        format:
+          type: string
+          description: Which kind of header
+          enum:
+            - TEXT
+          example:
+            TEXT
+        text:
+          type: string
+          description: Text that should be displayed as header. Can contain 1 variable
+          maxLength: 60
+          example: Hi {{1}}
+    WhatsAppTemplateMediaHeaderComponentRequest:
       type: object
       description: Header component of a template
       required:
@@ -3458,6 +3492,8 @@ components:
         - status
         - language
         - components
+        - createdAt
+        - lastUpdated
       properties:
         status:
           type: string
@@ -3491,18 +3527,23 @@ components:
           example:
             - type: BODY
               text: Hello {{1}}! How is going?
+        createdAt:
+          type: string
+          description: At which point in time the template was created
+          format: date-time
+          example: 2020-02-15T23:28:34.442Z
         lastUpdated:
           type: string
           description: At which point in time the last update happen
           format: date-time
-          example: 2020-02-15T23:28:34.442Z
+          example: 2020-02-15T25:28:34.442Z
         expiresAt:
           type: string
           description: |
             When does the localization expire.
             Only present, when a template is deleted
           format: date-time
-          example: 2020-02-15T23:28:34.442Z
+          example: 2020-03-15T23:28:34.442Z
     WhatsAppTemplateHeaderComponentResponse:
       type: object
       description: Header component of a template
@@ -3520,6 +3561,7 @@ components:
           description: Which kind of header
           enum:
             - IMAGE
+            - TEXT
             - DOCUMENT
           example:
             IMAGE
