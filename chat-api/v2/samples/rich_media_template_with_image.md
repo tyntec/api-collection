@@ -69,4 +69,4 @@ The matching request would look like this
 
 The message would look like this on the device
 
-![-](sample-image-template.png | width=100)
+![Rich Media Template with image](/chat-api/v2/samples/sample-image-template.png)
