@@ -1,4 +1,4 @@
-# Rich Media Template with document
+# Rich Media Template with image
 
 This is an example request for sending an image a long with a rich media template
 
