@@ -66,3 +66,7 @@ The matching request would look like this
   }
 }
 ````
+
+The message would look like this on the device
+
+![-](sample-image-template.png | width=100)
