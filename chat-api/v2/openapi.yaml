@@ -272,11 +272,16 @@ paths:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/accounts:
     get:
+      parameters:
+        - $ref: '#/components/parameters/PhoneNumberQuery'
       operationId: listAllWhatsAppAccounts
       summary: List WhatsApp accounts
       tags:
         - "WA Account management"
-      description: List all WhatsApp accounts managed by this access credentials
+      description: |
+        Lists all WhatsApp accounts managed by this access credentials.
+
+        In case phone number query parameter is set, only the phone numbers account is listed
       responses:
         200:
           description: WhatsApp accounts managed by this access credentials
@@ -1197,6 +1202,15 @@ components:
       name: phone-number
       in: path
       required: true
+      description: Phone number used for WhatsApp messaging.
+      schema:
+        type: integer
+        minLength: 4
+        maxLength: 15
+      example: 4923147790717
+    PhoneNumberQuery:
+      name: phone-number
+      in: query
       description: Phone number used for WhatsApp messaging.
       schema:
         type: integer
