@@ -1,6 +1,6 @@
 # Rich Media Template with document
 
-This is an example request for sending a document a long with a rich media template
+This is an example request for sending a document together with a rich media template
 
 The template is defined as
 
