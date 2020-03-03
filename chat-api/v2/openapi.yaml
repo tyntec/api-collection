@@ -23,20 +23,22 @@ info:
     - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
     - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
 
-    *RFC 5988* is implemented in a way that all API calls that return a list of sub resources, make use of the following Link headers
+    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following Link headers
 
-    - _first_ : First page of the list of requested sub-resources
-    - _previous_ : Page before the current page of the list of requested sub-resources
-    - _current_ : The actual page of the list of requested sub-resources
-    - _next_ : Page after the current page of the list of requested sub-resources
-    - _last_ : Last page of the list of requested sub-resources
+    - `first` : First page of the resource list pagination
+    - `previous` : Predecessor page of the current page of the resource list pagination
+    - `current` : Actual page of the resource list pagination
+    - `next` : Successor page of the current of page of the resource list pagination
+    - `last` : Last page of the resource list pagination
+
+
 
     In addition the following custom headers are provided for convenience
 
-    - _x-total-pages_ : Total number of pages of the list of requested sub-resources
-    - _x-total-items_ : Total number of items on the list of requested sub-resources
-    - _x-page-size_ : Maxium size of the page
-    - _x-current-page_ : Page number of the current page of the list of requested sub-resources
+    - `x-total-pages` : Total number of pages of the list of requested sub-resources
+    - `x-total-items` : Total number of items on the list of requested sub-resources
+    - `x-page-size` : Maxium size of the page
+    - `x-current-page` : Page number of the current page of the list of requested sub-resources
 
   contact:
     name: tyntec API Support
@@ -3773,73 +3775,7 @@ components:
         - TRANSPORTATION_UPDATE
     LanguageCode:
       type: string
-      description: |
-        Supported language codes
-        * `af` - Afrikaans
-        * `sq` - Albanian
-        * `ar` - Arabic
-        * `az` - Azerbaijani
-        * `bn` - Bengali
-        * `bg` - Bulgarian
-        * `ca` - Catalan
-        * `zh_CN` - Chinese (CHN)
-        * `zh_HK` - Chinese (HKG)
-        * `zh_TW` - Chinese (TAI)
-        * `hr` - Croatian
-        * `cs` - Czech
-        * `da` - Danish
-        * `nl` - Dutch
-        * `en` - English
-        * `en_GB` - English (UK)
-        * `en_US` - English (US)
-        * `et` - Estonian
-        * `fil` - Filipino
-        * `fi` - Finnish
-        * `fr` - French
-        * `de` - German
-        * `el` - Greek
-        * `gu` - Gujarati
-        * `he` - Hebrew
-        * `hi` - Hindi
-        * `hu` - Hungarian
-        * `id` - Indonesian
-        * `ga` - Irish
-        * `it` - Italian
-        * `ja` - Japanese
-        * `kn` - Kannada
-        * `kk` - Kazakh
-        * `ko` - Korean
-        * `lo` - Lao
-        * `lv` - Latvian
-        * `lt` - Lithuanian
-        * `mk` - Macedonian
-        * `ms` - Malay
-        * `mr` - Marathi
-        * `nb` - Norwegian
-        * `fa` - Persian
-        * `pl` - Polish
-        * `pt_BR` - Portuguese (BR)
-        * `pt_PT` - Portuguese (POR)
-        * `pa` - Punjabi
-        * `ro` - Romanian
-        * `ru` - Russian
-        * `sr` - Serbian
-        * `sk` - Slovak
-        * `sl` - Slovenian
-        * `es` - Spanish
-        * `es_AR` - Spanish (ARG)
-        * `es_ES` - Spanish (SPA)
-        * `es_MX` - Spanish (MEX)
-        * `sw` - Swahili
-        * `sv` - Swedish
-        * `ta` - Tamil
-        * `te` - Telugu
-        * `th` - Thai
-        * `tr` - Turkish
-        * `uk` - Ukrainian
-        * `ur` - Urdu
-        * `uz` - Uzbek
-        * `vi` - Vietnamese
+      description: Supported language codes, according to [Supported Languages](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
       enum:
         - af
         - sq
@@ -3928,11 +3864,12 @@ components:
 
         The relations are defined as following:
 
-        - first - First page of the sub-resource pagination
-        - previous - Predecessor page of the current page of the sub-resource pagination
-        - current - Actual page of the sub-resource pagination
-        - next - Successor page of the current of page of the sub-resource pagination
-        - last - Last page of the sub-resource pagination
+        - `first` : First page of the resource list pagination
+        - `previous` : Predecessor page of the current page of the resource list pagination
+        - `current` : Actual page of the resource list pagination
+        - `next` : Successor page of the current of page of the resource list pagination
+        - `last` : Last page of the resource list pagination
+
       enum:
         - first
         - previous
