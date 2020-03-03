@@ -14,6 +14,30 @@ info:
     - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
     - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-request-your-access)
 
+    **Adheared web-standards**
+
+    One goal of the API is to follow best practices and standards around http based services.
+
+    A build block of this is to follow RFC standards listed below:
+
+    - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
+    - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
+
+    *RFC 5988* is implemented in a way that all API calls that return a list of sub resources, make use of the following Link headers
+
+    - _first_ : First page of the list of requested sub-resources
+    - _previous_ : Page before the current page of the list of requested sub-resources
+    - _current_ : The actual page of the list of requested sub-resources
+    - _next_ : Page after the current page of the list of requested sub-resources
+    - _last_ : Last page of the list of requested sub-resources
+
+    In addition the following custom headers are provided for convenience
+
+    - _x-total-pages_ : Total number of pages of the list of requested sub-resources
+    - _x-total-items_ : Total number of items on the list of requested sub-resources
+    - _x-page-size_ : Maxium size of the page
+    - _x-current-page_ : Page number of the current page of the list of requested sub-resources
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -289,6 +313,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppAccounts'
+          headers:
+            x-total-pages:
+              description: how many pages are available
+              schema:
+                type: integer
+            x-total-items:
+              description: how many items are available in total
+              schema:
+                type: integer
+            x-page-size:
+              description: maximum number of items per page
+              schema:
+                type: integer
+            x-current-page:
+              description: current page
+              schema:
+                type: integer
+            Link:
+              description: Links describing pagination
+              schema:
+                properties:
+                  rel:
+                    type: string
+                    description: What kind of relation is this link
+                    enum:
+                      - first
+                      - previous
+                      - current
+                      - next
+                      - last
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/accounts/{whatsapp-account-id}:
@@ -327,6 +381,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppPhoneNumbers'
+          headers:
+            x-total-pages:
+              description: how many pages are available
+              schema:
+                type: integer
+            x-total-items:
+              description: how many items are available in total
+              schema:
+                type: integer
+            x-page-size:
+              description: maximum number of items per page
+              schema:
+                type: integer
+            x-current-page:
+              description: current page
+              schema:
+                type: integer
+            Link:
+              description: Links describing pagination
+              schema:
+                properties:
+                  rel:
+                    type: string
+                    description: What kind of relation is this link
+                    enum:
+                      - first
+                      - previous
+                      - current
+                      - next
+                      - last
         404:
           $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
@@ -348,6 +432,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppTemplates'
+          headers:
+            x-total-pages:
+              description: how many pages are available
+              schema:
+                type: integer
+            x-total-items:
+              description: how many items are available in total
+              schema:
+                type: integer
+            x-page-size:
+              description: maximum number of items per page
+              schema:
+                type: integer
+            x-current-page:
+              description: current page
+              schema:
+                type: integer
+            Link:
+              description: Links describing pagination
+              schema:
+                properties:
+                  rel:
+                    type: string
+                    description: What kind of relation is this link
+                    enum:
+                      - first
+                      - previous
+                      - current
+                      - next
+                      - last
         404:
           $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
@@ -475,6 +589,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppPhoneNumbers'
+          headers:
+            x-total-pages:
+              description: how many pages are available
+              schema:
+                type: integer
+            x-total-items:
+              description: how many items are available in total
+              schema:
+                type: integer
+            x-page-size:
+              description: maximum number of items per page
+              schema:
+                type: integer
+            x-current-page:
+              description: current page
+              schema:
+                type: integer
+            Link:
+              description: Links describing pagination
+              schema:
+                properties:
+                  rel:
+                    type: string
+                    description: What kind of relation is this link
+                    enum:
+                      - first
+                      - previous
+                      - current
+                      - next
+                      - last
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}:
@@ -514,6 +658,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppTemplates'
+          headers:
+            x-total-pages:
+              description: how many pages are available
+              schema:
+                type: integer
+            x-total-items:
+              description: how many items are available in total
+              schema:
+                type: integer
+            x-page-size:
+              description: maximum number of items per page
+              schema:
+                type: integer
+            x-current-page:
+              description: current page
+              schema:
+                type: integer
+            Link:
+              description: Links describing pagination
+              schema:
+                properties:
+                  rel:
+                    type: string
+                    description: What kind of relation is this link
+                    enum:
+                      - first
+                      - previous
+                      - current
+                      - next
+                      - last
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
@@ -3154,11 +3328,12 @@ components:
     WhatsAppProfileLogoLink:
       type: object
       description: Link to the profile logo
+      required:
+        - link
       properties:
         link:
           type: string
           description: Link to the profile logo
-          required: true
           example: https://pps.whatsapp.net/v/123123
     WhatsAppAccounts:
       type: array
