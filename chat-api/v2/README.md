@@ -1,5 +1,41 @@
 # Release notes
 
+## 2.9
+
+This release introduces the WhatsApp template management API and also APIs to retrieve information about your WhatsApp account and assigned phone numbers.
+
+### Features
+
+#### WhatsApp Account information
+
+The API allows now to receive information about your WhatsApp accounts. At the moment these are only basic information like
+the message on behalf status, the Facebook Business Manager ID.
+
+This will be enhanced in the future to provide you with more detailed information about the current status of your account requests.
+
+#### WhatsApp phone number information
+
+The API provides now information about phone numbers assigned to your WhatsApp business account.
+
+Most important are the `status` and `quality rating`. 
+
+The `status` provides you with information if your number is 
+
+ - pending - it hasn't been yet activated
+ - dis/connected - is it available for sending
+ - flagged - due to user reports about low quality messaging
+ - restricted - it has reached the daily unique users limit
+ 
+The `quality rating` shows you how your messages are perceived by your users. When a number is `flagged` and has a `red` rating, it is on risk for being permanently banned from WhatsApp.
+
+#### WhatsApp template management
+
+The API allows you now to request new templates (standard and rich media templates). As well add new localizations to an existing template.
+
+It's possible also to delete a template and get information about it's status.
+
+**Note** It's not possible to edit a rejected template at the moment due to limitations by WhatsApp API.
+
 ## 2.8
 
 This release introduces the support of WhatsApp contact messages, the WhatsApp group admin API.
