@@ -1841,7 +1841,7 @@ components:
         templateId: weclome_message
         language:
           policy: deterministic
-          example: en
+          code: en
         components:
           - type: header
             parameters:
@@ -2257,10 +2257,14 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        - WhatsAppGroupEvent::descriptionChanged
-        - WhatsAppGroupEvent::subjectChanged
         - WhatsAppGroupEvent::userJoined
         - WhatsAppGroupEvent::userLeft
+        - WhatsAppGroupEvent::userPromoted
+        - WhatsAppGroupEvent::userDemoted
+        - WhatsAppGroupEvent::descriptionChanged
+        - WhatsAppGroupEvent::subjectChanged
+        - WhatsAppGroupEvent::iconChanged
+        - WhatsAppGroupEvent::iconDeleted
     MessageStatus:
       type: object
       description: |
@@ -2677,7 +2681,7 @@ components:
         to:
           type: string
           description: Receiving account of the message. The format is channel specific
-          example: "49123512314"
+          example: "49123512315"
         groupId:
           type: string
           description: Group id from which the event originates from. Only present if the message was send into a group
@@ -2695,6 +2699,7 @@ components:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
         event: MoMessage
         from: "49123512314"
+        to: "49123512315"
         timestamp: 2019-06-26T11:41:00
         channel: sms
         content:
@@ -3299,7 +3304,7 @@ components:
       properties:
         link:
           type: string
-          description: Link to the profile logo
+          description: Link to the profile logo          
           example: https://pps.whatsapp.net/v/123123
     WhatsAppAccounts:
       type: array
