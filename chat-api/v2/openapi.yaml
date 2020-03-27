@@ -3478,8 +3478,7 @@ components:
             type: string
             enum:
               - BODY
-            default:
-              - BODY
+            default: BODY
           text:
             type: string
             description: |
