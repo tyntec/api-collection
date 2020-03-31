@@ -8,7 +8,7 @@ This release introduces the WhatsApp template management API and also APIs to re
 
 #### WhatsApp Account information
 
-The API allows now to receive information about your WhatsApp accounts. At the moment these are only basic information like
+The API allows you now to receive information about your WhatsApp accounts. At the moment these are only basic information like
 the message on behalf status, the Facebook Business Manager ID.
 
 This will be enhanced in the future to provide you with more detailed information about the current status of your account requests.
