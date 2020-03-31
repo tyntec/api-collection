@@ -18,7 +18,7 @@ info:
 
     One goal of the API is to follow best practices and standards around http based services.
 
-    A build block of this is to follow RFC standards listed below:
+    A building block of this is to follow the RFCs:
 
     - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
     - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
@@ -307,7 +307,7 @@ paths:
       description: |
         Lists all WhatsApp accounts managed by this access credentials.
 
-        In case phone number query parameter is set, only the phone numbers account is listed
+        If the phone number query parameter is set, only the phone numbers account is listed
       responses:
         200:
           description: WhatsApp accounts managed by this access credentials
@@ -1835,8 +1835,8 @@ components:
           items:
             $ref: '#/components/schemas/TemplateParameter'
           example:
-            - default: Mr.
-            - default: Doe
+           - default: Mr.
+           - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -3782,62 +3782,59 @@ components:
       description: Supported language codes, according to [Supported Languages](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
       enum:
         - af
-        - sq
         - ar
         - az
-        - bn
         - bg
+        - bn
         - ca
-        - zh_CN
-        - zh_HK
-        - zh_TW
-        - hr
         - cs
         - da
-        - nl
+        - de
+        - el
         - en
         - en_GB
         - en_US
-        - et
-        - fil
-        - fi
-        - fr
-        - de
-        - el
-        - gu
-        - he
-        - hi
-        - hu
-        - id
-        - ga
-        - it
-        - ja
-        - kn
-        - kk
-        - ko
-        - lo
-        - lv
-        - lt
-        - mk
-        - ms
-        - mr
-        - nb
-        - fa
-        - pl
-        - pt_BR
-        - pt_PT
-        - pa
-        - ro
-        - ru
-        - sr
-        - sk
-        - sl
         - es
         - es_AR
         - es_ES
         - es_MX
-        - sw
+        - et
+        - fa
+        - fi
+        - fil
+        - fr
+        - ga
+        - gu
+        - he
+        - hi
+        - hr
+        - hu
+        - id
+        - it
+        - ja
+        - kk
+        - kn
+        - ko
+        - lo
+        - lt
+        - lv
+        - mk
+        - mr
+        - ms
+        - nb
+        - nl
+        - pa
+        - pl
+        - pt_BR
+        - pt_PT
+        - ro
+        - ru
+        - sk
+        - sl
+        - sq
+        - sr
         - sv
+        - sw
         - ta
         - te
         - th
@@ -3846,6 +3843,9 @@ components:
         - ur
         - uz
         - vi
+        - zh_CN
+        - zh_HK
+        - zh_TW
       example:
         en
     WhatsAppAccountStatus:
