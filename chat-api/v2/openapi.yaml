@@ -44,7 +44,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.8'
+  version: '2.9'
   x-repository: https://github.com/tyntec/api-collection/blob/master/chat-api
   x-major-version: v2
   x-postman-collection: postman.zip
