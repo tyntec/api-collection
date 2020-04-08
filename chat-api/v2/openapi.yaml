@@ -1420,6 +1420,7 @@ components:
               - sms
               - whatsapp
               - tyntecEcho
+              - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
@@ -1436,6 +1437,8 @@ components:
             A detailed description is provided on the object definition.
           allOf:
             - $ref: '#/components/schemas/TyntecEchoRequest'
+        viber:
+          $ref: '#/components/schemas/ViberMessageRequest'
       example:
         to: "+123234234"
         channels: ["whatsapp"]
@@ -1577,6 +1580,44 @@ components:
         contentType: text
         from: "1233423454"
         text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberMessageRequest:
+      type: object
+      description: |
+        Viber message to be sent
+      required:
+        - components
+        - messagePurpose
+      properties:
+        from:
+          type: string
+          description: Viber channel id
+          example: "1233423454"
+        components:
+          type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000
+              description: The message to be send
+              example: Thanks for contacting our support. We will get back to you in 5 minutes.
+            image:
+              type: string
+              description: image url
+            button:
+              type: string
+              description: button caption
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          description: Purpose of the message
+          example: promotion
+      example:
+        from: "1233423454"
+        messagePurpose: transaction
+        components:
+          text: Thanks for contacting our support. We will get back to you in 5 minutes.
     WhatsappMessageRequest:
       description: |
         Whatsapp message to be send.
@@ -2229,6 +2270,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         timestamp:
           type: string
           format: 'date-time'
@@ -2657,6 +2699,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         receivedAt:
           deprecated: true
           type: string
