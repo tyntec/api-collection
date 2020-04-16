@@ -2,6 +2,8 @@
 
 These are examples on requesting new WhatsApp templates. 
 
+The name of a template **must** match `^[a-z_0.9]+$`, so consist only of lower case letters, numbers and `_`.
+
 In general a template can consist of the following three components:
 
 #### Header
@@ -86,7 +88,7 @@ Text based footer up to 60 characters.
 
 ````
 {
-  "name": "body_and_footer",
+  "name": "body_and_text_header",
   "category": "ACCOUNT_UPDATE",
   "localizations": [
     {
@@ -111,7 +113,7 @@ Text based footer up to 60 characters.
 
 ````
 {
-  "name": "body_and_footer",
+  "name": "body_and_media_header",
   "category": "ACCOUNT_UPDATE",
   "localizations": [
     {
