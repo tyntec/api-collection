@@ -7,3 +7,6 @@ They **don't** covering all cases and options. They are complementary to the [po
 ## Rich Media Templates
 - [Sending a document on a template](rich_media_template_with_document.md)
 - [Sending an image on a template](rich_media_template_with_image.md)
+
+## Requesting WhatsApp Templates
+- [Requesting new templates](requesting_new_templates.md) 
