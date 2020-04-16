@@ -2,7 +2,7 @@
 
 These are examples on requesting new WhatsApp templates. 
 
-The name of a template **must** match `^[a-z_0.9]+$`, so consist only of lower case letters, numbers and `_`.
+The name of a template **must** match `^[a-z][a-z_0-9]+$`, so start with lower case letter and consist only of lower case letters, numbers and `_`.
 
 In general a template can consist of the following three components:
 
