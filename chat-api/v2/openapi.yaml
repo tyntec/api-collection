@@ -1603,10 +1603,11 @@ components:
              - image
              - text & button
              - text & image & button
-          anyOf:
-            - $ref: '#/components/schemas/ViberTextComponent'
-            - $ref: '#/components/schemas/ViberImageComponent'
-            - $ref: '#/components/schemas/ViberButtonComponent'
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
           minItems: 1
           maxItems: 3
         messagePurpose:
@@ -1620,7 +1621,8 @@ components:
         from: "1233423454"
         messagePurpose: transaction
         components:
-          text: Thanks for contacting our support. We will get back to you in 5 minutes.
+          - type: text
+            text: Thanks for contacting our support. We will get back to you in 5 minutes.
     ViberTextComponent:
       type: object
       properties:
