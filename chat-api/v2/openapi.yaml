@@ -1617,6 +1617,8 @@ components:
             - transaction
           description: Purpose of the message
           example: promotion
+        ttl:
+          $ref: '#/components/schemas/ViberTTL'
       example:
         from: "1233423454"
         messagePurpose: transaction
@@ -1643,10 +1645,20 @@ components:
           type: string
           enum:
             - button
-        text:
-          type: string
-          description: Caption of the button
-          example: click me!
+        button:
+          type: object
+          properties:
+              text:
+                type: string
+                maxLength: 30
+                description: Caption of the button
+                example: click me!
+              url:
+                type: string
+                maxLength: 62
+                pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+                description: Action callback that is executed when the user clicks on the button
+                example: https://my.callba.ck/clicked
     ViberImageComponent:
       type: object
       properties:
@@ -1654,11 +1666,24 @@ components:
           type: string
           enum:
             - image
-        url:
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Url location of the image, must be accessible from the public network
+    ViberTTL:
+      type: object
+      properties:
+        expiresAfter:
+          type: integer
+          minimum: 30
+          maximum: 86400
+          default: 1209600
+        expirationText:
           type: string
-          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
-          description: Url location of the image, must be accessible from the public network
-
+          maxLength: 1000
     WhatsappMessageRequest:
       type: object
       description: |
