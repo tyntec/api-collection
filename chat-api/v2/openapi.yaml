@@ -1594,6 +1594,15 @@ components:
           example: "1233423454"
         components:
           type: object
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
           properties:
             text:
               type: string
