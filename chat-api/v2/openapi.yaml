@@ -1657,12 +1657,12 @@ components:
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
           description: Url location of the image, must be accessible from the public network
 
-  WhatsappMessageRequest:
+    WhatsappMessageRequest:
+      type: object
       description: |
         Whatsapp message to be send.
 
         This will override defaults from DefaultContent
-      type: object
       required:
         - contentType
         - from
