@@ -1543,16 +1543,21 @@ components:
         to: "12331132"
         channels:
           - whatsapp
-        whatsapp:
+        viber:
           from: "1233423454"
-          contentType: text
-          text: hi!
+          components:
+            - type: text
+              text: Do you want to know more?
+            - type: button
+              button:
+              caption: Yes
+              callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
     ViberTextImageButtonMessage:
       value:
         to: "12331132"
         channels:
           - whatsapp
-        whatsapp:
+        viber:
           from: "1233423454"
           components:
             - type: text
@@ -1562,7 +1567,7 @@ components:
                 url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
             - type: button
               button:
-                text: I accept
+                caption: I accept
                 callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
 
   schemas:
@@ -1821,7 +1826,7 @@ components:
         button:
           type: object
           properties:
-              text:
+              caption:
                 type: string
                 maxLength: 30
                 description: Caption of the button
