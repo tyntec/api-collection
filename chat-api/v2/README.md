@@ -21,6 +21,37 @@ messages.
 
 Using the channel requires you to request a viber id from tyntec.
 
+### Video on rich templates
+
+It's now possible to send as well videos in the header component of rich templates.
+
+### Text on rich notification templates
+
+It's now possible to send as well text with a parameter in the header component of rich templates.
+
+## Changes
+
+### Length restriction on body component of rich templates
+
+It's now possible to define up to 1024 characters on the body component of rich templates.
+
+Previously it was 160.
+
+**Note** : The length restriction still applies to the hydrate template (template text including parameter replacements).
+
+## Deprecations
+
+### Groups API
+
+WhatsApp decided to deprecate the Groups API 6th of July for new and 6th of October for all WhatsApp business accounts.
+ 
+This affects on our side
+
+ - group management API 
+ - sending messages to groups
+ 
+WhatsApp announced a replacement but without any timeline yet.
+
 ## 2.9
 
 This release introduces the WhatsApp template management API and also APIs to retrieve information about your WhatsApp account and assigned phone numbers.
