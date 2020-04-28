@@ -1826,7 +1826,7 @@ components:
                 maxLength: 30
                 description: Caption of the button
                 example: click me!
-              url:
+              callback:
                 type: string
                 maxLength: 62
                 pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
