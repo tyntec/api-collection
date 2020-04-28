@@ -1909,6 +1909,7 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/TemplateMediaParameter'
+              - $ref: '#/components/schemas/TextParameter'
           maxItems: 1
           minItems: 1
       example:
@@ -1975,6 +1976,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/ImageMedia'
             - $ref: '#/components/schemas/TemplateDocumentMedia'
+            - $ref: '#/components/schemas/TemplateVideoMedia'
       example:
         type: media
         media:
@@ -2003,6 +2005,23 @@ components:
         type: document
         url: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
         filename: Test document
+    TemplateVideoMedia:
+      type: object
+      description: Media to be send
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send
+          enum:
+            - video
+          example: video
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: http://techslides.com/demos/sample-videos/small.mp4
+      example:
+        type: video
+        url: http://techslides.com/demos/sample-videos/small.mp4
     Location:
       type: object
       description: Location received or send
@@ -3551,6 +3570,7 @@ components:
           enum:
             - IMAGE
             - DOCUMENT
+            - VIDEO
           example:
             IMAGE
     WhatsAppTemplateBodyComponentRequest:
@@ -3722,6 +3742,7 @@ components:
             - IMAGE
             - TEXT
             - DOCUMENT
+            - VIDEO
           example:
             IMAGE
         text:
