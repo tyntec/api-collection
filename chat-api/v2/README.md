@@ -1,5 +1,26 @@
 # Release notes
 
+## 2.10
+
+This release introduces Viber as third channel on the Chat API.
+
+### Features
+
+#### Viber support
+
+Beginning with this release the Chat API starts supporting Viber as channel.
+  
+The Viber channel supports to send
+
+ - text
+ - image
+ - text & button
+ - text & image & button
+ 
+messages.
+
+Using the channel requires you to request a viber id from tyntec.
+
 ## 2.9
 
 This release introduces the WhatsApp template management API and also APIs to retrieve information about your WhatsApp account and assigned phone numbers.
