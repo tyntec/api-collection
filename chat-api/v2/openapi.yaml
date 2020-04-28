@@ -152,6 +152,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MessageRequest'
+            examples:
+              WhatsAppTextMessage:
+                $ref: '#/components/examples/WhatsAppTextMessage'
+              WhatsAppImageMessage:
+                $ref: '#/components/examples/WhatsAppImageMessage'
       responses:
         202:
           description: The message is accepted by our system
@@ -1391,6 +1396,27 @@ components:
         type: string
         pattern: "[a-z_0-9]+"
       example: welcome_message
+  examples:
+    WhatsAppTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+    WhatsAppImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: image
+            url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
   schemas:
     MessageRequest:
       type: object
@@ -1615,10 +1641,9 @@ components:
           enum:
             - promotion
             - transaction
+          default: promotion
           description: Purpose of the message
           example: promotion
-        ttl:
-          $ref: '#/components/schemas/ViberTTL'
       example:
         from: "1233423454"
         messagePurpose: transaction
@@ -1673,17 +1698,6 @@ components:
               type: string
               pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
               description: Url location of the image, must be accessible from the public network
-    ViberTTL:
-      type: object
-      properties:
-        expiresAfter:
-          type: integer
-          minimum: 30
-          maximum: 86400
-          default: 1209600
-        expirationText:
-          type: string
-          maxLength: 1000
     WhatsappMessageRequest:
       type: object
       description: |
