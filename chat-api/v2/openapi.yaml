@@ -130,7 +130,7 @@ tags:
       The WA Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
-  - name: "WA Group Management"
+  - name: "WA Group management"
     description: |
       **Deprecation Notes**
 
