@@ -12,7 +12,8 @@ info:
     **Channel specific pre-conditions**
     
     - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
-    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-request-your-access)
+    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
+    - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/)
 
     **Adheared web-standards**
 
@@ -40,11 +41,19 @@ info:
     - `x-page-size` : Maxium size of the page
     - `x-current-page` : Page number of the current page of the list of requested sub-resources
 
+    **Deprecation Notes**
+
+    WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
+    The feature will be turned off on 6th of October for all Business API Accounts.
+
+    The group messaging related parts of Chat API have to follow this deprecation time line.
+    Please migrate to the standard messaging and contact us about alternative ways.
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.9'
+  version: '2.10'
   x-repository: https://github.com/tyntec/api-collection/blob/master/chat-api
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -121,6 +130,15 @@ tags:
       The WA Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
+  - name: "WA Group Management"
+    description: |
+      **Deprecation Notes**
+
+      WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
+      The feature will be turned off on 6th of October for all Business API Accounts.
+
+      The group messaging related parts of Chat API have to follow this deprecation time line.
+      Please migrate to the standard messaging and contact us about alternative ways.
 x-tagGroups:
   - name: Messaging
     tags:
