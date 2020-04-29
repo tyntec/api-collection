@@ -1550,8 +1550,8 @@ components:
               text: Do you want to know more?
             - type: button
               button:
-              caption: Yes
-              callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
+                caption: Yes
+                callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
     ViberTextImageButtonMessage:
       value:
         to: "12331132"
