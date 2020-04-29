@@ -100,144 +100,6 @@ paths:
         - "Send SMS"
       summary: Sends SMS via POST HTTP method
       operationId: sendSmsUsingPOST
-      parameters:
-        - name: to
-          in: query
-          description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
-          schema:
-            type: string
-        - name: from
-          in: query
-          description: |
-            This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
-
-            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
-            and contact us for more information.`
-          required: true
-          schema:
-            type: string
-        - name: message
-          in: query
-          description: |
-            The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
-
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
-            per concatenated message.
-            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
-            per concatenated message.
-
-            tyntec automatically splits the sent message into concatenated messages if the message
-            exceeds the given limits. These concatenated messages are unified by the handset once again and
-            they are displayed as one message (if supported by the handset).
-
-            `tyntec will charge for each part of the concatenated message as an individual message.`
-
-          required: true
-          schema:
-            type: string
-        - name: encoding
-          in: query
-          description: Encoding selection between GSM7, UNICODE or the default AUTO selection
-          schema:
-            type: string
-            enum:
-              - AUTO
-              - GSM7
-              - UNICODE
-            default: AUTO
-        - name: gateway
-          in: query
-          description: Which gateway to use for the delivery of the message
-          schema:
-            type: string
-            default: DEFAULT
-        - name: conversion
-          in: query
-          description: Is this message subject to conversion ratio
-          schema:
-            type: boolean
-            default: false
-        - name: sendDateTime
-          in: query
-          description: >-
-            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
-            If not set, message will be sent immediately.
-            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
-          schema:
-            type: string
-        - name: validity
-          in: query
-          description: Validity in minutes for this message
-          schema:
-            type: string
-            default: '2880'
-        - name: reference
-          in: query
-          description: A customer reference attached to the Delivery Reports
-          schema:
-            type: string
-        - name: callbackUrl
-          in: query
-          description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
-          schema:
-            type: string
-        - name: callbackMethod
-          in: query
-          description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
-          schema:
-            type: string
-        - name: partLimit
-          in: query
-          description: Up to how many parts you allow this message to be concatenated
-          schema:
-            type: integer
-            format: int32
-            default: 4
-        - name: trate
-          in: query
-          description: >-
-            Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible characters. This can be used to compress the message.
-          schema:
-            type: number
-            format: double
-            minimum: 0
-            maximum: 1
-            default: 1
-        - name: mrate
-          in: query
-          description: >-
-            Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
-            They're replaced with '.'.
-          schema:
-            type: number
-            format: double
-            minimum: 0
-            maximum: 1
-            default: 0
-        - name: upperCased
-          in: query
-          description: >-
-            If you allow the transcoder to try an upper case version of
-            the content in case this improves the produced parts of the
-            message
-          schema:
-            type: boolean
-            default: true
-        - name: keepEmojis
-          in: query
-          description: >-
-            Instructs the transcoder to keep emojis or to replace the with text.
-            By default the transcoder will keep emojis; thus text will result to UNICODE.
-          schema:
-            type: boolean
-            default: true
-        - name: flash
-          in: query
-          description: If this sms will be delivered as flash. Some networks do not support this.
-          schema:
-            type: boolean
-            default: false
       responses:
         '200':
           description: The messageIds of your request
@@ -492,8 +354,219 @@ paths:
             tyntec's inbound system will retry the delivery
 
 components:
+  requestBodies:
+    sendSmsUsingPOST:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              to:
+                description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
+                type: string
+              from:
+                description: |
+                  This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+
+                  `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+                  and contact us for more information.`
+                type: string
+              message:
+                description: |
+                  The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+
+                  - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
+                  per concatenated message.
+                  - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
+                  per concatenated message.
+
+                  tyntec automatically splits the sent message into concatenated messages if the message
+                  exceeds the given limits. These concatenated messages are unified by the handset once again and
+                  they are displayed as one message (if supported by the handset).
+
+                  `tyntec will charge for each part of the concatenated message as an individual message.`
+                type: string
+              encoding:
+                description: Encoding selection between GSM7, UNICODE or the default AUTO selection
+                type: string
+                enum:
+                  - AUTO
+                  - GDM7
+                  - UNICODE
+                default: AUTO
+              gateway:
+                description: Which gateway to use for the delivery of the message
+                type: string
+                default: DEFAULT
+              conversion:
+                description: Is this message subject to conversion ratio
+                type: boolean
+                default: false
+              sendDateTime:
+                description: >-
+                  Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+                  If not set, message will be sent immediately.
+                  The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+                type: string
+              validity:
+                description: Validity in minutes for this message
+                type: string
+                default: '2880'
+              reference:
+                description: A customer reference attached to the Delivery Reports
+                type: string
+              callbackUrl:
+                description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
+                type: string
+              callbackMethod:
+                description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
+                type: string
+              partLimit:
+                description: Up to how many parts you allow this message to be concatenated
+                type: integer
+                format: int32
+                default: 4
+              trate:
+                description: >-
+                  Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+                  compatible characters. This can be used to compress the message.
+                type: number
+                format: double
+                default: 1
+              mrate:
+                description: >-
+                  Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
+                  They're replaced with '.'.
+                type: number
+                format: double
+                default: 0
+              upperCased:
+                description: >-
+                  If you allow the transcoder to try an upper case version of
+                  the content in case this improves the produced parts of the
+                  message
+                type: boolean
+                default: true
+              keepEmojis:
+                description: >-
+                  If you allow the transcoder to keep emojis
+                type: boolean
+                default: true
+              flash:
+                description: >-
+                  If this sms will be delivered as flash. Some networks do not support this.
+                type: boolean
+                default: true                
+            required:
+              - to
+              - from
+              - message
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              to:
+                description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
+                type: string
+              from:
+                description: |
+                  This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+
+                  `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+                  and contact us for more information.`
+                type: string
+              message:
+                description: |
+                  The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+
+                  - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
+                  per concatenated message.
+                  - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
+                  per concatenated message.
+
+                  tyntec automatically splits the sent message into concatenated messages if the message
+                  exceeds the given limits. These concatenated messages are unified by the handset once again and
+                  they are displayed as one message (if supported by the handset).
+
+                  `tyntec will charge for each part of the concatenated message as an individual message.`
+                type: string
+              encoding:
+                description: Encoding selection between GSM7, UNICODE or the default AUTO selection
+                type: string
+                enum:
+                  - AUTO
+                  - GDM7
+                  - UNICODE
+                default: AUTO
+              gateway:
+                description: Which gateway to use for the delivery of the message
+                type: string
+                default: DEFAULT
+              conversion:
+                description: Is this message subject to conversion ratio
+                type: boolean
+                default: false
+              sendDateTime:
+                description: >-
+                  Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+                  If not set, message will be sent immediately.
+                  The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+                type: string
+              validity:
+                description: Validity in minutes for this message
+                type: string
+                default: '2880'
+              reference:
+                description: A customer reference attached to the Delivery Reports
+                type: string
+              callbackUrl:
+                description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
+                type: string
+              callbackMethod:
+                description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
+                type: string
+              partLimit:
+                description: Up to how many parts you allow this message to be concatenated
+                type: integer
+                format: int32
+                default: 4
+              trate:
+                description: >-
+                  Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
+                  compatible characters. This can be used to compress the message.
+                type: number
+                format: double
+                default: 1
+              mrate:
+                description: >-
+                  Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
+                  They're replaced with '.'.
+                type: number
+                format: double
+                default: 0
+              upperCased:
+                description: >-
+                  If you allow the transcoder to try an upper case version of
+                  the content in case this improves the produced parts of the
+                  message
+                type: boolean
+                default: true
+              keepEmojis:
+                description: >-
+                  If you allow the transcoder to keep emojis
+                type: boolean
+                default: true
+              flash:
+                description: >-
+                  If this sms will be delivered as flash. Some networks do not support this.
+                type: boolean
+                default: true
+            required:
+              - to
+              - from
+              - message
   securitySchemes:
-    ApiKeyAuth:
+    ApiKeyHeader:
       type: apiKey
       in: header
       name: apikey
