@@ -1833,7 +1833,7 @@ components:
                 example: click me!
               callback:
                 type: string
-                maxLength: 62
+                maxLength: 1000
                 pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
                 description: Action callback that is executed when the user clicks on the button
                 example: https://my.callba.ck/clicked
