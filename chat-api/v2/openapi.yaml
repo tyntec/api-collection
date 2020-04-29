@@ -152,6 +152,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MessageRequest'
+            examples:
+              SMSTextMessage:
+                $ref: '#/components/examples/SMSTextMessage'
+              WhatsAppTextMessage:
+                $ref: '#/components/examples/WhatsAppTextMessage'
+              WhatsAppAudioMessage:
+                $ref: '#/components/examples/WhatsAppAudioMessage'
+              WhatsAppDocumentMessage:
+                $ref: '#/components/examples/WhatsAppDocumentMessage'
+              WhatsAppImageMessage:
+                $ref: '#/components/examples/WhatsAppImageMessage'
+              WhatsAppTemplateMessage:
+                $ref: '#/components/examples/WhatsAppTemplateMessage'
+              WhatsAppRichNotificationMessage:
+                $ref: '#/components/examples/WhatsAppRichNotificationMessage'
+              ViberTextMessage:
+                $ref: '#/components/examples/ViberTextMessage'
+              ViberImageMessage:
+                $ref: '#/components/examples/ViberImageMessage'
+              ViberTextButtonMessage:
+                $ref: '#/components/examples/ViberTextButtonMessage'
+              ViberTextImageButtonMessage:
+                $ref: '#/components/examples/ViberTextImageButtonMessage'
       responses:
         202:
           description: The message is accepted by our system
@@ -1391,6 +1414,162 @@ components:
         type: string
         pattern: "[a-z_0-9]+"
       example: welcome_message
+  examples:
+    SMSTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - sms
+        sms:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+    WhatsAppTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+    WhatsAppImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: image
+            url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+            caption: Hi this is a test
+    WhatsAppDocumentMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: document
+            url: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+            caption: Tyntec Pricelist
+            filename: tyntec_pricelist.pdf
+    WhatsAppAudioMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: audio
+            url: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
+    WhatsAppTemplateMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: 2fa_code
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Peter
+                  - type: text
+                    text: 123456
+                  - type: text
+                    text: 5 minutes
+    WhatsAppRichNotificationMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: header
+                parameters:
+                  - type: media
+                    media:
+                      type: image
+                      url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+    ViberTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - viber
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: "hi!"
+    ViberImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          components:
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+    ViberTextButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: Do you want to know more?
+            - type: button
+              button:
+              caption: Yes
+              callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
+    ViberTextImageButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: This is our offer
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+            - type: button
+              button:
+                caption: I accept
+                callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
+
   schemas:
     MessageRequest:
       type: object
@@ -1420,6 +1599,7 @@ components:
               - sms
               - whatsapp
               - tyntecEcho
+              - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
@@ -1436,6 +1616,8 @@ components:
             A detailed description is provided on the object definition.
           allOf:
             - $ref: '#/components/schemas/TyntecEchoRequest'
+        viber:
+          $ref: '#/components/schemas/ViberMessageRequest'
       example:
         to: "+123234234"
         channels: ["whatsapp"]
@@ -1577,12 +1759,104 @@ components:
         contentType: text
         from: "1233423454"
         text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberMessageRequest:
+      type: object
+      description: |
+        Viber message to be sent
+      required:
+        - components
+        - messagePurpose
+      properties:
+        from:
+          type: string
+          description: Viber channel id
+          example: "1233423454"
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
+      example:
+        from: "1233423454"
+        messagePurpose: transaction
+        components:
+          - type: text
+            text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberTextComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: Text component for viber
+        text:
+          type: string
+          maxLength: 1000
+          description: The message to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberButtonComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        button:
+          type: object
+          properties:
+              caption:
+                type: string
+                maxLength: 30
+                description: Caption of the button
+                example: click me!
+              callback:
+                type: string
+                maxLength: 62
+                pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+                description: Action callback that is executed when the user clicks on the button
+                example: https://my.callba.ck/clicked
+    ViberImageComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - image
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Url location of the image, must be accessible from the public network
     WhatsappMessageRequest:
+      type: object
       description: |
         Whatsapp message to be send.
 
         This will override defaults from DefaultContent
-      type: object
       required:
         - contentType
         - from
@@ -2248,6 +2522,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         timestamp:
           type: string
           format: 'date-time'
@@ -2676,6 +2951,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         receivedAt:
           deprecated: true
           type: string
