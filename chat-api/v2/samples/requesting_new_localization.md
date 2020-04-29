@@ -2,7 +2,7 @@
 
 These are examples on requesting new localizations for WhatsApp templates. 
 
-You need to have a template requested before.
+You must have requested a template before.
 
 In general a localization of a template can consist of the following three components:
 
@@ -14,7 +14,7 @@ In case of a text up to one variable is supported. The variable is indicated by 
 
 #### Body
 
-Simple text, that can contain newlines, emojis or urls and variables.
+Simple text that can contain newlines, emojis, or urls and variables.
 
 Variables are indicated by `{{n}}`, n sequential natural number without repetition.
 
