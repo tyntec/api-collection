@@ -145,6 +145,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       requestBody:
         $ref: '#/components/requestBodies/sendSmsUsingPOST'
+        required: true
     get:
       tags:
         - Send SMS
@@ -470,11 +471,11 @@ components:
                 description: >-
                   If this sms will be delivered as flash. Some networks do not support this.
                 type: boolean
-                default: false       
+                default: false
           example:
             to: "+123456789"
             from: "tyntec"
-            message: "Hello world!"         
+            message: "Hello world!"
   securitySchemes:
     ApiKeyHeader:
       type: apiKey
