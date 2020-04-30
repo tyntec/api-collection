@@ -421,6 +421,10 @@ components:
               callbackMethod:
                 description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
                 type: string
+                enum:
+                  - POST
+                  - GET
+                default: POST
               partLimit:
                 description: Up to how many parts you allow this message to be concatenated
                 type: integer
@@ -525,6 +529,10 @@ components:
               callbackMethod:
                 description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
                 type: string
+                enum:
+                  - POST
+                  - GET
+                default: POST
               partLimit:
                 description: Up to how many parts you allow this message to be concatenated
                 type: integer
