@@ -2562,6 +2562,7 @@ components:
       description: Determines which kind of event is emitted by the API
       enum:
         - MoMessage
+        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
@@ -2943,6 +2944,98 @@ components:
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MoMessagePostBack:
+      type: object
+      description: |
+        The current status of a message.
+
+        It is used for messages send and received by you.
+
+        In case you send a message the status will inform you about the delivery process.
+
+        In the case that you receive a message from a user, the user may decide to delete the message.
+        Then and only then status deleted is triggered.
+      required:
+        - messageId
+        - event
+        - status
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
+          enum:
+            - MoMessage::PostBack
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: the sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific
+          example: "49123512315"
+        groupId:
+          type: string
+          description: Group id from which the event originates from. Only present if the message was send into a group
+          example:
+            4923147790717-1564134658
+        postback:
+          $ref: '#/components/schemas/PostBack'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/WhatsAppPostBack'
+      example:
+        event: MoMessage::PostBack
+        messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        postback:
+          data: EventVisited::2020-04-04::WhatsAppFair
+        context:
+          messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        whatsapp:
+          senderName: open api sample
+          text: I liked the event
+    PostBack:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Payload or data that was specified on when requesting the button based message
+          example: EventVisited::2020-04-04::WhatsAppFair
+    WhatsAppPostBack:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Whatsapp'
+      properties:
+        text:
+          type: string
+          description: Caption of the button that was clicked
+          example: Yes
     MoMessage:
       type: object
       description: |
