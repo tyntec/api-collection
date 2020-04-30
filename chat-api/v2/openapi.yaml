@@ -2967,7 +2967,7 @@ components:
           type: string
           description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
           enum:
-            - MoMessage::PostBack
+            - MoMessage::Postback
         channel:
           type: string
           description: Channel which triggered the event.
