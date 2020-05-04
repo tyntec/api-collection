@@ -2516,11 +2516,17 @@ components:
           - type: text
             text: nice replacement
     ButtonComponent:
+      description:  One of the given Types can be used.
       oneOf:
         - $ref: '#/components/schemas/QuickReplyButtonComponent'
         - $ref: '#/components/schemas/UrlButtonComponent'
     QuickReplyButtonComponent:
+      anyOf:
+        -  $ref: '#/components/schemas/FirstQuickReplyButtonComponent'
+        -  $ref: '#/components/schemas/SecondQuickReplyButtonComponent'
+    FirstQuickReplyButtonComponent:
       type: object
+      description: This type can be used up to three times
       properties:
         type:
           type: string
@@ -2530,6 +2536,42 @@ components:
           type: string
           enum:
             - quick_reply
+        index:
+          type: number
+          enum:
+            - 0
+          minimum: 0
+          maximum: 2
+        parameters:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+                enum:
+                  - payload
+              payload:
+                type: string
+          minItems: 0
+          maxItems: 1
+    SecondQuickReplyButtonComponent:
+      type: object
+      description: This type can be used up to three times
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        subtype:
+          type: string
+          enum:
+            - quick_reply
+        index:
+          type: number
+          enum:
+            - 1
+          minimum: 0
+          maximum: 2
         parameters:
           type: array
           items:
@@ -2544,6 +2586,7 @@ components:
           maxItems: 1
     UrlButtonComponent:
       type: object
+        description: This type can be used up to two times
       properties:
         type:
           type: string
@@ -2553,6 +2596,10 @@ components:
           type: string
           enum:
             - url
+        index:
+          type: number
+          minimum: 0
+          maximum: 1
         parameters:
           type: array
           items:
