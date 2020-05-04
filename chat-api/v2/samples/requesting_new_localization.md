@@ -45,7 +45,7 @@ Text based footer up to 60 characters.
 }
 ````
 
-### Body with footer template request
+### Body with footer localization request
 
 ````
 {
@@ -63,7 +63,7 @@ Text based footer up to 60 characters.
 }
 ````
 
-### Text-based header template request
+### Text-based header localization request
 
 ````
 {
@@ -82,7 +82,7 @@ Text based footer up to 60 characters.
 }
 ````
 
-### Media-based header template request
+### Media-based header localization request
 
 ````
 {
