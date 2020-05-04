@@ -171,27 +171,31 @@ paths:
             schema:
               $ref: '#/components/schemas/MessageRequest'
             examples:
-              SMSTextMessage:
+              SMS - Text:
                 $ref: '#/components/examples/SMSTextMessage'
-              WhatsAppTextMessage:
+              WA - Text:
                 $ref: '#/components/examples/WhatsAppTextMessage'
-              WhatsAppAudioMessage:
+              WA - Audio:
                 $ref: '#/components/examples/WhatsAppAudioMessage'
-              WhatsAppDocumentMessage:
+              WA - Document:
                 $ref: '#/components/examples/WhatsAppDocumentMessage'
-              WhatsAppImageMessage:
+              WA - Image:
                 $ref: '#/components/examples/WhatsAppImageMessage'
-              WhatsAppTemplateMessage:
+              WA - Text Template:
                 $ref: '#/components/examples/WhatsAppTemplateMessage'
-              WhatsAppRichNotificationMessage:
+              WA - Rich Template :
                 $ref: '#/components/examples/WhatsAppRichNotificationMessage'
-              ViberTextMessage:
+              WA - Call to action Template:
+                $ref: '#/components/examples/WhatsAppInteractiveCallToActionMessage'
+              WA - Quick reply Template:
+                $ref: '#/components/examples/WhatsAppInteractiveQuickReplyMessage'
+              Viber - Text:
                 $ref: '#/components/examples/ViberTextMessage'
-              ViberImageMessage:
+              Viber - Image:
                 $ref: '#/components/examples/ViberImageMessage'
-              ViberTextButtonMessage:
+              Viber - Text & Button:
                 $ref: '#/components/examples/ViberTextButtonMessage'
-              ViberTextImageButtonMessage:
+              Viber - Text & Image & Button:
                 $ref: '#/components/examples/ViberTextImageButtonMessage'
       responses:
         202:
@@ -1535,6 +1539,64 @@ components:
                     text: Mr. Tester
                   - type: text
                     text: "Inv: 1233131-2020"
+    WhatsAppInteractiveQuickReplyMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+              - type: button
+                subtype: quick_reply
+                index: 0
+                parameters:
+                  - type: payload
+                    payload: InvoiceId:1233131-2020
+              - type: button
+                subtype: quick_reply
+                index: 2
+                parameters:
+                  - type: payload
+                    payload: CustomerId:13134141
+    WhatsAppInteractiveCallToActionMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+              - type: button
+                subtype: url
+                index: 0
+                parameters:
+                  - type: text
+                    payload: 1233131-2020
     ViberTextMessage:
       value:
         to: "12331132"
@@ -4024,20 +4086,23 @@ components:
       maxItems: 3
     WhatsAppQuickReplyButton:
       type: object
+      description: Quick reply button, when clicked the caption and the dynamic payload is returned.
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of the button
+          description: Type of this button
           enum:
             - QUICK_REPLY
+          example: QUICK_REPLY
         text:
           type: string
           description: Caption of the button
           maxLength: 20
           minLength: 1
+          example: I liked it!
     WhatsAppCallToActionButtons:
       type: array
       description: Call to action buttons. At most one of each button types can be used.
@@ -4049,20 +4114,23 @@ components:
       maxItems: 2
     WhatsAppURLButton:
       type: object
+      description: Call to action button that opens the specified URL when clicked
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of the button
+          description: Type of this button
           enum:
             - URL
+          example: URL
         text:
           type: string
           description: Caption of the button
           maxLength: 20
           minLength: 1
+          example: Your invoice
         url:
           type: string
           description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
@@ -4070,20 +4138,23 @@ components:
           example: https://www.myservice.com/invoices/{{1}}
     WhatsAppPhoneNumberButton:
       type: object
+      description: Call to action button that initiates a call when clicked
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of the button
+          description: Type of this button
           enum:
             - PHONE_NUMBER
+          example: PHONE_NUMBER
         text:
           type: string
-          description: Caption of the button
+          description: Caption of this button
           maxLength: 20
           minLength: 1
+          example: Call us
         phoneNumber:
           type: string
           description: Phone number that will be called when clicking on the button.
