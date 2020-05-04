@@ -2392,12 +2392,15 @@ components:
             Parameter for replacement in the template.
 
             Header and body components can only be used once.
+
+            The button components can be used up to 3 times (quick replies) or 1 time (url)
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/HeaderComponent'
               - $ref: '#/components/schemas/BodyComponent'
-              - $ref: '#/components/schemas/ButtonComponent'
+              - $ref: '#/components/schemas/QuickReplyButtonComponent'
+              - $ref: '#/components/schemas/UrlButtonComponent'
         parameters:
           description: |
             Parameter for replacement in the template.
@@ -2515,11 +2518,6 @@ components:
             text: Sam
           - type: text
             text: nice replacement
-    ButtonComponent:
-      description:  Only one of the variants can be used. Each up to the maximum of the index
-      anyOf:
-        -  $ref: '#/components/schemas/QuickReplyButtonComponent'
-        -  $ref: '#/components/schemas/UrlButtonComponent'
     QuickReplyButtonComponent:
       type: object
       description: This type can be used up to three times
