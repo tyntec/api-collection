@@ -20,8 +20,7 @@ Variables are indicated by `{{n}}`, n sequential natural number without repetiti
 
 A variable counts as 1 character for the length.
 
-When a Footer or Header component is used it can be at most 160 characters.
-Otherwise it's 1024 characters. 
+The body is limited to 1024 characters. **Note** this limit is applied also to the hydrated template, when a footer, header or buttons are used. A hydrated template is a template on which the variable replacements are applied.
 
 The body **must** be present and **not** empty.
 
@@ -95,6 +94,66 @@ Text based footer up to 60 characters.
         {
           "type": "BODY",
           "text": "The format could be as well DOCUMENT"
+        }
+      ]
+}
+```` 
+
+### Interactive template localization request with quick reply buttons
+
+You can add up to 3 quick reply buttons
+
+````
+{
+      "language": "en",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Quick reply buttons are possible as well"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type" : "QUICK_REPLY",
+              "text" : "Cool!"
+            },
+            {
+              "type" : "QUICK_REPLY",
+              "text" : "Nice!"
+            }
+          ]
+        }
+      ]
+}
+```` 
+
+### Interactive template localization request with call to action buttons
+
+You can use either one url or one phone number or both types here.
+
+````
+{
+      "language": "en",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Quick reply buttons are possible as well"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type" : "PHONE_NUMBER",
+              "text" : "Support",
+              "phoneNumber" : "+1231312313"
+            },
+            {
+              "type" : "URL",
+              "text" : "Your documents",
+              "url" : "https://www.example.com/{{1}}"
+            }
+          ]
         }
       ]
 }
