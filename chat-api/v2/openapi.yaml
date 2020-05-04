@@ -506,6 +506,25 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WhatsAppTemplateRequest'
+            examples:
+              Plain text:
+                $ref: '#/components/examples/WhatsAppTextTemplate'
+              Text header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithText'
+              Image header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithImage'
+              Document header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithDocument'
+              Video header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithVideo'
+              Location header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithLocation'
+              Quick replies:
+                $ref: '#/components/examples/WhatsAppInteractiveTemplateWithQuickReply'
+              Call to action:
+                $ref: '#/components/examples/WhatsAppInteractiveTemplateWithCallToAction'
+              All components:
+                $ref: '#/components/examples/WhatsAppAllComponentsUsedTemplate'
       responses:
         201:
           $ref: '#/components/responses/ResourceCreated'
@@ -1437,6 +1456,7 @@ components:
         pattern: "[a-z_0-9]+"
       example: welcome_message
   examples:
+    ## Messaging section
     SMSTextMessage:
       value:
         to: "12331132"
@@ -1649,6 +1669,190 @@ components:
               button:
                 caption: I accept
                 callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
+    ## Template management section
+    WhatsAppTextTemplate:
+      value:
+        name: welcome
+        category: AUTO_REPLY
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  welcome at our support.
+                  How can we help you?
+
+                  Your support team
+    WhatsAppTextWithFooterTemplate:
+      value:
+        name: welcome_v2
+        category: AUTO_REPLY
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  welcome at our support.
+                  How can we help you?
+              - type: FOOTER
+                text: Your support team
+    WhatsAppRichTemplateWithImage:
+      value:
+        name: appointment_confirmation
+        category: APPOINTMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: IMAGE
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  this is our office building.
+
+                  Please be in *front* of the building at {{2}}
+              - type: FOOTER
+                text: Your people team
+    WhatsAppRichTemplateWithDocument:
+      value:
+        name: invoice
+        category: PAYMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: DOCUMENT
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  here's the requested invoice for your order {{2}}.
+
+                  Don't hesitate to come back to us, if you have any questions.
+    WhatsAppRichTemplateWithVideo:
+      value:
+        name: surveilance_alert
+        category: ALERT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: DOCUMENT
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we recorded this activity at {{2}} on the location named {{3}}
+
+                  Please check if any countermeasures are required
+    WhatsAppRichTemplateWithLocation:
+      value:
+        name: pickup_point
+        category: TRANSPORTATION_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: LOCATION
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  please meet us at {{2}} on the specified point.
+
+                  Sincerely,
+
+                  Your travel team.
+    WhatsAppRichTemplateWithText:
+      value:
+        name: account_upgrade
+        category: ACCOUNT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: TEXT
+                text: Account {{1}} information
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we happily inform you that your account {{2}} has been upgraded to {{3}}.
+
+                  Sincerely,
+
+                  Your support team.
+    WhatsAppInteractiveTemplateWithQuickReply:
+      value:
+        name: ticket_closed
+        category: ISSUE_RESOLUTION
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we've closed your ticket {{2}} due to inactivity.
+
+                  Has your issue been solved in the meantime?
+              - type: BUTTONS
+                buttons:
+                  - type: QUICK_REPLY
+                    text: Yes
+                  - type: QUICK_REPLY
+                    text: No
+    WhatsAppInteractiveTemplateWithCallToAction:
+      value:
+        name: invoice_issues
+        category: PAYMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we need to inform you, that the invoice {{2}} is not payed yet.
+              - type: BUTTONS
+                buttons:
+                  - type: PHONE_NUMBER
+                    phoneNumber: +4923147790813
+                    text: Call an agent
+                  - type: URL
+                    text: Pending Invoice
+                    url: https://www.myservice.com/invoices/{{1}}
+    WhatsAppAllComponentsUsedTemplate:
+      value:
+        name: surveilance_v2
+        category: ALERT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: Video
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we recorded this activity at {{2}} on the location named {{3}}
+
+                  Please check if any countermeasures are required
+              - type: FOOTER
+                text: Your security team
+              - type: BUTTONS
+                buttons:
+                  - type: QUICK_REPLY
+                    text: All fine
+                  - type: QUICK_REPLY
+                    text: Call the police
+                  - type: QUICK_REPLY
+                    text: I take care
 
   schemas:
     MessageRequest:
