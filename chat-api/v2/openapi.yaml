@@ -3906,6 +3906,7 @@ components:
           - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateButtonComponentRequest'
       minItems: 1
     WhatsAppTemplateHeaderComponentRequest:
       type: object
@@ -3998,6 +3999,96 @@ components:
           minLength: 1
           example:
             The specification team
+    WhatsAppTemplateButtonComponentRequest:
+      type: object
+      description: Footer component of a template
+      required:
+        - type
+        - buttons
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - BUTTONS
+        buttons:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
+            - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
+    WhatsAppQuickReplyButtons:
+      type: array
+      description: Quick Reply buttons
+      items:
+        $ref: '#/components/schemas/WhatsAppQuickReplyButton'
+      minItems: 1
+      maxItems: 3
+    WhatsAppQuickReplyButton:
+      type: object
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of the button
+          enum:
+            - QUICK_REPLY
+        text:
+          type: string
+          description: Caption of the button
+          maxLength: 20
+          minLength: 1
+    WhatsAppCallToActionButtons:
+      type: array
+      description: Call to action buttons. At most one of each button types can be used.
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppURLButton'
+          - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
+      minItems: 1
+      maxItems: 2
+    WhatsAppURLButton:
+      type: object
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of the button
+          enum:
+            - URL
+        text:
+          type: string
+          description: Caption of the button
+          maxLength: 20
+          minLength: 1
+        url:
+          type: string
+          description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
+          example: https://www.myservice.com/invoices/{{1}}
+    WhatsAppPhoneNumberButton:
+      type: object
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of the button
+          enum:
+            - PHONE_NUMBER
+        text:
+          type: string
+          description: Caption of the button
+          maxLength: 20
+          minLength: 1
+        phoneNumber:
+          type: string
+          description: Phone number that will be called when clicking on the button.
+          pattern: "^\+\d{4,23}"
+          example: "+4923147790813"
     WhatsAppTemplates:
       type: array
       description: List of WhatsApp templates
