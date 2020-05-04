@@ -2397,6 +2397,7 @@ components:
             anyOf:
               - $ref: '#/components/schemas/HeaderComponent'
               - $ref: '#/components/schemas/BodyComponent'
+              - $ref: '#/components/schemas/ButtonComponent'
         parameters:
           description: |
             Parameter for replacement in the template.
@@ -2514,6 +2515,56 @@ components:
             text: Sam
           - type: text
             text: nice replacement
+    ButtonComponent:
+      oneOf:
+        - $ref: '#/components/schemas/QuickReplyButtonComponent'
+        - $ref: '#/components/schemas/UrlButtonComponent'
+    QuickReplyButtonComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        subtype:
+          type: string
+          enum:
+            - quick_reply
+        parameters:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+                enum:
+                  - payload
+              payload:
+                type: string
+          minItems: 0
+          maxItems: 1
+    UrlButtonComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        subtype:
+          type: string
+          enum:
+            - url
+        parameters:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+                enum:
+                  - text
+              text:
+                type: string
+          minItems: 0
+          maxItems: 1
     TextParameter:
       type: object
       properties:
