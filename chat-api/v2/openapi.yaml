@@ -4087,7 +4087,7 @@ components:
         phoneNumber:
           type: string
           description: Phone number that will be called when clicking on the button.
-          pattern: "^\+\d{4,23}"
+          pattern: "^\+\d{4,23}$"
           example: "+4923147790813"
     WhatsAppTemplates:
       type: array
