@@ -2516,15 +2516,10 @@ components:
           - type: text
             text: nice replacement
     ButtonComponent:
-      description:  One of the given Types can be used.
-      oneOf:
-        - $ref: '#/components/schemas/QuickReplyButtonComponents'
-        - $ref: '#/components/schemas/UrlButtonComponent'
-    QuickReplyButtonComponents:
+      description:  Only one of the variants can be used. Each up to the maximum of the index
       anyOf:
-        -  $ref: '#/components/schemas/FirstQuickReplyButtonComponent'
-        -  $ref: '#/components/schemas/SecondQuickReplyButtonComponent'
-        -  $ref: '#/components/schemas/ThirdQuickReplyButtonComponent'
+        -  $ref: '#/components/schemas/QuickReplyButtonComponent'
+        -  $ref: '#/components/schemas/UrlButtonComponent'
     QuickReplyButtonComponent:
       type: object
       description: This type can be used up to three times
@@ -2553,36 +2548,6 @@ components:
                 type: string
           minItems: 0
           maxItems: 1
-    FirstQuickReplyButtonComponent:
-      type: object
-      description: First quick reply button
-      allOf:
-        - $ref: '#/components/schemas/QuickReplyButtonComponent'
-      properties:
-        index:
-          type: number
-          enum:
-            - 0
-    SecondQuickReplyButtonComponent:
-      type: object
-      description: Second quick reply button
-      allOf:
-        - $ref: '#/components/schemas/QuickReplyButtonComponent'
-      properties:
-        index:
-          type: number
-          enum:
-            - 1
-    ThirdQuickReplyButtonComponent:
-      type: object
-      description: Third quick reply button
-      allOf:
-        - $ref: '#/components/schemas/QuickReplyButtonComponent'
-      properties:
-        index:
-          type: number
-          enum:
-            - 2
     UrlButtonComponent:
       type: object
       description: This type can be used up to two times
