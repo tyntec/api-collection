@@ -182,7 +182,7 @@ paths:
               WA - Image:
                 $ref: '#/components/examples/WhatsAppImageMessage'
               WA - Sticker:
-                $ref: '#/components/examples/WhatsAppImageMessage'
+                $ref: '#/components/examples/WhatsAppStickerMessage'
               WA - Location:
                 $ref: '#/components/examples/WhatsAppLocationMessage'
               WA - Text Template:
@@ -2335,7 +2335,7 @@ components:
         url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     StickerMedia:
       type: object
-      description: Image to be send
+      description: Sticker to be send
       required:
         - type
         - url
@@ -2348,7 +2348,7 @@ components:
           example: sticker
         url:
           type: string
-          description: the url of the location where the image is stored
+          description: the url of the location where the sticker is stored
           example: https://www.gstatic.com/webp/gallery/1.webp
       example:
         type: image
