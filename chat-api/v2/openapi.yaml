@@ -2536,7 +2536,7 @@ components:
       properties:
         type:
           type: string
-          default: body
+          description: Determines the type of the component. Always _body_.
           enum:
             - body
         parameters:
@@ -2558,26 +2558,32 @@ components:
       properties:
         type:
           type: string
+          description: Determines the type of the component. Always _button_.
           enum:
             - button
         subtype:
           type: string
+          description: Determines the sub type of the button. Always _quick_reply_.
           enum:
             - quick_reply
         index:
           type: number
+          description: Determines the index of the button that should be enhanced with the payload.
           minimum: 0
           maximum: 2
         parameters:
           type: array
+          description: Parameter for this quick reply button
           items:
             properties:
               type:
                 type: string
+                description: Determines the type of the parameter. Always _payload_.
                 enum:
                   - payload
               payload:
                 type: string
+                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
           minItems: 0
           maxItems: 1
     UrlButtonComponent:
@@ -2586,14 +2592,17 @@ components:
       properties:
         type:
           type: string
+          description: Determines the type of the component. Always _button_.
           enum:
             - button
         subtype:
           type: string
+          description: Determines the type of the component. Always _url_.
           enum:
             - url
         index:
           type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
           minimum: 0
           maximum: 1
         parameters:
@@ -2602,10 +2611,12 @@ components:
             properties:
               type:
                 type: string
+                description: Determines the type of the parameter. Always _text_.
                 enum:
                   - text
               text:
                 type: string
+                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
           minItems: 0
           maxItems: 1
     TextParameter:
@@ -2637,6 +2648,7 @@ components:
       properties:
         type:
           type: string
+          description: Determines the type of the parameter. Always _location_.
           enum:
             - location
         location:
@@ -2670,7 +2682,7 @@ components:
       properties:
         type:
           type: string
-          default: media
+          description: Determines the type of the parameter. Always _media_.
           enum:
             - media
         media:
@@ -2690,7 +2702,7 @@ components:
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: Determines the type of the media. Always _document_.
           enum:
             - document
           example: image
@@ -2712,7 +2724,7 @@ components:
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: Determines the type of the media. Always _video_.
           enum:
             - video
           example: video
