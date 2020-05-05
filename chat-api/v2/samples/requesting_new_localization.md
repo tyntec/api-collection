@@ -1,10 +1,10 @@
 # Requesting new templates
 
-These are examples on requesting new WhatsApp templates. 
+These are examples on requesting new localizations for WhatsApp templates. 
 
-The name of a template **must** match `^[a-z][a-z_0-9]+$`, so start with lower case letter and consist only of lower case letters, numbers and `_`.
+You must have requested a template before.
 
-In general a template can consist of the following three components:
+In general a localization of a template can consist of the following three components:
 
 #### Header
 
@@ -14,7 +14,7 @@ In case of a text up to one variable is supported. The variable is indicated by 
 
 #### Body
 
-Simple text, that can contain newlines, emojis or urls and variables.
+Simple text that can contain newlines, emojis, or urls and variables.
 
 Variables are indicated by `{{n}}`, n sequential natural number without repetition.
 
@@ -30,43 +30,24 @@ Text based footer up to 60 characters.
 
 ## Examples
 
-### Body only template request
+### Body only template localization request
 
 ````
 {
-  "name": "body_only",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
-      "language": "en",
-      "components": [
+   "language": "en",
+   "components": [
         {
           "type": "BODY",
           "text": "Hello {{1}}!"
         }
-      ]
-    },
-    {
-      "language": "fr",
-      "components": [
-        {
-          "type": "BODY",
-          "text": "Bonjour {{1}}!"
-        }
-      ]
-    }
-  ]
+   ]    
 }
 ````
 
-### Body with footer template request
+### Body with footer template localization request
 
 ````
 {
-  "name": "body_and_footer",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
       "language": "en",
       "components": [
         {
@@ -78,19 +59,13 @@ Text based footer up to 60 characters.
           "text": "Your demo team"
         }
       ]
-    }
-  ]
 }
 ````
 
-### Text-based header template request
+### Text-based header template localization request
 
 ````
 {
-  "name": "body_and_text_header",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
       "language": "en",
       "components": [
         {
@@ -103,19 +78,13 @@ Text based footer up to 60 characters.
           "text": "This is an example of a text based header"
         }
       ]
-    }
-  ]
 }
 ````
 
-### Media-based header template request
+### Media-based header template localization request
 
 ````
 {
-  "name": "body_and_media_header",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
       "language": "en",
       "components": [
         {
@@ -127,21 +96,15 @@ Text based footer up to 60 characters.
           "text": "The format could be as well DOCUMENT"
         }
       ]
-    }
-  ]
 }
-````
+```` 
 
-### Interactive template request with quick reply buttons
+### Interactive template localization request with quick reply buttons
 
 You can add up to 3 quick reply buttons.
 
 ````
 {
-  "name": "quick_reply_buttons",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
       "language": "en",
       "components": [
         {
@@ -162,21 +125,15 @@ You can add up to 3 quick reply buttons.
           ]
         }
       ]
-    }
-  ]
 }
 ```` 
 
-### Interactive template request with call to action buttons
+### Interactive template localization request with call to action buttons
 
 You can use either one url or one phone number or both types here.
 
 ````
 {
-  "name": "body_and_text_header",
-  "category": "ACCOUNT_UPDATE",
-  "localizations": [
-    {
       "language": "en",
       "components": [
         {
@@ -199,8 +156,5 @@ You can use either one url or one phone number or both types here.
           ]
         }
       ]
-    }
-  ]
 }
 ```` 
- 
