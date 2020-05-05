@@ -4372,7 +4372,7 @@ components:
             The specification team
     WhatsAppTemplateButtonComponentRequest:
       type: object
-      description: Footer component of a template
+      description: Button component of a template
       required:
         - type
         - buttons
