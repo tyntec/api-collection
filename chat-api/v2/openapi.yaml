@@ -2548,7 +2548,7 @@ components:
           maxItems: 1
     UrlButtonComponent:
       type: object
-      description: This type can be used up to two times
+      description: This type can be used up to one time
       properties:
         type:
           type: string
