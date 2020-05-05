@@ -2608,8 +2608,10 @@ components:
         location:
           $ref: '#/components/schemas/TemplateHeaderLocation'
       example:
-        type: text
-        text: Hi! Cool replacement
+        type: location
+        location:
+          longitude: 7.4954884
+          latitude: 51.5005765
     TemplateHeaderLocation:
       type: object
       description: Location used in template headers
@@ -3320,14 +3322,9 @@ components:
     MoMessagePostBack:
       type: object
       description: |
-        The current status of a message.
+        Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
 
-        It is used for messages send and received by you.
-
-        In case you send a message the status will inform you about the delivery process.
-
-        In the case that you receive a message from a user, the user may decide to delete the message.
-        Then and only then status deleted is triggered.
+        For WhatsApp only Quick Reply buttons trigger this event.
       required:
         - messageId
         - event
@@ -3402,6 +3399,7 @@ components:
           example: EventVisited::2020-04-04::WhatsAppFair
     WhatsAppPostBack:
       type: object
+      description: Postback data for a WhatsApp quick reply button
       allOf:
         - $ref: '#/components/schemas/Whatsapp'
       properties:
