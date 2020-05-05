@@ -2,7 +2,9 @@
 
 ## 2.10
 
-This release introduces Viber as third channel on the Chat API.
+This release introduces Viber as third channel on the Chat API. 
+
+Also interactive templates with buttons as well as stickers are now available on WhatsApp.
 
 ### Features
 
@@ -21,13 +23,22 @@ messages.
 
 Using the channel requires you to request a viber id from tyntec.
 
-### Video on rich templates
+### WhatsApp - Interactive templates 
 
-It's now possible to send as well videos in the header component of rich templates.
+With this release the API supports requesting and sending interactive templates.
 
-### Text on rich notification templates
+These templates can provide up to 3 quick reply buttons or 2 call to action buttons (URL and phone number).
 
-It's now possible to send as well text with a parameter in the header component of rich templates.
+The quick reply buttons can be charged with a custom payload that is send back in the new event `MoMessage::Postback`
+when a user clicks on the button. 
+
+### WhatsApp - New content types on rich templates
+
+This release enables the following content types in the header component of rich templates:
+
+ - text
+ - video
+ - location
 
 ## Changes
 
