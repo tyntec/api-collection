@@ -11,15 +11,14 @@ Also interactive templates with buttons as well as stickers are now available on
 #### Viber support
 
 Beginning with this release the Chat API starts supporting Viber as channel.
-  
-The Viber channel supports to send
 
- - text
- - image
- - text & button
- - text & image & button
- 
-messages.
+The Viber channel supports to send the following through messages:
+
+text
+image
+text & button
+text & image & button
+
 
 Using the channel requires you to request a viber id from tyntec.
 
