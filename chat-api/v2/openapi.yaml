@@ -4590,6 +4590,7 @@ components:
             - REJECTED
             - DELETE_PENDING
             - DELETED
+            - SUBMITTED
           example:
             DELETED
         rejectionReason:
