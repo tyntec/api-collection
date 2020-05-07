@@ -1608,13 +1608,13 @@ components:
                   - type: text
                     text: "Inv: 1233131-2020"
               - type: button
-                subtype: quick_reply
+                subType: quick_reply
                 index: 0
                 parameters:
                   - type: payload
                     payload: InvoiceId:1233131-2020
               - type: button
-                subtype: quick_reply
+                subType: quick_reply
                 index: 2
                 parameters:
                   - type: payload
@@ -1640,7 +1640,7 @@ components:
                   - type: text
                     text: "Inv: 1233131-2020"
               - type: button
-                subtype: url
+                subType: url
                 index: 0
                 parameters:
                   - type: text
@@ -2561,7 +2561,7 @@ components:
           description: Determines the type of the component. Always _button_.
           enum:
             - button
-        subtype:
+        subType:
           type: string
           description: Determines the sub type of the button. Always _quick_reply_.
           enum:
@@ -2595,7 +2595,7 @@ components:
           description: Determines the type of the component. Always _button_.
           enum:
             - button
-        subtype:
+        subType:
           type: string
           description: Determines the type of the component. Always _url_.
           enum:
