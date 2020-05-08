@@ -1,5 +1,67 @@
 # Release notes
 
+## 2.10
+
+This release introduces Viber as third channel on the Chat API. 
+
+Also interactive templates with buttons as well as stickers are now available on WhatsApp.
+
+### Features
+
+#### Viber support
+
+Beginning with this release the Chat API starts supporting Viber as channel.
+
+The Viber channel supports to send the following through messages:
+
+text
+image
+text & button
+text & image & button
+
+
+Using the channel requires you to request a viber id from tyntec.
+
+### WhatsApp - Interactive templates 
+
+With this release the API supports requesting and sending interactive templates.
+
+These templates can provide up to 3 quick reply buttons or 2 call to action buttons (URL and phone number).
+
+The quick reply buttons can be charged with a custom payload that is send back in the new event `MoMessage::Postback`
+when a user clicks on the button. 
+
+### WhatsApp - New content types on rich templates
+
+This release enables the following content types in the header component of rich templates:
+
+ - text
+ - video
+ - location
+
+## Changes
+
+### Length restriction on body component of rich templates
+
+It's now possible to define up to 1024 characters on the body component of rich templates.
+
+Previously it was 160.
+
+**Note** : The length restriction still applies to the hydrate template (template text including parameter replacements).
+
+## Deprecations
+
+### Groups API
+
+WhatsApp decided to deprecate the Groups API 6th of July for new and 6th of October for all WhatsApp business accounts.
+ 
+This affects on our side
+
+ - group management API 
+ - sending messages to groups
+ 
+WhatsApp announced a replacement but without any timeline yet.
+
 ## 2.9
 
 This release introduces the WhatsApp template management API and also APIs to retrieve information about your WhatsApp account and assigned phone numbers.

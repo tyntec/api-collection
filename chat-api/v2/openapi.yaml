@@ -12,7 +12,8 @@ info:
     **Channel specific pre-conditions**
     
     - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
-    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-request-your-access)
+    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
+    - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
 
     **Adheared web-standards**
 
@@ -40,11 +41,19 @@ info:
     - `x-page-size` : Maxium size of the page
     - `x-current-page` : Page number of the current page of the list of requested sub-resources
 
+    **Deprecation Notes**
+
+    WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
+    The feature will be turned off on 6th of October for all Business API Accounts.
+
+    The group messaging related parts of Chat API have to follow this deprecation time line.
+    Please migrate to the standard messaging and contact us about alternative ways.
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.9'
+  version: '2.10'
   x-repository: https://github.com/tyntec/api-collection/blob/master/chat-api
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -121,6 +130,15 @@ tags:
       The WA Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
+  - name: "WA Group management"
+    description: |
+      **Deprecation Notes**
+
+      WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
+      The feature will be turned off on 6th of October for all Business API Accounts.
+
+      The group messaging related parts of Chat API have to follow this deprecation time line.
+      Please migrate to the standard messaging and contact us about alternative ways.
 x-tagGroups:
   - name: Messaging
     tags:
@@ -152,6 +170,37 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MessageRequest'
+            examples:
+              SMS - Text:
+                $ref: '#/components/examples/SMSTextMessage'
+              WA - Text:
+                $ref: '#/components/examples/WhatsAppTextMessage'
+              WA - Audio:
+                $ref: '#/components/examples/WhatsAppAudioMessage'
+              WA - Document:
+                $ref: '#/components/examples/WhatsAppDocumentMessage'
+              WA - Image:
+                $ref: '#/components/examples/WhatsAppImageMessage'
+              WA - Sticker:
+                $ref: '#/components/examples/WhatsAppStickerMessage'
+              WA - Location:
+                $ref: '#/components/examples/WhatsAppLocationMessage'
+              WA - Text Template:
+                $ref: '#/components/examples/WhatsAppTemplateMessage'
+              WA - Rich Template :
+                $ref: '#/components/examples/WhatsAppRichNotificationMessage'
+              WA - Call to action Template:
+                $ref: '#/components/examples/WhatsAppInteractiveCallToActionMessage'
+              WA - Quick reply Template:
+                $ref: '#/components/examples/WhatsAppInteractiveQuickReplyMessage'
+              Viber - Text:
+                $ref: '#/components/examples/ViberTextMessage'
+              Viber - Image:
+                $ref: '#/components/examples/ViberImageMessage'
+              Viber - Text & Button:
+                $ref: '#/components/examples/ViberTextButtonMessage'
+              Viber - Text & Image & Button:
+                $ref: '#/components/examples/ViberTextImageButtonMessage'
       responses:
         202:
           description: The message is accepted by our system
@@ -461,6 +510,25 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WhatsAppTemplateRequest'
+            examples:
+              Plain text:
+                $ref: '#/components/examples/WhatsAppTextTemplate'
+              Text header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithText'
+              Image header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithImage'
+              Document header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithDocument'
+              Video header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithVideo'
+              Location header:
+                $ref: '#/components/examples/WhatsAppRichTemplateWithLocation'
+              Quick replies:
+                $ref: '#/components/examples/WhatsAppInteractiveTemplateWithQuickReply'
+              Call to action:
+                $ref: '#/components/examples/WhatsAppInteractiveTemplateWithCallToAction'
+              All components:
+                $ref: '#/components/examples/WhatsAppAllComponentsUsedTemplate'
       responses:
         201:
           $ref: '#/components/responses/ResourceCreated'
@@ -1391,6 +1459,429 @@ components:
         type: string
         pattern: "[a-z_0-9]+"
       example: welcome_message
+  examples:
+    ## Messaging section
+    SMSTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - sms
+        sms:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+    WhatsAppTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+    WhatsAppImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: image
+            url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+            caption: Hi this is a test
+    WhatsAppStickerMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: sticker
+            url: https://www.gstatic.com/webp/gallery/1.webp
+    WhatsAppLocationMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: location
+          location:
+            latitude: 51.5005765
+            longitude: 7.4954884
+            name: tyntec GmbH
+            address: tyntec GmbH, Semerteichstraße, Dortmund
+    WhatsAppDocumentMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: document
+            url: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+            caption: Tyntec Pricelist
+            filename: tyntec_pricelist.pdf
+    WhatsAppAudioMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: media
+          media:
+            type: audio
+            url: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
+    WhatsAppTemplateMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: 2fa_code
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Peter
+                  - type: text
+                    text: 123456
+                  - type: text
+                    text: 5 minutes
+    WhatsAppRichNotificationMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: header
+                parameters:
+                  - type: media
+                    media:
+                      type: image
+                      url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+    WhatsAppInteractiveQuickReplyMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+              - type: button
+                subType: quick_reply
+                index: 0
+                parameters:
+                  - type: payload
+                    payload: InvoiceId:1233131-2020
+              - type: button
+                subType: quick_reply
+                index: 2
+                parameters:
+                  - type: payload
+                    payload: CustomerId:13134141
+    WhatsAppInteractiveCallToActionMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: template
+          template:
+            templateId: invoice
+            language:
+              policy: deterministic
+              code: en
+            components:
+              - type: body
+                parameters:
+                  - type: text
+                    text: Mr. Tester
+                  - type: text
+                    text: "Inv: 1233131-2020"
+              - type: button
+                subType: url
+                index: 0
+                parameters:
+                  - type: text
+                    payload: 1233131-2020
+    ViberTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - viber
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: "hi!"
+    ViberImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          components:
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+    ViberTextButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: Do you want to know more?
+            - type: button
+              button:
+                caption: Yes
+                callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
+    ViberTextImageButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: This is our offer
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+            - type: button
+              button:
+                caption: I accept
+                callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
+    ## Template management section
+    WhatsAppTextTemplate:
+      value:
+        name: welcome
+        category: AUTO_REPLY
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  welcome at our support.
+                  How can we help you?
+
+                  Your support team
+    WhatsAppTextWithFooterTemplate:
+      value:
+        name: welcome_v2
+        category: AUTO_REPLY
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  welcome at our support.
+                  How can we help you?
+              - type: FOOTER
+                text: Your support team
+    WhatsAppRichTemplateWithImage:
+      value:
+        name: appointment_confirmation
+        category: APPOINTMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: IMAGE
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  this is our office building.
+
+                  Please be in *front* of the building at {{2}}
+              - type: FOOTER
+                text: Your people team
+    WhatsAppRichTemplateWithDocument:
+      value:
+        name: invoice
+        category: PAYMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: DOCUMENT
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  here's the requested invoice for your order {{2}}.
+
+                  Don't hesitate to come back to us, if you have any questions.
+    WhatsAppRichTemplateWithVideo:
+      value:
+        name: surveilance_alert
+        category: ALERT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: DOCUMENT
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we recorded this activity at {{2}} on the location named {{3}}
+
+                  Please check if any countermeasures are required
+    WhatsAppRichTemplateWithLocation:
+      value:
+        name: pickup_point
+        category: TRANSPORTATION_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: LOCATION
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  please meet us at {{2}} on the specified point.
+
+                  Sincerely,
+
+                  Your travel team.
+    WhatsAppRichTemplateWithText:
+      value:
+        name: account_upgrade
+        category: ACCOUNT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: TEXT
+                text: Account {{1}} information
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we happily inform you that your account {{2}} has been upgraded to {{3}}.
+
+                  Sincerely,
+
+                  Your support team.
+    WhatsAppInteractiveTemplateWithQuickReply:
+      value:
+        name: ticket_closed
+        category: ISSUE_RESOLUTION
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we've closed your ticket {{2}} due to inactivity.
+
+                  Has your issue been solved in the meantime?
+              - type: BUTTONS
+                buttons:
+                  - type: QUICK_REPLY
+                    text: Yes
+                  - type: QUICK_REPLY
+                    text: No
+    WhatsAppInteractiveTemplateWithCallToAction:
+      value:
+        name: invoice_issues
+        category: PAYMENT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we need to inform you, that the invoice {{2}} is not payed yet.
+              - type: BUTTONS
+                buttons:
+                  - type: PHONE_NUMBER
+                    phoneNumber: +4923147790813
+                    text: Call an agent
+                  - type: URL
+                    text: Pending Invoice
+                    url: https://www.myservice.com/invoices/{{1}}
+    WhatsAppAllComponentsUsedTemplate:
+      value:
+        name: surveilance_v2
+        category: ALERT_UPDATE
+        localizations:
+          - language: en
+            components:
+              - type: HEADER
+                format: Video
+              - type: BODY
+                text: |
+                  Hi {{1}},
+
+                  we recorded this activity at {{2}} on the location named {{3}}
+
+                  Please check if any countermeasures are required
+              - type: FOOTER
+                text: Your security team
+              - type: BUTTONS
+                buttons:
+                  - type: QUICK_REPLY
+                    text: All fine
+                  - type: QUICK_REPLY
+                    text: Call the police
+                  - type: QUICK_REPLY
+                    text: I take care
+
   schemas:
     MessageRequest:
       type: object
@@ -1420,6 +1911,7 @@ components:
               - sms
               - whatsapp
               - tyntecEcho
+              - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
@@ -1436,6 +1928,8 @@ components:
             A detailed description is provided on the object definition.
           allOf:
             - $ref: '#/components/schemas/TyntecEchoRequest'
+        viber:
+          $ref: '#/components/schemas/ViberMessageRequest'
       example:
         to: "+123234234"
         channels: ["whatsapp"]
@@ -1577,12 +2071,104 @@ components:
         contentType: text
         from: "1233423454"
         text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberMessageRequest:
+      type: object
+      description: |
+        Viber message to be sent
+      required:
+        - components
+        - messagePurpose
+      properties:
+        from:
+          type: string
+          description: Viber channel id
+          example: "1233423454"
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
+      example:
+        from: "1233423454"
+        messagePurpose: transaction
+        components:
+          - type: text
+            text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberTextComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: Text component for viber
+        text:
+          type: string
+          maxLength: 1000
+          description: The message to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberButtonComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        button:
+          type: object
+          properties:
+              caption:
+                type: string
+                maxLength: 30
+                description: Caption of the button
+                example: click me!
+              callback:
+                type: string
+                maxLength: 1000
+                pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+                description: Action callback that is executed when the user clicks on the button
+                example: https://my.callba.ck/clicked
+    ViberImageComponent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - image
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Url location of the image, must be accessible from the public network
     WhatsappMessageRequest:
+      type: object
       description: |
         Whatsapp message to be send.
 
         This will override defaults from DefaultContent
-      type: object
       required:
         - contentType
         - from
@@ -1702,6 +2288,7 @@ components:
         - $ref: '#/components/schemas/ImageMedia'
         - $ref: '#/components/schemas/DocumentMedia'
         - $ref: '#/components/schemas/VideoMedia'
+        - $ref: '#/components/schemas/StickerMedia'
     AudioMedia:
       type: object
       description: Audio file to be send
@@ -1746,6 +2333,26 @@ components:
       example:
         type: image
         url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+    StickerMedia:
+      type: object
+      description: Sticker to be send
+      required:
+        - type
+        - url
+      properties:
+        type:
+          type: string
+          description: What kind of media should be send. Can only be webp
+          enum:
+            - sticker
+          example: sticker
+        url:
+          type: string
+          description: the url of the location where the sticker is stored
+          example: https://www.gstatic.com/webp/gallery/1.webp
+      example:
+        type: image
+        url: https://www.gstatic.com/webp/gallery/1.webp
     DocumentMedia:
       type: object
       description: Document to be send
@@ -1819,11 +2426,15 @@ components:
             Parameter for replacement in the template.
 
             Header and body components can only be used once.
+
+            The button components can be used up to 3 times (quick replies) or 1 time (url)
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/HeaderComponent'
               - $ref: '#/components/schemas/BodyComponent'
+              - $ref: '#/components/schemas/QuickReplyButtonComponent'
+              - $ref: '#/components/schemas/UrlButtonComponent'
         parameters:
           description: |
             Parameter for replacement in the template.
@@ -1909,6 +2520,8 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/TemplateMediaParameter'
+              - $ref: '#/components/schemas/TextParameter'
+              - $ref: '#/components/schemas/LocationParameter'
           maxItems: 1
           minItems: 1
       example:
@@ -1923,7 +2536,7 @@ components:
       properties:
         type:
           type: string
-          default: body
+          description: Determines the type of the component. Always _body_.
           enum:
             - body
         parameters:
@@ -1939,6 +2552,73 @@ components:
             text: Sam
           - type: text
             text: nice replacement
+    QuickReplyButtonComponent:
+      type: object
+      description: This type can be used up to three times
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component. Always _button_.
+          enum:
+            - button
+        subType:
+          type: string
+          description: Determines the sub type of the button. Always _quick_reply_.
+          enum:
+            - quick_reply
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with the payload.
+          minimum: 0
+          maximum: 2
+        parameters:
+          type: array
+          description: Parameter for this quick reply button
+          items:
+            properties:
+              type:
+                type: string
+                description: Determines the type of the parameter. Always _payload_.
+                enum:
+                  - payload
+              payload:
+                type: string
+                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+          minItems: 0
+          maxItems: 1
+    UrlButtonComponent:
+      type: object
+      description: This type can be used up to one time
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component. Always _button_.
+          enum:
+            - button
+        subType:
+          type: string
+          description: Determines the type of the component. Always _url_.
+          enum:
+            - url
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 1
+        parameters:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+                description: Determines the type of the parameter. Always _text_.
+                enum:
+                  - text
+              text:
+                type: string
+                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+          minItems: 0
+          maxItems: 1
     TextParameter:
       type: object
       properties:
@@ -1963,18 +2643,53 @@ components:
       example:
         type: text
         text: Hi! Cool replacement
+    LocationParameter:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Determines the type of the parameter. Always _location_.
+          enum:
+            - location
+        location:
+          $ref: '#/components/schemas/TemplateHeaderLocation'
+      example:
+        type: location
+        location:
+          longitude: 7.4954884
+          latitude: 51.5005765
+    TemplateHeaderLocation:
+      type: object
+      description: Location used in template headers
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+          format: double
+          description: Longitude part of the coordinate
+          example:
+            7.4954884
+        latitude:
+          type: integer
+          format: double
+          description: Latitude part of the coordinate
+          example:
+            51.5005765
     TemplateMediaParameter:
       type: object
       properties:
         type:
           type: string
-          default: media
+          description: Determines the type of the parameter. Always _media_.
           enum:
             - media
         media:
           oneOf:
             - $ref: '#/components/schemas/ImageMedia'
             - $ref: '#/components/schemas/TemplateDocumentMedia'
+            - $ref: '#/components/schemas/TemplateVideoMedia'
       example:
         type: media
         media:
@@ -1987,7 +2702,7 @@ components:
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: Determines the type of the media. Always _document_.
           enum:
             - document
           example: image
@@ -2003,6 +2718,23 @@ components:
         type: document
         url: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
         filename: Test document
+    TemplateVideoMedia:
+      type: object
+      description: Media to be send
+      properties:
+        type:
+          type: string
+          description: Determines the type of the media. Always _video_.
+          enum:
+            - video
+          example: video
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: http://techslides.com/demos/sample-videos/small.mp4
+      example:
+        type: video
+        url: http://techslides.com/demos/sample-videos/small.mp4
     Location:
       type: object
       description: Location received or send
@@ -2229,6 +2961,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         timestamp:
           type: string
           format: 'date-time'
@@ -2250,6 +2983,7 @@ components:
       description: Determines which kind of event is emitted by the API
       enum:
         - MoMessage
+        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
@@ -2631,6 +3365,94 @@ components:
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MoMessagePostBack:
+      type: object
+      description: |
+        Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
+
+        For WhatsApp only Quick Reply buttons trigger this event.
+      required:
+        - messageId
+        - event
+        - status
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
+          enum:
+            - MoMessage::Postback
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: the sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific
+          example: "49123512315"
+        groupId:
+          type: string
+          description: Group id from which the event originates from. Only present if the message was send into a group
+          example:
+            4923147790717-1564134658
+        postback:
+          $ref: '#/components/schemas/PostBack'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/WhatsAppPostBack'
+      example:
+        event: MoMessage::PostBack
+        messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        postback:
+          data: EventVisited::2020-04-04::WhatsAppFair
+        context:
+          messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        whatsapp:
+          senderName: open api sample
+          text: I liked the event
+    PostBack:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Payload or data that was specified on when requesting the button based message
+          example: EventVisited::2020-04-04::WhatsAppFair
+    WhatsAppPostBack:
+      type: object
+      description: Postback data for a WhatsApp quick reply button
+      allOf:
+        - $ref: '#/components/schemas/Whatsapp'
+      properties:
+        text:
+          type: string
+          description: Caption of the button that was clicked
+          example: Yes
     MoMessage:
       type: object
       description: |
@@ -2657,6 +3479,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
+            - viber
         receivedAt:
           deprecated: true
           type: string
@@ -3500,6 +4323,7 @@ components:
           - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateButtonComponentRequest'
       minItems: 1
     WhatsAppTemplateHeaderComponentRequest:
       type: object
@@ -3551,6 +4375,7 @@ components:
           enum:
             - IMAGE
             - DOCUMENT
+            - VIDEO
           example:
             IMAGE
     WhatsAppTemplateBodyComponentRequest:
@@ -3591,6 +4416,105 @@ components:
           minLength: 1
           example:
             The specification team
+    WhatsAppTemplateButtonComponentRequest:
+      type: object
+      description: Button component of a template
+      required:
+        - type
+        - buttons
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - BUTTONS
+        buttons:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
+            - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
+    WhatsAppQuickReplyButtons:
+      type: array
+      description: Quick Reply buttons
+      items:
+        $ref: '#/components/schemas/WhatsAppQuickReplyButton'
+      minItems: 1
+      maxItems: 3
+    WhatsAppQuickReplyButton:
+      type: object
+      description: Quick reply button, when clicked the caption and the dynamic payload is returned.
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of this button
+          enum:
+            - QUICK_REPLY
+          example: QUICK_REPLY
+        text:
+          type: string
+          description: Caption of the button
+          maxLength: 20
+          minLength: 1
+          example: I liked it!
+    WhatsAppCallToActionButtons:
+      type: array
+      description: Call to action buttons. At most one of each button types can be used.
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppURLButton'
+          - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
+      minItems: 1
+      maxItems: 2
+    WhatsAppURLButton:
+      type: object
+      description: Call to action button that opens the specified URL when clicked
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of this button
+          enum:
+            - URL
+          example: URL
+        text:
+          type: string
+          description: Caption of the button
+          maxLength: 20
+          minLength: 1
+          example: Your invoice
+        url:
+          type: string
+          description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
+          example: https://www.myservice.com/invoices/{{1}}
+    WhatsAppPhoneNumberButton:
+      type: object
+      description: Call to action button that initiates a call when clicked
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: Type of this button
+          enum:
+            - PHONE_NUMBER
+          example: PHONE_NUMBER
+        text:
+          type: string
+          description: Caption of this button
+          maxLength: 20
+          minLength: 1
+          example: Call us
+        phoneNumber:
+          type: string
+          description: Phone number that will be called when clicking on the button.
+          pattern: ^\+\d{4,23}$
+          example: "+4923147790813"
     WhatsAppTemplates:
       type: array
       description: List of WhatsApp templates
@@ -3666,6 +4590,7 @@ components:
             - REJECTED
             - DELETE_PENDING
             - DELETED
+            - SUBMITTED
           example:
             DELETED
         rejectionReason:
@@ -3722,6 +4647,7 @@ components:
             - IMAGE
             - TEXT
             - DOCUMENT
+            - VIDEO
           example:
             IMAGE
         text:
