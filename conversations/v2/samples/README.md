@@ -13,4 +13,4 @@ They **don't** covering all cases and options. They are complementary to the [po
 
 ## Requesting WhatsApp Templates
 - [Requesting new templates](requesting_new_templates.md) 
-- [Requesting new localizations](requesting_new_localizations.md) 
+- [Requesting new localizations](requesting_new_localization.md) 

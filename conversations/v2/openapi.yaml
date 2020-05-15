@@ -1,6 +1,6 @@
 openapi: '3.0.0'
 info:
-  title: Chat API
+  title: Conversations
   description: |
     The Chat API allows you to easily send messages to your customers via messaging services like WhatsApp 
     and still reach customers with classic SMS.
