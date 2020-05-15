@@ -17,7 +17,7 @@ servers:
 security:
   - APIKeyHeader: []
 tags:
- - name: Send SMS
+ - name: SMS Send
    description: |
      tyntec’s sending SMS service is governed by two operations that allow you:
 
@@ -25,13 +25,13 @@ tags:
      - to query the status of a previously sent SMS
 
      `tyntec stores the status details for up to three months after the final delivery state is known.`
- - name: Message Status
+ - name: SMS Message Status
    description: |
      You have the posibility to query the status of a message you sent through our systems.
      In case that that call-back URL is configured, we will POST the status to the defined URL
 
-     `The message status is available for three month after the final state is reached.`
- - name: Receive SMS
+     `The SMS Message Status is available for three month after the final state is reached.`
+ - name: SMS Receive
    description: |
      The Messaging API enables you to receive messages from your
      customers sent to phone numbers you have registered with tyntec.
@@ -59,7 +59,7 @@ paths:
   '/messaging/v1/messages/{requestId}':
     get:
       tags:
-        - Message Status
+        - SMS Message Status
       summary: Get status of a message
       security: 
       - ApiKeyHeader: []
@@ -107,7 +107,7 @@ paths:
   /messaging/v1/sms:
     post:
       tags:
-        - Send SMS
+        - SMS Send
       summary: Sends SMS via POST HTTP method
       security: 
       - ApiKeyHeader: []
@@ -160,7 +160,7 @@ paths:
               $ref: '#/components/schemas/SmsMessage'
     get:
       tags:
-        - Send SMS
+        - SMS Send
       summary: Sends SMS via GET HTTP method
       security: 
       - ApiKeyHeader: []
@@ -344,12 +344,12 @@ paths:
   /incoming:
     post:
       operationId: receiveMessage
-      summary: Receive SMS
+      summary: SMS Receive
       servers: 
         - url: 'https://example.com'
       security: []
       tags: 
-        - "Receive SMS"
+        - "SMS Receive"
       description: |
          Receive a SMS 
          
