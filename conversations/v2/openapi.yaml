@@ -2584,6 +2584,7 @@ components:
               payload:
                 type: string
                 description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+                maxLength: 128
           minItems: 0
           maxItems: 1
     UrlButtonComponent:
@@ -2617,6 +2618,7 @@ components:
               text:
                 type: string
                 description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+                maxLength: 2000
           minItems: 0
           maxItems: 1
     TextParameter:
