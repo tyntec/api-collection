@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: Conversations
   description: |
-    The Chat API allows you to easily send messages to your customers via messaging services like WhatsApp 
+    Conversations allows you to easily send messages to your customers via messaging services like WhatsApp
     and still reach customers with classic SMS.
 
     In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
@@ -46,7 +46,7 @@ info:
     WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
     The feature will be turned off on 6th of October for all Business API Accounts.
 
-    The group messaging related parts of Chat API have to follow this deprecation time line.
+    The group messaging related parts have to follow this deprecation time line.
     Please migrate to the standard messaging and contact us about alternative ways.
 
   contact:
@@ -99,7 +99,7 @@ tags:
       The notification message is the same as for the message status you can query MessageStatus.
   - name: "Applications"
     description: |
-      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
+      Conversations allows you to freely define which events should be sent via a callback URL to your webhook
       implementation.
 
       **Please note**:
@@ -137,7 +137,7 @@ tags:
       WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
       The feature will be turned off on 6th of October for all Business API Accounts.
 
-      The group messaging related parts of Chat API have to follow this deprecation time line.
+      The group messaging related parts have to follow this deprecation time line.
       Please migrate to the standard messaging and contact us about alternative ways.
 x-tagGroups:
   - name: Messaging
@@ -2944,10 +2944,10 @@ components:
         acceptedAt:
           type: string
           format: date-time
-          description: Point in time when the Chat API service confirms that the message request was accepted
+          description: Point in time when Conversations API confirms that the message request was accepted
     APIEvent:
       type: object
-      description: Basic type for events produced by the ChatAPI such as MessageStatus, InboundMessage and GroupEvent
+      description: Basic type for events produced, such as MessageStatus, InboundMessage and GroupEvent
       required:
         - event
       properties:

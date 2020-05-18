@@ -2,15 +2,15 @@
 
 ## 2.10
 
-This release introduces Viber as third channel on the Chat API. 
+This release introduces Viber as third channel on the Conversations. 
 
-Also interactive templates with buttons as well as stickers are now available on WhatsApp.
+Also, interactive templates with buttons as well as stickers are now available on WhatsApp.
 
 ### Features
 
 #### Viber support
 
-Beginning with this release the Chat API starts supporting Viber as channel.
+Beginning with this release the Conversations starts supporting Viber as channel.
 
 The Viber channel supports to send the following through messages:
 
@@ -265,7 +265,7 @@ Remove mandatory flag of property ``from`` as one event (``MessageStatus::failed
 
 #### New resources
 
-In order to enable the group management capabilities and be extensible in the future the CHAT API  is extended with a new path pattern
+In order to enable the group management capabilities and be extensible in the future the Conversations  is extended with a new path pattern
 
     channels/<channel name>
 
@@ -273,7 +273,7 @@ All channel-specific capabilities will reside under this base path.
 
 #### URL move
 
-The Chat API has been moved to https://api.tyntec.com/chat-api/v2. The old base URL is still accessible, but will not get any further major upgrades.
+The Conversations has been moved to https://api.tyntec.com/chat-api/v2. The old base URL is still accessible, but will not get any further major upgrades.
 
 #### Inbound messages are events
 
@@ -287,7 +287,7 @@ This enables your systems to easily filter out unwanted events without the needs
 
 #### WhatsApp Group Chat support
 
-Starting with this release the Chat API makes the WhatsApp group chat functionality available.
+Starting with this release the Conversations makes the WhatsApp group chat functionality available.
 
 The current release supports:
 
