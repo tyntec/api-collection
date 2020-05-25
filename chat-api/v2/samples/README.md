@@ -11,6 +11,7 @@ They **don't** covering all cases and options. They are complementary to the [po
 - [Sending a document on a template](rich_media_template_with_document.md)
 - [Sending an image on a template](rich_media_template_with_image.md)
 - [Sending a location on a template](rich_media_template_with_location.md)
+- [Sending a template with quick reply buttons](rich_media_template_with_quick_reply_buttons.md)
 - [Sending a text on a template](rich_media_template_with_text.md)
 - [Sending a video on a template](rich_media_template_with_video.md)
 
