@@ -177,8 +177,8 @@ paths:
           description: |
             This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
 
-            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
-            and contact us for more information.`
+            Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.
           required: true
           schema:
             type: string
@@ -196,7 +196,7 @@ paths:
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            `tyntec will charge for each part of the concatenated message as an individual message.`
+            tyntec will charge for each part of the concatenated message as an individual message.
 
           required: true
           schema:
@@ -1147,8 +1147,8 @@ components:
           description: |
             This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
 
-            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
-            and contact us for more information.`
+            Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.
           type: string
         message:
           description: |
@@ -1163,7 +1163,7 @@ components:
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            `tyntec will charge for each part of the concatenated message as an individual message.`
+            tyntec will charge for each part of the concatenated message as an individual message.
           type: string
         encoding:
           description: Encoding selection between GSM7, UNICODE or the default AUTO selection
