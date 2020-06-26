@@ -322,6 +322,8 @@ components:
           example: "02"
         imsi:
           type: string
+          description: |
+            The International Mobile Subscriber Identity of the subscriber
         imsiTtId:
           type: string
           description: |
@@ -369,6 +371,8 @@ components:
           example: "02"
         hlr:
           type: string
+          description: |
+            The representative Home Location Register
         hlrTtId:
           type: string
           description: |
@@ -416,6 +420,8 @@ components:
           example: "02"
         msc:
           type: string
+          description: |
+            The representative Mobile Switching Center
         mscTtId:
           type: string
           description: |
