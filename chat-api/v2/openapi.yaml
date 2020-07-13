@@ -8,9 +8,9 @@ info:
     In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
 
     Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
-    
+
     **Channel specific pre-conditions**
-    
+
     - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
     - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
     - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
@@ -187,7 +187,7 @@ paths:
                 $ref: '#/components/examples/WhatsAppLocationMessage'
               WA - Text Template:
                 $ref: '#/components/examples/WhatsAppTemplateMessage'
-              WA - Rich Template :
+              WA - Rich Template:
                 $ref: '#/components/examples/WhatsAppRichNotificationMessage'
               WA - Call to action Template:
                 $ref: '#/components/examples/WhatsAppInteractiveCallToActionMessage'
@@ -261,6 +261,36 @@ paths:
                 $ref: '#/components/schemas/MessageHistory'
         404:
           $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendBulkMessage
+      summary: Send a bulk of messages
+      tags:
+        - "Send messages"
+      description: |
+        Send a bulk of messages via one channel to one receiver.
+
+        The system guarantees that the messages are send in order to the receiver
+      requestBody:
+        description: The message bulk you want to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+      responses:
+        202:
+          description: The bulk was accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BulkAccepted'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
   /media/{media-id}:
@@ -1371,6 +1401,25 @@ components:
           schema:
             type: string
           description: Location URI of the newly created resource
+    BulkAccepted:
+      description: The requested bulk was accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  - type: string
+                    format: uuid
+                    example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20
   parameters:
     GroupId:
       name: group-id
@@ -1501,7 +1550,7 @@ components:
           contentType: media
           media:
             type: sticker
-            url: https://www.gstatic.com/webp/gallery/1.webp
+            url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     WhatsAppLocationMessage:
       value:
         to: "12331132"
@@ -2048,7 +2097,7 @@ components:
           enum:
             - text
             - url
-          description: What kind of payload should be sent
+          description: What kind of payload should be send
           example: text
         from:
           type: string
@@ -2074,7 +2123,7 @@ components:
     ViberMessageRequest:
       type: object
       description: |
-        Viber message to be sent
+        Viber message to be send
       required:
         - components
         - messagePurpose
@@ -2138,17 +2187,17 @@ components:
         button:
           type: object
           properties:
-              caption:
-                type: string
-                maxLength: 30
-                description: Caption of the button
-                example: click me!
-              callback:
-                type: string
-                maxLength: 1000
-                pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
-                description: Action callback that is executed when the user clicks on the button
-                example: https://my.callba.ck/clicked
+            caption:
+              type: string
+              maxLength: 30
+              description: Caption of the button
+              example: click me!
+            callback:
+              type: string
+              maxLength: 1000
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Action callback that is executed when the user clicks on the button
+              example: https://my.callba.ck/clicked
     ViberImageComponent:
       type: object
       properties:
@@ -2349,10 +2398,10 @@ components:
         url:
           type: string
           description: the url of the location where the sticker is stored
-          example: https://www.gstatic.com/webp/gallery/1.webp
+          example: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
       example:
         type: image
-        url: https://www.gstatic.com/webp/gallery/1.webp
+        url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     DocumentMedia:
       type: object
       description: Document to be send
@@ -2446,8 +2495,8 @@ components:
           items:
             $ref: '#/components/schemas/TemplateParameter'
           example:
-           - default: Mr.
-           - default: Doe
+            - default: Mr.
+            - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -4127,7 +4176,7 @@ components:
       properties:
         link:
           type: string
-          description: Link to the profile logo          
+          description: Link to the profile logo
           example: https://pps.whatsapp.net/v/123123
     WhatsAppAccounts:
       type: array
@@ -4806,3 +4855,117 @@ components:
         - current
         - next
         - last
+    BulkRequest:
+      type: object
+      description: Bulk request to be send. The items are guaranted to be send in order of appearance
+      properties:
+        to:
+          type: string
+        from:
+          type: string
+        channel:
+          type: string
+          description: Channel which should be used for the bulk
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        sms:
+          type: array
+          description: SMS to be send
+          items:
+            - $ref: '#/components/schemas/BulkSMSRequest'
+          minItems: 2
+          maxItems: 20
+        whatsapp:
+          type: array
+          description: WhatsApp messages to be send
+          items:
+            - $ref: '#/components/schemas/BulkWhatsAppRequest'
+          minItems: 2
+          maxItems: 20
+        viber:
+          type: array
+          description: Viber messages to be send
+          items:
+            - $ref: '#/components/schemas/BulkViberRequest'
+          minItems: 2
+          maxItems: 20
+    BulkSMSRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+          description: What kind of payload should be sent
+          example: text
+        text:
+          type: string
+          maxLength: 3000
+          description: The message to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+    BulkWhatsAppRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - template
+            - text
+            - url
+            - media
+            - location
+            - contacts
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          maxLength: 4096
+          description: The text to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        media:
+          $ref: '#/components/schemas/Media'
+        template:
+          $ref: '#/components/schemas/Template'
+        location:
+          $ref: '#/components/schemas/Location'
+        urlPreviewDisplayed:
+          type: boolean
+          default: false
+          description: Should a preview of the url be rendered. This will only have an effect on text messages.
+          example: true
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+    BulkViberRequest:
+      type: object
+      properties:
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
