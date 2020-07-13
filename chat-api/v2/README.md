@@ -8,7 +8,7 @@ This release introduces bulk messaging on the Chat API.
 
 #### Bulk messaging
 
-Beginning with this release the Chat API supports now bulk messaging.
+Beginning with this release the Chat API supports bulk messaging.
 
 Bulk messaging enables the business to send multiple messages in order to one user without the need of waiting for
 delivery receipts for single messages.
