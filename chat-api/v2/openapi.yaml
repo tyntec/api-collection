@@ -1550,7 +1550,7 @@ components:
           contentType: media
           media:
             type: sticker
-            url: https://www.gstatic.com/webp/gallery/1.webp
+            url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     WhatsAppLocationMessage:
       value:
         to: "12331132"
@@ -2398,10 +2398,10 @@ components:
         url:
           type: string
           description: the url of the location where the sticker is stored
-          example: https://www.gstatic.com/webp/gallery/1.webp
+          example: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
       example:
         type: image
-        url: https://www.gstatic.com/webp/gallery/1.webp
+        url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     DocumentMedia:
       type: object
       description: Document to be send
