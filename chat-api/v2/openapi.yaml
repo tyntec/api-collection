@@ -274,7 +274,7 @@ paths:
 
         The system guarantees that the messages are send in order to the receiver
       requestBody:
-        description: The message bulk you would like to send
+        description: The message bulk you want to send
         required: true
         content:
           application/json:
@@ -2097,7 +2097,7 @@ components:
           enum:
             - text
             - url
-          description: What kind of payload should be sent
+          description: What kind of payload should be send
           example: text
         from:
           type: string
@@ -2123,7 +2123,7 @@ components:
     ViberMessageRequest:
       type: object
       description: |
-        Viber message to be sent
+        Viber message to be send
       required:
         - components
         - messagePurpose
