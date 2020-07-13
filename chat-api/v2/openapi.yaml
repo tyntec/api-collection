@@ -4873,18 +4873,21 @@ components:
             - viber
         sms:
           type: array
+          description: SMS to be send
           items:
             - $ref: '#/components/schemas/BulkSMSRequest'
           minItems: 2
           maxItems: 20
         whatsapp:
           type: array
+          description: WhatsApp messages to be send
           items:
             - $ref: '#/components/schemas/BulkWhatsAppRequest'
           minItems: 2
           maxItems: 20
         viber:
           type: array
+          description: Viber messages to be send
           items:
             - $ref: '#/components/schemas/BulkViberRequest'
           minItems: 2
@@ -4922,15 +4925,6 @@ components:
           maxLength: 4096
           description: The text to be send
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
-        url:
-          type: string
-          deprecated: true
-          description: |
-            The URL you would like to send. Must be a valid http(s) URL.
-
-            **Note** This property will be removed in a future release.
-            Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
-          example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/Media'
         template:
