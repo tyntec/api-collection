@@ -1,5 +1,28 @@
 # Release notes
 
+## 2.11
+
+This release introduces bulk messaging on the Chat API.  
+
+### Features
+
+#### Bulk messaging
+
+Beginning with this release the Chat API supports now bulk messaging.
+
+Bulk messaging enables the business to send multiple messages in order to one user without the need of waiting for
+delivery receipts for single messages.
+
+Between 2 and 20 messages on all supported channels - SMS, WhatsApp and Viber - can be chained.
+
+All content types that a specific channel supports are supported as well.
+
+**Note** On WhatsApp the 24h support window rule is still effective when using this feature.
+
+#### WhatsApp : Location with URL
+
+When a user sends a location to the business, the URL of the origin site is present as well.
+
 ## 2.10
 
 This release introduces Viber as third channel on the Chat API. 
