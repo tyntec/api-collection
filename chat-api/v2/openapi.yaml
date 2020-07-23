@@ -4380,6 +4380,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequest'
         - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
+        - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponentRequest'
     WhatsAppTemplateTextHeaderComponentRequest:
       type: object
       description: Header component of a template
@@ -4406,6 +4407,27 @@ components:
           description: Text that should be displayed as header. Can contain 1 variable
           maxLength: 60
           example: Hi {{1}}
+
+    WhatsAppTemplateLocationHeaderComponentRequest:
+      type: object
+      description: Header component of a template
+      required:
+        - type
+        - format
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - HEADER
+          example: HEADER
+        format:
+          type: string
+          description: Which kind of header
+          enum:
+            - LOCATION
+          example:
+            LOCATION
     WhatsAppTemplateMediaHeaderComponentRequest:
       type: object
       description: Header component of a template
