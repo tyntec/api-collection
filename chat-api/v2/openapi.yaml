@@ -4214,8 +4214,13 @@ components:
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
+          description: The Facebook business manager id provided by Facebook
           type: string
           example: 1791147717848878
+        whatsAppBusinessAccountId:
+          description: The WhatsApp Business Account Id provided by WhatsApp
+          type: string
+          example: 24334545345345
         accountStatus:
           $ref: '#/components/schemas/WhatsAppAccountStatus'
         managedBy:
