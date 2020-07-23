@@ -2123,7 +2123,15 @@ components:
     ViberMessageRequest:
       type: object
       description: |
-        Viber message to be send
+        Viber message to be sent
+
+        The following content / service type combination sare valid
+
+        | Service Type | Text | Image | Text & Button | Text & Button & Image |
+        | ---: | :---: | :---: | :---: | :---: |
+        | One way | ✔ | ✔ | ✔ | ✔ |
+        | Two way | ✔ | ✔ | ✔ | ✔ |
+        | Session | ✔ | ✔ | ❌ | ❌ |
       required:
         - components
         - messagePurpose
