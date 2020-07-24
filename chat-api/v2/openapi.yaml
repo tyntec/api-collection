@@ -2,10 +2,7 @@ openapi: '3.0.0'
 info:
   title: Chat API
   description: |
-    The Chat API allows you to easily send messages to your customers via messaging services like WhatsApp 
-    and still reach customers with classic SMS.
-
-    In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
+    The Chat API allows you to easily send messages to your customers via messaging services like WhatsApp or Viber and also classic SMS.
 
     Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
 
