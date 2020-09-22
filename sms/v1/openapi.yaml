@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: '1.0'
-  title: Messaging API
+  title: SMS
   description: |
     The Messaging API enables you to sent messages to your customers or
     to receive messages from your customers to phone numbers registered with tyntec.
@@ -17,7 +17,7 @@ servers:
 security:
   - APIKeyHeader: []
 tags:
- - name: Send SMS
+ - name: SMS Send
    description: |
      tyntec’s sending SMS service is governed by two operations that allow you:
 
@@ -25,13 +25,13 @@ tags:
      - to query the status of a previously sent SMS
 
      `tyntec stores the status details for up to three months after the final delivery state is known.`
- - name: Message Status
+ - name: SMS Message Status
    description: |
      You have the posibility to query the status of a message you sent through our systems.
      In case that that call-back URL is configured, we will POST the status to the defined URL
 
-     `The message status is available for three month after the final state is reached.`
- - name: Receive SMS
+     `The SMS Message Status is available for three month after the final state is reached.`
+ - name: SMS Receive
    description: |
      The Messaging API enables you to receive messages from your
      customers sent to phone numbers you have registered with tyntec.
@@ -47,11 +47,19 @@ tags:
      application does not accept the inbound message. Retries are paused for
      10 minutes after every 100 consecutive unsuccessful delivery attempts.
      tyntec's application will retry for a maximum of 48 hours.
+ - name: BYON Contact Service
+   description: Bring Your Own Number (BYON) Contacts Service gives the posibility to users to manage their conctacts
+ - name: BYON Phone Book Service
+   description: Bring Your Own Number (BYON) Phone Book Service gives the posibility to users to view their Phone book entries
+ - name: BYON Number Service
+   description: Bring Your Own Number (BYON) Numbers Service gives the posibility to users to register new numbers
+ - name: BYON Partner Notification Service
+   description: API to send notifications to the partners
 paths:
   '/messaging/v1/messages/{requestId}':
     get:
       tags:
-        - Message Status
+        - SMS Message Status
       summary: Get status of a message
       security: 
       - ApiKeyHeader: []
@@ -99,7 +107,7 @@ paths:
   /messaging/v1/sms:
     post:
       tags:
-        - Send SMS
+        - SMS Send
       summary: Sends SMS via POST HTTP method
       security: 
       - ApiKeyHeader: []
@@ -152,7 +160,7 @@ paths:
               $ref: '#/components/schemas/SmsMessage'
     get:
       tags:
-        - Send SMS
+        - SMS Send
       summary: Sends SMS via GET HTTP method
       security: 
       - ApiKeyHeader: []
@@ -169,8 +177,8 @@ paths:
           description: |
             This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
 
-            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
-            and contact us for more information.`
+            Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.
           required: true
           schema:
             type: string
@@ -188,7 +196,7 @@ paths:
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            `tyntec will charge for each part of the concatenated message as an individual message.`
+            tyntec will charge for each part of the concatenated message as an individual message.
 
           required: true
           schema:
@@ -336,12 +344,12 @@ paths:
   /incoming:
     post:
       operationId: receiveMessage
-      summary: Receive SMS
+      summary: SMS Receive
       servers: 
         - url: 'https://example.com'
       security: []
       tags: 
-        - "Receive SMS"
+        - "SMS Receive"
       description: |
          Receive a SMS 
          
@@ -364,7 +372,537 @@ paths:
             
             tyntec's inbound system will retry the delivery
 
+  /phonebook/v1/numbers:
+    get:
+      tags:
+        - BYON Phone Book Service
+      summary: Return all phone numbers
+      description: Returns all phone numbers created by your API key. You can specify
+        attributes to filter the results. The size limit is 3000
+      operationId: getAllPhoneNumbersForAccountUsingGET
+      parameters:
+        - name: requestId
+          in: query
+          description: A filter on the list based on the requestId field.
+          required: false
+          schema:
+            type: string
+        - name: contactId
+          in: query
+          description: A filter on the list based on the contactId field.
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: A filter on the list based on the page field.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: A filter on the list based on the size field.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            maximum: 3000
+      responses:
+        "200":
+          description: The list of phones requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/phonebook/v1/numbers/{phoneNumber}":
+    get:
+      tags:
+        - BYON Phone Book Service
+      summary: Returns a phone number
+      description: Returns the specific phone number entity created by your API key.
+      operationId: getPhoneNumberForAccountUsingGET
+      parameters:
+        - name: phoneNumber
+          in: path
+          description: Phone number to get information for.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The Phone Number entity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contacts/v1:
+    get:
+      tags:
+        - BYON Contact Service
+      summary: Returns all contacts created
+      description: Returns all contacts created by your API key. You can get the contact id
+        from the list for editing or deleting the contact. You can specify
+        friendlyName to filter the results.
+      operationId: getAllContactsWithFriendlyNameUsingGET
+      parameters:
+        - name: friendlyName
+          in: query
+          description: A filter on the list based on the friendlyName field.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The list of contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactArrayResponse"
+        "204":
+          description: Empty list. No contacts found for this friendly name
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactArrayResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - BYON Contact Service
+      summary: Create a contact
+      description: Create a new contact
+      operationId: createContactUsingPOST
+      requestBody:
+        $ref: "#/components/requestBodies/ContactEntity"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+        "201":
+          description: Created
+        "202":
+          description: The contact as been created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+        "400":
+          description: Not valid contact provided
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Contact not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/contacts/v1/{contactId}":
+    get:
+      tags:
+        - BYON Contact Service
+      summary: Return contact
+      description: Returns the contact for the provided contactId.
+      operationId: getContactUsingGET
+      parameters:
+        - name: contactId
+          in: path
+          description: A filter on the list based on the contactId field.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Contact not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - BYON Contact Service
+      summary: Edit contact
+      description: Edit the contact for the provided contactId.
+      operationId: editContactUsingPOST
+      parameters:
+        - name: contactId
+          in: path
+          description: Contact ID to be edited.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/ContactEntity"
+      responses:
+        "200":
+          description: The edited contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+        "201":
+          description: Created
+        "400":
+          description: Contact can not be edited
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Contact not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - BYON Contact Service
+      summary: Delete contact
+      description: Delete the contact for the provided contactId.
+      operationId: deleteContactUsingDELETE
+      parameters:
+        - name: contactId
+          in: path
+          description: The unique identifier of the contact to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The deleted contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ContactEntity"
+        "204":
+          description: No Content
+        "400":
+          description: Contact can not be deleted
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Contact not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /provisioning/v1:
+    get:
+      tags:
+        - BYON Number Service
+      summary: Returns all phones
+      description: |
+        Returns all phone numbers provisioning requests created.
+        You can specify _friendlyName_ or _contactId_ for filtering the results.
+      operationId: getAllProvisioningPhoneNumbersForAccountUsingGET
+      parameters:
+        - name: friendlyName
+          in: query
+          description: A filter on the list based on the friendlyName field.
+          required: false
+          schema:
+            type: string
+        - name: contactId
+          in: query
+          description: A filter on the list based on the contactId field.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The list of phone provisioning requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+        "204":
+          description: Empty list. No phone provisioning requests found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - BYON Number Service
+      summary: Register multiple phones
+      description: New phone batch registration service for registering multiple numbers
+      operationId: createPhoneProvisioningRequestUsingPOST
+      parameters:
+        - name: friendlyName
+          in: query
+          description: A filter on the list based on the friendlyName field.
+          required: false
+          schema:
+            type: string
+        - name: contactId
+          in: query
+          description: A filter on the list based on the contactId field.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PhoneNumberEntity"
+        description: >
+          A comma-separated list of phone number details.
+
+            - phoneNumber
+            - country (only optional if the phone number already included the country code)
+        required: true
+      responses:
+        "200":
+          description: The list of applications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+        "201":
+          description: Created
+        "204":
+          description: Empty list. No applications found for your account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+        "400":
+          description: Your request was not valid
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: The contact was not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/provisioning/v1/{requestId}":
+    get:
+      tags:
+        - BYON Number Service
+      summary: Phone status
+      description: Returns the details of the provisioning request for the provided
+        requestId.
+      operationId: getProvisioningRequestUsingGET
+      parameters:
+        - name: requestId
+          in: path
+          description: A unique identifier based on the requestId field.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The provisioning request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
+        "400":
+          description: Your request was not valid
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: The provisioning request was not found
+        "500":
+          description: Something went wrong :-(
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
+  requestBodies:
+    ContactEntity:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ContactEntity"
+      description: |
+        A comma-separated list of contact details.
+
+          - companyAddress (optional)
+          - companyName
+          - contactEmail
+          - contactName
+          - contactPhone
+          - contactTitle (optional)
+          - friendlyName (optional)
+      required: true
   securitySchemes:
     ApiKeyHeader:
       type: apiKey
@@ -374,6 +912,227 @@ components:
         The API key used for this operation. We check as well that the API key has the phone number
         (either on sending messages or interacting with other phone number based features) assigned.
   schemas:
+    ContactArrayResponse:
+      type: object
+      description: Contract Array Response schema
+      properties:
+        contacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactEntity"
+        size:
+          type: integer
+          format: int32
+    ContactEntity:
+      type: object
+      description: Contract Entity schema
+      properties:
+        companyAddress:
+          description: Company's postal address
+          type: string
+        companyName:
+          description: Company's name
+          type: string
+        contactEmail:
+          description: e-mail address
+          type: string
+        contactName:
+          description: Name of the requestor
+          type: string
+        contactPhone:
+          description: Phone number of the requestor
+          type: string
+        contactTitle:
+          description: Title of the requestor
+          type: string
+        friendlyName:
+          description: A filter on the list based on the friendlyName field.
+          type: string
+    ErrorResponse:
+      type: object
+      description: Error Response schema
+      properties:
+        code:
+          description: error code
+          type: string
+        message:
+          description: A short, human-readable summary of the problem type.
+          type: string
+        timestamp:
+          description: Point in time when the event happend
+          type: integer
+          format: int64
+    InboundMessage:
+      title: InboundMessage
+      required:
+        - from
+        - to
+        - message
+        - requestId
+        - missingParts
+        - contentList
+      type: object
+      properties:
+        from:
+          type: string
+          description: The phone number of the sending party in international format if available.
+          example: '+49123456789'
+        to:
+          type: string
+          description: Your number provided by tyntec that has received the respective message in international format.
+          example: '+1987654321'
+        message:
+          type: string
+          description: 'The received message as an UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message'
+          example: 'This is an example, the data is garbage'
+        originMCC:
+          type: string
+          description: A representative MCC (Mobile Country Code) of the originating network.
+          example: 260
+        originMNC:
+          type: string
+          description: A representative MNC (Mobile Network Code) of the originating network.
+          example: 09
+        originTtId:
+          type: string
+          description: The tyntec id of the operator.
+          example: 77292
+        totalPrice:
+          type: number
+          description: The sum of prices for each message part listed in “contentList”.
+          example: -0.005
+        requestId:
+          type: string
+          description: The unique identifier provided for each request.
+          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
+        size:
+          type: integer
+          description: The amount of respective concatenated SMS parts.
+          format: int32
+          example: 1
+        missingParts:
+          type: boolean
+          description: This flag marks if tyntec has received all parts of a concat message within a time limit of 10 minutes
+          example: false
+        contentList:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboundContent'
+          description: 'tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as an individual message!'
+    InboundContent:
+      title: InboundContent
+      required:
+        - msgId
+        - sentDate
+        - sequenceNumber
+      type: object
+      properties:
+        msgId:
+          type: string
+          description: The unique identifier provided for each message part.
+          example: '48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6'
+        sentDate:
+          type: string
+          description: >-
+            The time when the SMS has been received by the sending MSC
+            (if available)
+            or
+            the time when the respective message was received by tyntec.
+          example: '2019-07-02T16:47:39+0200'
+        sequenceNumber:
+          type: integer
+          description: The sequenceNumber orders the respective message parts of an overlength message.
+          format: int32
+          example: 1
+        price:
+          type: number
+          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
+          example: -0.005
+        currency:
+          type: string
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+          example: EUR
+        priceEffective:
+          type: string
+          description: The date when the “price” became effective.
+          example: '2018-06-01T00:00:00+0200'
+    PhoneNumberEntity:
+      type: object
+      description: Phone number schema
+      properties:
+        phoneNumber:
+          description: Phone number of the contact
+          type: string
+        country:
+          description: The country that the phone number is registered
+          type: string
+        operator:
+          description: Operator's network
+          type: string
+        ip:
+          description: IP address of the phone
+          type: array
+          items:
+            type: string
+        callbackUrl:
+          type: string
+    PhoneProvisioningArrayResponse:
+      type: object
+      description: Phone provisioning array response schema
+      properties:
+        provisioningRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhoneProvisioningEntity"
+        size:
+          type: integer
+          format: int32
+    PhoneProvisioningEntity:
+      type: object
+      description: Phone provisioning schema
+      properties:
+        accountId:
+          description: The account that created this entry
+          type: string
+        contactId:
+          description: Contact ID of this entry
+          type: string
+        friendlyName:
+          description: Friendly name of this entry
+          type: string
+        requestId:
+          description: Request ID of this entry
+          type: string
+        status:
+          description: Status of this entry
+          type: string
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the [RFC-7807](https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          description: A short, human-readable summary of the problem type.
+          type: string
+          example: Data given was not parseable
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
     SmsMessage:
       type: object
       required:
@@ -388,8 +1147,8 @@ components:
           description: |
             This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
 
-            `Some destination networks impose restrictions on the sender ID format. Please check the coverage list
-            and contact us for more information.`
+            Some destination networks impose restrictions on the sender ID format. Please check the coverage list
+            and contact us for more information.
           type: string
         message:
           description: |
@@ -404,7 +1163,7 @@ components:
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            `tyntec will charge for each part of the concatenated message as an individual message.`
+            tyntec will charge for each part of the concatenated message as an individual message.
           type: string
         encoding:
           description: Encoding selection between GSM7, UNICODE or the default AUTO selection
@@ -485,6 +1244,85 @@ components:
         to: "+123456789"
         from: "tyntec"
         message: "Hello world!"
+    ResponseEntity:
+      type: object
+      description: Response schema
+      properties:
+        body:
+          description: A short, human-readable summary of the response.
+          type: object
+        statusCode:
+          description: ID of the response
+          type: string
+          enum:
+            - "100"
+            - "101"
+            - "102"
+            - "103"
+            - "200"
+            - "201"
+            - "202"
+            - "203"
+            - "204"
+            - "205"
+            - "206"
+            - "207"
+            - "208"
+            - "226"
+            - "300"
+            - "301"
+            - "302"
+            - "303"
+            - "304"
+            - "305"
+            - "307"
+            - "308"
+            - "400"
+            - "401"
+            - "402"
+            - "403"
+            - "404"
+            - "405"
+            - "406"
+            - "407"
+            - "408"
+            - "409"
+            - "410"
+            - "411"
+            - "412"
+            - "413"
+            - "414"
+            - "415"
+            - "416"
+            - "417"
+            - "418"
+            - "419"
+            - "420"
+            - "421"
+            - "422"
+            - "423"
+            - "424"
+            - "426"
+            - "428"
+            - "429"
+            - "431"
+            - "451"
+            - "500"
+            - "501"
+            - "502"
+            - "503"
+            - "504"
+            - "505"
+            - "506"
+            - "507"
+            - "508"
+            - "509"
+            - "510"
+            - "511"
+        statusCodeValue:
+          description: Response code value
+          type: integer
+          format: int32
     RestMessagePart:
       type: object
       description: The part of the message request that the message is split
@@ -588,124 +1426,3 @@ components:
           type: string
           description: The tyntec id of the operator.
           example: 77292
-    Problem:
-      type: object
-      additionalProperties: true
-      description: The problem object follows the [RFC-7807](https://tools.ietf.org/html/rfc7807)
-      required:
-        - type
-        - title
-        - status
-        - detail
-      properties:
-        type:
-          description: A URI reference [RFC3986] that identifies the problem type
-          example: https://docs.tyntec.com/problems/DataNotParseable
-          type: string
-        title:
-          description: A short, human-readable summary of the problem type.
-          type: string
-          example: Data given was not parseable
-        status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
-          type: string
-          example: 400
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-          example: |
-            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
-    InboundMessage:
-      title: InboundMessage
-      required:
-        - from
-        - to
-        - message
-        - requestId
-        - missingParts
-        - contentList
-      type: object
-      properties:
-        from:
-          type: string
-          description: The phone number of the sending party in international format if available.
-          example: '+49123456789'
-        to:
-          type: string
-          description: Your number provided by tyntec that has received the respective message in international format.
-          example: '+1987654321'
-        message:
-          type: string
-          description: 'The received message as an UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message'
-          example: 'This is an example, the data is garbage'
-        originMCC:
-          type: string
-          description: A representative MCC (Mobile Country Code) of the originating network.
-          example: 260
-        originMNC:
-          type: string
-          description: A representative MNC (Mobile Network Code) of the originating network.
-          example: 09
-        originTtId:
-          type: string
-          description: The tyntec id of the operator.
-          example: 77292
-        totalPrice:
-          type: number
-          description: The sum of prices for each message part listed in “contentList”.
-          example: -0.005
-        requestId:
-          type: string
-          description: The unique identifier provided for each request.
-          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
-        size:
-          type: integer
-          description: The amount of respective concatenated SMS parts.
-          format: int32
-          example: 1
-        missingParts:
-          type: boolean
-          description: This flag marks if tyntec has received all parts of a concat message within a time limit of 10 minutes
-          example: false
-        contentList:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboundContent'
-          description: 'tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as an individual message!'
-    InboundContent:
-      title: InboundContent
-      required:
-        - msgId
-        - sentDate
-        - sequenceNumber
-      type: object
-      properties:
-        msgId:
-          type: string
-          description: The unique identifier provided for each message part.
-          example: '48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6'
-        sentDate:
-          type: string
-          description: >-
-            The time when the SMS has been received by the sending MSC
-            (if available)
-            or
-            the time when the respective message was received by tyntec.
-          example: '2019-07-02T16:47:39+0200'
-        sequenceNumber:
-          type: integer
-          description: The sequenceNumber orders the respective message parts of an overlength message.
-          format: int32
-          example: 1
-        price:
-          type: number
-          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
-          example: -0.005
-        currency:
-          type: string
-          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
-          example: EUR
-        priceEffective:
-          type: string
-          description: The date when the “price” became effective.
-          example: '2018-06-01T00:00:00+0200'

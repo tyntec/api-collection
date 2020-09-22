@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: 2FA API
+  title: Authentication
   description: >
     Two-factor authentication (2FA) is an additional security layer for your
     applications or your business.
@@ -23,7 +23,7 @@ servers:
 security:
   - APIKeyHeader: []
 tags:
-  - name: Application Service
+  - name: 2FA Application Service
     description: >
       Users can create multiple 2FA applications and configurations through the
       2FA API.
@@ -40,14 +40,14 @@ tags:
       This default application will be used in case no 2FA application ID is specified in an OTP delivery request.
 
       Default 2FA application is configurable and users can set own default parameters or 2FA application.
-  - name: OTP Service
+  - name: 2FA OTP Service
     description: The OTP service is used for delivering and checking One Time Password
       (OTP) codes to destination numbers.
 paths:
   /2fa/v1/application:
     get:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Returns all applications created.
       description: Return a list of applications that have been created under your account
       operationId: getTwoFactorAuthApplicationsUsingGET
@@ -82,7 +82,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Create 2FA application
       description: |
         Creates a 2FA application instance. You can either:
@@ -140,7 +140,7 @@ paths:
   "/2fa/v1/application/{applicationId}":
     get:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Returns a 2FA application
       description: You can get a specific application by using the GET HTTP method and the
         application’s Universally Unique ID (UUID)
@@ -173,7 +173,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Edit 2FA application
       description: Define the parameters that you would like to change in a 2FA application
       operationId: updateTwoFactorAuthApplicationUsingPOST
@@ -276,7 +276,7 @@ paths:
           description: Something went wrong :-(
     delete:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Delete 2FA application
       description: >
         You can delete your application if needed by using the DELETE HTTP
@@ -317,7 +317,7 @@ paths:
   "/2fa/v1/application/{applicationId}/language":
     post:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Add/Update language template
       description: You can add or edit a language template by referring to the application
         UUID resource and the language you want to add or edit. If you specify
@@ -390,7 +390,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags:
-        - Application Service
+        - 2FA Application Service
       summary: Delete language template
       description: >
         You can delete a language template by referring to the application UUID
@@ -449,7 +449,7 @@ paths:
   /2fa/v1/otp:
     get:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: Get all OTPs
       description: You can query the events endpoint of an OTP delivery instance to get
         back a list of events reported for this delivery.
@@ -499,7 +499,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: Sends OTP
       description: Send an OTP based on your application configuration. Modify the request
         based on the optional parameters.
@@ -624,7 +624,7 @@ paths:
   "/2fa/v1/otp/{otpId}":
     get:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: OTP status
       description: Returns the status of an OTP.
       operationId: getOtpStatusUsingGET
@@ -660,7 +660,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: Resend an OTP
       description: >
         In case the end user didn’t receive the OTP in a reasonable timeframe
@@ -736,7 +736,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: Delete OTP
       description: You can delete the status of an OTP by using this operation
       operationId: deleteOtpStatusUsingDELETE
@@ -771,7 +771,7 @@ paths:
   "/2fa/v1/otp/{otpId}/events":
     get:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: OTP events status
       operationId: getOtpEventsUsingGET
       description: You can query the events endpoint of an OTP delivery instance to get
@@ -822,7 +822,7 @@ paths:
   "/2fa/v1/otp/{otpId}/check":
     post:
       tags:
-        - OTP Service
+        - 2FA OTP Service
       summary: OTP Validate
       description: >
         This operation will verify if the OTP code used matched the OTP code

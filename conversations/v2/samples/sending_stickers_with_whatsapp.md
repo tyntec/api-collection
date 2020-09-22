@@ -23,4 +23,4 @@ The matching request would look like this
 
 The message would look like this on the device
 
-![Sticker message](/chat-api/v2/samples/sample-image-whatsapp-sticker.jpg)
+![Sticker message](/conversations/v2/samples/sample-image-whatsapp-sticker.jpg)

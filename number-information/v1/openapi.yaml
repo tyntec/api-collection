@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: NIS API
+  title: Number Information
   description: |
     tyntec's  Number Information Services (NIS)
   version: '1.0'
@@ -13,10 +13,10 @@ info:
 servers:
   - url: https://api.tyntec.com/nis/v1/
 tags:
-  - name: "Global Number Portability"
+  - name: "Global Number Portability (GNP)"
     description: |
       tyntec's Global Number Portability (GNP) resolves number portability by obtaining data directly from local number portability databases and live network information from across the globe
-  - name: "Global Number Verification"
+  - name: "Global Number Verification (GNV)"
     description: |
       tyntec's Global Number Verification (GNV) minimizes message loss and unsuccessful call attempts with real-time phone number verification, providing key information on a user's phone number, such as subscriber status and roaming data
 
@@ -322,6 +322,8 @@ components:
           example: "02"
         imsi:
           type: string
+          description: |
+            The International Mobile Subscriber Identity of the subscriber
         imsiTtId:
           type: string
           description: |
@@ -369,6 +371,8 @@ components:
           example: "02"
         hlr:
           type: string
+          description: |
+            The representative Home Location Register
         hlrTtId:
           type: string
           description: |
@@ -416,6 +420,8 @@ components:
           example: "02"
         msc:
           type: string
+          description: |
+            The representative Mobile Switching Center
         mscTtId:
           type: string
           description: |
