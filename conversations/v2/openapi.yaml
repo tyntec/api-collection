@@ -82,7 +82,7 @@ tags:
       The notification message is the same as for the message status you can query MessageStatus.
   - name: "Applications"
     description: |
-      The Chat API allows you to freely define which events should be sent via a callback URL to your webhook
+      Conversations allows you to freely define which events should be sent via a callback URL to your webhook
       implementation.
 
       **Please note**:
@@ -1778,6 +1778,7 @@ components:
             text: Thanks for contacting our support. We will get back to you in 5 minutes.
     ViberTextComponent:
       type: object
+      description: Text component for viber
       properties:
         type:
           type: string
@@ -1791,6 +1792,7 @@ components:
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
     ViberButtonComponent:
       type: object
+      description: Button component for viber
       properties:
         type:
           type: string
@@ -1798,6 +1800,7 @@ components:
             - button
         button:
           type: object
+          description: The button to be used
           properties:
             caption:
               type: string
@@ -1812,13 +1815,16 @@ components:
               example: https://my.callba.ck/clicked
     ViberImageComponent:
       type: object
+      description: Image component for viber
       properties:
         type:
           type: string
+          description: Image component for Viber
           enum:
             - image
         image:
           type: object
+          description: The image to be sent
           properties:
             url:
               type: string
@@ -1944,6 +1950,7 @@ components:
         replyBack: false
     Media:
       type: object
+      description: Media file to be send
       oneOf:
         - $ref: '#/components/schemas/AudioMedia'
         - $ref: '#/components/schemas/ImageMedia'
@@ -2170,14 +2177,17 @@ components:
           example: Mr. Doe
     HeaderComponent:
       type: object
+      description: Header component
       properties:
         type:
           type: string
           default: header
+          description: Determines the type of the component. Always _header_.
           enum:
             - header
         parameters:
           type: array
+          description: Parameters to be used in Header
           items:
             oneOf:
               - $ref: '#/components/schemas/TemplateMediaParameter'
@@ -2194,6 +2204,7 @@ components:
               url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     BodyComponent:
       type: object
+      description: Body component
       properties:
         type:
           type: string
@@ -2202,6 +2213,7 @@ components:
             - body
         parameters:
           type: array
+          description: Parameters to be used in the Body
           items:
             anyOf:
               - $ref: '#/components/schemas/TextParameter'
@@ -2244,6 +2256,7 @@ components:
                   - payload
               payload:
                 type: string
+                maxLength: 128
                 description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
           minItems: 0
           maxItems: 1
@@ -2268,6 +2281,7 @@ components:
           maximum: 1
         parameters:
           type: array
+          description: Parameters to be used in Button's URL
           items:
             properties:
               type:
@@ -2277,15 +2291,18 @@ components:
                   - text
               text:
                 type: string
+                maxLength: 2000
                 description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
           minItems: 0
           maxItems: 1
     TextParameter:
       type: object
+      description: Text to be send
       properties:
         type:
           type: string
           default: text
+          description: Determines the type of the component. Always _text_.
           enum:
             - text
         text:
@@ -2306,6 +2323,7 @@ components:
         text: Hi! Cool replacement
     LocationParameter:
       type: object
+      description: Location to be send
       properties:
         type:
           type: string
@@ -2340,6 +2358,7 @@ components:
             51.5005765
     TemplateMediaParameter:
       type: object
+      description: Media to be send
       properties:
         type:
           type: string
@@ -2605,10 +2624,10 @@ components:
         acceptedAt:
           type: string
           format: date-time
-          description: Point in time when the Chat API service confirms that the message request was accepted
+          description: Point in time when the API confirms that the message request was accepted
     APIEvent:
       type: object
-      description: Basic type for events produced by the ChatAPI such as MessageStatus, InboundMessage and GroupEvent
+      description: Basic type for events produced such as MessageStatus, InboundMessage and GroupEvent
       required:
         - event
       properties:
@@ -3091,6 +3110,7 @@ components:
           text: I liked the event
     PostBack:
       type: object
+      description: Payload or data requested
       properties:
         data:
           type: string
@@ -3474,6 +3494,7 @@ components:
       properties:
         status:
           type: string
+          description: WhatsApp message status
           enum:
             - read
     DefaultApplicationUpdate:
@@ -3506,10 +3527,12 @@ components:
       properties:
         id:
           type: string
+          description: The default application ID
           enum:
             - default
         name:
           type: string
+          description: The default application name
           enum:
             - Default Application
         webhooks:
@@ -3735,6 +3758,7 @@ components:
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
     NotificationTemplateRequest:
       type: array
+      description: Notification template
       items:
         type: object
         description: Standard template request without rich media parts
@@ -3744,6 +3768,7 @@ components:
         properties:
           type:
             type: string
+            description: Template part
             enum:
               - BODY
             default: BODY
