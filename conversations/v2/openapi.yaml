@@ -4,9 +4,7 @@ info:
   description: |
     Conversations allows you to easily send messages to your customers via messaging services like WhatsApp
     and still reach customers with classic SMS.
-
     In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
-
     Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
     
     **Channel specific pre-conditions**
@@ -14,46 +12,31 @@ info:
     - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
     - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
     - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
-
+    
     **Adheared web-standards**
-
     One goal of the API is to follow best practices and standards around http based services.
-
     A building block of this is to follow the RFCs:
-
     - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
     - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
-
+    
     *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following Link headers
-
     - `first` : First page of the resource list pagination
     - `previous` : Predecessor page of the current page of the resource list pagination
     - `current` : Actual page of the resource list pagination
     - `next` : Successor page of the current of page of the resource list pagination
     - `last` : Last page of the resource list pagination
-
-
-
+    
     In addition the following custom headers are provided for convenience
-
     - `x-total-pages` : Total number of pages of the list of requested sub-resources
     - `x-total-items` : Total number of items on the list of requested sub-resources
     - `x-page-size` : Maxium size of the page
     - `x-current-page` : Page number of the current page of the list of requested sub-resources
 
-    **Deprecation Notes**
-
-    WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
-    The feature will be turned off on 6th of October for all Business API Accounts.
-
-    The group messaging related parts have to follow this deprecation time line.
-    Please migrate to the standard messaging and contact us about alternative ways.
-
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.10'
+  version: '2.11'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -130,15 +113,6 @@ tags:
       The WA Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
-  - name: "WA Group management"
-    description: |
-      **Deprecation Notes**
-
-      WhatsApp deciced to deprecate the group messaging for Business API Accounts starting from 6th of July 2020.
-      The feature will be turned off on 6th of October for all Business API Accounts.
-
-      The group messaging related parts have to follow this deprecation time line.
-      Please migrate to the standard messaging and contact us about alternative ways.
 x-tagGroups:
   - name: Messaging
     tags:
@@ -153,7 +127,6 @@ x-tagGroups:
       - "WA Account management"
       - "WA Template management"
       - "WA Phone Number insights"
-      - "WA Group management"
       - "WA Settings management"
 paths:
   /messages:
@@ -187,7 +160,7 @@ paths:
                 $ref: '#/components/examples/WhatsAppLocationMessage'
               WA - Text Template:
                 $ref: '#/components/examples/WhatsAppTemplateMessage'
-              WA - Rich Template :
+              WA - Rich Template:
                 $ref: '#/components/examples/WhatsAppRichNotificationMessage'
               WA - Call to action Template:
                 $ref: '#/components/examples/WhatsAppInteractiveCallToActionMessage'
@@ -261,6 +234,36 @@ paths:
                 $ref: '#/components/schemas/MessageHistory'
         404:
           $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendBulkMessage
+      summary: Send a bulk of messages
+      tags:
+        - "Send messages"
+      description: |
+        Send a bulk of messages via one channel to one receiver.
+
+        The system guarantees that the messages are send in order to the receiver
+      requestBody:
+        description: The message bulk you want to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+      responses:
+        202:
+          description: The bulk was accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BulkAccepted'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
   /media/{media-id}:
@@ -726,375 +729,6 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-    get:
-      operationId: getAllWhatsAppGroups
-      summary: List groups
-      description: List all groups the phone number is member of
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: List of group ids. Can be empty if no group exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroups'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    post:
-      operationId: createNewWhatsAppGroup
-      summary: Create a new group
-      description: Creates a new group with the given subject
-      tags:
-        - "WA Group management"
-      requestBody:
-        description: Information in order to create the group
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WhatsAppGroupCreationRequest'
-      responses:
-        200:
-          description: Group created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupCreationResponse'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    get:
-      operationId: getWhatsappGroupInformation
-      summary: Get details about a group
-      description: Returns information about the group specified by the group id
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: Information about the group
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupDetails'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/participants:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    get:
-      operationId: getGroupParticipants
-      summary: Get group participants
-      description: Returns current participants of a group
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: List of participants, can be empty
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupParticipants'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    delete:
-      operationId: removeParticipantsFromGroup
-      summary: Remove participants from group
-      description: Removes all specified participants from the group.
-      requestBody:
-        required: true
-        description: List of participants to be removed
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WhatsAppGroupParticipants'
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: Participants removed from group
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/participants/self:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    delete:
-      operationId: removeSelfFromGroup
-      summary: Remove yourself from the group
-      description: |
-        Removes the whatsapp account from it's own group.
-
-        **Note**: The account can **not** rejoin the group afterwards
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: Participants removed from group
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    get:
-      operationId: getGroupAdmins
-      summary: Get group admins
-      description: Returns current admins of a group
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: List of admins
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupParticipants'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/admins/{whats-app-id}:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-      - $ref: '#/components/parameters/WhatsAppId'
-    put:
-      summary: Promote a participant
-      description: |
-        Promotes the participant identified by the id to a group admin.
-
-        **Note** : This operation enables the user to manage the group participants.
-      operationId: promoteToGroupAdmin
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: User was successfully promoted.
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    delete:
-      operationId: demoteAsGroupAdmin
-      summary: Demote the admin
-      description: |
-        Demotes the admin identified by the id to a participant.
-      tags:
-        - "WA Group management"
-      responses:
-        200:
-          description: Admin was successfully demoted to a participant.
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/settings/icon:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    get:
-      summary: Get the group icon
-      description: Returns the current icon for the given group
-      tags:
-        - "WA Group management"
-      operationId: getWhatsAppGroupIcon
-      responses:
-        200:
-          description: The current icon
-          content:
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          description: The phone number, group id or icon does not exists
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-        default:
-          $ref: '#/components/responses/Default'
-    put:
-      summary: Update the group icon
-      description: |
-        Updates the group icon for the given group.
-
-        The icon must have a minimal edge size of 192 pixel and must not exceed 5 MB in size
-      tags:
-        - "WA Group management"
-      operationId: updateWhatsappGroupIcon
-      requestBody:
-        required: true
-        description: Image that should be used as a group icon
-        content:
-          image/png:
-            schema:
-              type: string
-              format: binary
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
-      responses:
-        202:
-          description: Image successfully updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/settings/profile:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    get:
-      summary: Get the group profile
-      description: Retrieve the actual profile for the given group
-      tags:
-        - "WA Group management"
-      operationId: getWhatsAppGroupProfile
-      responses:
-        200:
-          description: The current profile
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupProfile'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    put:
-      summary: Update the group profile
-      description: Update the actual profile for the given group
-      tags:
-        - "WA Group management"
-      operationId: updateWhatsAppGroupProfile
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WhatsAppGroupProfile'
-      responses:
-        202:
-          description: Profile successfully updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/groups/{group-id}/invites/link:
-    parameters:
-      - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/GroupId'
-    put:
-      summary: Create an invite link
-      description: Creates an invite link if necessary
-      tags:
-        - "WA Group management"
-      operationId: createWhatsAppGroupInviteLink
-      responses:
-        200:
-          description: Invite link created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    get:
-      summary: Get the invite link
-      description: Get the current active invite link for the given group
-      tags:
-        - "WA Group management"
-      operationId: getWhatsAppGroupInviteLink
-      responses:
-        200:
-          description: The current invite link
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-    delete:
-      summary: Delete the current invite link
-      description: This operation invalidates the previously generated invite link
-      tags:
-        - "WA Group management"
-      operationId: deleteInviteLink
-      responses:
-        200:
-          description: The current invite link was deleted
-        403:
-          $ref: '#/components/responses/Forbidden'
-        404:
-          $ref: '#/components/responses/PhoneNumberOrGroupIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/settings/profile:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -1371,6 +1005,25 @@ components:
           schema:
             type: string
           description: Location URI of the newly created resource
+    BulkAccepted:
+      description: The requested bulk was accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20
   parameters:
     GroupId:
       name: group-id
@@ -1501,7 +1154,7 @@ components:
           contentType: media
           media:
             type: sticker
-            url: https://www.gstatic.com/webp/gallery/1.webp
+            url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     WhatsAppLocationMessage:
       value:
         to: "12331132"
@@ -2048,7 +1701,7 @@ components:
           enum:
             - text
             - url
-          description: What kind of payload should be sent
+          description: What kind of payload should be send
           example: text
         from:
           type: string
@@ -2075,6 +1728,14 @@ components:
       type: object
       description: |
         Viber message to be sent
+
+        The following content / service type combination sare valid
+
+        | Service Type | Text | Image | Text & Button | Text & Button & Image |
+        | ---: | :---: | :---: | :---: | :---: |
+        | One way | ✔ | ✔ | ✔ | ✔ |
+        | Two way | ✔ | ✔ | ✔ | ✔ |
+        | Session | ✔ | ✔ | ❌ | ❌ |
       required:
         - components
         - messagePurpose
@@ -2137,31 +1798,30 @@ components:
           type: string
           enum:
             - button
-          description: Button component for Viber
         button:
           type: object
           description: The button to be used
           properties:
-              caption:
-                type: string
-                maxLength: 30
-                description: Caption of the button
-                example: click me!
-              callback:
-                type: string
-                maxLength: 1000
-                pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
-                description: Action callback that is executed when the user clicks on the button
-                example: https://my.callba.ck/clicked
+            caption:
+              type: string
+              maxLength: 30
+              description: Caption of the button
+              example: click me!
+            callback:
+              type: string
+              maxLength: 1000
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Action callback that is executed when the user clicks on the button
+              example: https://my.callba.ck/clicked
     ViberImageComponent:
       type: object
       description: Image component for viber
       properties:
         type:
           type: string
+          description: Image component for Viber
           enum:
             - image
-          description: Image component for Viber
         image:
           type: object
           description: The image to be sent
@@ -2357,10 +2017,10 @@ components:
         url:
           type: string
           description: the url of the location where the sticker is stored
-          example: https://www.gstatic.com/webp/gallery/1.webp
+          example: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
       example:
         type: image
-        url: https://www.gstatic.com/webp/gallery/1.webp
+        url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     DocumentMedia:
       type: object
       description: Document to be send
@@ -2454,8 +2114,8 @@ components:
           items:
             $ref: '#/components/schemas/TemplateParameter'
           example:
-           - default: Mr.
-           - default: Doe
+            - default: Mr.
+            - default: Doe
       example:
         templateId: weclome_message
         language:
@@ -2522,9 +2182,9 @@ components:
         type:
           type: string
           default: header
+          description: Determines the type of the component. Always _header_.
           enum:
             - header
-          description: Determines the type of the component. Always _header_.
         parameters:
           type: array
           description: Parameters to be used in Header
@@ -2596,8 +2256,8 @@ components:
                   - payload
               payload:
                 type: string
-                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
                 maxLength: 128
+                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
           minItems: 0
           maxItems: 1
     UrlButtonComponent:
@@ -2631,20 +2291,20 @@ components:
                   - text
               text:
                 type: string
-                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
                 maxLength: 2000
+                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
           minItems: 0
           maxItems: 1
     TextParameter:
       type: object
-      description: Media to be send
+      description: Text to be send
       properties:
         type:
           type: string
           default: text
+          description: Determines the type of the component. Always _text_.
           enum:
             - text
-          description: Determines the type of the component. Always _text_.
         text:
           type: string
           description: |
@@ -2663,7 +2323,7 @@ components:
         text: Hi! Cool replacement
     LocationParameter:
       type: object
-      description: Media to be send
+      description: Location to be send
       properties:
         type:
           type: string
@@ -2964,10 +2624,10 @@ components:
         acceptedAt:
           type: string
           format: date-time
-          description: Point in time when Conversations API confirms that the message request was accepted
+          description: Point in time when the API confirms that the message request was accepted
     APIEvent:
       type: object
-      description: Basic type for events produced, such as MessageStatus, InboundMessage and GroupEvent
+      description: Basic type for events produced such as MessageStatus, InboundMessage and GroupEvent
       required:
         - event
       properties:
@@ -3011,14 +2671,6 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        - WhatsAppGroupEvent::userJoined
-        - WhatsAppGroupEvent::userLeft
-        - WhatsAppGroupEvent::userPromoted
-        - WhatsAppGroupEvent::userDemoted
-        - WhatsAppGroupEvent::descriptionChanged
-        - WhatsAppGroupEvent::subjectChanged
-        - WhatsAppGroupEvent::iconChanged
-        - WhatsAppGroupEvent::iconDeleted
     MessageStatus:
       type: object
       description: |
@@ -3769,224 +3421,6 @@ components:
             Can be used for debugging use cases or individual routings.
           example:
             https://en4u5fpprib5i.x.pipedream.net
-    WhatsAppGroupCreationRequest:
-      type: object
-      description: Required information when creating a new group
-      required:
-        - subject
-      properties:
-        subject:
-          type: string
-          maxLength: 35
-          description: Group subject, used as display name
-          example:
-            This is a test group
-    WhatsAppGroupCreationResponse:
-      type: object
-      description: Response after a group was successfully created
-      properties:
-        groupId:
-          type: string
-          readOnly: true
-          description: |
-            The group id of the created group. This id is required on subsequent interactions with the group such as
-
-             - changes of the profile
-             - invite link management
-             - sending a message to the group
-          example:
-            4923147790717-1564131378
-        creationTime:
-          type: integer
-          readOnly: true
-          description: When was the group created. Time is given in seconds since 01.01.1970
-          example:
-            1564131378
-    WhatsAppGroups:
-      type: array
-      items:
-        $ref: '#/components/schemas/WhatsAppGroup'
-    WhatsAppGroup:
-      type: object
-      description: Basic information about a group
-      properties:
-        groupId:
-          type: string
-          readOnly: true
-          description: |
-            The group id of a group. This id is required on subsequent interactions with the group such as
-
-             - changes of the profile
-             - invite link management
-             - sending a message to the group
-          example:
-            4923147790717-1564131378
-        creationTime:
-          type: integer
-          readOnly: true
-          description: When was the group created. Time is given in seconds since 01.01.1970
-          example:
-            1564131378
-    WhatsAppGroupDetails:
-      type: object
-      description: Information about a dedicated WhatsApp group
-      properties:
-        admins:
-          type: array
-          readOnly: true
-          description: |
-            List of admin whatsapp account id
-          items:
-            type: string
-          example:
-            - 4923147790717
-        creationTime:
-          type: integer
-          readOnly: true
-          description: When was the group created. Time is given in seconds since 01.01.1970
-          example:
-            1564131378
-        creator:
-          type: string
-          readOnly: true
-          description: Which account created the group. Is always your WhatsApp account assigned to the phone number used
-          example:
-            4923147790717
-        participants:
-          type: array
-          readOnly: true
-          description: List of participants in the group
-          items:
-            type: string
-          example:
-            - 4923147790717
-            - 4923147790718
-        subject:
-          type: string
-          readOnly: true
-          description: Group subject, used as display name
-          example:
-            This is a test group
-    WhatsAppGroupParticipants:
-      type: object
-      description: Participants of a whatsapp group
-      properties:
-        participants:
-          type: array
-          description: List of participants in the group
-          items:
-            type: string
-          example:
-            - 4923147790717
-            - 4923147790718
-    WhatsAppGroupProfile:
-      type: object
-      description: Profile of the WhatsApp group
-      required:
-        - subject
-      properties:
-        subject:
-          type: string
-          maxLength: 35
-          description: Group subject, used as display name
-          example:
-            This is a test group
-    WhatsAppGroupInviteLink:
-      type: object
-      description: |
-        Invite link for the group.
-
-        Needs to be send to all participants of the group either by template or normal text message
-      required:
-        - link
-      properties:
-        link:
-          type: string
-          readOnly: true
-          description: The invite link as URL
-          example:
-            https://chat.whatsapp.com/EVZpTCb8xmB1KSoZlyDgU1
-    WhatsAppGroupEvent:
-      type: object
-      description: |
-        This events are send out for WhatsApp groups your account is member of.
-
-        The details of a certain event are stored in dedicated properties, please refer to the documentation below which
-        eventType will fill which property.
-      required:
-        - event
-        - groupId
-        - eventType
-      properties:
-        event:
-          type: string
-          description: Determines which kind of event is sent.
-          enum:
-            - WhatsAppGroupEvent::userJoined
-            - WhatsAppGroupEvent::userLeft
-            - WhatsAppGroupEvent::subjectChanged
-            - WhatsAppGroupEvent::descriptionChanged
-            - WhatsAppGroupEvent::userPromoted
-            - WhatsAppGroupEvent::userDemoted
-            - WhatsAppGroupEvent::iconChanged
-            - WhatsAppGroupEvent::iconDeleted
-        channel:
-          type: string
-          description: Channel which triggered the event. Is always _whatsapp_
-          example: whatsapp
-          enum:
-            - whatsapp
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happend
-          example:
-            2019-06-26T11:41:00
-        from:
-          type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
-          example:
-            491672634678
-        operator:
-          type: string
-          description: Phone number or whatsapp account id of the initiating user. May not be the same as _from_.
-        groupId:
-          type: string
-          description: originating group id
-        subject:
-          type: string
-          description: The changed subject of the group. Will only be present on _subjectChanged_
-          example:
-            Test Group
-        description:
-          type: string
-          description: The changed description of the group. Will only be present on _descriptionChanged_
-          example:
-            This is an example description
-        users:
-          type: array
-          description: |
-            Accounts left or joined the group. Will only be present on
-
-            - _userJoined_
-            - _userLeft_
-            - _userPromoted_
-            - _userDemoted_
-          items:
-            type: string
-          example:
-            - 491672634671
-            - 491672634672
-      example:
-        event: WhatsAppGroupEvent::userJoined
-        channel: whatsapp
-        timestamp: 2019-06-26T11:41:00
-        from: 491672634678
-        operator: 491672634652
-        groupId: 4923147790717-1564131378
-        users:
-          - 491672634672
-          - 491672634673
     WhatsAppProfile:
       type: object
       description: |
@@ -4060,9 +3494,9 @@ components:
       properties:
         status:
           type: string
+          description: WhatsApp message status
           enum:
             - read
-          description: WhatsApp message status
     DefaultApplicationUpdate:
       type: object
       description: Update of the default application
@@ -4151,7 +3585,7 @@ components:
       properties:
         link:
           type: string
-          description: Link to the profile logo          
+          description: Link to the profile logo
           example: https://pps.whatsapp.net/v/123123
     WhatsAppAccounts:
       type: array
@@ -4189,8 +3623,13 @@ components:
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
+          description: The Facebook business manager id provided by Facebook
           type: string
           example: 1791147717848878
+        whatsAppBusinessAccountId:
+          description: The WhatsApp Business Account Id provided by WhatsApp
+          type: string
+          example: 24334545345345
         accountStatus:
           $ref: '#/components/schemas/WhatsAppAccountStatus'
         managedBy:
@@ -4329,7 +3768,7 @@ components:
         properties:
           type:
             type: string
-            description: Template type
+            description: Template part
             enum:
               - BODY
             default: BODY
@@ -4357,6 +3796,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequest'
         - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
+        - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponentRequest'
     WhatsAppTemplateTextHeaderComponentRequest:
       type: object
       description: Header component of a template
@@ -4383,6 +3823,27 @@ components:
           description: Text that should be displayed as header. Can contain 1 variable
           maxLength: 60
           example: Hi {{1}}
+
+    WhatsAppTemplateLocationHeaderComponentRequest:
+      type: object
+      description: Header component of a template
+      required:
+        - type
+        - format
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - HEADER
+          example: HEADER
+        format:
+          type: string
+          description: Which kind of header
+          enum:
+            - LOCATION
+          example:
+            LOCATION
     WhatsAppTemplateMediaHeaderComponentRequest:
       type: object
       description: Header component of a template
@@ -4832,3 +4293,117 @@ components:
         - current
         - next
         - last
+    BulkRequest:
+      type: object
+      description: Bulk request to be send. The items are guaranted to be send in order of appearance
+      properties:
+        to:
+          type: string
+        from:
+          type: string
+        channel:
+          type: string
+          description: Channel which should be used for the bulk
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        sms:
+          type: array
+          description: SMS to be send
+          items:
+            $ref: '#/components/schemas/BulkSMSRequest'
+          minItems: 2
+          maxItems: 20
+        whatsapp:
+          type: array
+          description: WhatsApp messages to be send
+          items:
+            $ref: '#/components/schemas/BulkWhatsAppRequest'
+          minItems: 2
+          maxItems: 20
+        viber:
+          type: array
+          description: Viber messages to be send
+          items:
+            $ref: '#/components/schemas/BulkViberRequest'
+          minItems: 2
+          maxItems: 20
+    BulkSMSRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+          description: What kind of payload should be sent
+          example: text
+        text:
+          type: string
+          maxLength: 3000
+          description: The message to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+    BulkWhatsAppRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - template
+            - text
+            - url
+            - media
+            - location
+            - contacts
+          description: What kind of payload is used
+          example: template
+        text:
+          type: string
+          maxLength: 4096
+          description: The text to be send
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        media:
+          $ref: '#/components/schemas/Media'
+        template:
+          $ref: '#/components/schemas/Template'
+        location:
+          $ref: '#/components/schemas/Location'
+        urlPreviewDisplayed:
+          type: boolean
+          default: false
+          description: Should a preview of the url be rendered. This will only have an effect on text messages.
+          example: true
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+    BulkViberRequest:
+      type: object
+      properties:
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
