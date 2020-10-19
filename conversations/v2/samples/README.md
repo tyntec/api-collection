@@ -1,4 +1,4 @@
-# Chat API Sample requests
+# Conversations Sample requests
 
 This folder contains some sample requests for interacting with the API.
 
