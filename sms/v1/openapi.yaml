@@ -372,7 +372,7 @@ paths:
             
             tyntec's inbound system will retry the delivery
 
-  /phonebook/v1/numbers:
+  /byon/phonebook/v1/numbers:
     get:
       tags:
         - BYON Phone Book Service
@@ -437,7 +437,7 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  "/phonebook/v1/numbers/{phoneNumber}":
+  "/byon/phonebook/v1/numbers/{phoneNumber}":
     get:
       tags:
         - BYON Phone Book Service
@@ -480,7 +480,7 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /contacts/v1:
+  /byon/contacts/v1:
     get:
       tags:
         - BYON Contact Service
@@ -584,7 +584,7 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  "/contacts/v1/{contactId}":
+  "/byon/contacts/v1/{contactId}":
     get:
       tags:
         - BYON Contact Service
@@ -709,7 +709,7 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /provisioning/v1:
+  /byon/provisioning/v1:
     get:
       tags:
         - BYON Number Service
@@ -843,7 +843,7 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  "/provisioning/v1/{requestId}":
+  "/byon/provisioning/v1/{requestId}":
     get:
       tags:
         - BYON Number Service
@@ -1065,16 +1065,6 @@ components:
           type: string
         country:
           description: The country that the phone number is registered
-          type: string
-        operator:
-          description: Operator's network
-          type: string
-        ip:
-          description: IP address of the phone
-          type: array
-          items:
-            type: string
-        callbackUrl:
           type: string
     PhoneProvisioningArrayResponse:
       type: object
