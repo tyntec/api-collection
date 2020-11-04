@@ -2,35 +2,9 @@ openapi: '3.0.0'
 info:
   title: Common Operations
   description: |
-    Conversations allows you to easily send messages to your customers via different channels like WhatsApp
-    and still reach customers with classic SMS.
-    In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
-    Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
+    In this section you find an overview of common operations on the Conversations.
 
-    **Channel specific pre-conditions**
-
-    - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
-    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
-    - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
-
-    **Adheared web-standards**
-    One goal of the API is to follow best practices and standards around http based services.
-    A building block of this is to follow the RFCs:
-    - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
-    - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
-
-    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following Link headers
-    - `first` : First page of the resource list pagination
-    - `previous` : Predecessor page of the current page of the resource list pagination
-    - `current` : Actual page of the resource list pagination
-    - `next` : Successor page of the current of page of the resource list pagination
-    - `last` : Last page of the resource list pagination
-
-    In addition the following custom headers are provided for convenience
-    - `x-total-pages` : Total number of pages of the list of requested sub-resources
-    - `x-total-items` : Total number of items on the list of requested sub-resources
-    - `x-page-size` : Maxium size of the page
-    - `x-current-page` : Page number of the current page of the list of requested sub-resources
+    For details about interaction with a channel please refer to the channel specific section.
 
   contact:
     name: tyntec API Support
@@ -47,34 +21,12 @@ security:
 tags:
   - name: "Send messages"
     description: |
-      In this section we guide you on how to send messages, get information about the status and the events happening
-      during the delivery
+      Basic operations on messaging.
   - name: "Download inbound media"
     description: |
       After receiving an inbound message (_MoMessage_ event) with a media id, this endpoint can be used to download
       the media file.
-  - name: "Notifications"
-    description: |
-      Notifications or DLRs are **send** to your system when
 
-       - a message reaches a final state or
-       - a message reaches an intermediate state and you opt-in to receive this
-       - a user decides to delete a message previously send **to** you.
-       - a user interacts with a group, such as joining or leaving the group
-
-      We treat
-
-        - delivered
-        - seen / read
-        - finally failed
-
-      as final states for message send by you.
-
-      All other states are treated as intermediate states.
-
-      We will use HTTP ```POST``` method to send the notifications to your system.
-
-      The notification message is the same as for the message status you can query MessageStatus.
 paths:
   /messages:
     post:
