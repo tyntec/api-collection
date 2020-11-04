@@ -1,0 +1,712 @@
+openapi: '3.0.0'
+info:
+  title: Common Operations
+  description: |
+    Conversations allows you to easily send messages to your customers via different channels like WhatsApp
+    and still reach customers with classic SMS.
+    In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
+    Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
+
+    **Channel specific pre-conditions**
+
+    - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
+    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
+    - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
+
+    **Adheared web-standards**
+    One goal of the API is to follow best practices and standards around http based services.
+    A building block of this is to follow the RFCs:
+    - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
+    - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
+
+    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following Link headers
+    - `first` : First page of the resource list pagination
+    - `previous` : Predecessor page of the current page of the resource list pagination
+    - `current` : Actual page of the resource list pagination
+    - `next` : Successor page of the current of page of the resource list pagination
+    - `last` : Last page of the resource list pagination
+
+    In addition the following custom headers are provided for convenience
+    - `x-total-pages` : Total number of pages of the list of requested sub-resources
+    - `x-total-items` : Total number of items on the list of requested sub-resources
+    - `x-page-size` : Maxium size of the page
+    - `x-current-page` : Page number of the current page of the list of requested sub-resources
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '2.11'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v2
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/chat-api/v2
+security:
+  - ApiKeyAuth: [ ]
+tags:
+  - name: "Send messages"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening
+      during the delivery
+  - name: "Download inbound media"
+    description: |
+      After receiving an inbound message (_MoMessage_ event) with a media id, this endpoint can be used to download
+      the media file.
+  - name: "Notifications"
+    description: |
+      Notifications or DLRs are **send** to your system when
+
+       - a message reaches a final state or
+       - a message reaches an intermediate state and you opt-in to receive this
+       - a user decides to delete a message previously send **to** you.
+       - a user interacts with a group, such as joining or leaving the group
+
+      We treat
+
+        - delivered
+        - seen / read
+        - finally failed
+
+      as final states for message send by you.
+
+      All other states are treated as intermediate states.
+
+      We will use HTTP ```POST``` method to send the notifications to your system.
+
+      The notification message is the same as for the message status you can query MessageStatus.
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Send messages"
+      description: |
+        Send chat messages via this path.
+
+        For details on the channels please refer to the channel specific documentation.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{message-id}/history:
+    get:
+      operationId: getMessageHistory
+      summary: View message history
+      tags:
+        - "Send messages"
+      description: |
+        Get the history of the message.
+
+        This will give you detailed information about the delivery flow of the message.
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        200:
+          description: The history of the message id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageHistory'
+        404:
+          $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{message-id}/status:
+    get:
+      operationId: checkMessageStatus
+      summary: Check message status
+      tags:
+        - "Send messages"
+      description: Check status of the message
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        200:
+          description: The message id requested exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageStatus'
+        404:
+          $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{message-id}:
+    get:
+      operationId: retrieveMessage
+      summary: Retrieve the message
+      tags:
+        - "Send messages"
+      description: |
+
+        Returns back a message previously send by you.
+
+        **Please note** After a final status notification (delivered, read or failed) the message
+        is only available for the next 48 hours. After this period we delete the message in our system.
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        200:
+          description: The message id requested exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoredMessage'
+        404:
+          $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendBulkMessage
+      summary: Send a bulk of messages
+      tags:
+        - "Send messages"
+      description: |
+        Send a bulk of messages via one channel to one receiver.
+
+        The system guarantees that the messages are send in order to the receiver
+
+        For details on the channels please refer to the channel specific documentation.
+      requestBody:
+        description: The message bulk you want to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+      responses:
+        202:
+          description: The bulk was accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BulkAccepted'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /media/{media-id}:
+    parameters:
+      - $ref: '#/components/parameters/MediaId'
+    get:
+      operationId: downloadMedia
+      summary: Download received media
+      tags:
+        - "Download inbound media"
+      description: Retrieve the media associated with the id
+      responses:
+        200:
+          description: The media associated with the id requested exists.
+          content:
+            'audio/*':
+              schema:
+                type: string
+                format: binary
+            'application/*':
+              schema:
+                type: string
+                format: binary
+            'text/*':
+              schema:
+                type: string
+                format: binary
+            'video/*':
+              schema:
+                type: string
+                format: binary
+        404:
+          description: The media associated with the id does not exists in our system
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                status: 404
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: |
+        The API key used for this operation. We check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
+  responses:
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    MessageIdUnknown:
+      description: The message id does not exists in our system
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 404
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    BulkAccepted:
+      description: The requested bulk was accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20
+  parameters:
+    MediaId:
+      name: media-id
+      in: path
+      required: true
+      description: The id of the media to be downloaded
+      schema:
+        type: string
+        format: uuid
+        example: 77185196-664a-43ec-b14a-fe97036c697f
+    MessageId:
+      name: message-id
+      in: path
+      required: true
+      description: The id of the message
+      schema:
+        type: string
+        format: uuid
+        example: 77185196-664a-43ec-b14a-fe97036c697f
+  schemas:
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the message.
+
+            Could be one of
+              - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+              - group id create via the WA Group management
+          example: "+1233423454"
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - sms
+            - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
+              - viber
+        overrides:
+          $ref: '#/components/schemas/MessageRequestOverrides'
+        context:
+          $ref: '#/components/schemas/MessageRequestContext'
+      example:
+        to: "+123234234"
+        channels: [ "whatsapp" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    StoredMessage:
+      type: object
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          pattern: '^(00|\+)\d{1,15}$'
+          description: |
+            The receipient phone number in international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+          example: '+1233423454'
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        to: "+123234234"
+        channels: [ "whatsapp" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+        - acceptedAt
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the API confirms that the message request was accepted
+    APIEvent:
+      type: object
+      description: Basic type for events produced such as MessageStatus, InboundMessage and GroupEvent
+      required:
+        - event
+      properties:
+        event:
+          $ref: '#/components/schemas/EventTypes'
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:00
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+      example:
+        event: MessageStatus::accepted
+        channel: sms
+        from: 491672634678
+        timestamp: 2019-06-26T11:41:00
+    EventTypes:
+      type: string
+      description: Determines which kind of event is emitted by the API
+      enum:
+        - MoMessage
+        - MoMessage::Postback
+        - MessageStatus::accepted
+        - MessageStatus::channelFailed
+        - MessageStatus::deleted
+        - MessageStatus::delivered
+        - MessageStatus::failed
+        - MessageStatus::seen
+        - MessageStatus::unknown
+    MessageStatus:
+      type: object
+      description: |
+        The current status of a message.
+
+        It is used for messages send and received by you.
+
+        In case you send a message the status will inform you about the delivery process.
+
+        In the case that you receive a message from a user, the user may decide to delete the message.
+        Then and only then status deleted is triggered.
+      required:
+        - messageId
+        - event
+        - status
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::accepted
+            - MessageStatus::delivered
+            - MessageStatus::seen
+            - MessageStatus::failed
+            - MessageStatus::unknown
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        deliveryChannel:
+          type: string
+          deprecated: true
+          description: |
+            Channel which was used for delivery.
+
+            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        status:
+          description: |
+            Indicates the status of the message. Be aware that not all channels support all status.
+
+            **Note** This property will be replaced by the property _event_ in a future release.
+          deprecated: true
+          type: string
+          example: seen
+          enum:
+            - accepted
+            - delivered
+            - seen
+            - failed
+            - unknown
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+        details:
+          $ref: '#/components/schemas/HistoryDetails'
+      example:
+        event: MessageStatus::seen
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        status: seen
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+        from: 491672634678
+    MessageHistory:
+      type: object
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        history:
+          type: array
+          description: Ordered list of current available events for your message
+          items:
+            $ref: '#/components/schemas/HistoryItem'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        userContext: my-message-reference
+        history:
+          - deliveryChannel: whatsapp
+            happendAt: '2019-03-13T12:57:27.048Z'
+            state: accepted
+    HistoryItem:
+      type: object
+      description: Contains information about a specific event occuring in the delivery process
+      properties:
+        deliveryChannel:
+          type: string
+          deprecated: true
+          description: The channel triggering this event
+          example: whatsapp
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        channel:
+          type: string
+          description: The channel triggering this event
+          example: whatsapp
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+        happendAt:
+          type: string
+          description: When did the event happen
+          format: date-time
+        state:
+          type: string
+          description: State of the message delivery
+          example: accepted
+          enum:
+            - accepted
+            - dispatched
+            - dispatching_failed
+            - success
+            - failed
+            - unknown
+        details:
+          $ref: '#/components/schemas/HistoryDetails'
+      example:
+        deliveryChannel: whatsapp
+        happendAt: '2019-03-13T13:15:22Z'
+        state: accepted
+    HistoryDetails:
+      description: Further information available for this event
+      type: object
+      additionalProperties: true
+      properties:
+        code:
+          type: string
+          description: Code specific to the details
+          example: tyntec::error:noFurtherChannelAvailable
+        message:
+          type: string
+          description: Textual representation of the code, containing further information
+          example: No further channel after Channel[whatsapp] available
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parseable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MessageRequestContext:
+      type: object
+      description: Contextual information for the message request
+      properties:
+        userContext:
+          type: string
+          maxLength: 255
+          description: |
+            Contextual information that is transfered back on delivery notifications.
+          example:
+            my-message-reference
+    MessageRequestOverrides:
+      type: object
+      description: Overrides of defaults for this message
+      properties:
+        notificationCallbackUrl:
+          type: string
+          pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            When present this url is used for sending the delivery notifications to your webhook.
+            Can be used for debugging use cases or individual routings.
+          example:
+            https://en4u5fpprib5i.x.pipedream.net
+    BulkRequest:
+      type: object
+      description: Bulk request to be send. The items are guaranted to be send in order of appearance
+      properties:
+        to:
+          type: string
+        from:
+          type: string
+        channel:
+          type: string
+          description: Channel which should be used for the bulk
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
