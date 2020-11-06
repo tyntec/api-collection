@@ -19,7 +19,7 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 tags:
-  - name: "Send messages"
+  - name: "Messaging"
     description: |
       Basic operations on messaging.
   - name: "Download inbound media"
@@ -33,7 +33,7 @@ paths:
       operationId: sendMessage
       summary: Send a message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Send chat messages via this path.
 
@@ -64,7 +64,7 @@ paths:
       operationId: getMessageHistory
       summary: View message history
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Get the history of the message.
 
@@ -87,7 +87,7 @@ paths:
       operationId: checkMessageStatus
       summary: Check message status
       tags:
-        - "Send messages"
+        - "Messaging"
       description: Check status of the message
       parameters:
         - $ref: '#/components/parameters/MessageId'
@@ -107,7 +107,7 @@ paths:
       operationId: retrieveMessage
       summary: Retrieve the message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
 
         Returns back a message previously send by you.
@@ -132,7 +132,7 @@ paths:
       operationId: sendBulkMessage
       summary: Send a bulk of messages
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Send a bulk of messages via one channel to one receiver.
 

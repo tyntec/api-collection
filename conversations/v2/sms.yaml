@@ -21,7 +21,7 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 tags:
-  - name: "Send messages"
+  - name: "Messaging"
     description: |
       In this section we guide you on how to send messages, get information about the status and the events happening
       during the delivery
@@ -31,7 +31,7 @@ paths:
       operationId: sendMessage
       summary: Send a message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: Send chat messages via this path.
       requestBody:
         description: The message you would like to send
@@ -62,7 +62,7 @@ paths:
       operationId: retrieveMessage
       summary: Retrieve the message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
 
         Returns back a message previously send by you.
@@ -87,7 +87,7 @@ paths:
       operationId: sendBulkMessage
       summary: Send a bulk of messages
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Send a bulk of messages via one channel to one receiver.
 

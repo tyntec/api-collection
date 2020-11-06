@@ -21,13 +21,13 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 tags:
-  - name: "Send messages"
+  - name: "Messaging"
     description: |
       In this section we guide you on how to send messages, get information about the status and the events happening
       during the delivery
-  - name: "WA Account management"
+  - name: "Account management"
     description: |
-      The WA Account management grants you access to information about the WhatsApp accounts
+      The Account management grants you access to information about the WhatsApp accounts
       provisioned for you.
 
       At the moment it does not support requesting new WhatsApp accounts or editing existing ones.
@@ -36,16 +36,16 @@ tags:
 
       Read access to an account is available for all accounts that are associated with a phone number and thus eligible
       for sending messages.
-  - name: "WA Template management"
+  - name: "Template management"
     description: |
-      The WA Template management enables you to interact with the templates defined for your WhatsApp account.
+      The Template management enables you to interact with the templates defined for your WhatsApp account.
 
       We support creating or deleting templates and adding new localizations to an existing template.
 
       Due to restrictions by WhatsApp editing is not support yet.
-  - name: "WA Phone Number insights"
+  - name: "Phone Number insights"
     description: |
-      The WA Phone Number insights allows you to get information about the status of a phone number.
+      The Phone Number insights allows you to get information about the status of a phone number.
 
       It also provides *read* access to the templates usable by the phone number.
 paths:
@@ -54,7 +54,7 @@ paths:
       operationId: sendMessage
       summary: Send a message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: Send chat messages via this path.
       requestBody:
         description: The message you would like to send
@@ -103,7 +103,7 @@ paths:
       operationId: retrieveMessage
       summary: Retrieve the message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
 
         Returns back a message previously send by you.
@@ -128,7 +128,7 @@ paths:
       operationId: sendBulkMessage
       summary: Send a bulk of messages
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Send a bulk of messages via one channel to one receiver.
 
@@ -161,7 +161,7 @@ paths:
       summary: Mark whatsapp message as read
       description: Marks a previously received whatsapp message as read
       tags:
-        - "Receive messages"
+        - "Messaging"
       requestBody:
         description: The status change to execute
         required: true
@@ -183,7 +183,7 @@ paths:
       operationId: listAllWhatsAppAccounts
       summary: List WhatsApp accounts
       tags:
-        - "WA Account management"
+        - "Account management"
       description: |
         Lists all WhatsApp accounts managed by this access credentials.
 
@@ -227,7 +227,7 @@ paths:
       operationId: getWhatsAppAccount
       summary: Get details of an account
       tags:
-        - "WA Account management"
+        - "Account management"
       description: Get WhatsApp account
       responses:
         200:
@@ -247,7 +247,7 @@ paths:
       operationId: listPhoneNumbersOfWhatsAppAccount
       summary: List accounts phone numbers
       tags:
-        - "WA Account management"
+        - "Account management"
       description: List all phone numbers of a WhatsApp account
       responses:
         200:
@@ -290,8 +290,8 @@ paths:
       operationId: listTemplatesOfWhatsAppAccount
       summary: List accounts templates
       tags:
-        - "WA Template management"
-        - "WA Account management"
+        - "Template management"
+        - "Account management"
       description: List all templates of a WhatsApp account
       responses:
         200:
@@ -332,7 +332,7 @@ paths:
       summary: Submit a template for review
       description: Creates a new template that is submitted for review
       tags:
-        - "WA Template management"
+        - "Template management"
       requestBody:
         description: |
           The template for review by Facebook
@@ -380,7 +380,7 @@ paths:
       summary: Get details of a template
       description: Get details of a template
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         200:
           description: Specified template of the account
@@ -401,7 +401,7 @@ paths:
         After deleting the template a 30 days grace period is starting.
         This is indicated by the `expiresAt` property of the localizations
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         204:
           description: Deletion of the template is pendind now
@@ -418,7 +418,7 @@ paths:
       summary: List localizations of a template
       description: List localizations of a template
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         200:
           description: Localizations of a template.
@@ -438,7 +438,7 @@ paths:
       operationId: waTemplateAddLocalization
       description: Adds a localizations to the template. Will be separately reviewed by Facebook
       tags:
-        - "WA Template management"
+        - "Template management"
       requestBody:
         description: |
           The localization for review @ facebook
@@ -459,7 +459,7 @@ paths:
   /channels/whatsapp/phone-numbers:
     get:
       tags:
-        - "WA Phone Number insights"
+        - "Phone Number insights"
       operationId: listAllWhatsAppPhoneNumbers
       summary: Lists phone numbers
       description: Lists all phone numbers accessible for the given credentials
@@ -502,7 +502,7 @@ paths:
       operationId: getWhatsAppPhoneNumber
       summary: Get details of a phone number
       tags:
-        - "WA Phone Number insights"
+        - "Phone Number insights"
       description: Retrieves information about the phone number
 
       responses:
@@ -523,7 +523,7 @@ paths:
       operationId: getAvailableWhatsAppTemplates
       summary: List templates available to a phone number
       tags:
-        - "WA Phone Number insights"
+        - "Phone Number insights"
       description: Lists all available templates for a phone number
       responses:
         200:
@@ -567,7 +567,7 @@ paths:
       summary: Get the current profile
       description: Get the current profile settings
       tags:
-        - "WA Settings management"
+        - "Profile management"
       responses:
         200:
           description: The current profile settings
@@ -592,7 +592,7 @@ paths:
         Removal of an information is done by setting its value to an empty
         string.
       tags:
-        - "WA Settings management"
+        - "Profile management"
       requestBody:
         description: Information in order to create the group
         required: true
@@ -620,7 +620,7 @@ paths:
       summary: Get the logo
       description: Returns the current logo
       tags:
-        - "WA Settings management"
+        - "Profile management"
       responses:
         200:
           description: Current logo
@@ -652,7 +652,7 @@ paths:
 
         Recommended size is 640x640 pixel
       tags:
-        - "WA Settings management"
+        - "Profile management"
       requestBody:
         required: true
         description: Image that should be used as a profile logo
