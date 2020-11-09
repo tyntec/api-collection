@@ -1,7 +1,6 @@
 openapi: '3.0.0'
 info:
   title: Conversations
-  description: sdfsdf
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -11,7 +10,7 @@ info:
   x-major-version: v3
   x-postman-collection: postman.zip
 servers:
-  - url: https://api.tyntec.com/chat-api/v2
+  - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
 paths:
@@ -20,7 +19,7 @@ paths:
       operationId: sendMessage
       summary: Send a message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: Send chat messages via this path.
       requestBody:
         description: The message you would like to send
@@ -89,20 +88,19 @@ components:
       description: The message you would like to send
       required:
         - to
-        - channels
+        - from
+        - channel
       properties:
         to:
           type: string
           description: |
             The receipient of the messages
             The format depends on the specific channel
-
           example: "+1233423454"
         from:
           type: string
           description: |
             The sender of the messages. The format depends on the specific channel.
-
           example: "+1233423454"
         channel:
           type: string
@@ -122,8 +120,8 @@ components:
           description: Context for this particular message
           maxLength: 125
         content:
-          type: object
-          description: content of the message. Refer to the channel specifics
+          oneOf:
+            -
       example:
         to: "+123234234"
         from: "545345345"
