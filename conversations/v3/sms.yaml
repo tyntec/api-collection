@@ -1,0 +1,188 @@
+openapi: '3.0.0'
+info:
+  title: Conversations
+  description: sdfsdf
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v3
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/chat-api/v2
+security:
+  - ApiKeyAuth: [ ]
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Send messages"
+      description: Send chat messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/MessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  responses:
+    MessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+  schemas:
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - from
+        - channel
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+
+          example: "+1233423454"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+
+          example: "+1233423454"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: sms
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - wechat
+              - viber
+        overrides:
+          $ref: '#/components/schemas/MessageRequestOverrides'
+        context:
+          type: string
+          description: Context for this particular message
+          maxLength: 125
+        content:
+          type: object
+          description: content of the message. Refer to the channel specifics
+      example:
+        to: "+123234234"
+        from: "545345345"
+        channel:  "whatsapp"
+        whatsapp:
+          contentType: text
+          text: A simple text message
+    MessageRequestOverrides:
+      type: object
+      description: Overrides of defaults for this message
+      properties:
+        notificationCallbackUrl:
+          type: string
+          pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            When present this url is used for sending the delivery notifications to your webhook.
+            Can be used for debugging use cases or individual routings.
+          example:
+            https://en4u5fpprib5i.x.pipedream.net
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+        - acceptedAt
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the API confirms that the message request was accepted
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parseable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
