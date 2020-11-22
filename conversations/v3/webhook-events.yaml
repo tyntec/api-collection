@@ -1,0 +1,1083 @@
+asyncapi: '2.0.0'
+info:
+  title: Webhook Events
+  version: '2.11'
+  description: |
+    Delivery updates and inbound messages are send out to you in an event style manner.
+
+    They are send to the callback urls you specified on the previous section.
+
+    Inbound messages are send to your system as soon as we receive them from the channel.
+
+    Delivery updates  send to your system when
+
+    - a message reaches a final state or
+    - a message reaches an intermediate state and you opt-in to receive this
+    - a user decides to delete a message previously send **to** you (only available on WhatsApp)
+
+    We treat
+
+    - delivered
+    - seen / read
+    - finally failed
+
+    as final states for message send by you.
+
+    All other states are treated as intermediate states.
+
+tags:
+  - name: "Receiving messages"
+    description: |
+      Events published when the receiver of the message replies. Or deletes a previously sent message.
+  - name: "Delivery updates"
+    description: Events published on updates of the message delivery.
+servers:
+  production:
+    url: 78.110.226.11
+    description: Server address of tyntec, the events origin from
+    protocol: https
+channels:
+  "MoMessage (Basic)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/MoMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MoMessage (SMS)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/SMSMoMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MoMessage (WhatsApp)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/WhatsAppMoMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MoMessage (Viber)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/ViberMoMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MoMessage::Postback":
+    description: |
+      Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
+
+      **Supporting channels**
+
+      - WhatsApp on Quick Reply buttons.
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/MoMessagePostback'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::deleted":
+    description: |
+      This event is triggered, when a previously sent MoMessage has been deleted by its sender.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Receiving messages"
+      message:
+        $ref: '#/components/messages/MessageStatusDeleted'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::accepted":
+    description: |
+      This event is triggered, when tyntec has accepted your message request.
+
+      This happens after the http status code 202 on a messaging request.
+
+      **Supporting channels**
+
+      - All
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusAccepted'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::delivered":
+    description: |
+      This event is triggered, when the channel informed us about the successful delivery 
+      of your message to it's receiver.
+
+      **Supporting channels**
+
+      - WhatsApp
+      - SMS
+      - Viber
+
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusDelivered'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::seen":
+    description: |
+      This event is triggered, when the channel informed that the message was seen by it's receiver.
+
+      Depending on the channel this is subject of privacy settings by the receiver, eg. WhatsApp.
+
+      **Supporting channels**
+
+      - WhatsApp
+      - Viber
+
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusSeen'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::channelFailed":
+    description: |
+      This event is triggered, when message was not successfully delivered via the channel.
+
+      **Supporting channels**
+
+      - All
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusChannelFailed'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::failed":
+    description: |
+      This event is triggered, when the message failed on all configured channels.
+
+      **Supporting channels**
+
+      - All
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusFailed'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "MessageStatus::unknown":
+    description: |
+      This event is triggered, when the message status can not be mapped to any of the others.
+
+      **Supporting channels**
+
+      - All
+
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusUnknown'
+      bindings:
+        http:
+          type: request
+          method: POST
+components:
+  messages:
+    MoMessage:
+      payload:
+        $ref: '#/components/schemas/MoMessage'
+    SMSMoMessage:
+      payload:
+        $ref: '#/components/schemas/SMSMoMessage'
+    WhatsAppMoMessage:
+      payload:
+        $ref: '#/components/schemas/WhatsAppMoMessage'
+    ViberMoMessage:
+      payload:
+        $ref: '#/components/schemas/ViberMoMessage'
+    MoMessagePostback:
+      payload:
+        $ref: '#/components/schemas/MoMessagePostBack'
+    MessageStatusDeleted:
+      payload:
+        $ref: '#/components/schemas/MessageStatusDeletedEvent'
+    MessageStatusAccepted:
+      payload:
+        $ref: '#/components/schemas/MessageStatusAccepted'
+    MessageStatusDelivered:
+      payload:
+        $ref: '#/components/schemas/MessageStatusDelivered'
+    MessageStatusSeen:
+      payload:
+        $ref: '#/components/schemas/MessageStatusSeen'
+    MessageStatusChannelFailed:
+      payload:
+        $ref: '#/components/schemas/MessageStatusChannelFailed'
+    MessageStatusFailed:
+      payload:
+        $ref: '#/components/schemas/MessageStatusFailed'
+    MessageStatusUnknown:
+      payload:
+        $ref: '#/components/schemas/MessageStatusUnknown'
+  schemas:
+    APIEvent:
+      type: object
+      description: Basic type for events produced by the ChatAPI such as MessageStatus, MoMessage
+      required:
+        - event
+      properties:
+        event:
+          $ref: '#/components/schemas/EventTypes'
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:00
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          example:
+            491672634678
+      example:
+        event: MessageStatus::accepted
+        channel: sms
+        from: 491672634678
+        timestamp: 2019-06-26T11:41:00
+    EventTypes:
+      type: string
+      description: Determines which kind of event is emitted by the API
+      enum:
+        - MoMessage
+        - MoMessage::Postback
+        - MessageStatus::accepted
+        - MessageStatus::channelFailed
+        - MessageStatus::deleted
+        - MessageStatus::delivered
+        - MessageStatus::failed
+        - MessageStatus::seen
+        - MessageStatus::unknown
+    MoMessage:
+      type: object
+      description: |
+        Message received by us and delivered to your system via a webhook provided by your system.
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - content
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Is always _MoMessage_
+          enum:
+            - MoMessage
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: the sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific
+          example: "49123512315"
+        content:
+          $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: MoMessage
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: viber
+    MoContent:
+      type: object
+      description: Content of the mobile originated message
+      required:
+        - contentType
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+            - media
+            - location
+            - contacts
+          description: What kind of payload is used
+          example: media
+        text:
+          type: string
+          description: The received text
+          example: hi, thanks for your support message
+        media:
+          $ref: '#/components/schemas/MoMedia'
+      example:
+        contentType: media
+        media:
+          type: audio
+          url: 'https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f'
+          mediaId: 77185196-664a-43ec-b14a-fe97036c697f
+    MoContext:
+      type: object
+      description: Contextual information of the mobile originated message
+      properties:
+        messageId:
+          type: string
+          description: The message id the MoMessage refers to. Usualy set when the sender replies to a specific message
+          example: 77185196-664a-43ec-b14a-fe97036c697a
+    MoMedia:
+      type: object
+      description: Media information
+      properties:
+        type:
+          type: string
+          description: What kind of media was received
+          enum:
+            - image
+            - document
+            - audio
+            - voice
+            - video
+          example: audio
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
+        mediaId:
+          type: string
+          description: plain id of the media to download
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        caption:
+          type: string
+          description: caption specified by the user or the file name of the document
+          example: This is an picture of my cat!
+    SMSMoMessage:
+      type: object
+      description: |
+        Message received by us and delivered to your system via a webhook provided by your system.
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - content
+      allOf:
+        - $ref: '#/components/schemas/MoMessage'
+      properties:
+
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+        sms:
+          $ref: '#/components/schemas/SMS'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: MoMessage
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: sms
+        content:
+          contentType: text
+          text: 'hi, thanks for your support message'
+        sms:
+          origin:
+            mcc: string
+            mnc: string
+            ttId: string
+          totalPrice: 0
+          size: 1
+          missingParts: false
+          parts:
+            - messageId: string
+              sentDate: '2019-03-13T13:15:22Z'
+              price: 0
+              currency: string
+              priceEffective: '2019-03-13T13:15:22Z'
+              sequenceNumber: 1
+    SMS:
+      type: object
+      description: specifics of the sms channel
+      properties:
+        origin:
+          $ref: '#/components/schemas/SMSOrigin'
+        totalPrice:
+          type: number
+          description: The sum of prices for each message part listed in “contentList”.
+          example: 0.1
+        size:
+          type: number
+          description: The amount of respective concatenated SMS parts.
+          minimum: 1
+          maximum: 255
+          example: 1
+        missingParts:
+          type: boolean
+          description: True in case a part of an over-length was not received by the tyntec platform and the forwarded message text is incomplete.
+          default: false
+          example: false
+        parts:
+          type: array
+          description: |
+            tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver.
+            Information for each individual part are collected here
+          items:
+            $ref: '#/components/schemas/SMSContent'
+      example:
+        origin:
+          mcc: "49"
+          mnc: "176"
+          ttId: "25"
+        totalPrice: 0.1
+        size: 1
+        missingParts: false
+        parts:
+          - messageId: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
+            sentDate: '2019-03-13T13:15:22Z'
+            price: 0
+            currency: EUR
+            priceEffective: '2019-03-13T13:15:22Z'
+            sequenceNumber: 1
+    SMSOrigin:
+      type: object
+      description: Origin Information of the message
+      properties:
+        mcc:
+          type: string
+          description: A representative MCC (Mobile Network Code) of the originating network.
+          example: "49"
+        mnc:
+          type: string
+          description: A representative MNC (Mobile Network Code) of the originating network.
+          example: "176"
+        ttId:
+          type: string
+          description: The respective tyntec ID of the originating network.
+          example: "25"
+    SMSContent:
+      type: object
+      description: SMS channel specific information
+      properties:
+        messageId:
+          type: string
+          description: The unique identifier provided by tyntec for each message part.
+          example: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
+        sentDate:
+          type: string
+          description: |
+            The time stamp when the SMS has been received by the sending MSC (if available).
+
+            or
+
+            The time stamp when the respective message was received by tyntec.
+          format: date-time
+        price:
+          type: number
+          description: |
+            The price per message from the respective network.
+
+            Negative prices represent payout in favor of tyntec’s customer.
+          example: 0.1
+        currency:
+          type: string
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+          example: EUR
+        priceEffective:
+          type: string
+          description: The date when the “price” became effective.
+          format: date-time
+        sequenceNumber:
+          type: number
+          description: |
+            In case an over-length message is received tyntec recomposes the full message text before forwarding.
+            The “sequenceNumber” indicates the order of the message part.
+          minimum: 1
+          maximum: 255
+          example: 1
+    WhatsAppMoMessage:
+      type: object
+      description: |
+        Message received by us and delivered to your system via a webhook provided by your system.
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - content
+      allOf:
+        - $ref: '#/components/schemas/MoMessage'
+      properties:
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: whatsapp
+          enum:
+            - whatsapp
+        content:
+          $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/Whatsapp'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: MoMessage
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        content:
+          contentType: text
+          text: 'hi, thanks for your support message'
+        whatsapp:
+          senderName: Peter
+    Whatsapp:
+      type: object
+      description: specifics of the whatsapp channel
+      properties:
+        senderName:
+          type: string
+          description: Name of the sender, set in his or her profile
+          example: Peter
+      example:
+        senderName: Peter
+      additionalProperties: true
+    MessageRequestContext:
+      type: object
+      description: Contextual information for the message request
+      properties:
+        userContext:
+          type: string
+          maxLength: 255
+          description: |
+            Contextual information that is transfered back on delivery notifications.
+          example:
+            my-message-reference
+    ViberMoMessage:
+      type: object
+      description: |
+        Message received by us and delivered to your system via a webhook provided by your system.
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - content
+      allOf:
+        - $ref: '#/components/schemas/MoMessage'
+      properties:
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: viber
+          enum:
+            - viber
+        content:
+          $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: MoMessage
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: viber
+        content:
+          contentType: text
+          text: 'hi, thanks for your support message'
+    MoMessagePostBack:
+      type: object
+      description: |
+        Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
+
+        For WhatsApp only Quick Reply buttons trigger this event.
+      required:
+        - messageId
+        - event
+        - status
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
+          enum:
+            - MoMessage::Postback
+        channel:
+          type: string
+          description: Channel which triggered the event.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - tyntecEcho
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: the sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific
+          example: "49123512315"
+        postback:
+          $ref: '#/components/schemas/PostBack'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/WhatsAppPostBack'
+      example:
+        event: MoMessage::PostBack
+        messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        postback:
+          data: EventVisited::2020-04-04::WhatsAppFair
+        context:
+          messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        whatsapp:
+          senderName: open api sample
+          text: I liked the event
+    PostBack:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Payload or data that was specified on when requesting the button based message
+          example: EventVisited::2020-04-04::WhatsAppFair
+    WhatsAppPostBack:
+      type: object
+      description: Postback data for a WhatsApp quick reply button
+      allOf:
+        - $ref: '#/components/schemas/Whatsapp'
+      properties:
+        text:
+          type: string
+          description: Caption of the button that was clicked
+          example: Yes
+    MessageStatusDeletedEvent:
+      type: object
+      description: |
+        Indicates that a previously send inbound MOMessage is deleted by the user.
+      required:
+        - messageId
+        - event
+        - status
+        - channel
+        - from
+        - to
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent.
+          enum:
+            - MessageStatus::deleted
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        from:
+          type: string
+          description: Who triggered this event. Usually the phonenumber or whatsapp account id.
+          example:
+            491672634678
+        to:
+          type: string
+          description: Which channel specific account id is the receiver of this event.
+          example:
+            4923147790813
+      example:
+        event: MessageStatus::deleted
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        status: deleted
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+        from: 491672634678
+        to: 4923147790813
+    MessageStatusAccepted:
+      type: object
+      description: |
+        Indicates the acceptance of the message on the Conversations API
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::accepted_
+          enum:
+            - MessageStatus::accepted
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::accepted
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusDelivered:
+      type: object
+      description: |
+        Indicates the delivery of the message to the receiver
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::delivered_
+          enum:
+            - MessageStatus::delivered
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::delivered
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusSeen:
+      type: object
+      description: |
+        Indicates that the message was seen by the receiver
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::seen_
+          enum:
+            - MessageStatus::seen
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::seen
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusChannelFailed:
+      type: object
+      description: |
+        Indicates that the message failed on the particular channel
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::channelFailed_
+          enum:
+            - MessageStatus::channelFailed
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::channelFailed
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusFailed:
+      type: object
+      description: |
+        Indicates that all channels failed.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::failed_
+          enum:
+            - MessageStatus::failed
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::failed
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusUnknown:
+      type: object
+      description: |
+        Indicates an unforseen message status.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which kind of event is sent. Always _MessageStatus::unknown_
+          enum:
+            - MessageStatus::unknown
+        messageId:
+          type: string
+          description: Global Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel which triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happend
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+      example:
+        event: MessageStatus::unknown
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+
