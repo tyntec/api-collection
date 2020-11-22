@@ -46,6 +46,69 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /messages/{messageId}/status:
+    get:
+      operationId: getMessageStatus
+      summary: Check message status
+      tags:
+        - "Messaging"
+      description: Check the status of a message
+      responses:
+        200:
+          description: The status of a message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/MessageStatus'
+        404:
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{messageId}/events:
+    get:
+      operationId: getMessageEvents
+      summary: List delivery events
+      tags:
+        - "Messaging"
+      description: List the delivery events of a message
+      responses:
+        200:
+          description: The list of delivery events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/MessageDeliveryEvents'
+        404:
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulk:
+      operationId: sendABulkMessage
+      summary: Send a bulk message
+      tags:
+        - "Messaging"
+      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
+      requestBody:
+        description: The message bulk you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BulkMessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   responses:
     MessageResponse:
