@@ -16,14 +16,14 @@ security:
 tags:
   - name: "Applications"
     description: |
-      Conversations allows you to freely define which events should be sent via a callback URL to your webhook
+      An application allows you to freely define which events should be sent via a callback URL to your webhook
       implementation.
 
-      **Please note**:
+      **Important**
 
-       - By now, only a default application is supported. The extension to custom applications is planned for future releases
+       - By now, only a single application (the default application) is supported. The extension to custom applications is planned in future releases.
        - The API merges events pointing to the same callback URL into one set.
-       - When an update of a callback URL is executed, the whole webhook definition must be restated.
+       - When an update of a callback URL is executed, the whole webhook definition is restated.
 paths:
   /applications:
     get:
@@ -31,10 +31,10 @@ paths:
         - "Applications"
       summary: List all applications
       operationId: listApplications
-      description: Lists all applications configured for the APIKey
+      description: Lists all applications with their webhooks configured for the API key.
       responses:
         200:
-          description: List of applications. Will never be empty
+          description: List of applications. Will never be empty.
           content:
             application/json:
               schema:
@@ -43,9 +43,9 @@ paths:
     get:
       tags:
         - "Applications"
-      summary: Get default application
+      summary: Read the default application
       operationId: getDefaultApplication
-      description: Returns default application configured for the APIKey
+      description: Returns the default application configured for the API key with details about its webhooks.
       responses:
         200:
           description: Current definition of the default application
@@ -56,13 +56,12 @@ paths:
     patch:
       tags:
         - "Applications"
-      summary: Update default application
+      summary: Update the default application
       operationId: updateDefaultApplication
       description: |
-        The operation will save the specified webhooks. Makes merge(replacement)
-        operation on existing event types for newly defined webhooks.
-        Any other event type of the existing webhooks will remain associated
-        with the previous callback URL.
+        Defines webhooks in the default application by associating specified callback URLs with specified event types.
+        The operation will replace callback URLs on specified event types with the new callback URLs.
+        Omitted event types will remain associated with the previous callback URLs.
 
       requestBody:
         required: true
@@ -72,7 +71,7 @@ paths:
               $ref: "#/components/schemas/DefaultApplicationUpdate"
       responses:
         204:
-          description: Webhooks have been successfully saved.
+          description: Webhooks were saved successfully.
         400:
           $ref: '#/components/responses/BadRequest'
         default:
@@ -84,17 +83,17 @@ components:
       in: header
       name: apikey
       description: |
-        The API key used for this operation. We check as well that the API key has the phone number
-        (either on sending messages or interacting with other phone number based features) assigned.
+        The API key used for this operation. We also check that the API key has a phone number assigned
+        (either for sending messages or interacting with other phone-number based features).
   responses:
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in the case of any other error. Check the *Problem* object for details.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
     BadRequest:
-      description: The request does not match our expectations. Please check the Problems object for details
+      description: The request does not match our expectations. Check the *Problem* object for details.
       content:
         application/problem+json:
           schema:
@@ -111,7 +110,7 @@ components:
   schemas:
     EventTypes:
       type: string
-      description: Determines which kind of event is emitted by the API
+      description: Determines the event type emitted by the API.
       enum:
         - MoMessage
         - MoMessage::Postback
@@ -125,7 +124,7 @@ components:
     Problem:
       type: object
       additionalProperties: true
-      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      description: The problem object follows [RFC 7807](https://tools.ietf.org/html/rfc7807).
       required:
         - type
         - title
@@ -133,15 +132,15 @@ components:
         - detail
       properties:
         type:
-          description: A URI reference [RFC3986] that identifies the problem type
+          description: A URI reference [RFC 3986](https://tools.ietf.org/html/rfc3986) that identifies the problem type
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
           type: string
-          example: Data given was not parseable
+          example: Data given was not parsable
           description: A short, human-readable summary of the problem type.
         status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          description: The HTTP status code ([RFC 7231](https://tools.ietf.org/html/rfc7231), Section 6) generated by the origin server for this occurrence of the problem.
           type: string
           example: 400
         detail:
@@ -168,7 +167,7 @@ components:
             callbackUrl: https://some-other-call-back.service.com
     ApplicationList:
       type: array
-      description: List of configured applications. Never be empty
+      description: List of configured applications. It is never empty.
       items:
         anyOf:
           - $ref: '#/components/schemas/DefaultApplicationResponse'
@@ -211,9 +210,7 @@ components:
       properties:
         events:
           description: >
-            The types of events that this webhook should be triggered. Note that, although mandatory,
-            the array can be empty. In such a case, the webhook will be triggered on every
-            event, if no other webhook specific to the type of the event exists.
+            An array of event types, by which this webhook should be triggered. You may use an empty array to set the default webhook for all event types that aren't assigned specifically. Such webhook will be triggered on every event, for which another webhook doesn't exist that is specific to this event type.
           type: array
           items:
             $ref: "#/components/schemas/EventTypes"
@@ -221,7 +218,7 @@ components:
         callbackUrl:
           type: string
           pattern: "^https://.*"
-          description: The URL to forward the event to. Callback URLs should start with 'https://'.
+          description: The URL to forward the event to. Callback URLs should start with `https://`.
           example:
             https://some-call-back.service.com
       example:

@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: SMS
   description: |
-    The Messaging API enables you to sent messages to your customers or
+    The Messaging API enables you to send messages to your customers or
     to receive messages from your customers to phone numbers registered with tyntec.
 
   contact:
@@ -24,44 +24,44 @@ tags:
      - to send an SMS and
      - to query the status of a previously sent SMS
 
-     `tyntec stores the status details for up to three months after the final delivery state is known.`
+     `tyntec stores status details for up to three months after the final delivery state is known.`
  - name: SMS Message Status
    description: |
-     You have the posibility to query the status of a message you sent through our systems.
-     In case that that call-back URL is configured, we will POST the status to the defined URL
+     You have the possibility to query the status of a message you sent through our systems.
+     In the case the callback URL is configured, we will POST the status to the defined URL.
 
-     `The SMS Message Status is available for three month after the final state is reached.`
+     `The SMS Message Status is available for three months after the final state is reached.`
  - name: SMS Receive
    description: |
      The Messaging API enables you to receive messages from your
      customers sent to phone numbers you have registered with tyntec.
-    
+
      For this service you will need to provide tyntec with the URL
      (`callbackUrl`) of your webserver, e.g.
      `https://rest.customer.com/inboundmessages/`.
-    
-     tyntec's application will do either a `POST` or `GET` call to you
+
+     tyntec's application will do either the `POST` or `GET` call to your
      server; this can be configured by tyntec.
-    
-     tyntec's application will retry delivery every 10 seconds in case your
+
+     tyntec's application will retry delivery every 10 seconds in the case your
      application does not accept the inbound message. Retries are paused for
      10 minutes after every 100 consecutive unsuccessful delivery attempts.
      tyntec's application will retry for a maximum of 48 hours.
  - name: BYON Contact Service
-   description: Bring Your Own Number (BYON) Contacts Service gives the posibility to users to manage their conctacts
+   description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
  - name: BYON Phone Book Service
-   description: Bring Your Own Number (BYON) Phone Book Service gives the posibility to users to view their Phone book entries
+   description: Bring Your Own Number (BYON) Phone Book Service gives the users the possibility to view their Phone book entries.
  - name: BYON Number Service
-   description: Bring Your Own Number (BYON) Numbers Service gives the posibility to users to register new numbers
+   description: Bring Your Own Number (BYON) Numbers Service gives the users the possibility to register new numbers.
  - name: BYON Partner Notification Service
-   description: API to send notifications to the partners
+   description: API for sending notifications to the partners
 paths:
   '/messaging/v1/messages/{requestId}':
     get:
       tags:
         - SMS Message Status
       summary: Get status of a message
-      security: 
+      security:
       - ApiKeyHeader: []
       operationId: getMessageInfoUsingGET
       description: |
@@ -99,7 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '500':
-          description: 'Something went wrong :-('
+          description: 'Something went wrong. :-('
           content:
             application/json:
               schema:
@@ -109,7 +109,7 @@ paths:
       tags:
         - SMS Send
       summary: Sends SMS via POST HTTP method
-      security: 
+      security:
       - ApiKeyHeader: []
       operationId: sendSmsUsingPOST
       responses:
@@ -146,7 +146,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '500':
-          description: 'Something went wrong :-('
+          description: 'Something went wrong. :-('
           content:
             application/json:
               schema:
@@ -161,21 +161,21 @@ paths:
     get:
       tags:
         - SMS Send
-      summary: Sends SMS via GET HTTP method
-      security: 
+      summary: Sends SMS via the GET HTTP method.
+      security:
       - ApiKeyHeader: []
       operationId: sendSmsUsingGET
       parameters:
         - name: to
           in: query
-          description: This parameter represents the receiving party’s phone number in international phone format
+          description: This parameter represents the receiving party’s phone number in the international phone format.
           required: true
           schema:
             type: string
         - name: from
           in: query
           description: |
-            This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+            This parameter gives the identification of the sending party, which can either be a phone number in the international format or an alphanumeric identifier with up to 11 characters.
 
             Some destination networks impose restrictions on the sender ID format. Please check the coverage list
             and contact us for more information.
@@ -185,7 +185,7 @@ paths:
         - name: message
           in: query
           description: |
-            The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+            The message will be sent with characters encoded either in the GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
             - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
             per concatenated message.
@@ -196,14 +196,14 @@ paths:
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            tyntec will charge for each part of the concatenated message as an individual message.
+            tyntec will charge for each part of the concatenated message as for an individual message.
 
           required: true
           schema:
             type: string
         - name: encoding
           in: query
-          description: Encoding selection between GSM7, UNICODE or the default AUTO selection
+          description: Encoding selection between GSM7, UNICODE, or the default AUTO selection
           schema:
             type: string
             enum:
@@ -213,22 +213,22 @@ paths:
             default: AUTO
         - name: gateway
           in: query
-          description: Which gateway to use for the delivery of the message
+          description: Which gateway to use for the message delivery
           schema:
             type: string
             default: DEFAULT
         - name: conversion
           in: query
-          description: Is this message subject to conversion ratio
+          description: Whether the message is a subject to conversion ratio
           schema:
             type: boolean
             default: false
         - name: sendDateTime
           in: query
           description: >-
-            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
-            If not set, message will be sent immediately.
-            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+            Any future date in the format of “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+            If not set, the message will be sent immediately.
+            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time).
           schema:
             type: string
         - name: validity
@@ -244,12 +244,12 @@ paths:
             type: string
         - name: callbackUrl
           in: query
-          description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
+          description: Your URL for delivering the Delivery Reports; leave empty for no Delivery Report.
           schema:
             type: string
         - name: callbackMethod
           in: query
-          description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
+          description: Your prefered HTTP method for the Delivery Report callback; possible values POST/GET
           schema:
             type: string
         - name: partLimit
@@ -264,7 +264,7 @@ paths:
           description: >-
             Up to how much you allow the transcoder to replace original
             characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible. Possible decimal values from 0 to 1.
+            compatible; possible values: decimals from 0 to 1
           schema:
             type: number
             format: double
@@ -274,7 +274,7 @@ paths:
           description: >-
             Up to how much you allow the transcoder to skip original
             characters to make it [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible. Possible decimal values from 0 to 1.
+            compatible; possible values: decimals from 0 to 1
           schema:
             type: number
             format: double
@@ -282,8 +282,8 @@ paths:
         - name: upperCased
           in: query
           description: >-
-            If you allow the transcoder to try an upper case version of
-            the content in case this improves the produced parts of the
+            Whether you allow the transcoder to try an upper case version of
+            the content in the case this improves the produced parts of the
             message
           schema:
             type: boolean
@@ -291,14 +291,14 @@ paths:
         - name: keepEmojis
           in: query
           description: >-
-            Instructs the transcoder to keep emojis or to replace the with text.
+            Instructs the transcoder to keep emojis or to replace them with text.
             By default the transcoder will keep emojis; thus text will result to UNICODE.
           schema:
             type: boolean
             default: true
         - name: flash
           in: query
-          description: If this sms will be delivered as flash. Some networks do not support this.
+          description: Whether this SMS will be delivered as flash. Some networks do not support this.
           schema:
             type: boolean
             default: false
@@ -336,7 +336,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '500':
-          description: 'Something went wrong :-('
+          description: 'Something went wrong. :-('
           content:
             application/json:
               schema:
@@ -345,19 +345,19 @@ paths:
     post:
       operationId: receiveMessage
       summary: SMS Receive
-      servers: 
+      servers:
         - url: 'https://example.com'
       security: []
-      tags: 
+      tags:
         - "SMS Receive"
       description: |
-         Receive a SMS 
-         
+         Receive an SMS.
+
          `The path is only an example.`
-         
+
          You can choose freely the callback url.
       requestBody:
-        description: The message tyntec delivers to your system.
+        description: The message that tyntec delivers to your system
         required: true
         content:
           application/json:
@@ -368,41 +368,41 @@ paths:
           description: Message was accepted by your system.
         'default':
           description: |
-            Message was not accepted by your system. 
-            
-            tyntec's inbound system will retry the delivery
+            Message was not accepted by your system.
+
+            The tyntec's inbound system will retry the delivery.
 
   /byon/phonebook/v1/numbers:
     get:
       tags:
         - BYON Phone Book Service
-      summary: Return all phone numbers
-      description: Returns all phone numbers created by your API key. You can specify
-        attributes to filter the results. The size limit is 3000
+      summary: Returns all phone numbers.
+      description: Returns all phone numbers created by your API key; you can specify
+        attributes to filter the results. The size limit is 3000.
       operationId: getAllPhoneNumbersForAccountUsingGET
       parameters:
         - name: requestId
           in: query
-          description: A filter on the list based on the requestId field.
+          description: List filter based on the requestId field
           required: false
           schema:
             type: string
         - name: contactId
           in: query
-          description: A filter on the list based on the contactId field.
+          description: List filter based on the contactId field
           required: false
           schema:
             type: string
         - name: page
           in: query
-          description: A filter on the list based on the page field.
+          description: List filter based on the page field
           required: false
           schema:
             type: integer
             format: int32
         - name: size
           in: query
-          description: A filter on the list based on the size field.
+          description: List filter based on the size field
           required: false
           schema:
             type: integer
@@ -410,7 +410,7 @@ paths:
             maximum: 3000
       responses:
         "200":
-          description: The list of phones requests
+          description: List of phones requests
           content:
             application/json:
               schema:
@@ -429,7 +429,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -441,19 +441,19 @@ paths:
     get:
       tags:
         - BYON Phone Book Service
-      summary: Returns a phone number
+      summary: Returns a phone number.
       description: Returns the specific phone number entity created by your API key.
       operationId: getPhoneNumberForAccountUsingGET
       parameters:
         - name: phoneNumber
           in: path
-          description: Phone number to get information for.
+          description: Phone number to get information for
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: The Phone Number entity
+          description: Phone Number entity
           content:
             application/json:
               schema:
@@ -472,7 +472,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -484,21 +484,21 @@ paths:
     get:
       tags:
         - BYON Contact Service
-      summary: Returns all contacts created
-      description: Returns all contacts created by your API key. You can get the contact id
+      summary: Returns all contacts created.
+      description: Returns all contacts created by your API key; you can get the contact ID
         from the list for editing or deleting the contact. You can specify
         friendlyName to filter the results.
       operationId: getAllContactsWithFriendlyNameUsingGET
       parameters:
         - name: friendlyName
           in: query
-          description: A filter on the list based on the friendlyName field.
+          description: List filter based on the friendlyName field
           required: false
           schema:
             type: string
       responses:
         "200":
-          description: The list of contacts
+          description: List of contacts
           content:
             application/json:
               schema:
@@ -511,7 +511,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/ContactArrayResponse"
         "204":
-          description: Empty list. No contacts found for this friendly name
+          description: Empty list; no contacts were found for this friendly name.
           content:
             application/json:
               schema:
@@ -530,7 +530,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -541,8 +541,8 @@ paths:
     post:
       tags:
         - BYON Contact Service
-      summary: Create a contact
-      description: Create a new contact
+      summary: Creates a contact.
+      description: Creates a new contact.
       operationId: createContactUsingPOST
       requestBody:
         $ref: "#/components/requestBodies/ContactEntity"
@@ -559,7 +559,7 @@ paths:
         "201":
           description: Created
         "202":
-          description: The contact as been created
+          description: The contact was created.
           content:
             application/json:
               schema:
@@ -568,15 +568,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "400":
-          description: Not valid contact provided
+          description: The provided contact is not valid.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
         "404":
-          description: Contact not found
+          description: Contact was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -588,13 +588,13 @@ paths:
     get:
       tags:
         - BYON Contact Service
-      summary: Return contact
+      summary: Returns contact.
       description: Returns the contact for the provided contactId.
       operationId: getContactUsingGET
       parameters:
         - name: contactId
           in: path
-          description: A filter on the list based on the contactId field.
+          description: List filter based on the contactId field
           required: true
           schema:
             type: string
@@ -613,9 +613,9 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: Contact not found
+          description: Contact was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -626,13 +626,13 @@ paths:
     post:
       tags:
         - BYON Contact Service
-      summary: Edit contact
-      description: Edit the contact for the provided contactId.
+      summary: Edits contact.
+      description: Edits the contact for the provided contactId.
       operationId: editContactUsingPOST
       parameters:
         - name: contactId
           in: path
-          description: Contact ID to be edited.
+          description: ID of the contact that is to be edited
           required: true
           schema:
             type: string
@@ -651,15 +651,15 @@ paths:
         "201":
           description: Created
         "400":
-          description: Contact can not be edited
+          description: Contact can not be edited.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
         "404":
-          description: Contact not found
+          description: Contact was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -670,13 +670,13 @@ paths:
     delete:
       tags:
         - BYON Contact Service
-      summary: Delete contact
-      description: Delete the contact for the provided contactId.
+      summary: Deletes contact.
+      description: Deletes the contact for the provided contactId.
       operationId: deleteContactUsingDELETE
       parameters:
         - name: contactId
           in: path
-          description: The unique identifier of the contact to delete.
+          description: Unique identifier of the contact that is to be deleted.
           required: true
           schema:
             type: string
@@ -693,15 +693,15 @@ paths:
         "204":
           description: No Content
         "400":
-          description: Contact can not be deleted
+          description: Contact can not be deleted.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
         "404":
-          description: Contact not found
+          description: Contact was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -713,27 +713,27 @@ paths:
     get:
       tags:
         - BYON Number Service
-      summary: Returns all phones
+      summary: Returns all phones.
       description: |
-        Returns all phone numbers provisioning requests created.
+        Returns all phone numbers for which provisioning requests were created.
         You can specify _friendlyName_ or _contactId_ for filtering the results.
       operationId: getAllProvisioningPhoneNumbersForAccountUsingGET
       parameters:
         - name: friendlyName
           in: query
-          description: A filter on the list based on the friendlyName field.
+          description: List filter based on the friendlyName field
           required: false
           schema:
             type: string
         - name: contactId
           in: query
-          description: A filter on the list based on the contactId field.
+          description: List filter based on the contactId field
           required: false
           schema:
             type: string
       responses:
         "200":
-          description: The list of phone provisioning requests
+          description: List of phone provisioning requests
           content:
             application/json:
               schema:
@@ -746,7 +746,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "204":
-          description: Empty list. No phone provisioning requests found
+          description: Empty list; no phone provisioning requests were found.
           content:
             application/json:
               schema:
@@ -765,7 +765,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -776,19 +776,19 @@ paths:
     post:
       tags:
         - BYON Number Service
-      summary: Register multiple phones
+      summary: Registers multiple phones.
       description: New phone batch registration service for registering multiple numbers
       operationId: createPhoneProvisioningRequestUsingPOST
       parameters:
         - name: friendlyName
           in: query
-          description: A filter on the list based on the friendlyName field.
+          description: List filter based on the friendlyName field
           required: false
           schema:
             type: string
         - name: contactId
           in: query
-          description: A filter on the list based on the contactId field.
+          description: List filter based on the contactId field
           required: true
           schema:
             type: string
@@ -800,14 +800,14 @@ paths:
               items:
                 $ref: "#/components/schemas/PhoneNumberEntity"
         description: >
-          A comma-separated list of phone number details.
+          Comma-separated list of phone number details:
 
             - phoneNumber
-            - country (only optional if the phone number already included the country code)
+            - country (only optional if the phone number already has included the country code)
         required: true
       responses:
         "200":
-          description: The list of applications
+          description: List of applications
           content:
             application/json:
               schema:
@@ -818,7 +818,7 @@ paths:
         "201":
           description: Created
         "204":
-          description: Empty list. No applications found for your account
+          description: Empty list; no applications were found for your account.
           content:
             application/json:
               schema:
@@ -827,15 +827,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
-          description: Your request was not valid
+          description: Your request was not valid.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
         "404":
-          description: The contact was not found
+          description: The contact was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -854,13 +854,13 @@ paths:
       parameters:
         - name: requestId
           in: path
-          description: A unique identifier based on the requestId field.
+          description: Unique identifier based on the requestId field
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: The provisioning request
+          description: Provisioning request
           content:
             application/json:
               schema:
@@ -869,15 +869,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
-          description: Your request was not valid
+          description: Your request was not valid.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
         "404":
-          description: The provisioning request was not found
+          description: The provisioning request was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -893,7 +893,7 @@ components:
           schema:
             $ref: "#/components/schemas/ContactEntity"
       description: |
-        A comma-separated list of contact details.
+        Comma-separated list of contact details:
 
           - companyAddress (optional)
           - companyName
@@ -909,7 +909,7 @@ components:
       in: header
       name: apikey
       description: |
-        The API key used for this operation. We check as well that the API key has the phone number
+        The API key used for this operation; we check as well that the API key has the phone number
         (either on sending messages or interacting with other phone number based features) assigned.
   schemas:
     ContactArrayResponse:
@@ -934,19 +934,19 @@ components:
           description: Company's name
           type: string
         contactEmail:
-          description: e-mail address
+          description: E-mail address
           type: string
         contactName:
-          description: Name of the requestor
+          description: Requestor's name
           type: string
         contactPhone:
-          description: Phone number of the requestor
+          description: Requestor's phone number
           type: string
         contactTitle:
-          description: Title of the requestor
+          description: Requestor's title
           type: string
         friendlyName:
-          description: A filter on the list based on the friendlyName field.
+          description: List filter based on the friendlyName field
           type: string
     ErrorResponse:
       type: object
@@ -956,10 +956,10 @@ components:
           description: error code
           type: string
         message:
-          description: A short, human-readable summary of the problem type.
+          description: A short, human-readable summary of the problem type
           type: string
         timestamp:
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           type: integer
           format: int64
     InboundMessage:
@@ -975,50 +975,50 @@ components:
       properties:
         from:
           type: string
-          description: The phone number of the sending party in international format if available.
+          description: Phone number of the sending party in the international format if available
           example: '+49123456789'
         to:
           type: string
-          description: Your number provided by tyntec that has received the respective message in international format.
+          description: Your number provided by tyntec that has received the respective message in the international format.
           example: '+1987654321'
         message:
           type: string
-          description: 'The received message as an UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message'
-          example: 'This is an example, the data is garbage'
+          description: 'The received message as a UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message.'
+          example: 'This is an example, the data is garbage.'
         originMCC:
           type: string
-          description: A representative MCC (Mobile Country Code) of the originating network.
+          description: Representative MCC (Mobile Country Code) of the originating network
           example: 260
         originMNC:
           type: string
-          description: A representative MNC (Mobile Network Code) of the originating network.
+          description: Representative MNC (Mobile Network Code) of the originating network
           example: 09
         originTtId:
           type: string
-          description: The tyntec id of the operator.
+          description: Operator's tyntec ID
           example: 77292
         totalPrice:
           type: number
-          description: The sum of prices for each message part listed in “contentList”.
+          description: Sum of prices for each message part listed in “contentList”
           example: -0.005
         requestId:
           type: string
-          description: The unique identifier provided for each request.
+          description: Unique identifier provided for each request
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         size:
           type: integer
-          description: The amount of respective concatenated SMS parts.
+          description: Amount of respective concatenated SMS parts
           format: int32
           example: 1
         missingParts:
           type: boolean
-          description: This flag marks if tyntec has received all parts of a concat message within a time limit of 10 minutes
+          description: This flag marks whether tyntec received all parts of a concat message within a time limit of 10 minutes.
           example: false
         contentList:
           type: array
           items:
             $ref: '#/components/schemas/InboundContent'
-          description: 'tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as an individual message!'
+          description: 'tyntec merges overlength (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as for an individual message!'
     InboundContent:
       title: InboundContent
       required:
@@ -1029,12 +1029,12 @@ components:
       properties:
         msgId:
           type: string
-          description: The unique identifier provided for each message part.
+          description: Unique identifier provided for each message part
           example: '48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6'
         sentDate:
           type: string
           description: >-
-            The time when the SMS has been received by the sending MSC
+            The time when the SMS was sent by the sending MSC
             (if available)
             or
             the time when the respective message was received by tyntec.
@@ -1046,15 +1046,15 @@ components:
           example: 1
         price:
           type: number
-          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
+          description: The price per message from the respective network; negative prices represent payouts in favor of a tyntec’s customer.
           example: -0.005
         currency:
           type: string
-          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+          description: The currency in which the pricing is given; corresponding to the currency of the invoice
           example: EUR
         priceEffective:
           type: string
-          description: The date when the “price” became effective.
+          description: The date when the “price” became effective
           example: '2018-06-01T00:00:00+0200'
     PhoneNumberEntity:
       type: object
@@ -1064,7 +1064,7 @@ components:
           description: Phone number of the contact
           type: string
         country:
-          description: The country that the phone number is registered
+          description: The country that the phone number is registered in
           type: string
     PhoneProvisioningArrayResponse:
       type: object
@@ -1099,7 +1099,7 @@ components:
     Problem:
       type: object
       additionalProperties: true
-      description: The problem object follows the [RFC-7807](https://tools.ietf.org/html/rfc7807)
+      description: The problem object follows [RFC-7807](https://tools.ietf.org/html/rfc7807).
       required:
         - type
         - title
@@ -1107,19 +1107,19 @@ components:
         - detail
       properties:
         type:
-          description: A URI reference [RFC3986] that identifies the problem type
+          description: The URI reference [RFC3986] that identifies the problem type
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
-          description: A short, human-readable summary of the problem type.
+          description: Short, human-readable summary of the problem type
           type: string
-          example: Data given was not parseable
+          example: The given data were not parsable.
         status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem
           type: string
           example: 400
         detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
+          description: Human-readable explanation specific to this problem occurrence
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
@@ -1131,32 +1131,32 @@ components:
         - message
       properties:
         to:
-          description: Destination phone number in international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
+          description: Destination phone number in the international phone format [E.164](https://en.wikipedia.org/wiki/E.164)
           type: string
         from:
           description: |
-            This parameter gives the identification of the sending party, which can either be the phone number in international format or an alphanumeric identifier with up to 11 characters.
+            This parameter provides identification of the sending party, which can either be a phone number in the international format or an alphanumeric identifier with up to 11 characters.
 
             Some destination networks impose restrictions on the sender ID format. Please check the coverage list
             and contact us for more information.
           type: string
         message:
           description: |
-            The message will be sent with characters encoded either in GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
+            The message will be sent with characters encoded either in the GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
-            per concatenated message.
-            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
-            per concatenated message.
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per a single message and 152 characters
+            per a concatenated message.
+            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per a single message and 66 characters
+            per a concatenated message.
 
-            tyntec automatically splits the sent message into concatenated messages if the message
+            tyntec automatically splits a sent message into concatenated messages if the message
             exceeds the given limits. These concatenated messages are unified by the handset once again and
             they are displayed as one message (if supported by the handset).
 
-            tyntec will charge for each part of the concatenated message as an individual message.
+            tyntec will charge for each part of the concatenated message as for an individual message.
           type: string
         encoding:
-          description: Encoding selection between GSM7, UNICODE or the default AUTO selection
+          description: Encoding selection between GSM7, UNICODE, or the default AUTO selection
           type: string
           enum:
             - AUTO
@@ -1164,70 +1164,70 @@ components:
             - UNICODE
           default: AUTO
         gateway:
-          description: Which gateway to use for the delivery of the message
+          description: Which gateway to use for the message delivery
           type: string
           default: DEFAULT
         conversion:
-          description: Is this message subject to conversion ratio
+          description: Whether this message is subject to conversion ratio
           type: boolean
           default: false
         sendDateTime:
           description: >-
-            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
-            If not set, message will be sent immediately.
-            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+            Any future date in the format of “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601);
+            if not set, the message will be sent immediately.
+            The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time).
           type: string
         validity:
-          description: Validity in minutes for this message
+          description: Message validity in minutes
           type: string
           default: '2880'
         reference:
-          description: A customer reference attached to the Delivery Reports
+          description: Customer reference attached to the Delivery Reports
           type: string
         callbackUrl:
-          description: Your URL for delivering the Delivery Reports. Leave empty for no Delivery Report
+          description: Your URL for delivering the Delivery Reports; leave empty for no Delivery Report.
           type: string
         callbackMethod:
-          description: Your prefered HTTP method for the Delivery Report callback. Possible values POST/GET
+          description: Your prefered HTTP method for the Delivery Report callback; possible values are POST/GET.
           type: string
           enum:
             - POST
             - GET
           default: POST
         partLimit:
-          description: Up to how many parts you allow this message to be concatenated
+          description: Up to how many parts you allow this message can concatenated
           type: integer
           format: int32
           default: 4
         trate:
           description: >-
             Controls the transcoding rate of the original message to [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38)
-            compatible characters. This can be used to compress the message.
+            compatible characters; this can be used to compress the message.
           type: number
           format: double
           default: 0
         mrate:
           description: >-
-            Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38).
-            They're replaced with '.'.
+            Controls the replacement rate of characters incompatible with [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38);
+            they are replaced with '.'.
           type: number
           format: double
           default: 0
         upperCased:
           description: >-
-            If you allow the transcoder to try an upper case version of
-            the content in case this improves the produced parts of the
+            Whether you allow the transcoder to try an upper case version of
+            the content in the case this improves the produced parts of the
             message
           type: boolean
           default: true
         keepEmojis:
           description: >-
-            If you allow the transcoder to keep emojis
+            Whether you allow the transcoder to keep emojis
           type: boolean
           default: true
         flash:
           description: >-
-            If this sms will be delivered as flash. Some networks do not support this.
+            Whether this SMS will be delivered as flash; some networks do not support it.
           type: boolean
           default: false
       example:
@@ -1239,10 +1239,10 @@ components:
       description: Response schema
       properties:
         body:
-          description: A short, human-readable summary of the response.
+          description: Short, human-readable summary of the response
           type: object
         statusCode:
-          description: ID of the response
+          description: Response ID
           type: string
           enum:
             - "100"
@@ -1315,31 +1315,31 @@ components:
           format: int32
     RestMessagePart:
       type: object
-      description: The part of the message request that the message is split
+      description: The part of the message request that the message is split to
       properties:
         currency:
           type: string
-          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
+          description: The currency in which the pricing is given; it corresponds to the currency of the invoice.
           example: EUR
         deliveryState:
           type: string
-          description: The delivery status of this specific part. Possible values are given in a following table.
+          description: The delivery status of this specific part; possible values are given in the following table.
         doneDate:
           type: string
-          description: The time stamp when the message was successfully delivered.
+          description: The time stamp when the message was successfully delivered
         errorCode:
           type: string
-          description: The reason for an unsuccessful delivery attempt.
+          description: The reason for an unsuccessful delivery attempt
         partId:
           type: string
-          description: The identification number of the specific part of the message
+          description: The identification number of the specific message part
         price:
           type: string
-          description: The price per message from the respective network. Negative prices represent payout in favor of tyntec’s customer.
+          description: The price per message from the respective network; negative prices represent payouts in favor of a tyntec’s customer.
           example: "0.005"
         priceEffective:
           type: string
-          description: The date when the “price” became effective.
+          description: The date when the “price” became effective
           format: date-time
           example: '2018-06-01T00:00:00+0200'
         sentDate:
@@ -1348,71 +1348,71 @@ components:
           example: '2019-07-02T16:47:39+0200'
         statusText:
           type: string
-          description: The first 20 characters of the sent message.
+          description: The first 20 characters of the sent message
     RestMessageResponse:
       type: object
       properties:
         doneDate:
           type: string
-          description: The time stamp when the message was successfully delivered.
+          description: The time stamp when the message was successfully delivered
         errorCode:
           type: string
-          description: The error code.
+          description: The error code
         errorReason:
           type: string
-          description: The reason for an unsuccessful attempt.
+          description: The reason for an unsuccessful attempt
         from:
           type: string
-          description: The phone number of the sending party in international format if available.
+          description: The phone number of the sending party in the international format if available
           example: '+49123456789'
         href:
           type: string
-          description: The URL of the message accepted.
+          description: The URL of the accepted message
         mccmnc:
           type: string
-          description: A representative IMSI prefix of the target network. The respective mapping can be found at [http://mcc-mnc.com/](http://mcc-mnc.com/)
+          description: Representative IMSI prefix of the target network; the respective mapping can be found on [http://mcc-mnc.com/](http://mcc-mnc.com/).
         parts:
           type: array
           items:
             $ref: '#/components/schemas/RestMessagePart'
         overallPrice:
           type: string
-          description: The overall sum of prices for all the parts of this message.
+          description: The overall sum of prices for all parts of this message
           format: string
-          example: "0.01"            
+          example: "0.01"
         priceEffective:
           type: string
-          description: The date when the “price” became active.
+          description: The date when the “price” became active
           format: date-time
         reference:
           type: string
-          description: A custom reference that will mark the Delivery Report
+          description: Custom reference that will mark the Delivery Report
         requestId:
           type: string
-          description: The unique identifier provided for each messaging request.
+          description: The unique identifier provided for each messaging request
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         sentDate:
           type: string
-          description: The time stamp when the message was sent out by tyntec for delivery.
+          description: The time stamp when the message was sent out by tyntec for delivery
           example: '2019-07-02T16:47:39+0200'
         size:
           type: integer
-          description: The amount of respective concatenated SMS parts.
+          description: The amount of respective concatenated SMS parts
           format: int32
           example: 1
         status:
-          description: The status for this message. Values can be DELIVERED/UNDELIVERED/EXPIRED/UNDELIVERABLE/REJECTED
+          description: The message status; the values can be DELIVERED/UNDELIVERED/EXPIRED/UNDELIVERABLE/REJECTED.
           type: string
           example: "DELIVERED"
         submitDate:
-          description: The date when the message was sent out by tyntec for delivery.
+          description: The date when the message was sent out by tyntec for delivery
           type: string
           format: date-time
         to:
           type: string
-          description: Your number provided by tyntec that has received the respective message in international format.
+          description: Your number provided by tyntec that has received the respective message in international format
           example: '+1987654321'
         ttid:
           type: string
-          description: The tyntec id of the operator.
+          description: The tyntec operator's ID
           example: 77292

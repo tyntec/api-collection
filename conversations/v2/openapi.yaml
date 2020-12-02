@@ -2,35 +2,39 @@ openapi: '3.0.0'
 info:
   title: Conversations
   description: |
-    Conversations allows you to easily send messages to your customers via messaging services like WhatsApp
+    The Conversations API allows you to easily send messages to your customers via messaging services like WhatsApp
     and still reach customers with classic SMS.
-    In addition you can define a chain of channels which will be used for messaging attempts until one succeeds.
-    Notifications and messages from your users are send by us to your system via HTTP ```POST``` method.
-    
-    **Channel specific pre-conditions**
-    
-    - *2-way SMS* : Please contact us to get the details for the 2-way SMS setup
-    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
-    - *Viber* : A Viber Service id is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
-    
-    **Adheared web-standards**
-    One goal of the API is to follow best practices and standards around http based services.
+    Additionally, you can define a chain of channels that will be used for messaging attempts until one succeeds.
+    Notifications and messages from your users are sent by us to your system via the HTTP ```POST``` method.
+
+    **Channel specific prerequisites**
+
+    - *2-way SMS:* Please contact us to get the details for the 2-way SMS setup
+    - *WhatsApp:* A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
+    - *Viber:* A Viber Service ID is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
+
+    **Adhered web standards**
+
+    One goal of the API is to follow best practices and standards around HTTP-based services.
     A building block of this is to follow the RFCs:
+
     - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
     - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
-    
-    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following Link headers
-    - `first` : First page of the resource list pagination
-    - `previous` : Predecessor page of the current page of the resource list pagination
-    - `current` : Actual page of the resource list pagination
-    - `next` : Successor page of the current of page of the resource list pagination
-    - `last` : Last page of the resource list pagination
-    
-    In addition the following custom headers are provided for convenience
-    - `x-total-pages` : Total number of pages of the list of requested sub-resources
-    - `x-total-items` : Total number of items on the list of requested sub-resources
-    - `x-page-size` : Maxium size of the page
-    - `x-current-page` : Page number of the current page of the list of requested sub-resources
+
+    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following pagination headers:
+
+    - `first` – The first page in the resource list pagination
+    - `previous` – The predecessor page of the current page in the resource list pagination
+    - `current` – The current page in the resource list pagination
+    - `next` – The successor page of the current of page in the resource list pagination
+    - `last` – The last page in the resource list pagination
+
+    In addition, the following custom headers are provided for convenience:
+
+    - `x-total-pages` – Total number of pages in the list of requested sub-resources
+    - `x-total-items` – Total number of items in the list of requested sub-resources
+    - `x-page-size` – Maximum size of a page (number of items in a single page)
+    - `x-current-page` – Page number of the current page in the list of requested sub-resources
 
   contact:
     name: tyntec API Support
@@ -47,25 +51,26 @@ security:
 tags:
   - name: "Send messages"
     description: |
-      In this section we guide you on how to send messages, get information about the status and the events happening
-      during the delivery
+      In this section, we guide you on how to send messages, get information about the status and the events happening
+      during delivery.
   - name: "Receive messages"
     description: |
-      In order to receive messages send by the user you need to configure first an public available endpoint.
+      In order to receive messages sent by the user, you need to configure a publicly available endpoint first.
 
-      We will use HTTP ```POST``` method to send the user messages to your system as defined in MoMessage.
+      We use the HTTP ```POST``` method to send the user messages to your system as defined in MoMessage.
 
-      Media send by the user can be downloaded by
-        - either by following the link in the MoMedia object or
-        - by using the received media id and query our system via _/media/{media-id}_ (see below)
+      Media sent by the user can be downloaded by:
+
+        - following the link in the MoMedia object, or
+        - using the received media ID and query our system via _/media/{media-id}_ (see below)
   - name: "Notifications"
     description: |
-      Notifications or DLRs are **send** to your system when
+      Notifications or DLRs are **sent** to your system when:
 
-       - a message reaches a final state or
-       - a message reaches an intermediate state and you opt-in to receive this
-       - a user decides to delete a message previously send **to** you.
-       - a user interacts with a group, such as joining or leaving the group
+       - a message reaches a final state, or
+       - a message reaches an intermediate state and you opt-in to receive this,
+       - a user decides to delete a message previously send **to** you,
+       - a user interacts with a group, such as joining or leaving the group.
 
       We treat
 
@@ -73,19 +78,19 @@ tags:
         - seen / read
         - finally failed
 
-      as final states for message send by you.
+      as final states for a message sent by you.
 
       All other states are treated as intermediate states.
 
       We will use HTTP ```POST``` method to send the notifications to your system.
 
-      The notification message is the same as for the message status you can query MessageStatus.
+      The notification message has the same model as the message status you can query as MessageStatus.
   - name: "Applications"
     description: |
       Conversations allows you to freely define which events should be sent via a callback URL to your webhook
       implementation.
 
-      **Please note**:
+      **Important**:
 
        - By now, only a default application is supported. The extension to custom applications is planned for future releases
        - The API merges events pointing to the same callback URL into one set.
@@ -198,13 +203,13 @@ paths:
 
         Returns back a message previously send by you.
 
-        **Please note** After a final status notification (delivered, read or failed) the message
+        **Important** After a final status notification (delivered, read or failed) the message
         is only available for the next 48 hours. After this period we delete the message in our system.
       parameters:
         - $ref: '#/components/parameters/MessageId'
       responses:
         200:
-          description: The message id requested exists.
+          description: The message ID requested exists.
           content:
             application/json:
               schema:
@@ -227,7 +232,7 @@ paths:
         - $ref: '#/components/parameters/MessageId'
       responses:
         200:
-          description: The history of the message id.
+          description: The history of the message ID
           content:
             application/json:
               schema:
@@ -243,9 +248,9 @@ paths:
       tags:
         - "Send messages"
       description: |
-        Send a bulk of messages via one channel to one receiver.
+        Send a bulk of messages via one channel to one recipient.
 
-        The system guarantees that the messages are send in order to the receiver
+        The system guarantees that the messages are send in order to the recipient
       requestBody:
         description: The message bulk you want to send
         required: true
@@ -274,10 +279,10 @@ paths:
       summary: Download received media
       tags:
         - "Receive messages"
-      description: Retrieve the media associated with the id
+      description: Retrieve the media associated with the ID
       responses:
         200:
-          description: The media associated with the id requested exists.
+          description: The media associated with the ID requested exists.
           content:
             'audio/*':
               schema:
@@ -296,7 +301,7 @@ paths:
                 type: string
                 format: binary
         404:
-          description: The media associated with the id does not exists in our system
+          description: The media associated with the ID does not exist in our system
           content:
             application/problem+json:
               schema:
@@ -339,7 +344,7 @@ paths:
         - $ref: '#/components/parameters/MessageId'
       responses:
         200:
-          description: The message id requested exists.
+          description: The message ID requested exists.
           content:
             application/json:
               schema:
@@ -915,7 +920,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     MessageIdUnknown:
-      description: The message id does not exists in our system
+      description: The message ID does not exist in our system
       content:
         application/problem+json:
           schema:
@@ -938,7 +943,7 @@ components:
             title: Updating profile failed
             code: 1009
     WhatsAppAccountUnknown:
-      description: The WhatsApp account does not exists
+      description: The WhatsApp account does not exist
       content:
         application/problem+json:
           schema:
@@ -947,7 +952,7 @@ components:
             status: 404
             title: WhatsApp account unknown
     PhoneNumberUnknown:
-      description: The phone number does not exists
+      description: The phone number does not exist
       content:
         application/problem+json:
           schema:
@@ -956,7 +961,7 @@ components:
             status: 404
             title: Phone number unknown
     MoMessageNotFound:
-      description: No MO Message found for the given id
+      description: No MO Message found for the given ID
       content:
         application/problem+json:
           schema:
@@ -965,14 +970,14 @@ components:
             status: 404
             title: Not Found
     PhoneNumberOrGroupIdUnknown:
-      description: The phone number or group id does not exists
+      description: The phone number or group ID does not exist
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
             status: 404
-            title: Group id unknown
+            title: Group ID unknown
     BadRequest:
       description: The request does not match our expectations. Please check the Problems object for details
       content:
@@ -1029,7 +1034,7 @@ components:
       name: group-id
       in: path
       required: true
-      description: Group id
+      description: Group ID
       schema:
         type: string
       example: 4923147790717-1564131378
@@ -1037,7 +1042,7 @@ components:
       name: media-id
       in: path
       required: true
-      description: The id of the media to be downloaded
+      description: The ID of the media to be downloaded
       schema:
         type: string
         format: uuid
@@ -1046,7 +1051,7 @@ components:
       name: message-id
       in: path
       required: true
-      description: The id of the message
+      description: The ID of the message
       schema:
         type: string
         format: uuid
@@ -1055,7 +1060,7 @@ components:
       name: message-id
       in: path
       required: true
-      description: The id of the mo message
+      description: The ID of the mo message
       schema:
         type: string
         example: ABEGSRcolTdUAhCDTh0Viu2YwDb751d6V33t
@@ -1082,7 +1087,7 @@ components:
       name: whats-app-id
       in: path
       required: true
-      description: Whatsapp id of a user
+      description: Whatsapp ID of a user
       schema:
         type: string
         example: 4923147790717
@@ -1099,7 +1104,7 @@ components:
       name: whatsapp-account-id
       in: path
       required: true
-      description: WhatsApp account id
+      description: WhatsApp account ID
       schema:
         type: string
       example: 132923147790717
@@ -1546,11 +1551,11 @@ components:
         to:
           type: string
           description: |
-            The receipient of the message.
+            The recipient of the message.
 
             Could be one of
               - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
-              - group id create via the WA Group management
+              - group ID create via the WA Group management
           example: "+1233423454"
         channels:
           type: array
@@ -1600,7 +1605,7 @@ components:
           type: string
           pattern: '^(00|\+)\d{1,15}$'
           description: |
-            The receipient phone number in international format. It should follow the guidelines
+            The recipient phone number in international format. It should follow the guidelines
             of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
           example: '+1233423454'
         channels:
@@ -1664,7 +1669,7 @@ components:
           example: template
         text:
           type: string
-          description: The text to be send
+          description: The text to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
@@ -1688,7 +1693,7 @@ components:
     SMSRequest:
       type: object
       description: |
-        Normal SMS to be send.
+        Normal SMS to be sent.
 
         If Content is used as well this will override the specification made there.
 
@@ -1701,7 +1706,7 @@ components:
           enum:
             - text
             - url
-          description: What kind of payload should be send
+          description: What kind of payload should be sent
           example: text
         from:
           type: string
@@ -1710,7 +1715,7 @@ components:
         text:
           type: string
           maxLength: 3000
-          description: The message to be send
+          description: The message to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
@@ -1742,7 +1747,7 @@ components:
       properties:
         from:
           type: string
-          description: Viber channel id
+          description: Viber channel ID
           example: "1233423454"
         components:
           type: array
@@ -1788,7 +1793,7 @@ components:
         text:
           type: string
           maxLength: 1000
-          description: The message to be send
+          description: The message to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
     ViberButtonComponent:
       type: object
@@ -1833,7 +1838,7 @@ components:
     WhatsappMessageRequest:
       type: object
       description: |
-        Whatsapp message to be send.
+        Whatsapp message to be sent.
 
         This will override defaults from DefaultContent
       required:
@@ -1858,7 +1863,7 @@ components:
         text:
           type: string
           maxLength: 4096
-          description: The text to be send
+          description: The text to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
@@ -1929,7 +1934,7 @@ components:
         text:
           type: string
           maxLength: 100
-          description: The text to be send
+          description: The text to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         url:
           type: string
@@ -1950,7 +1955,7 @@ components:
         replyBack: false
     Media:
       type: object
-      description: Media file to be send
+      description: Media file to be sent
       oneOf:
         - $ref: '#/components/schemas/AudioMedia'
         - $ref: '#/components/schemas/ImageMedia'
@@ -1959,40 +1964,40 @@ components:
         - $ref: '#/components/schemas/StickerMedia'
     AudioMedia:
       type: object
-      description: Audio file to be send
+      description: Audio file to be sent
       required:
         - type
         - url
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: What kind of media should be sent
           enum:
             - audio
           example: audio
         url:
           type: string
-          description: the url of the location where the audio file is stored
+          description: The URL of the location where the audio file is stored
           example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
       example:
         type: audio
         url: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4
     ImageMedia:
       type: object
-      description: Image to be send
+      description: Image to be sent
       required:
         - type
         - url
       properties:
         type:
           type: string
-          description: What kind of media should be send. Can only be png or jpeg
+          description: What kind of media should be sent. Can only be png or jpeg
           enum:
             - image
           example: image
         url:
           type: string
-          description: the url of the location where the image is stored
+          description: The URL of the location where the image is stored
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
         caption:
           type: string
@@ -2003,40 +2008,40 @@ components:
         url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     StickerMedia:
       type: object
-      description: Sticker to be send
+      description: Sticker to be sent
       required:
         - type
         - url
       properties:
         type:
           type: string
-          description: What kind of media should be send. Can only be webp
+          description: What kind of media should be sent. Can only be webp
           enum:
             - sticker
           example: sticker
         url:
           type: string
-          description: the url of the location where the sticker is stored
+          description: The URL of the location where the sticker is stored
           example: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
       example:
         type: image
         url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     DocumentMedia:
       type: object
-      description: Document to be send
+      description: Document to be sent
       required:
         - type
         - url
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: What kind of media should be sent
           enum:
             - document
           example: document
         url:
           type: string
-          description: the url of the location where the document is stored
+          description: The URL of the location where the document is stored
           example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
         caption:
           type: string
@@ -2053,20 +2058,20 @@ components:
         filename: tyntec_pricelist.pdf
     VideoMedia:
       type: object
-      description: Video file to be send
+      description: Video file to be sent
       required:
         - type
         - url
       properties:
         type:
           type: string
-          description: What kind of media should be send
+          description: What kind of media should be sent
           enum:
             - video
           example: video
         url:
           type: string
-          description: the url of the location where the video is stored
+          description: The URL of the location where the video is stored
           example: http://techslides.com/demos/sample-videos/small.mp4
         caption:
           type: string
@@ -2078,7 +2083,7 @@ components:
         caption: Tyntec Party
     Template:
       type: object
-      description: The message template to be send.
+      description: The message template to be sent.
       required:
         - templateId
         - language
@@ -2107,7 +2112,7 @@ components:
           description: |
             Parameter for replacement in the template.
 
-            **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
+            **NOTE:** This parameter is deprecated by version 2.7 and will be removed in the next major release.
             Instead use components.
           deprecated: true
           type: array
@@ -2168,7 +2173,7 @@ components:
 
         It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
 
-        **NOTE** : This parameter is deprecated by version 2.7 and will be removed in the next major release.
+        **NOTE:** This parameter is deprecated by version 2.7 and will be removed in the next major release.
             Instead use components.
       properties:
         default:
@@ -2297,7 +2302,7 @@ components:
           maxItems: 1
     TextParameter:
       type: object
-      description: Text to be send
+      description: Text to be sent
       properties:
         type:
           type: string
@@ -2323,7 +2328,7 @@ components:
         text: Hi! Cool replacement
     LocationParameter:
       type: object
-      description: Location to be send
+      description: Location to be sent
       properties:
         type:
           type: string
@@ -2358,7 +2363,7 @@ components:
             51.5005765
     TemplateMediaParameter:
       type: object
-      description: Media to be send
+      description: Media to be sent
       properties:
         type:
           type: string
@@ -2378,7 +2383,7 @@ components:
           caption: Tyntec Logo
     TemplateDocumentMedia:
       type: object
-      description: Media to be send
+      description: Media to be sent
       properties:
         type:
           type: string
@@ -2388,7 +2393,7 @@ components:
           example: image
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: The URL of the location where the media is stored
           example: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
         filename:
           type: string
@@ -2400,7 +2405,7 @@ components:
         filename: Test document
     TemplateVideoMedia:
       type: object
-      description: Media to be send
+      description: Media to be sent
       properties:
         type:
           type: string
@@ -2410,7 +2415,7 @@ components:
           example: video
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: The URL of the location where the media is stored
           example: http://techslides.com/demos/sample-videos/small.mp4
       example:
         type: video
@@ -2537,7 +2542,7 @@ components:
           example: WhatsApp
         userId:
           type: string
-          description: IMS user id
+          description: IMS user ID
           example: 123123123
     Name:
       type: object
@@ -2619,7 +2624,7 @@ components:
         messageId:
           type: string
           format: uuid
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         acceptedAt:
           type: string
@@ -2645,12 +2650,12 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:00
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
           example:
             491672634678
       example:
@@ -2660,7 +2665,7 @@ components:
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string
-      description: Determines which kind of event is emitted by the API
+      description: Determines which event type is emitted by the API
       enum:
         - MoMessage
         - MoMessage::Postback
@@ -2692,7 +2697,7 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent.
+          description: Determines which event type is sent.
           enum:
             - MessageStatus::accepted
             - MessageStatus::delivered
@@ -2701,7 +2706,7 @@ components:
             - MessageStatus::unknown
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
@@ -2740,7 +2745,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -2750,7 +2755,7 @@ components:
             my-message-reference
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
           example:
             491672634678
         details:
@@ -2781,12 +2786,12 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent.
+          description: Determines which event type is sent.
           enum:
             - MessageStatus::channelFailed
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
@@ -2821,7 +2826,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -2858,12 +2863,12 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent.
+          description: Determines which event type is sent.
           enum:
             - MessageStatus::deleted
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
@@ -2898,7 +2903,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -2908,12 +2913,12 @@ components:
             my-message-reference
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id.
+          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
           example:
             491672634678
         to:
           type: string
-          description: Which channel specific account id is the receiver of this event.
+          description: Which channel specific account ID is the recipient of this event.
           example:
             4923147790813
       example:
@@ -2931,7 +2936,7 @@ components:
         messageId:
           type: string
           format: uuid
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         userContext:
           type: string
@@ -2948,7 +2953,7 @@ components:
         userContext: my-message-reference
         history:
           - deliveryChannel: whatsapp
-            happendAt: '2019-03-13T12:57:27.048Z'
+            happenedAt: '2019-03-13T12:57:27.048Z'
             state: accepted
     HistoryItem:
       type: object
@@ -2971,7 +2976,7 @@ components:
             - sms
             - whatsapp
             - tyntecEcho
-        happendAt:
+        happenedAt:
           type: string
           description: When did the event happen
           format: date-time
@@ -2990,7 +2995,7 @@ components:
           $ref: '#/components/schemas/HistoryDetails'
       example:
         deliveryChannel: whatsapp
-        happendAt: '2019-03-13T13:15:22Z'
+        happenedAt: '2019-03-13T13:15:22Z'
         state: accepted
     HistoryDetails:
       description: Further information available for this event
@@ -3007,7 +3012,7 @@ components:
           example: No further channel after Channel[whatsapp] available
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
           example:
             491672634678
     Problem:
@@ -3026,7 +3031,7 @@ components:
           type: string
         title:
           type: string
-          example: Data given was not parseable
+          example: Data given was not parsable
           description: A short, human-readable summary of the problem type.
         status:
           description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
@@ -3053,7 +3058,7 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
+          description: Determines which event type is sent. Always _MoMessage::PostBack_
           enum:
             - MoMessage::Postback
         channel:
@@ -3073,7 +3078,7 @@ components:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message Id reference
+          description: Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
@@ -3085,7 +3090,7 @@ components:
           example: "49123512315"
         groupId:
           type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
+          description: Group ID from which the event originates from. Only present if the message was send into a group
           example:
             4923147790717-1564134658
         postback:
@@ -3141,7 +3146,7 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _MoMessage_
+          description: Determines which event type is sent. Always _MoMessage_
           enum:
             - MoMessage
         channel:
@@ -3168,7 +3173,7 @@ components:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message Id reference
+          description: Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
@@ -3180,7 +3185,7 @@ components:
           example: "49123512315"
         groupId:
           type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
+          description: Group ID from which the event originates from. Only present if the message was send into a group
           example:
             4923147790717-1564134658
         content:
@@ -3260,7 +3265,7 @@ components:
       properties:
         messageId:
           type: string
-          description: The message id the MoMessage refers to. Usualy set when the sender replies to a specific message
+          description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
     MoMedia:
       type: object
@@ -3278,11 +3283,11 @@ components:
           example: audio
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: The URL of the location where the media is stored
           example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
         mediaId:
           type: string
-          description: plain id of the media to download
+          description: plain ID of the media to download
           example: 77185196-664a-43ec-b14a-fe97036c697f
         caption:
           type: string
@@ -3600,7 +3605,7 @@ components:
       properties:
         whatsAppAccountId:
           type: string
-          description: Id of the WhatsApp Business Account
+          description: ID of the WhatsApp Business Account
           format: uuid
           example:
             5637b8a7-51e1-47be-ad0b-b242453dcc1b
@@ -3623,11 +3628,11 @@ components:
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
-          description: The Facebook business manager id provided by Facebook
+          description: The Facebook business manager ID provided by Facebook
           type: string
           example: 1791147717848878
         whatsAppBusinessAccountId:
-          description: The WhatsApp Business Account Id provided by WhatsApp
+          description: The WhatsApp Business Account ID provided by WhatsApp
           type: string
           example: 24334545345345
         accountStatus:
@@ -3699,7 +3704,7 @@ components:
             CONNECTED
         whatsAppAccountId:
           type: string
-          description: Id of the WhatsApp Business Account the number belongs to.
+          description: ID of the WhatsApp Business Account the number belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         managedBy:
@@ -4013,7 +4018,7 @@ components:
       properties:
         whatsAppAccountId:
           type: string
-          description: Id of the WhatsApp Business Account the template belongs to.
+          description: ID of the WhatsApp Business Account the template belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         templateName:
@@ -4023,7 +4028,7 @@ components:
             swagger_test
         templateId:
           type: string
-          description: Id of the template
+          description: ID of the template
           example:
             swagger_test
         category:
@@ -4222,7 +4227,7 @@ components:
         - hi
         - hr
         - hu
-        - id
+        - ID
         - it
         - ja
         - kk
@@ -4281,11 +4286,11 @@ components:
 
         The relations are defined as following:
 
-        - `first` : First page of the resource list pagination
-        - `previous` : Predecessor page of the current page of the resource list pagination
-        - `current` : Actual page of the resource list pagination
-        - `next` : Successor page of the current of page of the resource list pagination
-        - `last` : Last page of the resource list pagination
+        - `first` – First page of the resource list pagination
+        - `previous` – Predecessor page of the current page of the resource list pagination
+        - `current` – Actual page of the resource list pagination
+        - `next` – Successor page of the current of page of the resource list pagination
+        - `last` – Last page of the resource list pagination
 
       enum:
         - first
@@ -4295,7 +4300,7 @@ components:
         - last
     BulkRequest:
       type: object
-      description: Bulk request to be send. The items are guaranted to be send in order of appearance
+      description: Bulk request to be sent. The items are guaranted to be sent in order of appearance
       properties:
         to:
           type: string
@@ -4311,21 +4316,21 @@ components:
             - viber
         sms:
           type: array
-          description: SMS to be send
+          description: SMS to be sent
           items:
             $ref: '#/components/schemas/BulkSMSRequest'
           minItems: 2
           maxItems: 20
         whatsapp:
           type: array
-          description: WhatsApp messages to be send
+          description: WhatsApp messages to be sent
           items:
             $ref: '#/components/schemas/BulkWhatsAppRequest'
           minItems: 2
           maxItems: 20
         viber:
           type: array
-          description: Viber messages to be send
+          description: Viber messages to be sent
           items:
             $ref: '#/components/schemas/BulkViberRequest'
           minItems: 2
@@ -4342,7 +4347,7 @@ components:
         text:
           type: string
           maxLength: 3000
-          description: The message to be send
+          description: The message to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
     BulkWhatsAppRequest:
       type: object
@@ -4361,7 +4366,7 @@ components:
         text:
           type: string
           maxLength: 4096
-          description: The text to be send
+          description: The text to be sent
           example: Thanks for contacting our support. We will get back to you in 5 minutes.
         media:
           $ref: '#/components/schemas/Media'

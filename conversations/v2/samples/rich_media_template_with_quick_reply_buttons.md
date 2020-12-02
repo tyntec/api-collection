@@ -4,7 +4,7 @@ This is an example request for sending a rich media template with quick reply bu
 
 The template is defined as
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}}, 
@@ -14,11 +14,11 @@ thank you for visiting {{2}}.
 We would like to know how much you enjoyed it. 
 ````
 
-*Footer* :
+*Footer:*
 
     Your tyntec event team 
     
-*Buttons* :
+*Buttons:*
 
  - It was great     
  - It was OK         

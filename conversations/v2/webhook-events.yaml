@@ -3,17 +3,17 @@ info:
   title: Webhook Events
   version: '2.11'
   description: |
-    Delivery updates and inbound messages are send out to you in an event style manner.
+    Delivery updates and inbound messages are sent out to you in a manner of events.
 
-    They are send to the callback urls you specified on the previous section.
+    They are sent to the callback URLs that you specified in an application (see the previous section).
 
-    Inbound messages are send to your system as soon as we receive them from the channel.
+    Inbound messages are sent to your system as soon as we receive them from the channel.
 
-    Delivery updates  send to your system when
+    Delivery updates are sent to your system when:
 
-    - a message reaches a final state or
-    - a message reaches an intermediate state and you opt-in to receive this
-    - a user decides to delete a message previously send **to** you (only available on WhatsApp)
+    - a message reaches a final state, or
+    - a message reaches an intermediate state and you opted-in to receive this, or
+    - a user decides to delete a message previously sent **to** you (only available on WhatsApp).
 
     We treat
 
@@ -21,16 +21,16 @@ info:
     - seen / read
     - finally failed
 
-    as final states for message send by you.
+    as final states for messages sent by you.
 
     All other states are treated as intermediate states.
 
 tags:
-  - name: "Receiving messages"
+  - name: "Received messages"
     description: |
-      Events published when the receiver of the message replies. Or deletes a previously sent message.
+      Events emitted when the recipient of the message replies or deletes a previously sent message.
   - name: "Delivery updates"
-    description: Events published on updates of the message delivery.
+    description: Events emitted on updates of message delivery.
 servers:
   production:
     url: 78.110.226.11
@@ -42,7 +42,7 @@ channels:
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/MoMessage'
       bindings:
@@ -51,10 +51,10 @@ channels:
           method: POST
   "MoMessage (SMS)":
     description: |
-      Message received by us and delivered to your system via a webhook provided by your system.
+      Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/SMSMoMessage'
       bindings:
@@ -63,10 +63,10 @@ channels:
           method: POST
   "MoMessage (WhatsApp)":
     description: |
-      Message received by us and delivered to your system via a webhook provided by your system.
+      Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/WhatsAppMoMessage'
       bindings:
@@ -75,10 +75,10 @@ channels:
           method: POST
   "MoMessage (Viber)":
     description: |
-      Message received by us and delivered to your system via a webhook provided by your system.
+      Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/ViberMoMessage'
       bindings:
@@ -87,14 +87,14 @@ channels:
           method: POST
   "MoMessage::Postback":
     description: |
-      Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
+      Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
       **Supporting channels**
 
-      - WhatsApp on Quick Reply buttons.
+      - WhatsApp: Quick Reply buttons
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/MoMessagePostback'
       bindings:
@@ -103,14 +103,14 @@ channels:
           method: POST
   "MessageStatus::deleted":
     description: |
-      This event is triggered, when a previously sent MoMessage has been deleted by its sender.
+      This event is triggered when a previously sent MoMessage is deleted by its sender.
 
       **Supporting channels**
 
       - WhatsApp
     publish:
       tags:
-        - name: "Receiving messages"
+        - name: "Received messages"
       message:
         $ref: '#/components/messages/MessageStatusDeleted'
       bindings:
@@ -119,9 +119,9 @@ channels:
           method: POST
   "MessageStatus::accepted":
     description: |
-      This event is triggered, when tyntec has accepted your message request.
+      This event is triggered when tyntec accepted your message request.
 
-      This happens after the http status code 202 on a messaging request.
+      This happens after the HTTP status code 202 on a messaging request.
 
       **Supporting channels**
 
@@ -137,8 +137,8 @@ channels:
           method: POST
   "MessageStatus::delivered":
     description: |
-      This event is triggered, when the channel informed us about the successful delivery 
-      of your message to it's receiver.
+      This event is triggered when the channel informed us about the successful delivery
+      of your message to the recipient.
 
       **Supporting channels**
 
@@ -157,9 +157,9 @@ channels:
           method: POST
   "MessageStatus::seen":
     description: |
-      This event is triggered, when the channel informed that the message was seen by it's receiver.
+      This event is triggered when the channel informed that the message was seen by the recipient.
 
-      Depending on the channel this is subject of privacy settings by the receiver, eg. WhatsApp.
+      Depending on the channel, this is a subject of privacy settings by the recipient, eg. WhatsApp.
 
       **Supporting channels**
 
@@ -177,7 +177,7 @@ channels:
           method: POST
   "MessageStatus::channelFailed":
     description: |
-      This event is triggered, when message was not successfully delivered via the channel.
+      This event is triggered when a message was not successfully delivered via the channel.
 
       **Supporting channels**
 
@@ -193,7 +193,7 @@ channels:
           method: POST
   "MessageStatus::failed":
     description: |
-      This event is triggered, when the message failed on all configured channels.
+      This event is triggered when the message failed on all configured channels.
 
       **Supporting channels**
 
@@ -209,7 +209,7 @@ channels:
           method: POST
   "MessageStatus::unknown":
     description: |
-      This event is triggered, when the message status can not be mapped to any of the others.
+      This event is triggered when the message status cannot be mapped to any of the others.
 
       **Supporting channels**
 
@@ -265,7 +265,7 @@ components:
   schemas:
     APIEvent:
       type: object
-      description: Basic type for events produced by the ChatAPI such as MessageStatus, MoMessage
+      description: Basic object of events produced by the API such as MessageStatus or MoMessage
       required:
         - event
       properties:
@@ -273,7 +273,7 @@ components:
           $ref: '#/components/schemas/EventTypes'
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source
+          description: Channel that triggered the event. Can be empty in case of an internal source
           example: sms
           enum:
             - sms
@@ -283,12 +283,12 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:00
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id
+          description: Who triggered this event. Usually a phone number or WhatsApp account ID
           example:
             491672634678
       example:
@@ -298,7 +298,7 @@ components:
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string
-      description: Determines which kind of event is emitted by the API
+      description: Determines the event types emitted by the API
       enum:
         - MoMessage
         - MoMessage::Postback
@@ -330,12 +330,12 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _MoMessage_
+          description: Determines which type of event is sent. Always _MoMessage_
           enum:
             - MoMessage
         channel:
           type: string
-          description: Channel which triggered the event.
+          description: Channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -357,19 +357,19 @@ components:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message Id reference
+          description: Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
-          description: the sender of the message
+          description: The sender of the message
           example: "49123512314"
         to:
           type: string
-          description: Receiving account of the message. The format is channel specific
+          description: Receiving account of the message. The format is channel specific.
           example: "49123512315"
         groupId:
           type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
+          description: Group ID from which the event originates. Only present if the message was sent into a group.
           example:
             4923147790717-1564134658
         content:
@@ -385,7 +385,7 @@ components:
         channel: viber
     MoContent:
       type: object
-      description: Content of the mobile originated message
+      description: Content of the mobile-originated message
       required:
         - contentType
       properties:
@@ -401,7 +401,7 @@ components:
         text:
           type: string
           description: The received text
-          example: hi, thanks for your support message
+          example: Hi, thanks for your support message
         media:
           $ref: '#/components/schemas/MoMedia'
       example:
@@ -412,11 +412,11 @@ components:
           mediaId: 77185196-664a-43ec-b14a-fe97036c697f
     MoContext:
       type: object
-      description: Contextual information of the mobile originated message
+      description: Contextual information of the mobile-originated message
       properties:
         messageId:
           type: string
-          description: The message id the MoMessage refers to. Usualy set when the sender replies to a specific message
+          description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
     MoMedia:
       type: object
@@ -434,20 +434,20 @@ components:
           example: audio
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: The URL of the location where the media is stored
           example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
         mediaId:
           type: string
-          description: plain id of the media to download
+          description: Plain ID of the media to download
           example: 77185196-664a-43ec-b14a-fe97036c697f
         caption:
           type: string
-          description: caption specified by the user or the file name of the document
+          description: Caption specified by the user or the file name of the document
           example: This is an picture of my cat!
     SMSMoMessage:
       type: object
       description: |
-        Message received by us and delivered to your system via a webhook provided by your system.
+        Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -460,7 +460,7 @@ components:
 
         channel:
           type: string
-          description: Channel which triggered the event.
+          description: Channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -475,7 +475,7 @@ components:
         channel: sms
         content:
           contentType: text
-          text: 'hi, thanks for your support message'
+          text: 'Hi, thanks for your support message'
         sms:
           origin:
             mcc: string
@@ -493,7 +493,7 @@ components:
               sequenceNumber: 1
     SMS:
       type: object
-      description: specifics of the sms channel
+      description: Details specific to the SMS channel
       properties:
         origin:
           $ref: '#/components/schemas/SMSOrigin'
@@ -509,14 +509,14 @@ components:
           example: 1
         missingParts:
           type: boolean
-          description: True in case a part of an over-length was not received by the tyntec platform and the forwarded message text is incomplete.
+          description: True in the case a part of an over-length message was not received by the tyntec platform and the forwarded message text is incomplete.
           default: false
           example: false
         parts:
           type: array
           description: |
             tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver.
-            Information for each individual part are collected here
+            Information for each individual part is collected here
           items:
             $ref: '#/components/schemas/SMSContent'
       example:
@@ -536,7 +536,7 @@ components:
             sequenceNumber: 1
     SMSOrigin:
       type: object
-      description: Origin Information of the message
+      description: Information about the origin of the message
       properties:
         mcc:
           type: string
@@ -561,7 +561,7 @@ components:
         sentDate:
           type: string
           description: |
-            The time stamp when the SMS has been received by the sending MSC (if available).
+            The time stamp when the SMS was received by the sending MSC (if available).
 
             or
 
@@ -585,7 +585,7 @@ components:
         sequenceNumber:
           type: number
           description: |
-            In case an over-length message is received tyntec recomposes the full message text before forwarding.
+            In the case an over-length message is received tyntec recomposes the full message text before forwarding.
             The “sequenceNumber” indicates the order of the message part.
           minimum: 1
           maximum: 255
@@ -593,7 +593,7 @@ components:
     WhatsAppMoMessage:
       type: object
       description: |
-        Message received by us and delivered to your system via a webhook provided by your system.
+        Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -605,7 +605,7 @@ components:
       properties:
         channel:
           type: string
-          description: Channel which triggered the event.
+          description: Channel that triggered the event.
           example: whatsapp
           enum:
             - whatsapp
@@ -624,12 +624,12 @@ components:
         channel: whatsapp
         content:
           contentType: text
-          text: 'hi, thanks for your support message'
+          text: 'Hi, thanks for your support message'
         whatsapp:
           senderName: Peter
     Whatsapp:
       type: object
-      description: specifics of the whatsapp channel
+      description: Details specific to the WhatsApp channel
       properties:
         senderName:
           type: string
@@ -652,7 +652,7 @@ components:
     ViberMoMessage:
       type: object
       description: |
-        Message received by us and delivered to your system via a webhook provided by your system.
+        Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -664,7 +664,7 @@ components:
       properties:
         channel:
           type: string
-          description: Channel which triggered the event.
+          description: Channel that triggered the event.
           example: viber
           enum:
             - viber
@@ -681,11 +681,11 @@ components:
         channel: viber
         content:
           contentType: text
-          text: 'hi, thanks for your support message'
+          text: 'Hi, thanks for your support message'
     MoMessagePostBack:
       type: object
       description: |
-        Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
+        Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
         For WhatsApp only Quick Reply buttons trigger this event.
       required:
@@ -698,12 +698,12 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
+          description: Determines which event type is sent. Always _MoMessage::PostBack_
           enum:
             - MoMessage::Postback
         channel:
           type: string
-          description: Channel which triggered the event.
+          description: Channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -718,19 +718,19 @@ components:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message Id reference
+          description: Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
-          description: the sender of the message
+          description: The sender of the message
           example: "49123512314"
         to:
           type: string
-          description: Receiving account of the message. The format is channel specific
+          description: Receiving account of the message. The format is channel specific.
           example: "49123512315"
         groupId:
           type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
+          description: Group ID from which the event originates. Only present if the message was sent into a group
           example:
             4923147790717-1564134658
         postback:
@@ -758,7 +758,7 @@ components:
       properties:
         data:
           type: string
-          description: Payload or data that was specified on when requesting the button based message
+          description: Payload or data that was specified when requesting the button based message
           example: EventVisited::2020-04-04::WhatsAppFair
     WhatsAppPostBack:
       type: object
@@ -773,7 +773,7 @@ components:
     MessageStatusDeletedEvent:
       type: object
       description: |
-        Indicates that a previously send inbound MOMessage is deleted by the user.
+        Indicates that a previously sent inbound MoMessage was deleted by the user.
       required:
         - messageId
         - event
@@ -787,16 +787,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent.
+          description: Determines which event type is sent.
           enum:
             - MessageStatus::deleted
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -804,7 +804,7 @@ components:
             - tyntecEcho
         status:
           description: |
-            Indicates the status of the message. Be aware that not all channels support all status.
+            Indicates the status of the message. Be aware that not all channels support all statuses.
 
             **Note** This property will be replaced by the property _event_ in a future release.
           deprecated: true
@@ -815,7 +815,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -825,12 +825,12 @@ components:
             my-message-reference
         from:
           type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account id.
+          description: Who triggered this event. Usually the phone number or WhatsApp account ID.
           example:
             491672634678
         to:
           type: string
-          description: Which channel specific account id is the receiver of this event.
+          description: Which channel specific account ID is the recipient of this event.
           example:
             4923147790813
       example:
@@ -845,7 +845,7 @@ components:
     MessageStatusAccepted:
       type: object
       description: |
-        Indicates the acceptance of the message on the Conversations API
+        Indicates the acceptance of the message by the Conversations API
       required:
         - messageId
         - event
@@ -856,16 +856,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::accepted_
+          description: Determines which event type is sent. Always _MessageStatus::accepted_
           enum:
             - MessageStatus::accepted
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -874,7 +874,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -891,7 +891,7 @@ components:
     MessageStatusDelivered:
       type: object
       description: |
-        Indicates the delivery of the message to the receiver
+        Indicates the delivery of the message to the recipient
       required:
         - messageId
         - event
@@ -902,16 +902,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::delivered_
+          description: Determines which event type is sent. Always _MessageStatus::delivered_
           enum:
             - MessageStatus::delivered
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -920,7 +920,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -937,7 +937,7 @@ components:
     MessageStatusSeen:
       type: object
       description: |
-        Indicates that the message was seen by the receiver
+        Indicates that the message was seen by the recipient
       required:
         - messageId
         - event
@@ -948,16 +948,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::seen_
+          description: Determines which event type is sent. Always _MessageStatus::seen_
           enum:
             - MessageStatus::seen
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -966,7 +966,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -994,16 +994,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::channelFailed_
+          description: Determines which event type is sent. Always _MessageStatus::channelFailed_
           enum:
             - MessageStatus::channelFailed
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -1012,7 +1012,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1040,16 +1040,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::failed_
+          description: Determines which event type is sent. Always _MessageStatus::failed_
           enum:
             - MessageStatus::failed
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -1058,7 +1058,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1086,16 +1086,16 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::unknown_
+          description: Determines which event type is sent. Always _MessageStatus::unknown_
           enum:
             - MessageStatus::unknown
         messageId:
           type: string
-          description: Global Message Id reference
+          description: Global Message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
+          description: Channel that triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
             - sms
@@ -1104,7 +1104,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happend
+          description: Point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1118,4 +1118,3 @@ components:
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
-

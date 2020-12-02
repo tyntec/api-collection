@@ -15,10 +15,10 @@ servers:
 tags:
   - name: "Global Number Portability (GNP)"
     description: |
-      tyntec's Global Number Portability (GNP) resolves number portability by obtaining data directly from local number portability databases and live network information from across the globe
+      tyntec's Global Number Portability (GNP) resolves number portability by obtaining data directly from local number portability databases and live network information from across the globe.
   - name: "Global Number Verification (GNV)"
     description: |
-      tyntec's Global Number Verification (GNV) minimizes message loss and unsuccessful call attempts with real-time phone number verification, providing key information on a user's phone number, such as subscriber status and roaming data
+      tyntec's Global Number Verification (GNV) minimizes message loss and unsuccessful call attempts with real-time phone number verification, providing key information on a user's phone number, such as subscriber status and roaming data.
 
 security:
   - APIKeyHeader: []
@@ -27,8 +27,8 @@ paths:
     get:
       tags:
         - "Global Number Portability"
-      summary: Get GNP information
-      description: Global Number Portability (GNP) request for the specified msisdn
+      summary: Read GNP information
+      description: Global Number Portability (GNP) request for the specified MSISDN
       operationId: gnpRequestGET
       parameters:
         - in: query
@@ -38,7 +38,7 @@ paths:
             type: string
           style: form
           description: |
-            The phone number of interest, given in international format
+            The phone number of interest, given in the international format
           example: +49569858597
         - in: query
           name: callbackUrl
@@ -46,11 +46,11 @@ paths:
             type: string
           required: false
           description: |
-            The asynchronous response can be triggered with this request parameter. In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry for a maximum of 48 hours to POST the number information after 1, 5, 10, 20, 30, 60 minutes
+            The asynchronous response can be triggered by this request parameter. In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for the maximum of 48 hours.
           example: https://my.callback.io/gnp-response
       responses:
         '200':
-          description: Successful GNP response. In case a valid callbackUrl is provided, the response will be the requestId.
+          description: Successful GNP response; in the case a valid callbackUrl is provided, the response will be the requestId.
 
           content:
             application/json:
@@ -70,8 +70,8 @@ paths:
     get:
       tags:
         - "Global Number Verification"
-      summary: Get GNV information
-      description: Global Number Verification (GNV) request for the specified msisdn
+      summary: Read GNV information
+      description: Global Number Verification (GNV) request for the specified MSISDN
       operationId: gnvRequestGET
       parameters:
         - in: query
@@ -81,7 +81,7 @@ paths:
             type: string
           style: form
           description: |
-            The phone number of interest, given in international format
+            The phone number of interest, given in the international format
           example: +49569858597
         - in: query
           name: callbackUrl
@@ -89,7 +89,7 @@ paths:
             type: string
           required: false
           description: |
-            The asynchronous response can be triggered with this request parameter. In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry for a maximum of 48 hours to POST the number information after 1, 5, 10, 20, 30, 60 minutes
+            The asynchronous response can be triggered by this request parameter. In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for the maximum of 48 hours.
           example: https://my.callback.io/gnv-response
       responses:
         '200':
@@ -112,13 +112,13 @@ paths:
 components:
   responses:
     BadRequest:
-      description: Error in msisdn or in callback Url
+      description: Error in MSISDN or in callback URL
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Problem'
     Forbidden:
-      description: Authorization information is missing
+      description: Authorization information is missing.
       content:
         application/json:
           schema:
@@ -130,13 +130,13 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     PaymentRequired:
-      description: The current credit balance is not sufficient for this request
+      description: The current credit balance is not sufficient for this request.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Problem'
     InternalError:
-      description: Something went wrong :-(
+      description: Something went wrong. :-(
       content:
         application/json:
           schema:
@@ -159,12 +159,12 @@ components:
         msisdn:
           type: string
           description: |
-            The phone number of interest given in international format
+            The phone number of interest given in the international format
           example: "+491622943176"
         ported:
           type: string
           description: |
-            An indication of the porting status (yes/no)
+            Indication of the porting status (yes/no)
           example: "false"
         price:
           type: number
@@ -174,7 +174,7 @@ components:
         currency:
           type: string
           description: |
-            The currency in which the pricing is given; corresponding to the currency of the invoice
+            The currency in which the pricing is given; it corresponds to the currency of the invoice.
           example: "EUR"
         priceEffective:
           type: string
@@ -189,27 +189,27 @@ components:
         mcc:
           type: string
           description: |
-            A representative MCC (Mobile Country Code) of the operator
+            Representative MCC (Mobile Country Code) of the operator
           example: "262"
         mnc:
           type: string
           description: |
-            A representative MNC (Mobile Network Code) of the operator
+            Representative MNC (Mobile Network Code) of the operator
           example: "02"
         ttid:
           type: string
           description: |
-            The respective tyntec ID of the network
+            Respective tyntec ID of the network
           example: "15"
         operator:
           type: string
           description: |
-            The human readable name of the operator
+            Human-readable name of the operator
           example: "Vodafone"
         country:
           type: string
           description: |
-            The three-letter country code(following ISO 3166-1 alpha-3) where the operator is located
+            The three-letter code (following ISO 3166-1 alpha-3) of the country where the operator is located
           example: "DEU"
         timezone:
           type: string
@@ -219,12 +219,12 @@ components:
         technology:
           type: string
           description: |
-            Technology used by the operator's network. Possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed
+            Technology used by the operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         synchronous:
           type: boolean
           description: |
-            Indicates whether the response body contains the number information(synchronous) or just the requestId of the asynchronous response
+            Indicates whether the response body contains the number information (synchronous) or just the requestId of the asynchronous response.
           example: "true"
     GnvResponse:
       type: object
@@ -238,22 +238,22 @@ components:
         msisdn:
           type: string
           description: |
-            The phone number of interest given in international format
+            The phone number of interest given in the international format
           example: "+491622943176"
         ported:
           type: string
           description: |
-            Indicating the porting status true/false/unknown
+            Indicates the porting status true/false/unknown.
           example: "false"
         roaming:
           type: string
           description: |
-            Indicating the roaming status true/false/unknown
+            Indicates the roaming status true/false/unknown.
           example: "false"
         presence:
           type: string
           description: |
-            Latest handset status (switched on/off) known by the operator (stored in respective HLR)
+            The latest handset status (switched on/off) known by the operator (stored in the respective HLR)
           example: "true"
         price:
           type: number
@@ -263,7 +263,7 @@ components:
         currency:
           type: string
           description: |
-            The currency in which the pricing is given; corresponding to the currency of the invoice
+            The currency in which the pricing is given; it corresponds to the currency of the invoice.
           example: "EUR"
         priceEffective:
           type: string
@@ -278,76 +278,76 @@ components:
         nrhMCC:
           type: string
           description: |
-            A representative MCC (Mobile Country Code) of the NRH's network (Number Range Holder)
+            Representative MCC (Mobile Country Code) of the NRH's network (Number Range Holder)
           example: "262"
         nrhMNC:
           type: string
           description: |
-            A representative MNCs (Mobile Network Codes) of the NRH's network
+            Representative MNCs (Mobile Network Codes) of the NRH's network
           example: "02"
         nrhTtId:
           type: string
           description: |
-            The respective tyntec ID of the NRH
+            Respective tyntec ID of the NRH
           example: "15"
         nrhOperator:
           type: string
           description: |
-            Human readable name of the NRH
+            Human-readable name of the NRH
           example: "Vodafone"
         nrhCountry:
           type: string
           description: |
-            The three-letter country code(following ISO 3166-1 alpha-3) where the NRH's network is located
+            The three-letter code (following ISO 3166-1 alpha-3) of the country where the NRH's network is located
           example: "DEU"
         nrhTimeZone:
           type: string
           description: |
-            Local time zone of NRH's network relative to UTC
+            Local time zone of the NRH's network, relative to UTC
           example: "+0100"
         nrhTechnology:
           type: string
           description: |
-            The technology used by NRH operator's network. Possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed
+            The technology used by the NRH operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         imsiMCC:
           type: string
           description: |
-            The MCC of the subscriber's IMSI (International Mobile Subscriber Identity)
+            MCC of the subscriber's IMSI (International Mobile Subscriber Identity)
           example: "262"
         imsiMNC:
           type: string
           description: |
-            The MNC of the subscriber's IMSI
+            MNC of the subscriber's IMSI
           example: "02"
         imsi:
           type: string
           description: |
-            The International Mobile Subscriber Identity of the subscriber
+            The subscriber's International Mobile Subscriber Identity
         imsiTtId:
           type: string
           description: |
-            The respective tyntec ID of the subscription network operator
+            Respective tyntec ID of the subscription network operator
           example: "15"
         imsiOperator:
           type: string
           description: |
-            Human readable name of the subscription network operator
+            Human-readable name of the subscription network operator
           example: "Vodafone"
         imsiCountry:
           type: string
           description: |
-            The three-letter country code where the subscription network is located
+            The three-letter code of the country where the subscription network is located
           example: "DEU"
         imsiTimeZone:
           type: string
           description: |
-            Local time zone of the subscription network relative to UTC
+            Local time zone of the subscription network, relative to UTC
           example: "+0100"
         imsiTechnology:
           type: string
           description: |
-            The technology used by the subscription network. Possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed
+            The technology used by the subscription network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         hlrCC:
           type: string
@@ -362,41 +362,41 @@ components:
         hlrMCC:
           type: string
           description: |
-            A representative MCC of the HLR's operator
+            Representative MCC of the HLR's operator
           example: "262"
         hlrMNC:
           type: string
           description: |
-            A representative MNC of the HLR's operator
+            Representative MNC of the HLR's operator
           example: "02"
         hlr:
           type: string
           description: |
-            The representative Home Location Register
+            Representative Home Location Register
         hlrTtId:
           type: string
           description: |
-            The respective tyntec ID of the operator's HLR
+            Respective tyntec ID of the operator's HLR
           example: "15"
         hlrOperator:
           type: string
           description: |
-            Human readable name of operator's HLR
+            Human-readable name of operator's HLR
           example: "Vodafone"
         hlrCountry:
           type: string
           description: |
-            The three-letter country code where the HLR is located
+            The three-letter code of the country where the HLR is located
           example: "DEU"
         hlrTimeZone:
           type: string
           description: |
-            Local time zone of the HLR relative to UTC. +HH:mm (according to ISO 8601)
+            Local time zone of the HLR, relative to UTC; +HH:mm (according to ISO 8601)
           example: "+0100"
         hlrTechnology:
           type: string
           description: |
-            The technology used by the HLR operator network. Possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed
+            The technology used by the HLR operator network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         mscCC:
           type: string
@@ -411,51 +411,51 @@ components:
         mscMCC:
           type: string
           description: |
-            A representative MCC of the operator's MSC
+            Representative MCC of the operator's MSC
           example: "262"
         mscMNC:
           type: string
           description: |
-            A representative MNC of the operator's MSC
+            Representative MNC of the operator's MSC
           example: "02"
         msc:
           type: string
           description: |
-            The representative Mobile Switching Center
+            Representative Mobile Switching Center
         mscTtId:
           type: string
           description: |
-            The respective tyntec ID of the operator's MSC
+            Respective tyntec ID of the operator's MSC
           example: "15"
         mscOperator:
           type: string
           description: |
-            Human readable name of operator's MSC
+            Human-readable name of operator's MSC
           example: "Vodafone"
         mscCountry:
           type: string
           description: |
-            The three-letter country code(following ISO 3166-1 alpha-3) of the network operating the MSC
+            The three-letter country code (following ISO 3166-1 alpha-3) of the network operating the MSC
           example: "DEU"
         mscTimeZone:
           type: string
           description: |
-            Local time zone of the MSC relative to UTC. +HH:mm (according to ISO 8601)
+            Local time zone of the MSC, relative to UTC; +HH:mm (according to ISO 8601)
           example: "+0100"
         mscTechnology:
           type: string
           description: |
-            The technology used by the MSC operator's network. Possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed
+            The technology used by the MSC operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         synchronous:
           type: boolean
           description: |
-            Indicates whether the response body contains the number information(synchronous) or just the requestId of the asynchronous response
+            Indicates whether the response body contains the number information (synchronous) or just the requestId of the asynchronous response
           example: "true"
     Problem:
       type: object
       additionalProperties: true
-      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807).
       required:
         - type
         - title
@@ -468,14 +468,14 @@ components:
           type: string
         title:
           type: string
-          example: Data given was not parseable
-          description: A short, human-readable summary of the problem type.
+          example: The given data were not parsable.
+          description: Short, human-readable summary of the problem type
         status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem
           type: string
           example: 400
         detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
+          description: Human-readable explanation specific to this occurrence of the problem
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
