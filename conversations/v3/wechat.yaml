@@ -21,6 +21,37 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 paths:
+  /channels/wechat:
+    post:
+      operationId: addWeChatChannel
+      summary: create a new WeChat channel
+      tags:
+       - "Configuration"
+      description: Create a new WeChat channel in your account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: object
+                  properties:
+                    weChatId: 
+                     type: string
+                credentials:
+                  type: object
+                  properties:
+                    appId:
+                     type: string
+                    appSecret:
+                     type: string
+    get:
+      operationId: listAllWeChatChannels
+      summary: list WeChat channels
+    delete:
+      operationId: deleteWeChatChannel 
   /messages:
     post:
       operationId: sendMessage

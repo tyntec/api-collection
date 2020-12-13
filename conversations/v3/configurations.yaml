@@ -1,6 +1,6 @@
 openapi: '3.0.0'
 info:
-  title: Webhook Configuration
+  title: Configurations
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -14,21 +14,16 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 tags:
-  - name: "Applications"
+  - name: "Configurations"
     description: |
-      Conversations allows you to freely define which events should be sent via a callback URL to your webhook
-      implementation.
+      The Configurations allows you setup certain parts of a channels settings.
 
-      **Please note**:
-
-       - By now, only a default application is supported. The extension to custom applications is planned for future releases
-       - The API merges events pointing to the same callback URL into one set.
-       - When an update of a callback URL is executed, the whole webhook definition must be restated.
+      Such as callback settings, credentials (where appropriate)
 paths:
-  /applications:
+  /configurations:
     get:
       tags:
-        - "Applications"
+        - "Configurations"
       summary: List all applications
       operationId: listApplications
       description: Lists all applications configured for the APIKey
@@ -39,44 +34,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationList'
-  /applications/default:
-    get:
-      tags:
-        - "Applications"
-      summary: Get default application
-      operationId: getDefaultApplication
-      description: Returns default application configured for the APIKey
-      responses:
-        200:
-          description: Current definition of the default application
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultApplicationResponse'
-    patch:
-      tags:
-        - "Applications"
-      summary: Update default application
-      operationId: updateDefaultApplication
-      description: |
-        The operation will save the specified webhooks. Makes merge(replacement)
-        operation on existing event types for newly defined webhooks.
-        Any other event type of the existing webhooks will remain associated
-        with the previous callback URL.
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DefaultApplicationUpdate"
-      responses:
-        204:
-          description: Webhooks have been successfully saved.
-        400:
-          $ref: '#/components/responses/BadRequest'
-        default:
-          $ref: '#/components/responses/Default'
 components:
   securitySchemes:
     ApiKeyAuth:
