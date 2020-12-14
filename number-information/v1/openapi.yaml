@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Number Information
+  title: Number Information API
   description: |
     tyntec's  Number Information Services (NIS)
   version: '1.0'

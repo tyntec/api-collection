@@ -1,11 +1,22 @@
 openapi: '3.0.0'
 info:
-  title: Common Operations
+  title: Common Operations (work in progress)
   description: |
-    In this section, you find an overview of common operations on Conversations.
+    In this section, you find an overview of operations common to all Conversations channels.
 
     For details about interaction with a particular channel, please, refer to the channel specific section.
 
+    ### Sending messages
+
+    TODO
+
+    **Wait for it, Pete... :)**
+
+    NOTE Channels are expected to be used separately, not in cascades anymore (discontinued in the next version)
+
+    ### Receiving messages
+
+    To receive inbound messages, you have to implement webhooks on your end and associate their callback URLs with events in our platform, see the sections _Webhook Events_ and _Webhook Configuration_.
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -14,6 +25,7 @@ info:
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
+
 servers:
   - url: https://api.tyntec.com/chat-api/v2
 security:
@@ -21,48 +33,13 @@ security:
 tags:
   - name: "Messaging"
     description: |
-      Basic operations on messaging.
-
-      ### Receiving messages
-
-      To receive inbound messages, you have to implement webhooks on your end and associate their callback URLs with events in our platform, see the sections _Webhook Events_ and _Webhook Configuration_.
-  - name: "Download inbound media"
+      Messaging operations common on all channels.
+  - name: "Inbound media"
     description: |
       After receiving an inbound message (_MoMessage_ event) with a media ID, this endpoint can be used to download
       the media file.
 
 paths:
-  /messages:
-    post:
-      operationId: sendMessage
-      summary: Send a message
-      tags:
-        - "Messaging"
-      description: |
-        Request sending of outbound messages via this path.
-
-        For details on the channels, refer to the channel specific section.
-      requestBody:
-        description: The message you would like to send
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MessageRequest'
-      responses:
-        202:
-          description: The message was accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        default:
-          $ref: '#/components/responses/Default'
   /messages/{message-id}/history:
     get:
       operationId: getMessageHistory
@@ -109,7 +86,7 @@ paths:
   /messages/{message-id}:
     get:
       operationId: retrieveMessage
-      summary: Retrieve the message
+      summary: Retrieve a sent message
       tags:
         - "Messaging"
       description: |
@@ -144,7 +121,7 @@ paths:
 
         The system guarantees that the messages are send in order to the recipient
 
-        For details on the channels please refer to the channel specific documentation.
+        For details on the channels please refer to the channel specific section.
       requestBody:
         description: The message bulk you want to send
         required: true
@@ -167,13 +144,13 @@ paths:
       - $ref: '#/components/parameters/MediaId'
     get:
       operationId: downloadMedia
-      summary: Download received media
+      summary: Download inbound media
       tags:
-        - "Download inbound media"
-      description: Retrieve the media associated with the ID,
+        - "Inbound media"
+      description: Retrieve the media associated with a media ID.
       responses:
         200:
-          description: The media associated with the ID,requested exists.
+          description: The requested media associated with the ID exists. Returned.
           content:
             'audio/*':
               schema:
@@ -192,7 +169,7 @@ paths:
                 type: string
                 format: binary
         404:
-          description: The media associated with the ID,does not exist in our system
+          description: The requested media associated with the ID does not exist in our system.
           content:
             application/problem+json:
               schema:

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Authentication
+  title: Authentication API
   description: >
     Two-factor authentication (2FA) is an additional security layer for your business applications.
 

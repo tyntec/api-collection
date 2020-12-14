@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  version: '1.0'
-  title: SMS
+  version: "1.0"
+  title: SMS API
   description: |
-    The Messaging API enables you to send messages to your customers or
+    The SMS API enables you to send messages to your customers or
     to receive messages from your customers to phone numbers registered with tyntec.
 
   contact:
@@ -17,55 +17,69 @@ servers:
 security:
   - APIKeyHeader: []
 tags:
- - name: SMS Send
-   description: |
-     tyntec’s sending SMS service is governed by two operations that allow you:
+  - name: SMS Messaging
+    description: |
+      tyntec’s SMS service is governed by two operations that allow you:
 
-     - to send an SMS and
-     - to query the status of a previously sent SMS
+      - to send an SMS and
+      - to query the status of a previously sent SMS
 
-     `tyntec stores status details for up to three months after the final delivery state is known.`
- - name: SMS Message Status
-   description: |
-     You have the possibility to query the status of a message you sent through our systems.
-     In the case the callback URL is configured, we will POST the status to the defined URL.
+      **Important**
 
-     `The SMS Message Status is available for three months after the final state is reached.`
- - name: SMS Receive
-   description: |
-     The Messaging API enables you to receive messages from your
-     customers sent to phone numbers you have registered with tyntec.
+      tyntec stores status details for up to 3 months after the final delivery state is known.
+  - name: SMS Sending
+    description: |
+      tyntec’s sending SMS service is governed by two operations that allow you:
 
-     For this service you will need to provide tyntec with the URL
-     (`callbackUrl`) of your webserver, e.g.
-     `https://rest.customer.com/inboundmessages/`.
+      - to send an SMS and
+      - to query the status of a previously sent SMS
 
-     tyntec's application will do either the `POST` or `GET` call to your
-     server; this can be configured by tyntec.
+      **Important**
 
-     tyntec's application will retry delivery every 10 seconds in the case your
-     application does not accept the inbound message. Retries are paused for
-     10 minutes after every 100 consecutive unsuccessful delivery attempts.
-     tyntec's application will retry for a maximum of 48 hours.
- - name: BYON Contact Service
-   description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
- - name: BYON Phone Book Service
-   description: Bring Your Own Number (BYON) Phone Book Service gives the users the possibility to view their Phone book entries.
- - name: BYON Number Service
-   description: Bring Your Own Number (BYON) Numbers Service gives the users the possibility to register new numbers.
- - name: BYON Partner Notification Service
-   description: API for sending notifications to the partners
+      tyntec stores status details for up to 3 months after the final delivery state is known.
+  - name: SMS Message Status
+    description: |
+      You have the possibility to query the status of a message you sent through our systems.
+      In the case the callback URL is configured, we will POST the status to the defined URL.
+
+      **Important**
+
+      The SMS Message Status is available for 3 months after the final state is reached.
+  - name: SMS Receiving
+    description: |
+      The SMS API enables you to receive messages from your
+      customers sent to phone numbers that you have registered with tyntec.
+
+      For this service, you will need to provide tyntec with an URL
+      (`callbackUrl`) at your webserver, e.g.
+      `https://rest.customer.com/inboundmessages/`.
+
+      tyntec's application will do either the `POST` or `GET` call to your
+      server; this can be configured by tyntec.
+
+      tyntec's application will retry delivery every 10 seconds in the case your
+      application does not accept the inbound message. Retries are paused for
+      10 minutes after every 100 consecutive unsuccessful delivery attempts.
+      tyntec's application will retry for a maximum of 48 hours.
+  - name: BYON Contact Service
+    description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
+  - name: BYON Phone Book Service
+    description: Bring Your Own Number (BYON) Phone Book Service gives the users the possibility to view their Phone book entries.
+  - name: BYON Number Service
+    description: Bring Your Own Number (BYON) Numbers Service gives the users the possibility to register new numbers.
+  - name: BYON Partner Notification Service
+    description: API for sending notifications to the partners
 paths:
-  '/messaging/v1/messages/{requestId}':
+  "/messaging/v1/messages/{requestId}":
     get:
       tags:
-        - SMS Message Status
-      summary: Get status of a message
+        - SMS Messaging
+      summary: Read SMS status
       security:
-      - ApiKeyHeader: []
+        - ApiKeyHeader: []
       operationId: getMessageInfoUsingGET
       description: |
-        Query the status of a message.
+        Returns the status of a sent SMS message.
       parameters:
         - name: requestId
           in: path
@@ -74,97 +88,101 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestMessageResponse'
-        '401':
+                $ref: "#/components/schemas/RestMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
-          description: 'Something went wrong. :-('
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
   /messaging/v1/sms:
     post:
       tags:
-        - SMS Send
-      summary: Sends SMS via POST HTTP method
+        - SMS Messaging
+      summary: Send SMS (POST)
       security:
-      - ApiKeyHeader: []
+        - ApiKeyHeader: []
       operationId: sendSmsUsingPOST
+      description: |
+        Sends an SMS via the POST HTTP method with parameters defined in the request body.
       responses:
-        '200':
+        "200":
           description: The messageIds of your request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestMessageResponse'
-        '201':
+                $ref: "#/components/schemas/RestMessageResponse"
+        "201":
           description: Created
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '401':
+                $ref: "#/components/schemas/Problem"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
-          description: 'Something went wrong. :-('
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       requestBody:
         description: Message you would like to send
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SmsMessage'
+              $ref: "#/components/schemas/SmsMessage"
     get:
       tags:
-        - SMS Send
-      summary: Sends SMS via the GET HTTP method.
+        - SMS Messaging
+      summary: Send SMS (GET)
       security:
-      - ApiKeyHeader: []
+        - ApiKeyHeader: []
       operationId: sendSmsUsingGET
+      description: |
+        Sends an SMS via the GET HTTP method with parameters defined in the query string.
       parameters:
         - name: to
           in: query
@@ -226,7 +244,7 @@ paths:
         - name: sendDateTime
           in: query
           description: >-
-            Any future date in the format of “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
+            Any future date in the format “yyyy-MM-ddT-HH:mm:ss+HH:mm” [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).
             If not set, the message will be sent immediately.
             The default time zone is [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time).
           schema:
@@ -236,7 +254,7 @@ paths:
           description: Validity in minutes for this message
           schema:
             type: string
-            default: '2880'
+            default: "2880"
         - name: reference
           in: query
           description: A custom reference that will mark the Delivery Report
@@ -303,70 +321,70 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: The messageIds of your request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestMessageResponse'
-        '201':
+                $ref: "#/components/schemas/RestMessageResponse"
+        "201":
           description: Created
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '401':
+                $ref: "#/components/schemas/Problem"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
-          description: 'Something went wrong. :-('
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
   /incoming:
     post:
       operationId: receiveMessage
-      summary: SMS Receive
+      summary: Receive SMS
       servers:
-        - url: 'https://example.com'
+        - url: "https://example.com"
       security: []
       tags:
-        - "SMS Receive"
+        - SMS Messaging
       description: |
-         Receive an SMS.
+        Receive an SMS.
 
-         `The path is only an example.`
+        **Important: The aforementioned path is only an example.**
 
-         You can choose freely the callback url.
+        You can choose the callback URL freely.
       requestBody:
         description: The message that tyntec delivers to your system
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InboundMessage'
+              $ref: "#/components/schemas/InboundMessage"
       responses:
-        '2XX':
+        "2XX":
           description: Message was accepted by your system.
-        'default':
+        "default":
           description: |
             Message was not accepted by your system.
 
@@ -376,8 +394,9 @@ paths:
     get:
       tags:
         - BYON Phone Book Service
-      summary: Returns all phone numbers.
-      description: Returns all phone numbers created by your API key; you can specify
+      summary: List all phone numbers
+      description:
+        Returns all phone numbers created with your API key; you can specify
         attributes to filter the results. The size limit is 3000.
       operationId: getAllPhoneNumbersForAccountUsingGET
       parameters:
@@ -441,8 +460,8 @@ paths:
     get:
       tags:
         - BYON Phone Book Service
-      summary: Returns a phone number.
-      description: Returns the specific phone number entity created by your API key.
+      summary: Read a phone number
+      description: Returns details of the specific phone number entity created with your API key.
       operationId: getPhoneNumberForAccountUsingGET
       parameters:
         - name: phoneNumber
@@ -484,10 +503,11 @@ paths:
     get:
       tags:
         - BYON Contact Service
-      summary: Returns all contacts created.
-      description: Returns all contacts created by your API key; you can get the contact ID
+      summary: List all contacts
+      description:
+        Returns all contacts created with your API key; you can get the contact ID
         from the list for editing or deleting the contact. You can specify
-        friendlyName to filter the results.
+        `friendlyName` to filter the results.
       operationId: getAllContactsWithFriendlyNameUsingGET
       parameters:
         - name: friendlyName
@@ -498,7 +518,7 @@ paths:
             type: string
       responses:
         "200":
-          description: List of contacts
+          description: Returned the list of contacts
           content:
             application/json:
               schema:
@@ -541,7 +561,7 @@ paths:
     post:
       tags:
         - BYON Contact Service
-      summary: Creates a contact.
+      summary: Create a contact
       description: Creates a new contact.
       operationId: createContactUsingPOST
       requestBody:
@@ -588,7 +608,7 @@ paths:
     get:
       tags:
         - BYON Contact Service
-      summary: Returns contact.
+      summary: Read a contact
       description: Returns the contact for the provided contactId.
       operationId: getContactUsingGET
       parameters:
@@ -626,7 +646,7 @@ paths:
     post:
       tags:
         - BYON Contact Service
-      summary: Edits contact.
+      summary: Edit a contact
       description: Edits the contact for the provided contactId.
       operationId: editContactUsingPOST
       parameters:
@@ -670,7 +690,7 @@ paths:
     delete:
       tags:
         - BYON Contact Service
-      summary: Deletes contact.
+      summary: Delete a contact
       description: Deletes the contact for the provided contactId.
       operationId: deleteContactUsingDELETE
       parameters:
@@ -713,7 +733,7 @@ paths:
     get:
       tags:
         - BYON Number Service
-      summary: Returns all phones.
+      summary: List all phones
       description: |
         Returns all phone numbers for which provisioning requests were created.
         You can specify _friendlyName_ or _contactId_ for filtering the results.
@@ -776,7 +796,7 @@ paths:
     post:
       tags:
         - BYON Number Service
-      summary: Registers multiple phones.
+      summary: Register phones
       description: New phone batch registration service for registering multiple numbers
       operationId: createPhoneProvisioningRequestUsingPOST
       parameters:
@@ -847,8 +867,9 @@ paths:
     get:
       tags:
         - BYON Number Service
-      summary: Phone status
-      description: Returns the details of the provisioning request for the provided
+      summary: Read phone status
+      description:
+        Returns the details of the provisioning request for the provided
         requestId.
       operationId: getProvisioningRequestUsingGET
       parameters:
@@ -976,15 +997,15 @@ components:
         from:
           type: string
           description: Phone number of the sending party in the international format if available
-          example: '+49123456789'
+          example: "+49123456789"
         to:
           type: string
           description: Your number provided by tyntec that has received the respective message in the international format.
-          example: '+1987654321'
+          example: "+1987654321"
         message:
           type: string
-          description: 'The received message as a UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message.'
-          example: 'This is an example, the data is garbage.'
+          description: "The received message as a UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message."
+          example: "This is an example, the data is garbage."
         originMCC:
           type: string
           description: Representative MCC (Mobile Country Code) of the originating network
@@ -1017,8 +1038,8 @@ components:
         contentList:
           type: array
           items:
-            $ref: '#/components/schemas/InboundContent'
-          description: 'tyntec merges overlength (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as for an individual message!'
+            $ref: "#/components/schemas/InboundContent"
+          description: "tyntec merges overlength (concatenated) SMS into one string before sending it to your webserver. Note: tyntec will charge for each part of the concatenated message as for an individual message!"
     InboundContent:
       title: InboundContent
       required:
@@ -1030,7 +1051,7 @@ components:
         msgId:
           type: string
           description: Unique identifier provided for each message part
-          example: '48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6'
+          example: "48799399408:0:cad578e86b324c0a80f8fe866bfdb2b6"
         sentDate:
           type: string
           description: >-
@@ -1038,7 +1059,7 @@ components:
             (if available)
             or
             the time when the respective message was received by tyntec.
-          example: '2019-07-02T16:47:39+0200'
+          example: "2019-07-02T16:47:39+0200"
         sequenceNumber:
           type: integer
           description: The sequenceNumber orders the respective message parts of an overlength message.
@@ -1055,7 +1076,7 @@ components:
         priceEffective:
           type: string
           description: The date when the “price” became effective
-          example: '2018-06-01T00:00:00+0200'
+          example: "2018-06-01T00:00:00+0200"
     PhoneNumberEntity:
       type: object
       description: Phone number schema
@@ -1180,7 +1201,7 @@ components:
         validity:
           description: Message validity in minutes
           type: string
-          default: '2880'
+          default: "2880"
         reference:
           description: Customer reference attached to the Delivery Reports
           type: string
@@ -1341,11 +1362,11 @@ components:
           type: string
           description: The date when the “price” became effective
           format: date-time
-          example: '2018-06-01T00:00:00+0200'
+          example: "2018-06-01T00:00:00+0200"
         sentDate:
           type: string
           description: The time stamp when the message was sent out by tyntec for delivery.
-          example: '2019-07-02T16:47:39+0200'
+          example: "2019-07-02T16:47:39+0200"
         statusText:
           type: string
           description: The first 20 characters of the sent message
@@ -1364,7 +1385,7 @@ components:
         from:
           type: string
           description: The phone number of the sending party in the international format if available
-          example: '+49123456789'
+          example: "+49123456789"
         href:
           type: string
           description: The URL of the accepted message
@@ -1374,7 +1395,7 @@ components:
         parts:
           type: array
           items:
-            $ref: '#/components/schemas/RestMessagePart'
+            $ref: "#/components/schemas/RestMessagePart"
         overallPrice:
           type: string
           description: The overall sum of prices for all parts of this message
@@ -1394,7 +1415,7 @@ components:
         sentDate:
           type: string
           description: The time stamp when the message was sent out by tyntec for delivery
-          example: '2019-07-02T16:47:39+0200'
+          example: "2019-07-02T16:47:39+0200"
         size:
           type: integer
           description: The amount of respective concatenated SMS parts
@@ -1411,7 +1432,7 @@ components:
         to:
           type: string
           description: Your number provided by tyntec that has received the respective message in international format
-          example: '+1987654321'
+          example: "+1987654321"
         ttid:
           type: string
           description: The tyntec operator's ID
