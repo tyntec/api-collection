@@ -155,10 +155,7 @@ paths:
       responses:
         202:
           description: The bulk was accepted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/BulkAccepted'
+          $ref: '#/components/responses/BulkAccepted'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -258,20 +255,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              bulkId:
-                type: string
-                format: uuid
-                example: 77185196-664a-43ec-b14a-fe97036c697f
-              messageIds:
-                type: array
-                items:
-                  type: string
-                  format: uuid
-                  example: 77185196-664a-43ec-b14a-fe97036c697f
-                minItems: 2
-                maxItems: 20
+            $ref:  "#/components/schemas/BulkAcceptedResponse"
   parameters:
     MediaId:
       name: media-id
@@ -668,3 +652,18 @@ components:
             - sms
             - whatsapp
             - viber
+    BulkAcceptedResponse:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20

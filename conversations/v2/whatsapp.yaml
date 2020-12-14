@@ -147,10 +147,7 @@ paths:
       responses:
         202:
           description: The bulk was accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/BulkAccepted'
+          $ref: 'common.yaml#/components/responses/BulkAccepted'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -704,7 +701,8 @@ components:
           example:
             status: 404
     WhatsAppProfileUpdateFailed:
-      description: Profile update failed. In the case a partial update failed: retrieve the current profile, change the required information and retry with the whole profile.
+      description: |
+        Profile update failed. In the case a partial update failed: retrieve the current profile, change the required information and retry with the whole profile.
       content:
         application/problem+json:
           schema:

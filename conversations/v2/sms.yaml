@@ -101,11 +101,8 @@ paths:
               $ref: '#/components/schemas/BulkRequest'
       responses:
         202:
-          description: The bulk was accepted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/BulkAccepted'
+          description: The bulk was accepted.
+          $ref: 'common.yaml#/components/responses/BulkAccepted'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
