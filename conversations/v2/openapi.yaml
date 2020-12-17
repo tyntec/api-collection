@@ -47,7 +47,7 @@ info:
 servers:
   - url: https://api.tyntec.com/chat-api/v2
 security:
-  - ApiKeyAuth: []
+  - ApiKeyHeader: []
 tags:
   - name: "Send messages"
     description: |
@@ -364,7 +364,7 @@ paths:
       description: |
         Lists all WhatsApp accounts managed by this access credentials.
 
-        If the phone number query parameter is set, only the phone numbers account is listed
+        If the phone number query parameter is set, only the phone numbers account is listed.
       responses:
         200:
           description: WhatsApp accounts managed by this access credentials
@@ -905,7 +905,7 @@ paths:
           $ref: '#/components/responses/Default'
 components:
   securitySchemes:
-    ApiKeyAuth:
+    ApiKeyHeader:
       type: apiKey
       in: header
       name: apikey

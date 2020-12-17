@@ -19,7 +19,7 @@ info:
 servers:
   - url: https://api.tyntec.com/chat-api/v2
 security:
-  - ApiKeyAuth: [ ]
+  - ApiKeyHeader: [ ]
 tags:
   - name: "Messaging"
     description: |
@@ -57,7 +57,7 @@ paths:
       summary: Send a message
       tags:
         - "Messaging"
-      description: Send chat messages via this path.
+      description: Send a WhatsApp message.
       requestBody:
         description: The message you would like to send
         required: true
@@ -678,7 +678,7 @@ paths:
           $ref: '#/components/responses/Default'
 components:
   securitySchemes:
-    ApiKeyAuth:
+    ApiKeyHeader:
       type: apiKey
       in: header
       name: apikey

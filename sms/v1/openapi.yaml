@@ -27,40 +27,6 @@ tags:
       **Important**
 
       tyntec stores status details for up to 3 months after the final delivery state is known.
-  - name: SMS Sending
-    description: |
-      tyntec’s sending SMS service is governed by two operations that allow you:
-
-      - to send an SMS and
-      - to query the status of a previously sent SMS
-
-      **Important**
-
-      tyntec stores status details for up to 3 months after the final delivery state is known.
-  - name: SMS Message Status
-    description: |
-      You have the possibility to query the status of a message you sent through our systems.
-      In the case the callback URL is configured, we will POST the status to the defined URL.
-
-      **Important**
-
-      The SMS Message Status is available for 3 months after the final state is reached.
-  - name: SMS Receiving
-    description: |
-      The SMS API enables you to receive messages from your
-      customers sent to phone numbers that you have registered with tyntec.
-
-      For this service, you will need to provide tyntec with an URL
-      (`callbackUrl`) at your webserver, e.g.
-      `https://rest.customer.com/inboundmessages/`.
-
-      tyntec's application will do either the `POST` or `GET` call to your
-      server; this can be configured by tyntec.
-
-      tyntec's application will retry delivery every 10 seconds in the case your
-      application does not accept the inbound message. Retries are paused for
-      10 minutes after every 100 consecutive unsuccessful delivery attempts.
-      tyntec's application will retry for a maximum of 48 hours.
   - name: BYON Contact Service
     description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
   - name: BYON Phone Book Service
@@ -70,54 +36,6 @@ tags:
   - name: BYON Partner Notification Service
     description: API for sending notifications to the partners
 paths:
-  "/messaging/v1/messages/{requestId}":
-    get:
-      tags:
-        - SMS Messaging
-      summary: Read SMS status
-      security:
-        - ApiKeyHeader: []
-      operationId: getMessageInfoUsingGET
-      description: |
-        Returns the status of a sent SMS message.
-      parameters:
-        - name: requestId
-          in: path
-          description: The unique identifier provided for each request.
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RestMessageResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "500":
-          description: "Something went wrong. :-("
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Problem"
   /messaging/v1/sms:
     post:
       tags:
@@ -359,6 +277,61 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  "/messaging/v1/messages/{requestId}":
+    get:
+      tags:
+        - SMS Messaging
+      summary: Read SMS status
+      security:
+        - ApiKeyHeader: []
+      operationId: getMessageInfoUsingGET
+      description: |
+        Returns the status of a sent SMS message.
+
+        You have the possibility to query the status of a message you sent through our systems.
+        In the case the callback URL is configured, we will POST the status to the defined URL.
+
+        **Important**
+
+        The SMS Message Status is available for 3 months after a final delivery state is reached.
+      parameters:
+        - name: requestId
+          in: path
+          description: The unique identifier provided for each request.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestMessageResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /incoming:
     post:
       operationId: receiveMessage
@@ -369,11 +342,25 @@ paths:
       tags:
         - SMS Messaging
       description: |
-        Receive an SMS.
+        Receive an SMS as a POST request from us to your server.
 
-        **Important: The aforementioned path is only an example.**
+        **Note:** The aforementioned path is only an example. You can choose the callback URL freely.
 
-        You can choose the callback URL freely.
+        The SMS API allows you to automatically receive messages from your
+        customers sent to your phone numbers that you have registered with tyntec.
+
+        For this service, you will need to provide tyntec with an URL
+        (`callbackUrl`) at your webserver, e.g. `https://rest.customer.com/inboundmessages/`.
+
+        tyntec's application will do either the `POST` or `GET` call to your
+        server; this can be configured by tyntec.
+
+        **Retries**
+
+        tyntec's application will retry delivery every 10 seconds in the case your
+        application does not accept the inbound message. Retries are paused for
+        10 minutes after every 100 consecutive unsuccessful delivery attempts.
+        tyntec's application will keep trying for a maximum of 48 hours.
       requestBody:
         description: The message that tyntec delivers to your system
         required: true

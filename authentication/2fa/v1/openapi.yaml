@@ -42,7 +42,7 @@ paths:
     get:
       tags:
         - 2FA Application Service
-      summary: List applications
+      summary: List all applications
       description: Returns a list of all applications that were created under your account.
       operationId: getTwoFactorAuthApplicationsUsingGET
       responses:

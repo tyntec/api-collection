@@ -5,7 +5,7 @@ info:
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
 
-    They are sent to the callback URLs that you specified in an application (see the previous section).
+    They are sent to the callback URLs that you specified in a [tyntec application](/conversations/current.html#webhook-configuration).
 
     Inbound messages are sent to your system as soon as we receive them from the channel.
 
@@ -85,7 +85,7 @@ channels:
         http:
           type: request
           method: POST
-  "MoMessage::Postback":
+  "MoMessage Postback":
     description: |
       Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
@@ -101,7 +101,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::deleted":
+  "Message Status: Deleted":
     description: |
       This event is triggered when a previously sent MoMessage is deleted by its sender.
 
@@ -117,7 +117,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::accepted":
+  "Message Status: Accepted":
     description: |
       This event is triggered when tyntec accepted your message request.
 
@@ -135,7 +135,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::delivered":
+  "Message Status: Delivered":
     description: |
       This event is triggered when the channel informed us about the successful delivery
       of your message to the recipient.
@@ -155,7 +155,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::seen":
+  "Message Status: Seen":
     description: |
       This event is triggered when the channel informed that the message was seen by the recipient.
 
@@ -175,7 +175,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::channelFailed":
+  "Message Status: Channel Failed":
     description: |
       This event is triggered when a message was not successfully delivered via the channel.
 
@@ -191,7 +191,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::failed":
+  "Message Status: Failed":
     description: |
       This event is triggered when the message failed on all configured channels.
 
@@ -207,7 +207,7 @@ channels:
         http:
           type: request
           method: POST
-  "MessageStatus::unknown":
+  "Message Status: Unknown":
     description: |
       This event is triggered when the message status cannot be mapped to any of the others.
 
@@ -265,7 +265,7 @@ components:
   schemas:
     APIEvent:
       type: object
-      description: Basic object of events produced by the API such as MessageStatus or MoMessage
+      description: Abstract event object produced by the API, such as MessageStatus or MoMessage
       required:
         - event
       properties:

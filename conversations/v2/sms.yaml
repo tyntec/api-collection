@@ -19,7 +19,7 @@ info:
 servers:
   - url: https://api.tyntec.com/chat-api/v2
 security:
-  - ApiKeyAuth: [ ]
+  - ApiKeyHeader: [ ]
 tags:
   - name: "Messaging"
     description: |
@@ -111,7 +111,7 @@ paths:
           $ref: '#/components/responses/Default'
 components:
   securitySchemes:
-    ApiKeyAuth:
+    ApiKeyHeader:
       type: apiKey
       in: header
       name: apikey
