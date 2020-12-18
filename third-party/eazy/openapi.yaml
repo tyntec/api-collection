@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: 'Eazy dashboard'
+  title: 'Support Inbox'
   description: |
     The Eazy API is a JSON REST API to connect to social messaging platforms like WhatsApp Business, Apple Business Chat, Facebook Messenger, Twitter DM, Viber, LINE and more.
   contact:
@@ -12,9 +12,9 @@ info:
   x-major-version: v1
   x-postman-collection: postman.zip
 servers:
-  - url: https://api.eazy.im/v3
+  - url: https://api.cmd.tyntec.com/
 security:
-  - ApiKeyAuth: []
+  - bearerAuth: []
 tags:
   - name: 'Overview'
     description: |
@@ -470,17 +470,17 @@ paths:
             type: string
             format: email
             example: 'jid@company.com'
-        - in: query
+        - in: body
           name: color
           description: Color
           schema:
             type: integer
-        - in: query
+        - in: body
           name: description
           description: Description of the assistant
           schema:
             type: string
-        - in: query
+        - in: body
           name: name
           description: Name of the assistant
           schema:
@@ -554,12 +554,12 @@ paths:
             type: string
             format: email
             example: 'jid@company.com'
-        - in: query
+        - in: body
           name: name
           description: Name of the channel
           schema:
             type: integer
-        - in: query
+        - in: body
           name: priority
           description: Priority of the channel
           schema:
@@ -757,7 +757,7 @@ paths:
             type: string
             format: email
             example: 'contactJid@company.com'
-        - in: query
+        - in: body
           name: body
           description: Text for the comment
           schema:
@@ -786,25 +786,25 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: jid
           description: Contact ID
           schema:
             type: string
           example: '31611111111@company.com'
-        - in: query
+        - in: body
           name: name
           description: Name of the contact
           schema:
             type: string
           example: 'John Doe'
-        - in: query
+        - in: body
           name: reference
           description: Reference of the contact
           schema:
             type: string
           example: 'Customer #545'
-        - in: query
+        - in: body
           name: remarks
           description: Comment for the contact
           schema:
@@ -871,19 +871,19 @@ paths:
             type: string
             format: email
             example: 'contactJid@company.com'
-        - in: query
+        - in: body
           name: name
           description: Name of the contact
           schema:
             type: string
           example: 'John Doe'
-        - in: query
+        - in: body
           name: reference
           description: Reference of the contact
           schema:
             type: string
           example: 'Customer #545'
-        - in: query
+        - in: body
           name: remarks
           description: Comment for the contact
           schema:
@@ -950,25 +950,25 @@ paths:
             type: string
             format: email
             example: 'contactJid@company.com'
-        - in: query
+        - in: body
           name: assignee
           description: Assistant to the agents
           schema:
             type: string
           example: 'john@mycompany.com'
-        - in: query
+        - in: body
           name: label
           description: Labels of the conversation
           schema:
             type: string
           example: 'Label123'
-        - in: query
+        - in: body
           name: status
           description: Status of the conversation
           schema:
             type: string
           example: 'CLOSED'
-        - in: query
+        - in: body
           name: unreadCount
           description: Number of unread messages
           schema:
@@ -996,13 +996,13 @@ paths:
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
-        - in: query
+        - in: body
           name: description
           description: Description of the label
           schema:
             type: string
           example: 'Support related questions'
-        - in: query
+        - in: body
           name: name
           description: Name of the label
           schema:
@@ -1061,19 +1061,19 @@ paths:
             type: string
             format: email
             example: 'jid@company.com'
-        - in: query
+        - in: body
           name: color
           description: Color of the label
           schema:
             type: integer
           example: 8
-        - in: query
+        - in: body
           name: name
           description: Friendly name of the label
           schema:
             type: string
           example: 'Customer support'
-        - in: query
+        - in: body
           name: priority
           description: Priority of the label
           schema:
@@ -1228,7 +1228,7 @@ paths:
             type: string
             format: email
             example: 'contactJid@company.com'
-        - in: query
+        - in: body
           name: message
           description: Color of the label
           schema:
@@ -1270,13 +1270,13 @@ paths:
             type: string
             format: email
             example: 'contactJid@company.com'
-        - in: query
+        - in: body
           name: body
           description: Text/Body of the note.
           schema:
             type: string
           example: 'Customer number #63553'
-        - in: query
+        - in: body
           name: referenceId
           description: Friendly reference name as an ID.
           schema:
@@ -1352,25 +1352,25 @@ paths:
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
-        - in: query
+        - in: body
           name: body
           description: Text/Body of the note.
           schema:
             type: string
           example: 'Customer number #63553'
-        - in: query
+        - in: body
           name: isPinnel
           description: Is this note pinned?
           schema:
             type: boolean
           example: true
-        - in: query
+        - in: body
           name: isReadOnly
           description: Is this note read only or not?
           schema:
             type: boolean
           example: false
-        - in: query
+        - in: body
           name: referenceId
           description: Friendly reference name as an ID.
           schema:
@@ -1454,13 +1454,13 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: about
           description: Description of what is this profile about.
           schema:
             type: string
           example: 'Welcome! We are here to help you 24/7'
-        - in: query
+        - in: body
           name: businessProfile
           description: WhatsApp for Business profile
           schema:
@@ -1506,7 +1506,7 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: businessProfile
           description: Example of WhatsApp for Business profile update
           schema:
@@ -1544,7 +1544,7 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: message
           description: Text/Body of the message.
           schema:
@@ -1604,7 +1604,7 @@ paths:
           schema:
             type: string
             example: 'VETO8Y3SYCSFH1'
-        - in: query
+        - in: body
           name: message
           required: true
           description: Text/Body of the message.
@@ -1658,7 +1658,7 @@ paths:
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
-        - in: query
+        - in: body
           name: name
           required: true
           description: Name of the team to be created
@@ -1718,7 +1718,7 @@ paths:
             type: string
             format: email
             example: 'jid@company.com'
-        - in: query
+        - in: body
           name: name
           required: true
           description: Name of the team to be created
@@ -1773,7 +1773,7 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: category
           required: true
           description: Category text
@@ -1781,14 +1781,14 @@ paths:
             type: string
           example: 'ISSUE_RESOLUTION'
         - $ref: '#/components/parameters/components'
-        - in: query
+        - in: body
           name: language
           required: true
           description: Language to be used in the template
           schema:
             type: string
           example: 'en'
-        - in: query
+        - in: body
           name: name
           required: true
           description: Name of the template
@@ -1858,7 +1858,7 @@ paths:
             type: string
             format: email
             example: 'channelJid@company.com'
-        - in: query
+        - in: body
           name: events
           required: true
           description: Events described above
@@ -1869,7 +1869,7 @@ paths:
                 description: Message event example
                 type: string
                 example: "message"
-        - in: query
+        - in: body
           name: url
           required: true
           description: URL of the webhook
@@ -1931,7 +1931,7 @@ paths:
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
-        - in: query
+        - in: body
           name: name
           required: true
           description: Name of the webhook to be created
@@ -1972,11 +1972,10 @@ paths:
           description: No Content
 components:
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: apikey
-      description: The API key used for this operation. We check as well that the API key has the phone number (either on sending messages or interacting with other phone number based features) assigned.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: The API key is transmitted using the Authentication header with the Bearer scheme
   schemas:
     agentResponse:
       description: Specific Agent response
@@ -2481,13 +2480,13 @@ components:
   parameters:
     components:
       name: components
-      in: query
+      in: body
       description: Array of components to be used in the template
       schema:
         type: string
     text:
       name: text
-      in: query
+      in: body
       description: Text to be used
       schema:
         type: string
