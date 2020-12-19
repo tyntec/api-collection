@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: 'Support Inbox'
+  title: 'Support Inbox API'
   description: |
     The Eazy API is a JSON REST API to connect to social messaging platforms like WhatsApp Business, Apple Business Chat, Facebook Messenger, Twitter DM, Viber, LINE and more.
   contact:
