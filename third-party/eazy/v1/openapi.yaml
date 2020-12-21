@@ -90,7 +90,7 @@ security:
 tags:
   - name: 'API Keys'
     description: |
-      apikeys
+      You can read information about your API keys and their scopes.
   - name: 'Company Management'
     description: |
       Each owner is defined by a company. Owners can only manage their own company except for resellers
@@ -113,31 +113,6 @@ tags:
   - name: 'Channel Management'
     description: |
       The available channels can be used.
-
-      ### Webhooks
-
-      Webhooks are used to receive real-time events like messages and receipts. Multiple webhooks can be defined per channel, each with their own events.
-
-      Webhooks must always return a 200 OK response. In case of connection or HTTP errors the platform will retry indefinitely.
-
-      **Important:** HTTPS with TLS 1.2 is required. Self-signed certificates are NOT allowed.
-
-      **Events**
-
-      The following events are defined:
-
-      | **Name**        | **Description**                                                                   |
-      | ---             | ---                                                                               |
-      | custom          |	Custom event for specific customer purposes                                     |
-      | echo            |	Outgoing messages sent by agents or assistants                                  |
-      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
-      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
-      | message         |	Incoming messages from customers                                                |
-      | note            |	Note creation or deletion event                                                 |
-      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
-      | receipt         |	Message receipt event                                                           |
-      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
-      | typing          |	Typing indications when customers are typing a message                          |
   - name: 'WhatsApp Management'
     description: |
       WhatsApp Business channel has the following additional features:
@@ -242,22 +217,24 @@ tags:
       ```
   - name: 'Contact Management'
     description: |
-      Operations regarding contacts
+      Operations regarding contacts.
 
       **Remarks & Notes**
 
-      Assign notes to contacts
+      Assign remarks and notes to contacts.
 
-      *Contact lists**
+      **Contact lists**
 
-      Operations regarding various list that can be created
+      Operations regarding custom lists of contacts that can be created in the GUI. You may use contact lists to send
+      the same message to several contacts at once while keeping them as individual recipients.
 
-      **Blacklist**
+      **Black list**
 
-      Contacts can be black listed so that any messages received from those contacts can be ignored
+      Contacts can be black listed so that any messages received from those contacts are ignored.
+      Also agents will not be able to send messages to blacklisted contacts.
   - name: 'Conversation Management'
     description: |
-      Operations regarding conversations
+      Operations regarding conversations.
 
       **Use cases**
 
@@ -282,6 +259,52 @@ tags:
       Automated messages are used in conversations.
   - name: 'Messaging'
     description: ""
+  - name: 'Webhook Configuration'
+    description: |
+      Webhooks are used to receive real-time events like messages and receipts. Multiple webhooks can be defined per channel, each with their own events.
+
+      Webhooks must always return a *200 OK* response.
+
+      **Important:** HTTPS with TLS 1.2 is required. Self-signed certificates are NOT allowed.
+
+      **Retries**
+
+      In the case of connection or HTTP errors, the platform will retry indefinitely.
+
+      ## Webhook Events
+
+      The following events are defined:
+
+      | **Name**        | **Description**                                                                 |
+      | ---             | ---                                                                             |
+      | custom          |	Custom event for specific customer purposes                                     |
+      | echo            |	Outgoing messages sent by agents or assistants                                  |
+      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
+      | message         |	Incoming messages from customers                                                |
+      | note            |	Note creation or deletion event                                                 |
+      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
+      | receipt         |	Message receipt event                                                           |
+      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
+      | typing          |	Typing indications when customers are typing a message                          |
+  - name: 'Webhook Events'
+    description: |
+      TODO
+
+      The following events are defined:
+
+      | **Name**        | **Description**                                                                 |
+      | ---             | ---                                                                             |
+      | custom          |	Custom event for specific customer purposes                                     |
+      | echo            |	Outgoing messages sent by agents or assistants                                  |
+      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
+      | message         |	Incoming messages from customers                                                |
+      | note            |	Note creation or deletion event                                                 |
+      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
+      | receipt         |	Message receipt event                                                           |
+      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
+      | typing          |	Typing indications when customers are typing a message                          |
 paths:
   /keys:
     get:
@@ -864,121 +887,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/autoMessageResponse'
-  /channels/{channelJid}/contacts/blacklist/{contactJid}:
-    post:
-      summary: Block a contact
-      tags:
-        - 'Contact Management'
-      operationId: blockContact
-      description: A contact can be blocked by adding it to the blacklist. Messages received from a blocked contact will be ignored and it is not possible to send messages to it.
-      parameters:
-        - in: path
-          name: channelJid
-          required: true
-          description: Jabber IDs to represent channel
-          schema:
-            type: string
-            format: email
-            example: 'channelJid@company.com'
-        - in: path
-          name: contactJid
-          required: true
-          description: Jabber IDs to represent contacts
-          schema:
-            type: string
-            format: email
-            example: 'contactJid@company.com'
-      responses:
-        204:
-          description: No Content
-    delete:
-      summary: Unblock a contact
-      tags:
-        - 'Contact Management'
-      operationId: unblockContact
-      description: A contact can be removed from the blacklist
-      parameters:
-        - in: path
-          name: channelJid
-          required: true
-          description: Jabber IDs to represent channel
-          schema:
-            type: string
-            format: email
-            example: 'channelJid@company.com'
-        - in: path
-          name: contactJid
-          required: true
-          description: Jabber IDs to represent contacts
-          schema:
-            type: string
-            format: email
-            example: 'contactJid@company.com'
-      responses:
-        204:
-          description: No Content
-  /channels/{channelJid}/contacts/blacklist:
-    get:
-      summary: List blocked contacts
-      tags:
-        - 'Contact Management'
-      operationId: listBlockContact
-      description: A list of all blocked contacts can be requested.
-      parameters:
-        - in: path
-          name: channelJid
-          required: true
-          description: Jabber IDs to represent channel
-          schema:
-            type: string
-            format: email
-            example: 'channelJid@company.com'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/responses/emailResponse'
-  /channels/{channelJid}/conversations/{contactJid}/comments:
-    post:
-      summary: Create a comment
-      tags:
-        - 'Conversation Management'
-      operationId: createComment
-      description: Create a new comment for a conversation.
-      parameters:
-        - in: path
-          name: channelJid
-          required: true
-          description: Jabber IDs to represent channel
-          schema:
-            type: string
-            format: email
-            example: 'channelJid@company.com'
-        - in: path
-          name: contactJid
-          required: true
-          description: Jabber IDs to represent contacts
-          schema:
-            type: string
-            format: email
-            example: 'contactJid@company.com'
-        - in: body
-          name: body
-          description: Text for the comment
-          schema:
-            type: string
-          example: 'Order #12345 has been delivered'
-      responses:
-        201:
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/commentResponse'
   /channels/{channelJid}/contacts:
     post:
       summary: Create a contact
@@ -1105,6 +1013,121 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/contactResponse'
+  /channels/{channelJid}/contacts/blacklist:
+    get:
+      summary: List blocked contacts
+      tags:
+        - 'Contact Management'
+      operationId: listBlockContact
+      description: A list of all blocked contacts can be requested.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/emailResponse'
+  /channels/{channelJid}/contacts/blacklist/{contactJid}:
+    post:
+      summary: Block a contact
+      tags:
+        - 'Contact Management'
+      operationId: blockContact
+      description: A contact can be blocked by adding it to the blacklist. Messages received from a blocked contact will be ignored and it is not possible to send messages to it.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        204:
+          description: No Content
+    delete:
+      summary: Unblock a contact
+      tags:
+        - 'Contact Management'
+      operationId: unblockContact
+      description: A contact can be removed from the blacklist
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        204:
+          description: No Content
+  /channels/{channelJid}/conversations/{contactJid}/comments:
+    post:
+      summary: Create a comment
+      tags:
+        - 'Conversation Management'
+      operationId: createComment
+      description: Create a new comment for a conversation.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: body
+          description: Text for the comment
+          schema:
+            type: string
+          example: 'Order #12345 has been delivered'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/commentResponse'
   /channels/{channelJid}/conversations/{contactJid}:
     get:
       summary: Read a conversation
@@ -1420,15 +1443,17 @@ paths:
       tags:
         - 'Messaging'
       description: |
-        To receive messages, create an endpoint on your server which will be able to process POST requests
-        and subscribe its URL via [Create a webhook](#create-a-webhook) to the "message" events.
+        To receive messages, create an endpoint on your webserver that will be able to process POST requests
+        and subscribe its URL via [Webhook Configuration](#webhook-configuration) to the "message" events.
+
+        **Note:** The path above is only an example, you may choose your URL freely.
   /channels/{channelJid}/contacts/{contactJid}/notes:
     get:
-      summary: List all notes in a contact
+      summary: List all notes
       tags:
         - 'Contact Management'
       operationId: listAllNotes
-      description: A list of all notes from a contact can be requested
+      description: List all notes from a contact.
       parameters:
         - in: path
           name: channelJid
@@ -1456,11 +1481,11 @@ paths:
                 items:
                   $ref: '#/components/responses/notesResponse'
     post:
-      summary: Create a note in a contact
+      summary: Create a note
       tags:
         - 'Contact Management'
       operationId: createNote
-      description: Create a new note.
+      description: Create a new note in a contact.
       parameters:
         - in: path
           name: channelJid
@@ -1503,7 +1528,9 @@ paths:
       tags:
         - 'Contact Management'
       operationId: updateNote
-      description: A note can be updated. But only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *body*, *isPinned*, *isReadOnly*, *referenceId*
+      description: |
+        Update a note in a contact. Only the specified fields will be updated, all other fields will remain unchanged.
+        The following fields can be updated: *body*, *isPinned*, *isReadOnly*, *referenceId*
       parameters:
         - in: path
           name: channelJid
@@ -1564,7 +1591,7 @@ paths:
       tags:
         - 'Contact Management'
       operationId: deleteNote
-      description: An existing note can be deleted
+      description: Delete an existing note in a contact.
       parameters:
         - in: path
           name: channelJid
@@ -1908,7 +1935,7 @@ paths:
     get:
       summary: List all webhooks
       tags:
-        - 'Channel Management'
+        - 'Webhook Configuration'
       operationId: listWebhooks
       description: |
         A list of all webhooks can be requested
@@ -1933,7 +1960,7 @@ paths:
     post:
       summary: Create a webhook
       tags:
-        - 'Channel Management'
+        - 'Webhook Configuration'
       operationId: createWebhook
       description: Create a new webhook for the specified events.
       parameters:
@@ -1975,7 +2002,7 @@ paths:
     patch:
       summary: Update a webhook
       tags:
-        - 'Channel Management'
+        - 'Webhook Configuration'
       operationId: updateWebhook
       description: A webhook can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *name*
       parameters:
@@ -2011,7 +2038,7 @@ paths:
     delete:
       summary: Delete a webhook
       tags:
-        - 'Channel Management'
+        - 'Webhook Configuration'
       operationId: deleteWebhook
       description: An existing Webhook can be deleted
       parameters:
