@@ -37,55 +37,55 @@ servers:
     description: Server address of tyntec, the events origin from
     protocol: https
 channels:
-  "InboundMessage (Basic)":
+  "MoMessage (Basic)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Receiving messages"
       message:
-        $ref: '#/components/messages/InboundMessage'
+        $ref: '#/components/messages/MoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (SMS)":
+  "MoMessage (SMS)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Receiving messages"
       message:
-        $ref: '#/components/messages/SMSInboundMessage'
+        $ref: '#/components/messages/SMSMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (WhatsApp)":
+  "MoMessage (WhatsApp)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Receiving messages"
       message:
-        $ref: '#/components/messages/WhatsAppInboundMessage'
+        $ref: '#/components/messages/WhatsAppMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (Viber)":
+  "MoMessage (Viber)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Receiving messages"
       message:
-        $ref: '#/components/messages/ViberInboundMessage'
+        $ref: '#/components/messages/ViberMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage::Postback":
+  "MoMessage::Postback":
     description: |
       Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
 
@@ -96,14 +96,14 @@ channels:
       tags:
         - name: "Receiving messages"
       message:
-        $ref: '#/components/messages/InboundMessagePostback'
+        $ref: '#/components/messages/MoMessagePostback'
       bindings:
         http:
           type: request
           method: POST
   "MessageStatus::deleted":
     description: |
-      This event is triggered, when a previously sent InboundMessage has been deleted by its sender.
+      This event is triggered, when a previously sent MoMessage has been deleted by its sender.
 
       **Supporting channels**
 
@@ -226,30 +226,27 @@ channels:
           method: POST
 components:
   messages:
-    InboundMessage:
+    MoMessage:
       payload:
-        $ref: '#/components/schemas/InboundMessage'
-    SMSInboundMessage:
+        $ref: '#/components/schemas/MoMessage'
+    SMSMoMessage:
       payload:
-        $ref: '#/components/schemas/SMSInboundMessage'
-    WhatsAppInboundMessage:
+        $ref: '#/components/schemas/SMSMoMessage'
+    WhatsAppMoMessage:
       payload:
-        $ref: '#/components/schemas/WhatsAppInboundMessage'
-    ViberInboundMessage:
+        $ref: '#/components/schemas/WhatsAppMoMessage'
+    ViberMoMessage:
       payload:
-        $ref: '#/components/schemas/ViberInboundMessage'
-    InboundMessagePostback:
+        $ref: '#/components/schemas/ViberMoMessage'
+    MoMessagePostback:
       payload:
-        $ref: '#/components/schemas/InboundMessagePostBack'
+        $ref: '#/components/schemas/MoMessagePostBack'
     MessageStatusDeleted:
       payload:
         $ref: '#/components/schemas/MessageStatusDeletedEvent'
     MessageStatusAccepted:
       payload:
         $ref: '#/components/schemas/MessageStatusAccepted'
-    MessageStatusSent:
-      payload:
-        $ref: '#/components/schemas/MessageStatusSent'
     MessageStatusDelivered:
       payload:
         $ref: '#/components/schemas/MessageStatusDelivered'
@@ -268,7 +265,7 @@ components:
   schemas:
     APIEvent:
       type: object
-      description: Basic type for events produced by the ChatAPI such as MessageStatus, InboundMessage
+      description: Basic type for events produced by the ChatAPI such as MessageStatus, MoMessage
       required:
         - event
       properties:
@@ -303,8 +300,8 @@ components:
       type: string
       description: Determines which kind of event is emitted by the API
       enum:
-        - InboundMessage
-        - InboundMessage::Postback
+        - MoMessage
+        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
@@ -312,15 +309,7 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        - WhatsAppGroupEvent::userJoined
-        - WhatsAppGroupEvent::userLeft
-        - WhatsAppGroupEvent::userPromoted
-        - WhatsAppGroupEvent::userDemoted
-        - WhatsAppGroupEvent::descriptionChanged
-        - WhatsAppGroupEvent::subjectChanged
-        - WhatsAppGroupEvent::iconChanged
-        - WhatsAppGroupEvent::iconDeleted
-    InboundMessage:
+    MoMessage:
       type: object
       description: |
         Message received by us and delivered to your system via a webhook provided by your system.
@@ -333,9 +322,9 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _InboundMessage_
+          description: Determines which kind of event is sent. Is always _MoMessage_
           enum:
-            - InboundMessage
+            - MoMessage
         channel:
           type: string
           description: Channel which triggered the event.
@@ -343,15 +332,7 @@ components:
           enum:
             - sms
             - whatsapp
-            - tyntecEcho
             - viber
-        receivedAt:
-          deprecated: true
-          type: string
-          format: 'date-time'
-          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
-          example:
-            2019-06-26T11:41:00
         timestamp:
           type: string
           format: 'date-time'
@@ -370,18 +351,13 @@ components:
           type: string
           description: Receiving account of the message. The format is channel specific
           example: "49123512315"
-        groupId:
-          type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
-          example:
-            4923147790717-1564134658
         content:
           $ref: '#/components/schemas/MoContent'
         context:
           $ref: '#/components/schemas/MoContext'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -419,7 +395,7 @@ components:
       properties:
         messageId:
           type: string
-          description: The message id the InboundMessage refers to. Usualy set when the sender replies to a specific message
+          description: The message id the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
     MoMedia:
       type: object
@@ -447,7 +423,7 @@ components:
           type: string
           description: caption specified by the user or the file name of the document
           example: This is an picture of my cat!
-    SMSInboundMessage:
+    SMSMoMessage:
       type: object
       description: |
         Message received by us and delivered to your system via a webhook provided by your system.
@@ -458,7 +434,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
 
         channel:
@@ -471,7 +447,7 @@ components:
           $ref: '#/components/schemas/SMS'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -593,7 +569,7 @@ components:
           minimum: 1
           maximum: 255
           example: 1
-    WhatsAppInboundMessage:
+    WhatsAppMoMessage:
       type: object
       description: |
         Message received by us and delivered to your system via a webhook provided by your system.
@@ -604,7 +580,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
         channel:
           type: string
@@ -620,7 +596,7 @@ components:
           $ref: '#/components/schemas/Whatsapp'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -652,7 +628,7 @@ components:
             Contextual information that is transfered back on delivery notifications.
           example:
             my-message-reference
-    ViberInboundMessage:
+    ViberMoMessage:
       type: object
       description: |
         Message received by us and delivered to your system via a webhook provided by your system.
@@ -663,7 +639,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
         channel:
           type: string
@@ -677,7 +653,7 @@ components:
           $ref: '#/components/schemas/MoContext'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -685,7 +661,7 @@ components:
         content:
           contentType: text
           text: 'hi, thanks for your support message'
-    InboundMessagePostBack:
+    MoMessagePostBack:
       type: object
       description: |
         Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
@@ -701,9 +677,9 @@ components:
       properties:
         event:
           type: string
-          description: Determines which kind of event is sent. Is always _InboundMessage::PostBack_
+          description: Determines which kind of event is sent. Is always _MoMessage::PostBack_
           enum:
-            - InboundMessage::Postback
+            - MoMessage::Postback
         channel:
           type: string
           description: Channel which triggered the event.
@@ -731,11 +707,6 @@ components:
           type: string
           description: Receiving account of the message. The format is channel specific
           example: "49123512315"
-        groupId:
-          type: string
-          description: Group id from which the event originates from. Only present if the message was send into a group
-          example:
-            4923147790717-1564134658
         postback:
           $ref: '#/components/schemas/PostBack'
         context:
@@ -743,7 +714,7 @@ components:
         whatsapp:
           $ref: '#/components/schemas/WhatsAppPostBack'
       example:
-        event: InboundMessage::PostBack
+        event: MoMessage::PostBack
         messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
         from: "49123512314"
         to: "49123512315"
@@ -776,7 +747,7 @@ components:
     MessageStatusDeletedEvent:
       type: object
       description: |
-        Indicates that a previously send inbound InboundMessage is deleted by the user.
+        Indicates that a previously send inbound MOMessage is deleted by the user.
       required:
         - messageId
         - event
@@ -802,19 +773,7 @@ components:
           description: Channel which triggered the event. Can be empty in case of an internal source.
           example: sms
           enum:
-            - sms
             - whatsapp
-            - tyntecEcho
-        status:
-          description: |
-            Indicates the status of the message. Be aware that not all channels support all status.
-
-            **Note** This property will be replaced by the property _event_ in a future release.
-          deprecated: true
-          type: string
-          example: seen
-          enum:
-            - deleted
         timestamp:
           type: string
           format: 'date-time'
@@ -887,53 +846,6 @@ components:
             my-message-reference
       example:
         event: MessageStatus::accepted
-        messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        channel: whatsapp
-        userContext: my-message-reference
-        timestamp: 2019-06-26T11:41:28Z
-    MessageStatusSent:
-      type: object
-      description: |
-        Indicates the hand over of the message to the messaging network
-      required:
-        - messageId
-        - event
-        - channel
-        - timestamp
-      allOf:
-        - $ref: '#/components/schemas/APIEvent'
-      properties:
-        event:
-          type: string
-          description: Determines which kind of event is sent. Always _MessageStatus::delivered_
-          enum:
-            - MessageStatus::sent
-        messageId:
-          type: string
-          description: Global Message Id reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        channel:
-          type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - viber
-            - wechat
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happend
-          example:
-            2019-06-26T11:41:28Z
-        userContext:
-          type: string
-          description: Contextual information set on the message request
-          example:
-            my-message-reference
-      example:
-        event: MessageStatus::delivered
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         channel: whatsapp
         userContext: my-message-reference
