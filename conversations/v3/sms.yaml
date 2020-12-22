@@ -48,6 +48,34 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendABulkMessage
+      summary: Send a bulk message
+      tags:
+        - "Messaging"
+      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
+      requestBody:
+        description: The message bulk you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/responses/BulkMessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   responses:
     MessageResponse:
@@ -130,6 +158,40 @@ components:
         whatsapp:
           contentType: text
           text: A simple text message
+    BulkMessageRequest:
+      type: object
+      description: The bulk of messages you would like to send
+      required:
+        - to
+        - channel
+        - from
+        - messages
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "+1233423454"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "+1233423454"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: WhatsApp
+          items:
+            type: string
+            enum:
+              - whatsapp
+        messages:
+          type: array
+          maxItems: 20
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/SMSContent'
     SMSContent:
       type: object
       properties:
