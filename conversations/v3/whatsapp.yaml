@@ -88,6 +88,34 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendABulkMessage
+      summary: Send a bulk message
+      tags:
+        - "Messaging"
+      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
+      requestBody:
+        description: The message bulk you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/responses/BulkMessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   responses:
     MessageResponse:
@@ -155,8 +183,6 @@ components:
             type: string
             enum:
               - whatsapp
-        overrides:
-          $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
           description: Context for this particular message
@@ -165,14 +191,65 @@ components:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppTextContent'
             - $ref: '#/components/schemas/WhatsAppImageContent'
+            - $ref: '#/components/schemas/WhatsAppDocumentContent'
+            - $ref: '#/components/schemas/WhatsAppVideoContent'
+            - $ref: '#/components/schemas/WhatsAppAudioContent'
+            - $ref: '#/components/schemas/WhatsAppStickerContent'
+            - $ref: '#/components/schemas/WhatsAppLocationContent'
+            - $ref: '#/components/schemas/WhatsAppContactsContent'
             - $ref: '#/components/schemas/WhatsAppTemplateContent'
       example:
         to: "+123234234"
         from: "545345345"
-        channel:  "whatsapp"
+        channel: "whatsapp"
         whatsapp:
           contentType: text
           text: A simple text message
+    BulkMessageRequest:
+      type: object
+      description: The bulk of messages you would like to send
+      required:
+        - to
+        - channel
+        - from
+        - messages
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "+1233423454"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "+1233423454"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: WhatsApp
+          items:
+            type: string
+            enum:
+              - whatsapp
+        messages:
+          type: array
+          maxItems: 20
+          minItems: 2
+          items:
+            - $ref: '#/components/schemas/WhatsAppTextContent'
+            - $ref: '#/components/schemas/WhatsAppImageContent'
+            - $ref: '#/components/schemas/WhatsAppDocumentContent'
+            - $ref: '#/components/schemas/WhatsAppVideoContent'
+            - $ref: '#/components/schemas/WhatsAppAudioContent'
+            - $ref: '#/components/schemas/WhatsAppStickerContent'
+            - $ref: '#/components/schemas/WhatsAppLocationContent'
+            - $ref: '#/components/schemas/WhatsAppContactsContent'
+            - $ref: '#/components/schemas/WhatsAppTemplateContent'
+    #
+    # Content types
+    #
     WhatsAppTextContent:
       type: object
       properties:
@@ -182,7 +259,7 @@ components:
             - text
         text:
           type: string
-          maxLength: 3000
+          maxLength: 4096
     WhatsAppImageContent:
       type: object
       properties:
@@ -192,6 +269,62 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppImage'
+    WhatsAppDocumentContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - document
+        document:
+          $ref: '#/components/schemas/WhatsAppDocument'
+    WhatsAppVideoContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - video
+        video:
+          $ref: '#/components/schemas/WhatsAppVideo'
+    WhatsAppAudioContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - audio
+        audio:
+          $ref: '#/components/schemas/WhatsAppAudio'
+    WhatsAppStickerContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - sticker
+        sticker:
+          $ref: '#/components/schemas/WhatsAppSticker'
+    WhatsAppLocationContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - location
+        location:
+          $ref: '#/components/schemas/WhatsAppLocation'
+    WhatsAppContactsContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - contacts
+        concats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
     WhatsAppTemplateContent:
       type: object
       properties:
@@ -201,13 +334,249 @@ components:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
+    #
+    # Media
+    #
     WhatsAppImage:
       type: object
       properties:
         url:
           type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
+    WhatsAppDocument:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
         filename:
           type: string
+    WhatsAppVideo:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
+    WhatsAppAudio:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+    WhatsAppSticker:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+    #
+    # Other types
+    #
+    WhatsAppLocation:
+      type: object
+      description: Location received or send
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+          format: double
+          description: Longitude part of the coordinate
+          example:
+            7.4954884
+        latitude:
+          type: integer
+          format: double
+          description: Latitude part of the coordinate
+          example:
+            51.5005765
+        name:
+          type: string
+          maxLength: 256
+          description: Optional name
+          example:
+            tyntec GmbH
+        address:
+          type: string
+          maxLength: 256
+          description: Optional address, will only be rendered if name is set
+          example:
+            tyntec GmbH, Semerteichstraße, Dortmund
+
+    Contact:
+      type: object
+      description: Contact object
+      properties:
+        birthday:
+          type: string
+          description: Birthday of the contact
+          example:
+            2018-01-01
+        addresses:
+          type: array
+          description: List of addresses assigned to the contact
+          items:
+            $ref: '#/components/schemas/Address'
+        emails:
+          type: array
+          description: List of emails assigned to the contact
+          items:
+            $ref: '#/components/schemas/Email'
+        ims:
+          type: array
+          description: List of IMS accounts assigned to the contact
+          items:
+            $ref: '#/components/schemas/IMS'
+        name:
+          $ref: '#/components/schemas/Name'
+        org:
+          $ref: '#/components/schemas/Organisation'
+        phones:
+          type: array
+          description: List of phone numbers assigned to the contact
+          items:
+            $ref: '#/components/schemas/ContactPhone'
+        urls:
+          type: array
+          description: List of urls assigned to the contact
+          items:
+            $ref: '#/components/schemas/ContactUrl'
+    Address:
+      type: object
+      description: Address of a contact
+      properties:
+        city:
+          type: string
+          description: City name
+          example: Dortmund
+        country:
+          type: string
+          description: Full country name
+          example: Germany
+        countryCode:
+          type: string
+          description: Two-letter code abbreviation
+          example: de
+        state:
+          type: string
+          description: State abbreviation
+          example: NRW
+        street:
+          type: string
+          description: Street name and number
+        type:
+          type: string
+          description: Type of the address
+          example: WORK
+        zip:
+          type: string
+          description: ZIP or postal code
+          example: 44231
+    Email:
+      type: object
+      description: Email of the contact
+      properties:
+        email:
+          type: string
+          description: Email address
+          example: whatsapp@tyntec.com
+        type:
+          type: string
+          description: Type of the email
+          example: WORK
+    IMS:
+      type: object
+      description: IMS of the contact
+      properties:
+        service:
+          type: string
+          description: Type of the email
+          example: WhatsApp
+        userId:
+          type: string
+          description: IMS user id
+          example: 123123123
+    Name:
+      type: object
+      description: |
+        The name of a contact. Apart from the property ``formattedName`` at least one of the other must be set
+      required:
+        - formattedName
+      properties:
+        prefix:
+          type: string
+          description: Prefix of the contacts name
+          example: Mr.
+        firstName:
+          type: string
+          description: First name of the contact
+          example: Peter
+        middleName:
+          type: string
+          description: Middle name of the contact
+          example: Michael
+        lastName:
+          type: string
+          description: Last name of the contact
+          example: Tyntec
+        suffix:
+          type: string
+          description: Suffix of the contacts name
+          example: senior
+        formattedName:
+          type: string
+          description: Completely formatted name
+          example: Mr. Peter Michael Tyntec senior
+    Organisation:
+      type: object
+      description: Organisation associated with the contact
+      properties:
+        company:
+          type: string
+          description: Name of the contact's company
+          example: tyntec GmbH
+        department:
+          type: string
+          description: Name of the contact's department
+          example: Development
+        title:
+          type: string
+          description: Contact's business title
+          example: API Guardian
+    ContactPhone:
+      type: object
+      description: Phone entry of a contact
+      properties:
+        phone:
+          type: string
+          description: Phone number
+          example: +49 231 477 90 813
+        type:
+          type: string
+          description: Type of phone number
+          example: WORK
+    ContactUrl:
+      type: object
+      description: URL of a contact
+      properties:
+        url:
+          type: string
+          description: URL of a contact
+          example: https://www.tyntec.com
+        type:
+          type: string
+          description: Type of URL
+          example: WORK
+
+    # Templated messages
+
     WhatsAppTemplate:
       type: object
       properties:
@@ -222,18 +591,25 @@ components:
       properties:
         header:
           type: array
+          minItems: 0
+          maxItems: 1
           items:
-            $ref: '#/components/schemas/WhatsAppTemplateTextBody'
+            - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateDocumentHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponent'
         body:
           type: array
+          minItems: 0
+          maxItems: 1
           items:
-            $ref: '#/components/schemas/WhatsAppTemplateTextBody'
+            $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
         button:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
-
-    WhatsAppTemplateTextBody:
+    WhatsAppTemplateTextHeaderComponent:
       type: object
       properties:
         type:
@@ -242,102 +618,154 @@ components:
             - text
         text:
           type: string
-    WhatsAppTemplateButtonComponent:
+          maxLength: 60
+    WhatsAppTemplateImageHeaderComponent:
       type: object
-      description: Button component of a template
-      required:
-        - type
-        - buttons
       properties:
         type:
           type: string
-          description: Determines the type of the component
           enum:
-            - BUTTONS
-        buttons:
-          oneOf:
-            - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
-            - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
-    WhatsAppQuickReplyButtons:
-      type: array
-      description: Quick Reply buttons
-      items:
-        $ref: '#/components/schemas/WhatsAppQuickReplyButton'
-      minItems: 1
-      maxItems: 3
-    WhatsAppQuickReplyButton:
+            - image
+        image:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+    WhatsAppTemplateVideoHeaderComponent:
       type: object
-      description: Quick reply button, when clicked the caption and the dynamic payload is returned.
-      required:
-        - type
-        - text
       properties:
         type:
           type: string
-          description: Type of this button
           enum:
-            - QUICK_REPLY
-          example: QUICK_REPLY
-        text:
-          type: string
-          description: Caption of the button
-          maxLength: 20
-          minLength: 1
-          example: I liked it!
-    WhatsAppCallToActionButtons:
-      type: array
-      description: Call to action buttons. At most one of each button types can be used.
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/WhatsAppURLButton'
-          - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
-      minItems: 1
-      maxItems: 2
-    WhatsAppURLButton:
+            - video
+        video:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+    WhatsAppTemplateDocumentHeaderComponent:
       type: object
-      description: Call to action button that opens the specified URL when clicked
-      required:
-        - type
-        - text
       properties:
         type:
           type: string
-          description: Type of this button
           enum:
-            - URL
-          example: URL
-        text:
+            - document
+        document:
+          $ref: '#/components/schemas/WhatsAppTemplateDocumentHeader'
+    WhatsAppTemplateLocationHeaderComponent:
+      type: object
+      properties:
+        type:
           type: string
-          description: Caption of the button
-          maxLength: 20
-          minLength: 1
-          example: Your invoice
+          enum:
+            - document
+        document:
+          $ref: '#/components/schemas/WhatsAppLocation'
+    WhatsAppTemplateMediaHeader:
+      type: object
+      required:
+        - url
+      properties:
         url:
           type: string
-          description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
-          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
-          example: https://www.myservice.com/invoices/{{1}}
-    WhatsAppPhoneNumberButton:
+          description: the url of the location where the media is stored
+          example: http://techslides.com/demos/sample-videos/small.mp4
+    WhatsAppTemplateDocumentHeader:
       type: object
-      description: Call to action button that initiates a call when clicked
       required:
-        - type
-        - text
+        - url
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+          example: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
+        filename:
+          type: string
+          description: Additional info for the filename to be displayed.
+          example: Test PDF
+
+    WhatsAppTemplateTextBodyComponent:
+      type: object
       properties:
         type:
           type: string
-          description: Type of this button
           enum:
-            - PHONE_NUMBER
-          example: PHONE_NUMBER
+            - text
         text:
           type: string
-          description: Caption of this button
-          maxLength: 20
-          minLength: 1
-          example: Call us
-        phoneNumber:
+    WhatsAppQuickReplyButtons:
+      type: array
+      minItems: 0
+      maxItems: 3
+      items:
+        $ref: '#/components/schemas/QuickReplyButtonComponent'
+    WhatsAppCallToActionButtons:
+      type: array
+      minItems: 0
+      maxItems: 1
+      items:
+        $ref: '#/components/schemas/UrlButtonComponent'
+    QuickReplyButtonComponent:
+      type: object
+      description: This type can be used up to three times
+      properties:
+        type:
           type: string
-          description: Phone number that will be called when clicking on the button.
-          pattern: ^\+\d{4,23}$
-          example: "+4923147790813"
+          description: Determines the type of the component. Always _button_.
+          enum:
+            - button
+        subType:
+          type: string
+          description: Determines the sub type of the button. Always _quick_reply_.
+          enum:
+            - quick_reply
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with the payload.
+          minimum: 0
+          maximum: 2
+        parameters:
+          type: array
+          description: Parameter for this quick reply button
+          items:
+            properties:
+              type:
+                type: string
+                description: Determines the type of the parameter. Always _payload_.
+                enum:
+                  - payload
+              payload:
+                type: string
+                maxLength: 128
+                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+          minItems: 0
+          maxItems: 1
+    UrlButtonComponent:
+      type: object
+      description: This type can be used up to one time
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component. Always _button_.
+          enum:
+            - button
+        subType:
+          type: string
+          description: Determines the type of the component. Always _url_.
+          enum:
+            - url
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 1
+        parameters:
+          type: array
+          description: Parameters to be used in Button's URL
+          items:
+            properties:
+              type:
+                type: string
+                description: Determines the type of the parameter. Always _text_.
+                enum:
+                  - text
+              text:
+                type: string
+                maxLength: 2000
+                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+          minItems: 0
+          maxItems: 1

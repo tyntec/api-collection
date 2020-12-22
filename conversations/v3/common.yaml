@@ -83,6 +83,7 @@ paths:
         default:
           $ref: '#/components/responses/Default'
   /bulk:
+    post:
       operationId: sendABulkMessage
       summary: Send a bulk message
       tags:
@@ -110,6 +111,13 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  parameters:
+    MessageId:
+      name: messageId
+      in: path
+      schema:
+        type: string
+        format: uuid
   responses:
     MessageResponse:
       description: Response after the server has accepted the request
@@ -148,6 +156,16 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    NotFound:
+      description: The requested element was not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'common.yaml#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/404
+            title: Not Found
+            status: 404
   schemas:
     MessageRequest:
       type: object
@@ -216,12 +234,26 @@ components:
         messageId:
           type: string
           format: uuid
-          description: Global Message Id reference
+          description: Global unique Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         acceptedAt:
           type: string
           format: date-time
           description: Point in time when the API confirms that the message request was accepted
+    MessageStatus:
+      type: object
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global unique Message Id reference
+        status:
+          type: string
+          description: Current status of the message
+        timestamp:
+          type: string
+          format: date-time
+          description: Point in time when status has been entered
     Problem:
       type: object
       additionalProperties: true
