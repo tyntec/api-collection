@@ -1,0 +1,226 @@
+openapi: '3.0.0'
+info:
+  title: Telegram
+  description: |
+    Conversations allows you to easily reach out and communicate with  your clients via Telegram Bots.
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v3
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/conversations/v3
+security:
+  - ApiKeyAuth: [ ]
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/MessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendABulkMessage
+      summary: Send a bulk message
+      tags:
+        - "Messaging"
+      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
+      requestBody:
+        description: The message bulk you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMessageRequest'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/responses/BulkMessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  responses:
+    MessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'common.yaml#/components/schemas/MessageResponse'
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'common.yaml#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'common.yaml#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'common.yaml#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+  schemas:
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channel
+        - from
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "12314123"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "34534532134"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: telegram
+          items:
+            type: string
+            enum:
+              - telegram
+        overrides:
+          $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
+        context:
+          type: string
+          description: Context for this particular message
+          maxLength: 125
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/TelegramTextContent'
+            - $ref: '#/components/schemas/TelegramImageContent'
+      example:
+        to: "+123234234"
+        from: "545345345"
+        channel:  "whatsapp"
+        whatsapp:
+          contentType: text
+          text: A simple text message
+    BulkMessageRequest:
+      type: object
+      description: The bulk of messages you would like to send
+      required:
+        - to
+        - channel
+        - from
+        - messages
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "+1233423454"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "+1233423454"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: telegram
+          items:
+            type: string
+            enum:
+              - telegram
+        messages:
+          type: array
+          maxItems: 20
+          minItems: 2
+          items:
+            - $ref: '#/components/schemas/TelegramTextContent'
+            - $ref: '#/components/schemas/TelegramImageContent'
+    TelegramTextContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+          default: text
+        text:
+          type: string
+          maxLength: 40
+    TelegramImageContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - image
+        image:
+          $ref: '#/components/schemas/TelegramImage'
+    #
+    # Media
+    #
+    TelegramImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
+          maxLength: 1024
