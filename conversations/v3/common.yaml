@@ -47,6 +47,8 @@ paths:
         default:
           $ref: '#/components/responses/Default'
   /messages/{messageId}/status:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
     get:
       operationId: getMessageStatus
       summary: Check message status
@@ -59,12 +61,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/MessageStatus'
+                $ref: '#/components/schemas/MessageStatus'
         404:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Default'
   /messages/{messageId}/events:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
     get:
       operationId: getMessageEvents
       summary: List delivery events
@@ -77,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/MessageDeliveryEvents'
+                $ref: '#/components/schemas/MessageDeliveryEvents'
         404:
           $ref: '#/components/responses/NotFound'
         default:
@@ -102,7 +106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/BulkMessageResponse'
+                $ref: '#/components/schemas/BulkMessageResponse'
 
         400:
           $ref: '#/components/responses/BadRequest'
@@ -110,10 +114,126 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /media:
+    get:
+      operationId: listUploadedMedia
+      summary: List uploaded media files
+      description: Lists all uploaded media files
+      tags:
+        - "Outbound media"
+      responses:
+        200:
+          description: List of uploaded media files
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MediaResponse'
+                minItems: 0
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      parameters:
+        - name: validity
+          description: How long is the media stored in minutes.
+          required: false
+          in: query
+          schema:
+            type: integer
+            default: 1440
+        - name: filename
+          description: the name of the file
+          required: false
+          in: query
+          schema:
+            type: string
+
+      operationId: uploadMedia
+      summary: Upload a media file
+      description: Uploads a media file for message sending
+      tags:
+        - "Outbound media"
+      requestBody:
+        description: the media to be uploaded
+        required: true
+        content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+      responses:
+        200:
+          description: The media was successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaUploadResponse'
+        default:
+          $ref: '#/components/responses/Default'
+  /media/{mediaId}:
+    parameters:
+      - $ref: '#/components/parameters/MediaId'
+    delete:
+      operationId: deleteUploadedMedia
+      summary: Delete a media file
+      description: Deletes a prior uploaded media.
+      tags:
+        - "Outbound media"
+      responses:
+        204:
+          description: The assiciated media was successfully deleted
+        default:
+          $ref: '#/components/responses/Default'
+    get:
+      operationId: downloadMedia
+      summary: Download media file
+      tags:
+        - "Inbound media"
+        - "Outbound media"
+      description: Retrieve the media associated with the id
+      responses:
+        200:
+          description: The media associated with the id requested exists.
+          content:
+            'audio/*':
+              schema:
+                type: string
+                format: binary
+            'application/*':
+              schema:
+                type: string
+                format: binary
+            'text/*':
+              schema:
+                type: string
+                format: binary
+            'video/*':
+              schema:
+                type: string
+                format: binary
+        404:
+          description: The media associated with the id does not exists in our system
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                status: 404
+        default:
+          $ref: '#/components/responses/Default'
 components:
   parameters:
     MessageId:
+      required: true
       name: messageId
+      in: path
+      schema:
+        type: string
+        format: uuid
+    MediaId:
+      required: true
+      name: mediaId
       in: path
       schema:
         type: string
@@ -254,6 +374,44 @@ components:
           type: string
           format: date-time
           description: Point in time when status has been entered
+    MessageDeliveryEvents:
+      type: object
+    BulkMessageRequest:
+      type: object
+    BulkMessageResponse:
+      type: object
+    MediaUploadResponse:
+      type: object
+      required:
+        - mediaId
+        - url
+        - quota
+        - usage
+      properties:
+        mediaId:
+          type: string
+          format: uuid
+        url:
+          type: string
+        quota:
+          type: integer
+        usage:
+          type: integer
+    MediaResponse:
+      type: object
+      properties:
+        mediaId:
+          type: string
+          format: uuid
+        contentType:
+          type: string
+        validity:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+        fileSize:
+          type: integer
     Problem:
       type: object
       additionalProperties: true
