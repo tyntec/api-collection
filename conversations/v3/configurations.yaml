@@ -10,7 +10,7 @@ info:
   x-major-version: v2
   x-postman-collection: postman.zip
 servers:
-  - url: https://api.tyntec.com/chat-api/v2
+  - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
 tags:
@@ -24,16 +24,35 @@ paths:
     get:
       tags:
         - "Configurations"
-      summary: List all applications
-      operationId: listApplications
-      description: Lists all applications configured for the APIKey
+      summary: Get account configuration
+      operationId: getAccountConfiguration
+      description: Returns the configuration of the API account
       responses:
         200:
-          description: List of applications. Will never be empty
+          description: Configuration of the account
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationList'
+                $ref: '#/components/schemas/AccountConfiguration'
+  /callback:
+    put:
+      tags:
+        - "Configurations"
+      summary: Update the callback
+      operationId: updateAccountCallback
+      description: Update the callback settings of the account. **Note** The complete object must be provided
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Callback'
+      responses:
+        200:
+          description: Configuration of the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountConfiguration'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -66,12 +85,52 @@ components:
             ]
             title: Constraint Violation
   schemas:
+    AccountConfiguration:
+      type: object
+      description: Configuration of an API account
+      properties:
+        scopes:
+          $ref: '#/components/schemas/Scopes'
+        callback:
+          $ref: '#/components/schemas/Callback'
+    Scopes:
+      type: string
+      enum:
+        - messages:read
+        - messages:write
+        - channels:read
+        - channels:write
+        - callbacks:read
+        - callbacks:write
+        - media:read
+        - media:write
+    Callback:
+      type: object
+      properties:
+        callbackVersion:
+          type: integer
+          minimum: 2
+          maximum: 3
+        signature:
+          $ref: '#/components/schemas/Signature'
+        header:
+          $ref: '#/components/schemas/Header'
+        inboundMessageUrl:
+          type: string
+          maxLength: 2000
+        messageStatusUrl:
+          type: string
+          maxLength: 2000
+        messageStatusEventFilter:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventTypes"
+          minLength: 0
+          default: []
     EventTypes:
       type: string
       description: Determines which kind of event is emitted by the API
       enum:
-        - MoMessage
-        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
@@ -79,6 +138,31 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
+    Signature:
+      type: object
+      required:
+        - secret
+        - method
+      properties:
+        secret:
+          type: string
+          minLength: 8
+          maxLength: 256
+        method:
+          type: string
+          enum:
+            - HS256
+            - HS512
+    Header:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+        value:
+          type: string
     Problem:
       type: object
       additionalProperties: true
@@ -106,83 +190,3 @@ components:
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
-    DefaultApplicationUpdate:
-      type: object
-      description: Update of the default application
-      properties:
-        webhooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-      example:
-        webhooks:
-          - events:
-              - MoMessage
-            callbackUrl: https://some-call-back.service.com
-          - events:
-              - MessageStatus::deleted
-              - MessageStatus::accepted
-            callbackUrl: https://some-other-call-back.service.com
-    ApplicationList:
-      type: array
-      description: List of configured applications. Never be empty
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/DefaultApplicationResponse'
-      minItems: 1
-    DefaultApplicationResponse:
-      type: object
-      description: The default application
-      properties:
-        id:
-          type: string
-          description: The default application ID
-          enum:
-            - default
-        name:
-          type: string
-          description: The default application name
-          enum:
-            - Default Application
-        webhooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-          minLength: 1
-      example:
-        id: default
-        name: Default Application
-        webhooks:
-          - events:
-              - MoMessage
-            callbackUrl: https://some-call-back.service.com
-          - events:
-              - MessageStatus::deleted
-              - MessageStatus::accepted
-            callbackUrl: https://some-other-call-back.service.com
-    Webhook:
-      description: >
-        A webhook associates one or more event types to a callback URL. In other words,
-        it specifies where the events of those types should be forwarded to.
-      type: object
-      properties:
-        events:
-          description: >
-            The types of events that this webhook should be triggered. Note that, although mandatory,
-            the array can be empty. In such a case, the webhook will be triggered on every
-            event, if no other webhook specific to the type of the event exists.
-          type: array
-          items:
-            $ref: "#/components/schemas/EventTypes"
-          minLength: 0
-        callbackUrl:
-          type: string
-          pattern: "^https://.*"
-          description: The URL to forward the event to. Callback URLs should start with 'https://'.
-          example:
-            https://some-call-back.service.com
-      example:
-        events:
-          - MessageStatus::deleted
-          - MessageStatus::accepted
-        callbackUrl: https://some-other-call-back.service.com
