@@ -147,7 +147,7 @@ components:
         secret:
           type: string
           minLength: 8
-          maxLength: 256
+          maxLength: 125
         method:
           type: string
           enum:
@@ -163,6 +163,8 @@ components:
           type: string
         value:
           type: string
+          minLength: 8
+          maxLength: 125
     Problem:
       type: object
       additionalProperties: true
