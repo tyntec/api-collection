@@ -337,44 +337,56 @@ components:
     #
     # Media
     #
-    WhatsAppImage:
+    BaseMedia:
       type: object
+      description: |
+        Base object handling media definitions for sending.
+
+        One of both properties _url_ or _mediaId_ **must** be set
       properties:
         url:
           type: string
           description: the url of the location where the media is stored
+        mediaId:
+          type: string
+          description: Media id of a previously uploaded media
+          format: uuid
+    WhatsAppImage:
+      type: object
+      description: Image media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
+      properties:
         caption:
           type: string
     WhatsAppDocument:
       type: object
+      description: Document media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
       properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
         caption:
           type: string
         filename:
           type: string
     WhatsAppVideo:
       type: object
+      description: Video media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
       properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
         caption:
           type: string
     WhatsAppAudio:
       type: object
-      properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
+      description: Audio media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
     WhatsAppSticker:
       type: object
-      properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
+      description: Sticker media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
     #
     # Other types
     #
@@ -657,22 +669,15 @@ components:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppTemplateMediaHeader:
       type: object
-      required:
-        - url
-      properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
-          example: http://techslides.com/demos/sample-videos/small.mp4
+      description: Document media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
     WhatsAppTemplateDocumentHeader:
       type: object
-      required:
-        - url
+      description: Document media specification
+      allOf:
+        - $ref: '#/components/schemas/BaseMedia'
       properties:
-        url:
-          type: string
-          description: the url of the location where the media is stored
-          example: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
         filename:
           type: string
           description: Additional info for the filename to be displayed.
