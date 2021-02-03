@@ -4,11 +4,11 @@ This is an example request for sending a location together with a rich media tem
 
 The template is defined as
 
-*Header* : 
+*Header:* 
 
     Location
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}}, 
@@ -16,7 +16,7 @@ Hi {{1}},
 please be on {{2}} at {{3}} at the specified location for your transfer to the airport. 
 ````
 
-*Footer* :
+*Footer:*
 
     tyntec customer care
 

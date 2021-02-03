@@ -1,0 +1,2602 @@
+openapi: 3.0.0
+info:
+  title: 'Support Inbox API'
+  description: |
+    The Support Inbox API is a JSON REST API to connect to social messaging platforms like WhatsApp Business,
+    Apple Business Chat, Facebook Messenger, Twitter DM, Viber, LINE and more.
+
+    **HTTP requests**
+
+    Standard HTTP methods, such as GET or POST, are used with the *application/json* content type.
+    API keys are used for authentication and TLS 1.2 is required.
+
+    **HTTP responses**
+
+    HTTP success status codes, such as *200 OK* or *201 Created*, are returned for successful responses and the
+    response data has the *application/json* content type.
+
+    HTTP error status codes, such as *400 Bad Request* or *401 Unauthorized*, are returned for error responses.
+    See [Error codes](#error-codes) for more information.
+
+    ## Channels & JIDs
+
+    The API uses Jabber IDs (JIDs) to identify channels and contacts. They have the same format as email addresses.
+    The following channels are supported:
+
+    | Channel             | JID example |
+    |---------------------|----------------------------------------------------|
+    | WhatsApp Business   | 31611111111@whatsapp.eazy.im |
+    | Apple Business Chat | d2b9f484-08ac-45a7-bbe0-f2f7d844bcb6@apple.eazy.im |
+    | Facebook Messenger  | 1918363544518991@messenger.eazy.im |
+    | Line                | 8191584934115639@line.eazy.im |
+    | Twitter DM          | 872362551@twitter.eazy.im |
+    | Viber               | voON2IU2FTGtgUB50qc08g@viber.eazy.im |
+    | Web chat            | 8191584934115639@webchat.eazy.im |
+    | SMS                 | 31633333333@sms.eazy.im |
+
+    **Note:** Custom channels can be added on your demand. For instance, an existing chat in your custom mobile app
+    or live chat on your website can be added as a channel in the Support Inbox.
+
+    ## Error codes
+
+    ```json
+    400 Bad Request
+
+    {
+        "error": {
+            "code": 1005,
+            "message": "Jid is invalid"
+        },
+        "traceId": "7e6459"
+    }
+    ```
+
+    In the case an HTTP error status (4xx) was returned, the response provides a detailed error code and message
+    in the JSON body, see the sample on the right.
+
+    The *traceId* can be used by our support team to track down the corresponding request.
+
+    The following error codes and messages are defined:
+
+    | Error code | Description |
+    |----------------|-------------------|
+    | 1001 | Unauthorized |
+    | 1002 | Access denied |
+    | 1003 | Service unavailable |
+    | 1004 | Internal server error |
+    | 1005 | Validation error |
+    | 1006 | Template name does not exist |
+    | 1007 | User does not have WhatsApp |
+    | 1008 | Media is invalid |
+    | 1009 | Not found |
+    | 1010 | Assistant has no ownership of conversation |
+    | 1011 | Message rejected |
+    | 1012 | Bad gateway |
+    | 1013 | Parameter count mismatch |
+    | 1014 | Already exists |
+    | 1015 | Customer care window expired |
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '1.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/third-party/eazy
+  x-major-version: v1
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.cmd.tyntec.com/
+security:
+  - bearerAuth: []
+tags:
+  - name: 'API Keys'
+    description: |
+      You can read information about your API keys and their scopes.
+  - name: 'Company Management'
+    description: |
+      Each owner is defined by a company. Owners can only manage their own company except for resellers
+      who can manage multiple companies.
+
+      **Agents and teams**
+
+      Agents are accounts of users in your company who respond to your customers via the Support Inbox.
+
+      You may organize agents into teams (e.g. support team, sales team).
+
+      **Assistants**
+
+      AI assistants can be used to automate conversations. If you want to add and assign an assistant to your agent,
+      contact us.
+
+      **Labels**
+
+      Labels can be used to assign friendly titles in colored boxes to conversations.
+  - name: 'Channel Management'
+    description: |
+      The available channels can be used.
+  - name: 'WhatsApp Management'
+    description: |
+      WhatsApp Business channel has the following additional features:
+
+      - Profile – define customer-facing information that consists of a logo, business information and an *About* message
+      - QR code – assign QR codes to messages and other objects in WhatsApp
+      - Message templates – define your message templates
+
+      ### Message templates
+
+      Operations for WhatsApp Business templates.
+
+      An example of a media template with a header, body, footer and buttons is as follows:
+
+      ```
+      {
+           "category": "TICKET_UPDATE",
+           "components": [
+               {
+                   "format": "DOCUMENT",
+                   "type": "HEADER"
+               },
+               {
+                   "text": "This is your KLM ticket for your flight on December 20th to New York.",
+                   "type": "BODY"
+               },
+               {
+                   "text": "Questions? We are available now, just send us a message",
+                   "type": "FOOTER"
+               },
+               {
+                   "buttons": [
+                       {
+                           "text": "Confirm",
+                           "type": "QUICK_REPLY"
+                       },
+                       {
+                           "text": "Reschedule",
+                           "type": "QUICK_REPLY"
+                       }
+                   ],
+                   "type": "BUTTONS"
+               }
+           ],
+           "language": "en",
+           "name": "ticket"
+       }
+      ```
+
+      And this is a response example:
+
+      ```
+      {
+          "namespace": "e08e69cb_d136_86fc_c33f_0f64becd1f46",
+          "templates": [
+              {
+                  "category": "ISSUE_RESOLUTION",
+                  "name": "delivery_notification",
+                  "translations": [
+                      {
+                          "components": [
+                              {
+                                  "text": "Hello {{1}}, your order with reference {{2}} has been delivered.",
+                                  "type": "body"
+                              }
+                          ],
+                          "localeName": "en",
+                          "status": "APPROVED"
+                      },
+                      {
+                          "components": [
+                              {
+                                  "text": "Hallo {{1}}, je bestelling met nummer {{2}} is afgeleverd.",
+                                  "type": "body"
+                              }
+                          ],
+                          "localeName": "nl",
+                          "rejectedReason": "NONE",
+                          "status": "APPROVED"
+                      }
+                  ]
+              },
+              {
+                  "category": "ACCOUNT_UPDATE",
+                  "name": "hello",
+                  "translations": [
+                      {
+                          "components": [
+                              {
+                                  "text": "Hello {{1}}",
+                                  "type": "body"
+                              }
+                          ],
+                          "localeName": "en",
+                          "rejectedReason": "PROMOTIONAL",
+                          "status": "REJECTED"
+                      }
+                  ]
+              }
+          ]
+      }
+      ```
+  - name: 'Contact Management'
+    description: |
+      Operations regarding contacts.
+
+      **Remarks & Notes**
+
+      Assign remarks and notes to contacts.
+
+      **Contact lists**
+
+      Operations regarding custom lists of contacts that can be created in the GUI. You may use contact lists to send
+      the same message to several contacts at once while keeping them as individual recipients.
+
+      **Black list**
+
+      Contacts can be black listed so that any messages received from those contacts are ignored.
+      Also agents will not be able to send messages to blacklisted contacts.
+  - name: 'Conversation Management'
+    description: |
+      Operations regarding conversations.
+
+      **Use cases**
+
+      The following table shows a quick reference of the most common use cases.
+
+      | **Example**                             | **Description**                                                               |
+      | ---                                     | ---                                                                           |
+      | status: "CLOSED"                        | Close the conversation                                                        |
+      | assignee: "john@mycompany.com"          | Handover the conversation from the assistant to a specific agent or assistant |
+      | assignee: null	                        | Handover the conversation from the assistant to the agents                    |
+      | labels: ["1580486175684@label.eazy.im"] | Label the conversation with the specified labels                              |
+      | labels: []                              | Unlabel the conversation                                                      |
+      | unreadCount: null                       | Mark as read                                                                  |
+      | unreadCount: 0                          | Mark as unread                                                                |
+
+      **Comments**
+
+      Comments can be used in many paths of this API.
+
+      **Automated messages**
+
+      Automated messages are used in conversations.
+  - name: 'Messaging'
+    description: ""
+  - name: 'Webhook Configuration'
+    description: |
+      Webhooks are used to receive real-time events like messages and receipts. Multiple webhooks can be defined per channel, each with their own events.
+
+      Webhooks must always return a *200 OK* response.
+
+      **Important:** HTTPS with TLS 1.2 is required. Self-signed certificates are NOT allowed.
+
+      **Retries**
+
+      In the case of connection or HTTP errors, the platform will retry indefinitely.
+
+      ## Webhook Events
+
+      The following events are defined:
+
+      | **Name**        | **Description**                                                                 |
+      | ---             | ---                                                                             |
+      | custom          |	Custom event for specific customer purposes                                     |
+      | echo            |	Outgoing messages sent by agents or assistants                                  |
+      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
+      | message         |	Incoming messages from customers                                                |
+      | note            |	Note creation or deletion event                                                 |
+      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
+      | receipt         |	Message receipt event                                                           |
+      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
+      | typing          |	Typing indications when customers are typing a message                          |
+  - name: 'Webhook Events'
+    description: |
+      TODO
+
+      The following events are defined:
+
+      | **Name**        | **Description**                                                                 |
+      | ---             | ---                                                                             |
+      | custom          |	Custom event for specific customer purposes                                     |
+      | echo            |	Outgoing messages sent by agents or assistants                                  |
+      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
+      | message         |	Incoming messages from customers                                                |
+      | note            |	Note creation or deletion event                                                 |
+      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
+      | receipt         |	Message receipt event                                                           |
+      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
+      | typing          |	Typing indications when customers are typing a message                          |
+paths:
+  /keys:
+    get:
+      summary: List all API keys
+      tags:
+        - 'API Keys'
+      operationId: allApiKeys
+      description: A list of all keys can be retrieved using the GET method.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/apiKeysResponse'
+  /keys/currrent:
+    get:
+      summary: Current API key
+      tags:
+        - 'API Keys'
+      operationId: currentApiKey
+      description: A specific agent can be requested
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/apiKeyResponse'
+  /companies:
+    get:
+      summary: List all companies
+      tags:
+        - 'Company Management'
+      operationId: listAllCompanies
+      description: List of all companies can be requested
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/companyResponse'
+  /companies/current:
+    get:
+      summary: Current company
+      tags:
+        - 'Company Management'
+      operationId: currentCompany
+      description: The current company can be requested
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/companyResponse'
+  /companies/{id}:
+    get:
+      summary: Company by ID
+      tags:
+        - 'Company Management'
+      operationId: companyById
+      description: Request a company by the ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the company
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/companyResponse'
+  /companies/{companyId}/agents:
+    get:
+      summary: List all agents
+      tags:
+        - 'Company Management'
+      operationId: allAgents
+      description: A list of all agents can be retrieved using the GET method. The objects field specifies to which objects the key has access to. IP whitelisting can be used to restrict originating IP addresses.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: ID of the company
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/agentResponse'
+  /companies/{companyId}/agents/{email}:
+    get:
+      summary: Read an agent
+      tags:
+        - 'Company Management'
+      operationId: singleAgents
+      description: A specific agent can be retrieved using the GET method.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: ID of the company
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: email
+          required: true
+          description: email of the agent
+          schema:
+            type: string
+            format: email
+            example: 'name@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/agentsResponse'
+  /companies/{companyId}/teams:
+    post:
+      summary: Create a team
+      tags:
+        - 'Company Management'
+      operationId: createTeam
+      description: Create a new team
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: body
+          name: name
+          required: true
+          description: Name of the team to be created
+          schema:
+            type: string
+          example: 'Support'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/teamResponse'
+    get:
+      summary: List all teams
+      tags:
+        - 'Company Management'
+      operationId: listTeams
+      description: A list of all teams can be requested
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/teamsResponse'
+  /companies/{companyId}/teams/{jid}:
+    patch:
+      summary: Update a team
+      tags:
+        - 'Company Management'
+      operationId: updateTeam
+      description: A team can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *color*, *metadata*, *name*
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: jid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: body
+          name: name
+          required: true
+          description: Name of the team to be created
+          schema:
+            type: string
+          example: 'Support'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/teamResponse'
+    delete:
+      summary: Delete a team
+      tags:
+        - 'Company Management'
+      operationId: deleteTeam
+      description: An existing Team can be deleted
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: jid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+      responses:
+        204:
+          description: No Content
+  /companies/{companyId}/assistants:
+    get:
+      summary: List all assistants
+      tags:
+        - 'Company Management'
+      operationId: allAssistants
+      description: A list of all assistants can be requested using the GET method.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: ID of the company
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/assistantsResponse'
+  /companies/{companyId}/assistants/{jid}:
+    patch:
+      summary: Update an assistant
+      tags:
+        - 'Company Management'
+      operationId: updateAssistant
+      description: An assistant can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated, *color*, *description*, *name*
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: ID of the company
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: jid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: body
+          name: color
+          description: Color
+          schema:
+            type: integer
+        - in: body
+          name: description
+          description: Description of the assistant
+          schema:
+            type: string
+        - in: body
+          name: name
+          description: Name of the assistant
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/assistantResponse'
+  /companies/{companyId}/labels:
+    post:
+      summary: Create a label
+      tags:
+        - 'Company Management'
+      operationId: createLabel
+      description: Create a new label. The *name* must be unique.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: body
+          name: description
+          description: Description of the label
+          schema:
+            type: string
+          example: 'Support related questions'
+        - in: body
+          name: name
+          description: Name of the label
+          schema:
+            type: string
+          example: 'Support'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/labelResponse'
+    get:
+      summary: List all labels
+      tags:
+        - 'Company Management'
+      operationId: listAllLabel
+      description: A list of all labels can be requested
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/labelResponse'
+  /companies/{companyId}/labels/{jid}:
+    patch:
+      summary: Update a label
+      tags:
+        - 'Company Management'
+      operationId: updateLabel
+      description: A label can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *color*, *name*, *priority*.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: jid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: body
+          name: color
+          description: Color of the label
+          schema:
+            type: integer
+          example: 8
+        - in: body
+          name: name
+          description: Friendly name of the label
+          schema:
+            type: string
+          example: 'Customer support'
+        - in: body
+          name: priority
+          description: Priority of the label
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/labelResponse'
+    delete:
+      summary: Delete a label
+      tags:
+        - 'Company Management'
+      operationId: deleteLabel
+      description: An existing label can be deleted by using the DELETE method.
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          description: Company ID
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: path
+          name: jid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+      responses:
+        204:
+          description: No Content
+  /channels:
+    get:
+      summary: List all channels
+      tags:
+        - 'Channel Management'
+      operationId: listAllChannels
+      description: A list of all channels can be requested
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/channelResponse'
+  /channels/{channelJid}:
+    patch:
+      summary: Update a channel
+      tags:
+        - 'Channel Management'
+      operationId: updateChannel
+      description: A channel can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated, *name*, *priority*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: body
+          name: name
+          description: Name of the channel
+          schema:
+            type: integer
+        - in: body
+          name: priority
+          description: Priority of the channel
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/channelResponse'
+  /channels/{channelJid}/automated-messages:
+    get:
+      summary: List all automated messages
+      tags:
+        - 'Conversation Management'
+      operationId: allAutoMessages
+      description: A list of all automated messages can be requested using the GET method.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/autoMessagesResponse'
+  /channels/{channelJid}/automated-messages/{type}:
+    get:
+      summary: Read an automated message
+      tags:
+        - 'Conversation Management'
+      operationId: singleAutoMessage
+      description: A specific automated message can be requested.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: path
+          name: type
+          required: true
+          description: Type of automated message
+          schema:
+            type: string
+            example: 'GREETING'
+      responses:
+        200:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/autoMessageResponse'
+    patch:
+      summary: Update an automated message
+      tags:
+        - 'Conversation Management'
+      operationId: updateAutoMessage
+      description: An automated message can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *body*, *enabled*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'jid@company.com'
+        - in: path
+          name: type
+          required: true
+          description: Type of automated message
+          schema:
+            type: string
+            example: 'GREETING'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/autoMessageResponse'
+  /channels/{channelJid}/contacts:
+    post:
+      summary: Create a contact
+      tags:
+        - 'Contact Management'
+      operationId: createContact
+      description: Create a new contact.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: jid
+          description: Contact ID
+          schema:
+            type: string
+          example: '31611111111@company.com'
+        - in: body
+          name: name
+          description: Name of the contact
+          schema:
+            type: string
+          example: 'John Doe'
+        - in: body
+          name: reference
+          description: Reference of the contact
+          schema:
+            type: string
+          example: 'Customer #545'
+        - in: body
+          name: remarks
+          description: Comment for the contact
+          schema:
+            type: string
+          example: 'VIP'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/contactResponse'
+  /channels/{channelJid}/contacts/{contactJid}:
+    get:
+      summary: Read a contact
+      tags:
+        - 'Contact Management'
+      operationId: getContact
+      description: A contact can be retrieved
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/contactResponse'
+    patch:
+      summary: Update a contact
+      tags:
+        - 'Contact Management'
+      operationId: updateContact
+      description: A contact can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *name*, *reference*, *remarks*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: name
+          description: Name of the contact
+          schema:
+            type: string
+          example: 'John Doe'
+        - in: body
+          name: reference
+          description: Reference of the contact
+          schema:
+            type: string
+          example: 'Customer #545'
+        - in: body
+          name: remarks
+          description: Comment for the contact
+          schema:
+            type: string
+          example: 'VIP'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/contactResponse'
+  /channels/{channelJid}/contacts/blacklist:
+    get:
+      summary: List blocked contacts
+      tags:
+        - 'Contact Management'
+      operationId: listBlockContact
+      description: A list of all blocked contacts can be requested.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/emailResponse'
+  /channels/{channelJid}/contacts/blacklist/{contactJid}:
+    post:
+      summary: Block a contact
+      tags:
+        - 'Contact Management'
+      operationId: blockContact
+      description: A contact can be blocked by adding it to the blacklist. Messages received from a blocked contact will be ignored and it is not possible to send messages to it.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        204:
+          description: No Content
+    delete:
+      summary: Unblock a contact
+      tags:
+        - 'Contact Management'
+      operationId: unblockContact
+      description: A contact can be removed from the blacklist
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        204:
+          description: No Content
+  /channels/{channelJid}/conversations/{contactJid}/comments:
+    post:
+      summary: Create a comment
+      tags:
+        - 'Conversation Management'
+      operationId: createComment
+      description: Create a new comment for a conversation.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: body
+          description: Text for the comment
+          schema:
+            type: string
+          example: 'Order #12345 has been delivered'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/commentResponse'
+  /channels/{channelJid}/conversations/{contactJid}:
+    get:
+      summary: Read a conversation
+      tags:
+        - 'Conversation Management'
+      operationId: conversationByJid
+      description: A conversation can be requested
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/conversationResponse'
+    patch:
+      summary: Update a conversation
+      tags:
+        - 'Conversation Management'
+      operationId: updateConversation
+      description: A conversation can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *assignee*, *labels*, *status*, *unreadCount*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: assignee
+          description: Assistant to the agents
+          schema:
+            type: string
+          example: 'john@mycompany.com'
+        - in: body
+          name: label
+          description: Labels of the conversation
+          schema:
+            type: string
+          example: 'Label123'
+        - in: body
+          name: status
+          description: Status of the conversation
+          schema:
+            type: string
+          example: 'CLOSED'
+        - in: body
+          name: unreadCount
+          description: Number of unread messages
+          schema:
+            type: integer
+          example: 5
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/conversationResponse'
+  /channels/{channelJid}/lists:
+    get:
+      summary: List all contact lists
+      tags:
+        - 'Contact Management'
+      operationId: listAllLists
+      description: All lists can be requested
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/listResponse'
+  /channels/{channelJid}/lists/{listJid}/{contactJid}:
+    post:
+      summary: Add a contact to a list
+      tags:
+        - 'Contact Management'
+      operationId: addContactTolist
+      description: A contact can be added to a list.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: listJid
+          required: true
+          description: Jabber IDs to represent a list
+          schema:
+            type: string
+            format: email
+            example: 'listJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Remove a contact from a list
+      tags:
+        - 'Contact Management'
+      operationId: removeContactfromlist
+      description: A contact can be removed from a list.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: listJid
+          required: true
+          description: Jabber IDs to represent a list
+          schema:
+            type: string
+            format: email
+            example: 'listJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        200:
+          description: OK
+  /channels/{channelJid}/messages/{contactJid}:
+    post:
+      summary: Send a message
+      tags:
+        - 'Messaging'
+      operationId: sendMessage
+      description: |
+        Request to send a message to a contact in a channel.
+
+        The JSON body structure of each message type is listed below.
+
+        **Audio**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**  |
+        | ---         | ---       | ---           | ---              |
+        | mimeType    | string    | Y             |MIME type         |
+        |type	        | "audio"	| Y             | Message type     |
+
+        **Contact**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**   |
+        | ---         | ---       | ---           | ---               |
+        | contacts	| array 	| Y             | Contact structure |
+        | type    	| "contact" | Y          	| Message type      |
+
+        **Document**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**  |
+        | ---         | ---       | ---           | ---              |
+        | fileName	| string	| Y	            | File name        |
+        | mimeType	| string	| Y	            | MIME type        |
+        | title   	| string	| Y           	| Document title   |
+        | type        | "document"| Y         	| Message type     |
+
+        **Gif**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**      |
+        | ---         | ---       | ---           | ---                  |
+        | caption	    | string	| N             | Caption text message |
+        | mimeType	| string	| Y         	| MIME type            |
+        | type    	| "gif" 	| Y           	| Message type         |
+
+        **Image**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**      |
+        | ---         | ---       | ---           | ---                  |
+        | caption   	| string 	| N             | Caption text message |
+        | mimeType	| string	| Y             | MIME type            |
+        | type        | "image" 	| Y         	| Message type         |
+
+        **Location**
+
+        | **Element** | **Value**	 | **Mandatory**	| **Description**         |
+        | ---         | ---        | ---              | ---                     |
+        | latitude	| float	Y	 | Latitude         | coordinate              |
+        | longitude	| float	Y	 | Longitude        | coordinate              |
+        | name	    | string	 | N                | Name of the location    |
+        | type	    | "location" | Y                | Message type            |
+        | url	        | string	 | N                | Website URL             |
+
+        **Voice message**
+
+        | **Element** | **Value** | **Mandatory** | **Description**   |
+        | ---         | ---       | ---           | ---               |
+        | mimeType    | string    | Y             | MIME type         |
+        | type        | "ptt"     | Y             | Message type      |
+
+        **Sticker**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**   |
+        | ---         | ---       | ---           | ---               |
+        | mimeType	| string	| Y             | MIME type         |
+        | type        | "sticker"	| Y             | Message type      |
+
+        **Template**
+
+        | **Element** | **Value**	 | **Mandatory**	| **Description**     |
+        | ---         | ---        | ---              | ---                 |
+        | template	| array      | Y                | Template structure  |
+        | type        | "template" | Y                | Message type        |
+
+        **Text**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**   |
+        | ---         | ---       | ---           | ---               |
+        | body        | string	| Y             | Message body      |
+        | type        | "text"	| Y             | Message type      |
+
+        **Video**
+
+        | **Element** | **Value**	| **Mandatory**	| **Description**       |
+        | ---         | ---       | ---           | ---                   |
+        | caption     | string	| N             | Caption text message  |
+        | mimeType	| string	| Y             | MIME type             |
+        | type        | "video"	| Y             | Message type          |
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: message
+          description: Color of the label
+          schema:
+            type: integer
+          example: 8
+      responses:
+        202:
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: The returned id can be used to match delivery [receipts](https://api.eazy.im/v3/#webhooks-overview) to the original message.
+                    type: integer
+                    example: "b48eaa2fab1e942cad8b8717ec6bf3ed2dad05a"
+  /incoming:
+    post:
+      summary: Receive messages
+      tags:
+        - 'Messaging'
+      description: |
+        To receive messages, create an endpoint on your webserver that will be able to process POST requests
+        and subscribe its URL via [Webhook Configuration](#webhook-configuration) to the "message" events.
+
+        **Note:** The path above is only an example, you may choose your URL freely.
+  /channels/{channelJid}/contacts/{contactJid}/notes:
+    get:
+      summary: List all notes
+      tags:
+        - 'Contact Management'
+      operationId: listAllNotes
+      description: List all notes from a contact.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/notesResponse'
+    post:
+      summary: Create a note
+      tags:
+        - 'Contact Management'
+      operationId: createNote
+      description: Create a new note in a contact.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: body
+          name: body
+          description: Text/Body of the note.
+          schema:
+            type: string
+          example: 'Customer number #63553'
+        - in: body
+          name: referenceId
+          description: Friendly reference name as an ID.
+          schema:
+            type: string
+          example: 'CUSTOMER_NUMBER'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/noteResponse'
+  /channels/{channelJid}/contacts/{contactJid}/notes/{id}:
+    post:
+      summary: Update a note
+      tags:
+        - 'Contact Management'
+      operationId: updateNote
+      description: |
+        Update a note in a contact. Only the specified fields will be updated, all other fields will remain unchanged.
+        The following fields can be updated: *body*, *isPinned*, *isReadOnly*, *referenceId*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: path
+          name: id
+          required: true
+          description: ID of the node
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: body
+          name: body
+          description: Text/Body of the note.
+          schema:
+            type: string
+          example: 'Customer number #63553'
+        - in: body
+          name: isPinnel
+          description: Is this note pinned?
+          schema:
+            type: boolean
+          example: true
+        - in: body
+          name: isReadOnly
+          description: Is this note read only or not?
+          schema:
+            type: boolean
+          example: false
+        - in: body
+          name: referenceId
+          description: Friendly reference name as an ID.
+          schema:
+            type: string
+          example: 'CUSTOMER_NUMBER'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/noteResponse'
+    delete:
+      summary: Delete a note
+      tags:
+        - 'Contact Management'
+      operationId: deleteNote
+      description: Delete an existing note in a contact.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: contactJid
+          required: true
+          description: Jabber IDs to represent contacts
+          schema:
+            type: string
+            format: email
+            example: 'contactJid@company.com'
+        - in: path
+          name: id
+          required: true
+          description: ID of the node
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        204:
+          description: No Content
+  /channels/{channelJid}/profile:
+    get:
+      summary: Read your profile
+      tags:
+        - 'WhatsApp Management'
+      operationId: getWabaProfile
+      description: The WhatsApp Business profile can be retrieved
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/profileResponse'
+    post:
+      summary: Overwrite your profile
+      tags:
+        - 'WhatsApp Management'
+      operationId: ovewriteWabaProfile
+      description: The WhatsApp Business profile can be completely overwritten or partially updated. The POST method is used to overwrite the whole profile.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: about
+          description: Description of what is this profile about.
+          schema:
+            type: string
+          example: 'Welcome! We are here to help you 24/7'
+        - in: body
+          name: businessProfile
+          description: WhatsApp for Business profile
+          schema:
+            type: object
+            properties:
+              address:
+                description: Address associated with the profile
+                type: string
+                example: "High Street 15, New York"
+              description:
+                description: Description of the profile
+                type: string
+                example: "YourCompany Ltd."
+              email:
+                description: email address associated with the WhatsApp for business profile
+                type: string
+                format: email
+                example: "info@your-company.com"
+              vertical:
+                type: string
+                example:
+              websites:
+                $ref: '#/components/schemas/websites'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/profileResponse'
+    patch:
+      summary: Update your profile
+      tags:
+        - 'WhatsApp Management'
+      operationId: updateWabaProfile
+      description: The PATCH method is used for a partial update. Unspecified fields will remain unchanged.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: businessProfile
+          description: Example of WhatsApp for Business profile update
+          schema:
+            type: object
+            properties:
+              description:
+                description: Description of the profile
+                type: string
+                example: "YourCompany Ltd."
+              email:
+                description: email address associated with the WhatsApp for business profile
+                type: string
+                format: email
+                example: "info@your-company.com"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/profileResponse'
+  /channels/{channelJid}/qr-codes:
+    get:
+      summary: List all QR codes
+      tags:
+        - 'WhatsApp Management'
+      operationId: listQrCodes
+      description: A list of all QR codes can be requested
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/qrCodesResponse'
+    post:
+      summary: Create a QR code
+      tags:
+        - 'WhatsApp Management'
+      operationId: createQrCode
+      description: Create a new QR code with a prefilled message for WhatsApp Business
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: message
+          description: Text/Body of the message.
+          schema:
+            type: string
+          example: 'I have a question about product ABC'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/qrCodeResponse'
+  /channels/{channelJid}/qr-codes/{code}:
+    patch:
+      summary: Update a QR code
+      tags:
+        - 'WhatsApp Management'
+      operationId: updateQrCode
+      description: The prefilled message of a QR code can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *message*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: code
+          required: true
+          description: QR code
+          schema:
+            type: string
+            example: 'VETO8Y3SYCSFH1'
+        - in: body
+          name: message
+          required: true
+          description: Text/Body of the message.
+          schema:
+            type: string
+          example: 'I have a question about product ABC'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/qrCodeResponse'
+    delete:
+      summary: Delete a QR code
+      tags:
+        - 'WhatsApp Management'
+      operationId: deleteQrCode
+      description: An existing QR code can be deleted
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: code
+          required: true
+          description: QR code
+          schema:
+            type: string
+            example: 'VETO8Y3SYCSFH1'
+      responses:
+        204:
+          description: No Content
+  /channels/{channelJid}/templates:
+    get:
+      summary: List all templates
+      tags:
+        - 'WhatsApp Management'
+      operationId: listWabaTemplates
+      description: All WhatsApp Business templates can be retrieved
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK - Check response in example above
+    post:
+      summary: Create a template
+      tags:
+        - 'WhatsApp Management'
+      operationId: createTemplate
+      description: Create a new WhatsApp Business template. Templates can include a header, body, footer and buttons.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: category
+          required: true
+          description: Category text
+          schema:
+            type: string
+          example: 'ISSUE_RESOLUTION'
+        - $ref: '#/components/parameters/components'
+        - in: body
+          name: language
+          required: true
+          description: Language to be used in the template
+          schema:
+            type: string
+          example: 'en'
+        - in: body
+          name: name
+          required: true
+          description: Name of the template
+          schema:
+            type: string
+          example: 'support_after_24hours'
+      responses:
+        201:
+          description: Created - Check response in example above
+  /channels/{channelJid}/templates/{name}:
+    delete:
+      summary: Delete a template
+      tags:
+        - 'WhatsApp Management'
+      operationId: deleteWabaTemplate
+      description: An existing Template can be deleted
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: name
+          required: true
+          description: Name of the template to be deleted
+          schema:
+            type: string
+          example: 'delivery_notification'
+      responses:
+        204:
+          description: No Content
+  /channels/{channelJid}/webhooks:
+    get:
+      summary: List all webhooks
+      tags:
+        - 'Webhook Configuration'
+      operationId: listWebhooks
+      description: |
+        A list of all webhooks can be requested
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/webhooksResponse'
+    post:
+      summary: Create a webhook
+      tags:
+        - 'Webhook Configuration'
+      operationId: createWebhook
+      description: Create a new webhook for the specified events.
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: body
+          name: events
+          required: true
+          description: Events described above
+          schema:
+            type: object
+            properties:
+              message:
+                description: Message event example
+                type: string
+                example: "message"
+        - in: body
+          name: url
+          required: true
+          description: URL of the webhook
+          schema:
+            type: string
+            format: uri
+          example: 'https://your.company.com/webhook'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/webhookResponse'
+  /channels/{channelJid}/webhooks/{id}:
+    patch:
+      summary: Update a webhook
+      tags:
+        - 'Webhook Configuration'
+      operationId: updateWebhook
+      description: A webhook can be updated using the PATCH method. Only the specified fields will be updated, all other fields will remain unchanged. The following fields can be updated *name*
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: id
+          required: true
+          description: ID of the node
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        - in: body
+          name: name
+          required: true
+          description: Name of the webhook to be created
+          schema:
+            type: string
+          example: 'Support'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/webhookResponse'
+    delete:
+      summary: Delete a webhook
+      tags:
+        - 'Webhook Configuration'
+      operationId: deleteWebhook
+      description: An existing Webhook can be deleted
+      parameters:
+        - in: path
+          name: channelJid
+          required: true
+          description: Jabber IDs to represent channel
+          schema:
+            type: string
+            format: email
+            example: 'channelJid@company.com'
+        - in: path
+          name: id
+          required: true
+          description: ID of the node
+          schema:
+            type: string
+            example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+      responses:
+        204:
+          description: No Content
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: The API key is transmitted using the Authentication header with the Bearer scheme.
+      name: Authorization
+      description: |
+        The Support Inbox API uses API keys for authentication. The API key is transmitted using the Authorization
+        header with the Bearer scheme:
+
+        `Authorization: Bearer Tnhip5Hiq10gGiKhNS850ShCAjIQZAgKDAN0JAIL`
+
+        ## Scopes
+
+        Each key has a scope that defines to which endpoints the key has access to. The following scopes are defined:
+
+        | **Scope**   | **Description** |
+        |-------------|---------------|
+        | Channel     | Access to channel related endpoints |
+        | Assistant   | Same as channel including assistant related endpoints |
+        | Company     | Same as channel including company related endpoints |
+        | Owner       | Same as company including owner related endpoints |
+
+        **Note:** API keys are stored in a hashed format. so it is not possible to retrieve them.
+  schemas:
+    agentResponse:
+      description: Details of an agent
+      type: object
+      properties:
+        email:
+          description: email address
+          type: string
+          example: jane@mycompany.com
+        name:
+          description: Name
+          type: object
+          properties:
+            firstName:
+              description: First Name of the Agent
+              type: string
+              example: Jane
+            fullName:
+              description: Full Name of the Agent
+              type: string
+              example: Jane Mayers
+            lastName:
+              description: Last Name of the Agent
+              type: string
+              example: Mayers
+        roles:
+          description: The role of the agent
+          type: array
+          items:
+            type: string
+          example:
+            - admin
+            - user
+        status:
+          description: Status of the agent
+          type: string
+          enum:
+            - OFFLINE
+            - AWAY
+            - ONLINE
+        teams:
+          description: Teams to be contacted with email
+          type: array
+          items:
+            type: string
+            format: email
+            example: company@domail.com
+    apiKeyResponse:
+      description: Current API key response
+      type: object
+      properties:
+        cipherKey:
+          description: Cipher Key
+          type: string
+        description:
+          description: Description for the key or usage of the key
+          type: string
+          example: 'Test environment'
+        id:
+          description: Id of the key
+          type: string
+          example: '509000e9-05c9-43a9-b6f1-70f1c6a5448a'
+        lastUsed:
+          description: When the key last used
+          type: string
+          format: date-time
+          example: '2020-03-11T19:53:02.000000Z'
+        objects:
+          description: Array of objects. Check example on the right
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+            example:
+              - "'jid': '31612345678@tyntec.com'"
+              - "'type': 'CHANNEL'"
+        scope:
+          description: The scope of this key
+          type: string
+          example: 'CHANNEL'
+        whitelist:
+          description: Array of whitelisted IPs. Check example on the right
+          type: array
+          items:
+            type: string
+            format: IP
+          example:
+            - '95.95.95.95'
+            - '12.12.12.12'
+    assistantResponse:
+      description: Single assistant response
+      type: object
+      properties:
+        color:
+          description: Color
+          type: integer
+          example: 8
+        description:
+          description: Role of the Assistant
+          type: string
+          example: 'Sales assistant'
+        jid:
+          description: Id of the key
+          type: string
+          format: email
+          example: 'jane@mycompany.com'
+        name:
+          description: Name of the assistant
+          type: string
+          example: 'Jane Mayer'
+    autoMessageResponse:
+      description: Automated message response
+      type: object
+      properties:
+        body:
+          description: Body/text of the message
+          type: string
+          example: 'Sorry, we are currently closed. Your question will be answered as soon as possible.'
+        createdAt:
+          description: When message is created
+          type: string
+          format: date-time
+          example: '2020-03-11T19:00:02.000000Z'
+        enabled:
+          description: Is the message enabled?
+          type: boolean
+        type:
+          description: Name of the assistant
+          type: string
+          enum:
+            - 'AWAY'
+            - 'GREETING'
+          example: 'AWAY'
+        updatedAt:
+          description: When message is last updated
+          type: string
+          format: date-time
+          example: '2020-04-11T19:00:02.000000Z'
+    channelResponse:
+      description: Channel Response
+      type: object
+      properties:
+        dataRetentionInDays:
+          description: Body/text of the message
+          type: integer
+          example: 90
+        jid:
+          description: ID
+          type: string
+          format: email
+          example: 31611111111@company.com
+        name:
+          description: Name of the channel
+          type: string
+          example: 'WhatApp'
+        priority:
+          description: Priority of the channel
+          type: integer
+    commentResponse:
+      description: Comment response
+      type: object
+      properties:
+        id:
+          description: ID of the contact added the comment
+          type: string
+          example: 'ee487689cac84f972ff1d8d10ed7b64f4148'
+    companyResponse:
+      description: Company response
+      type: object
+      properties:
+        id:
+          description: ID of the company
+          type: string
+          example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
+        name:
+          description: Name of the company
+          type: string
+          format: string
+          example: 'tyntec'
+    contactResponse:
+      description: Contact response
+      type: object
+      properties:
+        names:
+          description: Names
+          type: array
+          items:
+            $ref: '#/components/schemas/name'
+        notes:
+          description: Notes
+          type: array
+          items:
+            $ref: '#/components/schemas/note'
+        phoneNumber:
+          description: Phone number of the contact
+          type: integer
+          example: 31611111111
+        reference:
+          description: Reference of the contact
+          type: string
+          example: 'Customer #545'
+        remarks:
+          description: Comment for the contact
+          type: string
+          example: 'VIP'
+        type:
+          description: Type of the contact
+          type: string
+          example: 'INDIVIDUAL'
+    conversationResponse:
+      description: Conversation response
+      type: object
+      properties:
+        assignee:
+          description: Assistant to the agents
+          type: string
+          example: 'john@mycompany.com'
+        channel:
+          description: Channel to be used
+          type: string
+          items:
+            $ref: '#/components/schemas/channelResponse'
+        contact:
+          description: Contact of the conversation
+          type: string
+          items:
+            $ref: '#/components/schemas/contact'
+        createdAt:
+          description: Date and time the conversation is created
+          type: string
+          format: date-time
+          example: '2019-04-04T15:29:47.000000Z'
+        labels:
+          description: Labels of the conversation
+          type: array
+          items:
+            $ref: '#/components/schemas/allLabelsResponse'
+        lastMessageReceivedAt:
+          description: Date and time the last message is received
+          type: string
+          format: date-time
+          example: '2019-04-08T23:55:39.000000Z'
+        lastMessageSentAt:
+          description: Date and time that the last message is sent
+          type: string
+          format: date-time
+          example: '2019-04-07T17:12:00.000000Z'
+        messagesReceived:
+          description: Number of messages received
+          type: integer
+          example: 12
+        messagesSent:
+          description: Number of messages sent
+          type: integer
+          example: 8
+        status:
+          description: Status of the conversation
+          type: string
+          example: "CLOSED"
+        unreadCount:
+          description: Number of unread messages
+          type: integer
+          example: 5
+    emailsResponse:
+      description: List all email addresses
+      type: array
+      items:
+        $ref: '#/components/schemas/email'
+      example: [jane@mycompany1.com, jo@mycompany1.com, john@company2.com]
+    labelResponse:
+      description: Single Label Response
+      type: object
+      properties:
+        color:
+          description: Color
+          type: integer
+          example: 8
+        jid:
+          description: ID
+          type: string
+          format: email
+          example: '31611111111@company.com'
+        name:
+          description: Name of the label
+          type: string
+          example: 'Support'
+        priority:
+          description: Priority of the channel
+          type: integer
+    listResponse:
+      description: Single list response
+      type: object
+      properties:
+        jid:
+          description: ID
+          type: string
+          format: email
+          example: '31611111111@company.com'
+        name:
+          description: Name of the list
+          type: string
+          example: 'Mailing list'
+        remarks:
+          description: Comment for the list
+          type: string
+          example: 'Support'
+    noteResponse:
+      description: Single Note Response
+      type: object
+      properties:
+        body:
+          description: Text/Body of the note
+          type: string
+          example: 'Return order received'
+        createdAt:
+          description: Date and time the note is created
+          type: string
+          format: date-time
+          example: '2020-03-11T19:53:02.000000Z'
+        createdBy:
+          description: Who created this note
+          type: string
+          format: email
+          example: 'john@mycompany.com'
+        id:
+          description: ID of the note
+          type: string
+          example: '280cbbe0-c08a-4606-bf8d-a30242c4eaa4'
+        isPinned:
+          description: Is this note pinned?
+          type: boolean
+          example: false
+        isReadOnly:
+          description: Is this note read only or not?
+          type: boolean
+          example: false
+        updatedAt:
+          description: Date and time the note is last updated
+          type: string
+          format: date-time
+          example: '2020-04-11T19:53:02.000000Z'
+        referenceId:
+          description: Reference ID of the note
+          type: string
+          example: "CUSTOMER_NUMBER"
+    profileResponse:
+      description: WhatsApp for Business profile response
+      type: object
+      properties:
+        about:
+          description: Description of what is this profile about.
+          type: string
+          example: "Welcome! We are here to help you 24/7"
+        businessProfile:
+          $ref: '#/components/schemas/businessProfile'
+        name:
+          description: Name of the profile
+          type: string
+          example: "YourCompany"
+        phoneNumber:
+          description: Phone number associated with the WhatsApp for Business profile
+          type: integer
+          example: 31612345678
+        pictureUrl:
+          description: URL of the picture used in the profile
+          type: string
+          example: "https://pps.whatsapp.net/v/t61.24694-24/s96x96/71527172_751740171986704_2078049712831220364_n.jpg?oe=5E2168E9&oh=174efd2076218dff633a1e748beac190"
+    qrCodeResponse:
+      description: Single QR code response
+      type: object
+      properties:
+        code:
+          description: QR code
+          type: string
+          example: "VETO8Y3SYCSFH1"
+        createdAt:
+          description: Date and time the note is created
+          type: string
+          format: date-time
+          example: '2020-03-11T19:53:02.000000Z'
+        image:
+          description: QR image URL
+          type: string
+          format: uri
+          example: "https://scontent.xx.fbcdn.net/..."
+        message:
+          description: QR message to be displayed
+          type: string
+          example: "I have a question about product ABC"
+        updatedAt:
+          description: Date and time the note is last updated
+          type: string
+          format: date-time
+          example: '2020-04-11T19:53:02.000000Z'
+        url:
+          description: QR URL
+          type: string
+          format: uri
+          example: "https://wa.me/message/VEKO8Y3SYCSFH1"
+    teamResponse:
+      description: Single team response
+      type: object
+      properties:
+        channels:
+          description: Array of channels
+          type: array
+          items:
+            $ref: '#/components/schemas/channelResponse'
+        color:
+          description: Color
+          type: integer
+          example: 8
+        jid:
+          description: ID
+          type: string
+          format: email
+          example: 31611111111@company.com
+        metadata:
+          description: Metadata information
+          type: string
+        name:
+          description: Name of the team
+          type: string
+          example: "Support"
+    webhookResponse:
+      description: Webhook response
+      type: object
+      properties:
+        assistant:
+          description: Assistant to the agents
+          type: string
+          example: 'john@mycompany.com'
+        cipherKey:
+          description: Cipher key to be used in the webhook
+          type: string
+        createdAt:
+          description: Date and time the Webhook is created
+          type: string
+          format: date-time
+          example: '2019-04-04T15:29:47.000000Z'
+        enabled:
+          description: Is the Webhook active or not?
+          type: boolean
+          example: true
+        events:
+          description: Array of event on the webhooks
+          type: array
+          items:
+            $ref: '#/components/schemas/events'
+        headers:
+          description: Header parameters
+          type: object
+          items:
+            example: "'Authorization': 'Bearer SomeApiKey'"
+        id:
+          description: ID of the event
+          type: string
+          example: '8520d8d6-7b28-4d6f-8631-ecd528a0246d'
+        updatedAt:
+          description: Date and time that the last message is sent
+          type: string
+          format: date-time
+          example: '2019-04-07T17:12:00.000000Z'
+        url:
+          description: URL of the webhook
+          type: string
+          example: "https://your.company.com/webhook"
+    businessProfile:
+      description: WhatsApp for Business profile response
+      type: object
+      properties:
+        address:
+          description: Address associated with the profile
+          type: string
+          example: "High Street 15, New York"
+        description:
+          description: Description of the profile
+          type: string
+          example: "YourCompany Ltd."
+        email:
+          description: email address associated with the WhatsApp for business profile
+          type: string
+          format: email
+          example: "info@your-company.com"
+        vertical:
+          description: Vertical
+          type: string
+          example: "Vertical"
+        websites:
+          description: Website list of URLs
+          type: array
+          items:
+            $ref: '#/components/schemas/website'
+          example:
+            - 'www.company1.com'
+            - 'www.company2.com'
+    website:
+      description: Website URL
+      type: string
+      example: "https://your-company.com"
+  parameters:
+    components:
+      name: components
+      in: body
+      description: Array of components to be used in the template
+      schema:
+        type: string
+    text:
+      name: text
+      in: body
+      description: Text to be used
+      schema:
+        type: string
+      example: 'This is your KLM ticket for your flight on December 20th to New York.'

@@ -4,11 +4,11 @@ This is an example request for sending a document together with a rich media tem
 
 The template is defined as
 
-*Header* : 
+*Header:* 
 
     Document
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}}!

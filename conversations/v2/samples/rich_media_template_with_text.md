@@ -4,13 +4,13 @@ This is an example request for sending a text together with a rich media templat
 
 The template is defined as
 
-*Header* : 
+*Header:* 
 
     Text
     
     Account {{1}} has been upgraded
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}}, 
@@ -18,7 +18,7 @@ Hi {{1}},
 we're happy to inform you that your account {{2}} has been upgraded to {{3}}.
 ````
 
-*Footer* :
+*Footer:*
 
     Your tyntec support team
 

@@ -1,0 +1,413 @@
+openapi: '3.0.0'
+info:
+  title: SMS
+  description: |
+    Conversations allows you to easily reach out and communicate with  your clients via 2-way SMS.
+
+    **Channel specific prerequisites**
+
+    - *2-way SMS:* Please contact us to get the details for the 2-way SMS setup
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '2.11'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v2
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/chat-api/v2
+security:
+  - ApiKeyHeader: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening
+      during the delivery
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send chat messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+            examples:
+              SMS - Text:
+                $ref: '#/components/examples/SMSTextMessage'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{message-id}:
+    get:
+      operationId: retrieveMessage
+      summary: Retrieve the message
+      tags:
+        - "Messaging"
+      description: |
+
+        Returns back a message previously send by you.
+
+        **Important** After a final status notification (delivered, read or failed) the message
+        is only available for the next 48 hours. After this period we delete the message in our system.
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        200:
+          description: The message ID requested exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoredMessage'
+        404:
+          $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendBulkMessage
+      summary: Send a bulk of messages
+      tags:
+        - "Messaging"
+      description: |
+        Send a bulk of messages via one channel to one recipient.
+
+        The system guarantees that the messages are send in order to the recipient
+      requestBody:
+        description: The message bulk you want to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+      responses:
+        202:
+          description: The bulk was accepted.
+          $ref: 'common.yaml#/components/responses/BulkAccepted'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: apikey
+      description: |
+        The API key used for this operation. We check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
+  responses:
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    MessageIdUnknown:
+      description: The message ID does not exist in our system
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 404
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    BulkAccepted:
+      description: The requested bulk was accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20
+  parameters:
+    MessageId:
+      name: message-id
+      in: path
+      required: true
+      description: The ID of the message
+      schema:
+        type: string
+        format: uuid
+        example: 77185196-664a-43ec-b14a-fe97036c697f
+  examples:
+    ## Messaging section
+    SMSTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - sms
+        sms:
+          from: "1233423454"
+          contentType: text
+          text: hi!
+  schemas:
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          description: |
+            The recipient of the message.
+
+            Could be one of
+              - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+              - group ID create via the WA Group management
+          example: "+1233423454"
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - sms
+          items:
+            type: string
+            enum:
+              - sms
+        overrides:
+          $ref: '#/components/schemas/MessageRequestOverrides'
+        context:
+          $ref: '#/components/schemas/MessageRequestContext'
+        sms:
+          $ref: '#/components/schemas/SMSRequest'
+      example:
+        to: "+123234234"
+        channels: [ "sms" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    StoredMessage:
+      type: object
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          pattern: '^(00|\+)\d{1,15}$'
+          description: |
+            The recipient phone number in international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+          example: '+1233423454'
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - sms
+            - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
+        sms:
+          $ref: '#/components/schemas/SMSRequest'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        to: "+123234234"
+        channels: [ "sms" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    SMSRequest:
+      type: object
+      description: |
+        Normal SMS to be sent.
+
+        If Content is used as well this will override the specification made there.
+
+        In case URL type is specified the recipient will receive the plain URL as SMS.
+      required:
+        - contentType
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+            - url
+          description: What kind of payload should be sent
+          example: text
+        from:
+          type: string
+          description: The sender of the message
+          example: "1233423454"
+        text:
+          type: string
+          maxLength: 3000
+          description: The message to be sent
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+        url:
+          type: string
+          deprecated: true
+          description: |
+            The URL you would like to send. Must be a valid http(s) URL.
+
+            **Note** This property will be removed in a future release. Please use ``text`` instead.
+          example: https://www.tyntec.com
+      example:
+        contentType: text
+        from: "1233423454"
+        text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+        - acceptedAt
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the API confirms that the message request was accepted
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parsable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MessageRequestContext:
+      type: object
+      description: Contextual information for the message request
+      properties:
+        userContext:
+          type: string
+          maxLength: 255
+          description: |
+            Contextual information that is transfered back on delivery notifications.
+          example:
+            my-message-reference
+    MessageRequestOverrides:
+      type: object
+      description: Overrides of defaults for this message
+      properties:
+        notificationCallbackUrl:
+          type: string
+          pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            When present this url is used for sending the delivery notifications to your webhook.
+            Can be used for debugging use cases or individual routings.
+          example:
+            https://en4u5fpprib5i.x.pipedream.net
+    BulkRequest:
+      type: object
+      description: Bulk request to be sent. The items are guaranted to be sent in order of appearance
+      properties:
+        to:
+          type: string
+        from:
+          type: string
+        channel:
+          type: string
+          description: Channel which should be used for the bulk
+          example: sms
+          enum:
+            - sms
+        sms:
+          type: array
+          description: SMS to be sent
+          items:
+            $ref: '#/components/schemas/BulkSMSRequest'
+          minItems: 2
+          maxItems: 20
+    BulkSMSRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+          description: What kind of payload should be sent
+          example: text
+        text:
+          type: string
+          maxLength: 3000
+          description: The message to be sent
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.

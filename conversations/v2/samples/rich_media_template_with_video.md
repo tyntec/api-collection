@@ -4,11 +4,11 @@ This is an example request for sending a video together with a rich media templa
 
 The template is defined as
 
-*Header* : 
+*Header:* 
 
     Video
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}}, 
@@ -20,7 +20,7 @@ Please find attached a video guide with some useful instructions.
 When you're facing additional problems, don't hesitate and come back to us.  
 ````
 
-*Footer* :
+*Footer:*
 
     Your tyntec support team
 

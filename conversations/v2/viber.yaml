@@ -1,0 +1,545 @@
+openapi: '3.0.0'
+info:
+  title: Viber
+  description: |
+    Conversations allows you to easily send messages to your customers via Viber.
+
+    **Channel specific prerequisites**
+
+    - *Viber:* A Viber Service ID is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
+
+    Viber defines different service types and capabilities. The service types limit the possible content combinations.
+
+    The following content / service type combinations are valid
+
+    | Service Type | Text | Image | Text & Button | Text & Button & Image |
+    | ---: | :---: | :---: | :---: | :---: |
+    | One way | ✔ | ✔ | ✔ | ✔ |
+    | Two way | ✔ | ✔ | ✔ | ✔ |
+    | Session | ✔ | ✔ | ❌ | ❌ |
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '2.11'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v2
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/chat-api/v2
+security:
+  - ApiKeyHeader: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening
+      during the delivery
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send chat messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+            examples:
+              Viber - Text:
+                $ref: '#/components/examples/ViberTextMessage'
+              Viber - Image:
+                $ref: '#/components/examples/ViberImageMessage'
+              Viber - Text & Button:
+                $ref: '#/components/examples/ViberTextButtonMessage'
+              Viber - Text & Image & Button:
+                $ref: '#/components/examples/ViberTextImageButtonMessage'
+      responses:
+        202:
+          description: The message is accepted by our system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /messages/{message-id}:
+    get:
+      operationId: retrieveMessage
+      summary: Retrieve the message
+      tags:
+        - "Messaging"
+      description: |
+
+        Returns back a message previously send by you.
+
+        **Important** After a final status notification (delivered, read or failed) the message
+        is only available for the next 48 hours. After this period we delete the message in our system.
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        200:
+          description: The message ID requested exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoredMessage'
+        404:
+          $ref: '#/components/responses/MessageIdUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendBulkMessage
+      summary: Send a bulk of messages
+      tags:
+        - "Messaging"
+      description: |
+        Send a bulk of messages via one channel to one recipient.
+
+        The system guarantees that the messages are send in order to the recipient
+      requestBody:
+        description: The message bulk you want to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+      responses:
+        202:
+          description: The bulk was accepted.
+          $ref: 'common.yaml#/components/responses/BulkAccepted'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: apikey
+      description: |
+        The API key used for this operation. We check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
+  responses:
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    MessageIdUnknown:
+      description: The message ID does not exist in our system
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 404
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    BulkAccepted:
+      description: The requested bulk was accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bulkId:
+                type: string
+                format: uuid
+                example: 77185196-664a-43ec-b14a-fe97036c697f
+              messageIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  example: 77185196-664a-43ec-b14a-fe97036c697f
+                minItems: 2
+                maxItems: 20
+  parameters:
+    MessageId:
+      name: message-id
+      in: path
+      required: true
+      description: The ID of the message
+      schema:
+        type: string
+        format: uuid
+        example: 77185196-664a-43ec-b14a-fe97036c697f
+  examples:
+    ViberTextMessage:
+      value:
+        to: "12331132"
+        channels:
+          - viber
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: "hi!"
+    ViberImageMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          components:
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+    ViberTextButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: Do you want to know more?
+            - type: button
+              button:
+                caption: Yes
+                callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
+    ViberTextImageButtonMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        viber:
+          from: "1233423454"
+          components:
+            - type: text
+              text: This is our offer
+            - type: image
+              image:
+                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
+            - type: button
+              button:
+                caption: I accept
+                callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
+  schemas:
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          description: |
+            The recipient of the message.
+
+            Could be one of
+              - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+              - group ID create via the WA Group management
+          example: "+1233423454"
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - viber
+          items:
+            type: string
+            enum:
+              - viber
+        overrides:
+          $ref: '#/components/schemas/MessageRequestOverrides'
+        context:
+          $ref: '#/components/schemas/MessageRequestContext'
+        viber:
+          $ref: '#/components/schemas/ViberMessageRequest'
+      example:
+        to: "+123234234"
+        channels: [ "viber" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    StoredMessage:
+      type: object
+      required:
+        - to
+        - channels
+      properties:
+        to:
+          type: string
+          pattern: '^(00|\+)\d{1,15}$'
+          description: |
+            The recipient phone number in international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+          example: '+1233423454'
+        channels:
+          type: array
+          description: Channels selected for delivery.
+          example:
+            - sms
+            - whatsapp
+          items:
+            type: string
+            enum:
+              - sms
+              - whatsapp
+              - tyntecEcho
+        viber:
+          $ref: '#/components/schemas/ViberMessageRequest'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        to: "+123234234"
+        channels: [ "whatsapp" ]
+        whatsapp:
+          from: "545345345"
+          contentType: text
+          text: A simple text message
+    ViberMessageRequest:
+      type: object
+      description: |
+        Viber message to be sent
+      required:
+        - components
+        - messagePurpose
+      properties:
+        from:
+          type: string
+          description: Viber channel ID
+          example: "1233423454"
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
+      example:
+        from: "1233423454"
+        messagePurpose: transaction
+        components:
+          - type: text
+            text: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberTextComponent:
+      type: object
+      description: Text component for viber
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: Text component for viber
+        text:
+          type: string
+          maxLength: 1000
+          description: The message to be sent
+          example: Thanks for contacting our support. We will get back to you in 5 minutes.
+    ViberButtonComponent:
+      type: object
+      description: Button component for viber
+      properties:
+        type:
+          type: string
+          enum:
+            - button
+        button:
+          type: object
+          description: The button to be used
+          properties:
+            caption:
+              type: string
+              maxLength: 30
+              description: Caption of the button
+              example: click me!
+            callback:
+              type: string
+              maxLength: 1000
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Action callback that is executed when the user clicks on the button
+              example: https://my.callba.ck/clicked
+    ViberImageComponent:
+      type: object
+      description: Image component for viber
+      properties:
+        type:
+          type: string
+          description: Image component for Viber
+          enum:
+            - image
+        image:
+          type: object
+          description: The image to be sent
+          properties:
+            url:
+              type: string
+              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+              description: Url location of the image, must be accessible from the public network
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+        - acceptedAt
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global Message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the API confirms that the message request was accepted
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parsable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: string
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
+    MessageRequestContext:
+      type: object
+      description: Contextual information for the message request
+      properties:
+        userContext:
+          type: string
+          maxLength: 255
+          description: |
+            Contextual information that is transfered back on delivery notifications.
+          example:
+            my-message-reference
+    MessageRequestOverrides:
+      type: object
+      description: Overrides of defaults for this message
+      properties:
+        notificationCallbackUrl:
+          type: string
+          pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            When present this url is used for sending the delivery notifications to your webhook.
+            Can be used for debugging use cases or individual routings.
+          example:
+            https://en4u5fpprib5i.x.pipedream.net
+    BulkRequest:
+      type: object
+      description: Bulk request to be sent. The items are guaranted to be sent in order of appearance
+      properties:
+        to:
+          type: string
+        from:
+          type: string
+        channel:
+          type: string
+          description: Channel which should be used for the bulk
+          example: viber
+          enum:
+            - viber
+        viber:
+          type: array
+          description: Viber messages to be sent
+          items:
+            $ref: '#/components/schemas/BulkViberRequest'
+          minItems: 2
+          maxItems: 20
+    BulkViberRequest:
+      type: object
+      properties:
+        components:
+          type: array
+          description: |
+            Components to be used for sending a viber message.
+
+            Only these combinations are supported
+
+             - text
+             - image
+             - text & button
+             - text & image & button
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ViberTextComponent'
+              - $ref: '#/components/schemas/ViberImageComponent'
+              - $ref: '#/components/schemas/ViberButtonComponent'
+          minItems: 1
+          maxItems: 3
+        messagePurpose:
+          type: string
+          enum:
+            - promotion
+            - transaction
+          default: promotion
+          description: Purpose of the message
+          example: promotion
