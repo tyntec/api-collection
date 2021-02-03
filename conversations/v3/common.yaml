@@ -2,9 +2,82 @@ openapi: '3.0.0'
 info:
   title: Common operations
   description: |
-    In this section you find an overview of common operations on the Conversations.
+    In this section, you find an overview of operations common to all Conversations [channels](#channels).
 
-    For details about interaction with a channel please refer to the channel specific section.
+    The Conversations API works as a wrapper for messaging on varied channels and aims to provide a common data model
+    unified to the greatest possible extent.
+
+    Here are some guidelines on the general usage.
+    For details about interaction on a particular channel, please refer to the channel specific section.
+
+    ### Sending messages
+
+    All channels use the same endpoint and generic data model for requests to send messages. However, the components
+    of messages beyond plain text are channel specific. Some channels enforce special policies and restrictions,
+    for example the WhatsApp channel, and you need to watch that you comply with them in the context of your use case.
+
+    <!-- NOTE Channels are expected to be used separately, not in cascades anymore (discontinued in the next version) -->
+
+    For details on the channels, please refer to the channel specific section.
+
+    **Media and other non-text content**
+
+    Some channels allow you to attach images, video, audio, stickers, buttons or URLs.
+    These kinds of content are channel specific.
+
+    **Bulk messaging**
+
+    All channels provide the functionality of sending bulks of messages. A bulk of messages is always sent via one
+    channel to a single recipient.
+
+    Our system guarantees that the messages are sent to the recipient in the requested order.
+
+    ### Receiving status updates
+
+    The API allows you to automatically receive delivery notifications and status updates about messages that you
+    sent to your channels.
+
+    For this service, you will need to provide a URL (`callbackUrl`) at your webserver,
+    e.g. `https://rest.customer.com/messagestatus/`. This URL must serve a webhook able to process POST HTTP requests,
+    which the tyntec [application](current.html#webhook-configuration) will fire upon events in the system, in this case upon message status updates.
+
+    You will also need to subscribe your callback URL to one or more `MessageStatus::*` event types in the tyntec
+    application, see [Webhook Configuration](#webhook-configuration) and [Webhook Events](#webhook-events).
+    The set of available event types slightly varies on each channel:
+
+    - *WhatsApp:* Accepted, Delivered, Seen, Channel failed, Failed, Deleted
+    - *Viber:* Accepted, Delivered, Seen, Channel failed, Failed
+    - *SMS:* Accepted, Delivered, Channel failed, Failed
+
+    **Retries**
+
+    The tyntec application will retry to post the request 2 more times in the case your
+    webhook does not accept the request (final response codes other than 2xx).
+
+    ### Receiving inbound messages
+
+    The API allows you to automatically receive inbound messages sent to your channels by your customers.
+
+    **Note:** For the SMS channel, you need to ask us to enable 2-way interaction,
+    see [Channel specific prerequisites](#channels).
+
+    For this service, you will need to provide a URL (`callbackUrl`) at your webserver,
+    e.g. `https://rest.customer.com/inboundmessages/`. This URL must serve a webhook able to process POST HTTP requests,
+    which the tyntec [application](current.html#webhook-configuration) will fire upon the events of inbound messages.
+
+    You will also need to subscribe your callback URL to the `MoMessage` event type in the tyntec application,
+    see [Webhook Configuration](#webhook-configuration) and [Webhook Events](#webhook-events).
+
+    **Retries**
+
+    The tyntec application will retry to post the request in the case your webhook does not accept the request
+    (final response codes other than 2xx), depending on the channel as follows:
+
+    - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
+      nearly indefinitely (attempts repeat less and less often)
+    - *Viber:* TODO
+    - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
+      delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -17,35 +90,18 @@ servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
+tags:
+  - name: "Message details"
+    description: |
+      Operations on single sent messages common to all channels. They provide detailed information about sent messages.
+  - name: "Inbound media"
+    description: |
+      After receiving an inbound message (_MoMessage_ event) with a media ID, this endpoint can be used to download
+      the media file.
+  - name: "Outbound media"
+    description: |
+      .... to be described ....
 paths:
-  /messages:
-    post:
-      operationId: sendMessage
-      summary: Send a message
-      tags:
-        - "Messaging"
-      description: Send messages via this path.
-      requestBody:
-        description: The message you would like to send
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MessageRequest'
-      responses:
-        202:
-          description: The message is accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/MessageResponse'
-
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
-        default:
-          $ref: '#/components/responses/Default'
   /messages/{messageId}/status:
     parameters:
       - $ref: '#/components/parameters/MessageId'
@@ -53,7 +109,7 @@ paths:
       operationId: getMessageStatus
       summary: Check message status
       tags:
-        - "Messaging"
+        - "Message details"
       description: Check the status of a message
       responses:
         200:
@@ -73,7 +129,7 @@ paths:
       operationId: getMessageEvents
       summary: List delivery events
       tags:
-        - "Messaging"
+        - "Message details"
       description: List the delivery events of a message
       responses:
         200:
@@ -84,34 +140,6 @@ paths:
                 $ref: '#/components/schemas/MessageDeliveryEvents'
         404:
           $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/Default'
-  /bulk:
-    post:
-      operationId: sendABulkMessage
-      summary: Send a bulk message
-      tags:
-        - "Messaging"
-      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
-      requestBody:
-        description: The message bulk you would like to send
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BulkMessageRequest'
-      responses:
-        202:
-          description: The message is accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BulkMessageResponse'
-
-        400:
-          $ref: '#/components/responses/BadRequest'
-        403:
-          $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
   /media:
