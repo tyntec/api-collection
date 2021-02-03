@@ -4,11 +4,11 @@ This is an example request for sending an image together with a rich media templ
 
 The template is defined as
 
-*Header* : 
+*Header:* 
 
     Image
 
-*Body* : 
+*Body:* 
 
 ````
 Hi {{1}},
@@ -18,7 +18,7 @@ we were notified by the shipment partner, that your parcel got damaged (see atta
 Contact us for a free of charge replacement of your order.
 ````
 
-*Footer* :
+*Footer:*
 
     tyntec customer care
 

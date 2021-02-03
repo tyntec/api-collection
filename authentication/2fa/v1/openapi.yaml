@@ -1,11 +1,10 @@
 openapi: 3.0.0
 info:
-  title: Authentication
+  title: Authentication API
   description: >
-    Two-factor authentication (2FA) is an additional security layer for your
-    applications or your business.
+    Two-factor authentication (2FA) is an additional security layer for your business applications.
 
-    Traditional username/password approach is vulnerable, especially on the today's environment where everything is online.
+    Traditional username/password approach is vulnerable, especially in today's environment where everything is online.
 
     2FA aims to increase the security level of a standard password-only approach.
   version: "1.0"
@@ -25,21 +24,16 @@ security:
 tags:
   - name: 2FA Application Service
     description: >
-      Users can create multiple 2FA applications and configurations through the
-      2FA API.
-
+      Users can create multiple 2FA applications and configurations through the 2FA API.
       tyntec stores these configurations so that users can select between own 2FA applications
+      and the corresponding linked configuration. Those configurations will be used
+      when delivering One-Time Passwords (OTP).
 
-      and the corresponding linked configuration. Those configuration will be used
+      For each user, there is the default 2FA application which contains default values and the English language template.
 
-      when delivering One Time Passwords (OTP).
+      This default application will be used in the case no 2FA application ID is specified in an OTP delivery request.
 
-
-      There is a default 2FA application for each user which contains default values and English language template.
-
-      This default application will be used in case no 2FA application ID is specified in an OTP delivery request.
-
-      Default 2FA application is configurable and users can set own default parameters or 2FA application.
+      The default 2FA application is configurable and users can set own default parameters or a 2FA application.
   - name: 2FA OTP Service
     description: The OTP service is used for delivering and checking One Time Password
       (OTP) codes to destination numbers.
@@ -48,8 +42,8 @@ paths:
     get:
       tags:
         - 2FA Application Service
-      summary: Returns all applications created.
-      description: Return a list of applications that have been created under your account
+      summary: List all applications
+      description: Returns a list of all applications that were created under your account.
       operationId: getTwoFactorAuthApplicationsUsingGET
       responses:
         "200":
@@ -61,7 +55,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/TwoFactorAuthApplicationEntity"
         "204":
-          description: Empty list. No applications found for your account
+          description: Empty list. No applications were found for your account.
           content:
             application/json:
               schema:
@@ -75,7 +69,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -83,12 +77,12 @@ paths:
     post:
       tags:
         - 2FA Application Service
-      summary: Create 2FA application
+      summary: Create a 2FA application
       description: |
         Creates a 2FA application instance. You can either:
 
-          - Use the target URI with a POST HTTP request
-          - Include the application parameters in your request body
+          - use the target URI with a POST HTTP request or
+          - include the application parameters in your request body.
 
         Values that are not defined will be populated with default values.
       operationId: createTwoFactorAuthApplicationUsingPOST
@@ -97,10 +91,10 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/TwoFactorAuthApplicationEntity"
-        description: The application to be created.
+        description: The application to be created
       responses:
         "200":
-          description: The new application created
+          description: The new application was created.
           content:
             application/json:
               schema:
@@ -115,14 +109,14 @@ paths:
               examples:
                 response:
                   value:
-                    message: PIN length should be between 4 to 10 digits
+                    message: PIN length should be between 4 to 10 digits.
                     code: "1006"
                     timestamp: 1498730218449
             Wrong expiration time:
               examples:
                 response:
                   value:
-                    message: Number of expiration should be between 30 and 7200
+                    message: Expiration value should be between 30 and 7200.
                     code: "1008"
                     timestamp: 1498730687525
         "401":
@@ -132,7 +126,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -141,9 +135,9 @@ paths:
     get:
       tags:
         - 2FA Application Service
-      summary: Returns a 2FA application
-      description: You can get a specific application by using the GET HTTP method and the
-        application’s Universally Unique ID (UUID)
+      summary: Read a 2FA application
+      description: Returns a 2FA application. You can get a specific application by using the GET HTTP method and the
+        application’s Universally Unique ID (UUID).
       operationId: getTwoFactorAuthApplicationUsingGET
       parameters:
         - name: applicationId
@@ -154,7 +148,7 @@ paths:
             type: string
       responses:
         "200":
-          description: The application is included in the response
+          description: The application is included in the response.
           content:
             application/json:
               schema:
@@ -164,9 +158,9 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: The id for this application is not valid
+          description: The ID is not valid for this application.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -174,15 +168,15 @@ paths:
     post:
       tags:
         - 2FA Application Service
-      summary: Edit 2FA application
-      description: Define the parameters that you would like to change in a 2FA application
+      summary: Edit a 2FA application
+      description: Define the parameters that you would like to change in a 2FA application.
       operationId: updateTwoFactorAuthApplicationUsingPOST
       parameters:
         - name: applicationId
           in: path
-          description: This parameter is part of the URI following the pattern
+          description: This parameter is a part of the URI following the pattern.
             ${baseURL}/application/{applicationId}. You can specify "default" to
-            reference the default application
+            reference the default application.
           required: true
           schema:
             type: string
@@ -196,7 +190,7 @@ paths:
             type: string
         - name: pinLength
           in: query
-          description: The length of the auto generated PIN length. PIN length can be
+          description: The length of the auto-generated PIN length. PIN length can be
             between 4-11 digits.
           required: false
           schema:
@@ -204,9 +198,9 @@ paths:
             format: int32
         - name: alphaNumeric
           in: query
-          description: By default this parameter is FALSE, and the PIN is generated in
-            numeric values. In case this parameter is TRUE then the
-            auto-generated PIN will be a lower case alphanumeric PIN.
+          description: By default, this parameter is FALSE and the PIN is generated in
+            numeric values. In the case this parameter is TRUE, then the
+            auto-generated PIN will be a lowercase alphanumeric PIN.
           required: false
           schema:
             type: boolean
@@ -228,7 +222,7 @@ paths:
             format: int64
         - name: sender
           in: query
-          description: This parameter is controlling the sender name upon SMS delivery.
+          description: This parameter controls the sender name upon SMS delivery.
           required: false
           schema:
             type: string
@@ -236,7 +230,7 @@ paths:
           in: query
           description: This parameter is used to define a number as caller for voice calls.
             Adding this will improve the call success ratio, as some operators
-            filters anonymous calls.
+            filter anonymous calls.
           required: false
           schema:
             type: string
@@ -249,7 +243,7 @@ paths:
             type: boolean
       responses:
         "200":
-          description: The application is included in the response
+          description: The application is included in the response.
           content:
             application/json:
               schema:
@@ -257,7 +251,7 @@ paths:
         "201":
           description: Created
         "400":
-          description: Not valid configuration provided
+          description: Valid configuration was not provided.
           content:
             application/json:
               schema:
@@ -267,35 +261,35 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: The id for this application is not valid
+          description: The ID is not valid for this application.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
     delete:
       tags:
         - 2FA Application Service
-      summary: Delete 2FA application
+      summary: Delete a 2FA application
       description: >
         You can delete your application if needed by using the DELETE HTTP
         method. Existing OTPs will still be valid but resend or verification of
         an OTP will not be possible.
 
 
-        **Note** You cannot delete the “default” application.
+        **Note:** You cannot delete the “default” application.
       operationId: deleteTwoFactorAuthApplicationUsingDELETE
       parameters:
         - name: applicationId
           in: path
-          description: Application ID to be deleted
+          description: ID of the application to be deleted
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: The application was deleted
+          description: The application was deleted.
           content:
             application/json:
               schema:
@@ -307,18 +301,18 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: The id for this application is not valid
+          description: The ID is not valid for this application.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
   "/2fa/v1/application/{applicationId}/language":
     post:
       tags:
         - 2FA Application Service
-      summary: Add/Update language template
+      summary: Add/Update a language template
       description: You can add or edit a language template by referring to the application
         UUID resource and the language you want to add or edit. If you specify
         also the channel optional parameter, the specific template for this
@@ -330,14 +324,14 @@ paths:
           description: The applicationId of the application you would like to edit. This
             parameter is part of the URI following the pattern
             ${baseURL}/application/{applicationId}. You can specify "default" to
-            reference the default application
+            reference the default application.
           required: true
           schema:
             type: string
         - name: language
           in: query
-          description: The language locale should be in [ISO
-            639-1](https://en.wikipedia.org/wiki/ISO_639-1) format
+          description: The language locale should be in the [ISO
+            639-1](https://en.wikipedia.org/wiki/ISO_639-1) format.
           required: true
           schema:
             type: string
@@ -352,14 +346,14 @@ paths:
         - name: channel
           in: query
           required: false
-          description: This optional parameter is set in case you want to have different
+          description: This optional parameter is set in the case you want to have different
             template for the same language, depending on the delivery channel,
-            SMS or VOICE
+            SMS or VOICE.
           schema:
             type: string
       responses:
         "200":
-          description: The application language template has been saved
+          description: The application language template was saved.
           content:
             application/json:
               schema:
@@ -367,7 +361,7 @@ paths:
         "201":
           description: Created
         "400":
-          description: Wrong arguments provided
+          description: Wrong arguments were provided.
           content:
             application/json:
               schema:
@@ -377,13 +371,13 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: The id for this application is not valid
+          description: The ID for this application is not valid.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -391,7 +385,7 @@ paths:
     delete:
       tags:
         - 2FA Application Service
-      summary: Delete language template
+      summary: Delete a language template
       description: >
         You can delete a language template by referring to the application UUID
         resource and the language you want to delete.
@@ -402,9 +396,9 @@ paths:
         - name: applicationId
           in: path
           description: This parameter is the applicationId of the application you would
-            like to edit and it is part of the URI following the pattern
-            ${baseURL}/application/{applicaitonId}. You can specify "default" to
-            reference the default application
+            like to edit and it is a part of the URI following the pattern
+            ${baseURL}/application/{applicationId}. You can specify "default" to
+            reference the default application.
           required: true
           schema:
             type: string
@@ -418,14 +412,14 @@ paths:
         - name: channel
           in: query
           required: false
-          description: This optional parameter is set in case you want to have different
+          description: This optional parameter is set in the case you want to have different
             template for the same language, depending on the delivery channel,
-            SMS or VOICE
+            SMS or VOICE.
           schema:
             type: string
       responses:
         "200":
-          description: The language template was deleted
+          description: The language template was deleted.
           content:
             application/json:
               schema:
@@ -433,7 +427,7 @@ paths:
         "204":
           description: No Content
         "400":
-          description: Wrong arguments provided
+          description: Wrong arguments were provided.
           content:
             application/json:
               schema:
@@ -443,22 +437,21 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: The id for this application is not valid, or language does not exist
+          description: The ID is not valid for this application, or the language does not exist.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
   /2fa/v1/otp:
     get:
       tags:
         - 2FA OTP Service
-      summary: Get all OTPs
-      description: You can query the events endpoint of an OTP delivery instance to get
-        back a list of events reported for this delivery.
+      summary: List OTPs
+      description: You can query the event's endpoint of an OTP delivery instance to get a list
+        of events reported for this delivery.
       operationId: getOtpsForNumberUsingGET
       parameters:
         - name: number
           in: query
-          description: The destination telephone number in
-            [E.164](https://en.wikipedia.org/wiki/E.164) format
+          description: The destination telephone number in the [E.164](https://en.wikipedia.org/wiki/E.164) format
           required: true
           schema:
             type: string
@@ -472,7 +465,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/OtpStatusEntity"
         "204":
-          description: Empty list. No OTPs found for this account
+          description: Empty list. No OTPs were found for this account.
           content:
             application/json:
               schema:
@@ -480,7 +473,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/OtpStatusEntity"
         "400":
-          description: Invalid number format provided
+          description: Invalid number format was provided.
           content:
             application/json:
               schema:
@@ -492,7 +485,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -500,15 +493,15 @@ paths:
     post:
       tags:
         - 2FA OTP Service
-      summary: Sends OTP
-      description: Send an OTP based on your application configuration. Modify the request
+      summary: Send an OTP
+      description: Sends an OTP based on your application configuration. Modifies the request
         based on the optional parameters.
       operationId: sendOtpForNumberUsingPOST
       parameters:
         - name: number
           in: query
           description: The destination telephone number in
-            [E.164](https://en.wikipedia.org/wiki/E.164) format
+            the [E.164](https://en.wikipedia.org/wiki/E.164) format
           required: true
           schema:
             type: string
@@ -521,7 +514,7 @@ paths:
             type: string
         - name: via
           in: query
-          description: SMS/VOICE/AUTO. The channel to deliver the OTP
+          description: SMS/VOICE/AUTO; the channel to deliver the OTP to
           required: false
           schema:
             type: string
@@ -529,57 +522,57 @@ paths:
         - name: country
           in: query
           description: >
-            Optional if you provided a number without country code, it will add
+            Optional; if you provided a number without a country code, it will be added
             automatically.
 
-            If the country code is included but doesn't match the country specified, it will result to an error
+            If the country code is included but doesn't match the country specified, it will result in an error.
           required: false
           schema:
             type: string
         - name: language
           in: query
-          description: The language template to be used in [ISO
+          description: The language template to be used in the [ISO
             639-1](https://en.wikipedia.org/wiki/ISO_639-1) codes. If the
-            template is not specified it will be auto detected based on number.
-            If a language template does not exist, it will default to English
+            template is not specified, it will be auto-detected based on the number.
+            If a language template does not exist, it will default to English.
           required: false
           schema:
             type: string
         - name: text
           in: query
           description: Text to override the default template. Placeholder {{OTP}} must
-            exist for auto generation of OTP, otherwise otpCode should be
-            specified
+            exist for auto-generation of OTP, otherwise otpCode should be
+            specified.
           required: false
           schema:
             type: string
         - name: referenceId
           in: query
-          description: Set your custom reference ID
+          description: Set your custom reference ID.
           required: false
           schema:
             type: string
         - name: otpCode
           in: query
-          description: Override the auto generated OTP code
+          description: Override the auto-generated OTP code.
           required: false
           schema:
             type: string
         - name: sender
           in: query
-          description: Override the applications sender
+          description: Override the applications sender.
           required: false
           schema:
             type: string
         - name: caller
           in: query
-          description: Override the applicaitons caller
+          description: Override the applications caller.
           required: false
           schema:
             type: string
         - name: pinLength
           in: query
-          description: The length of the auto generated PIN length. PIN length can be
+          description: The length of the auto-generated PIN length. PIN length can be
             between 4-11 digits.
           required: false
           schema:
@@ -598,7 +591,7 @@ paths:
           description: Created
         "400":
           description: Invalid parameters provided. Look at the response for the specific
-            error
+            error.
           content:
             application/json:
               schema:
@@ -613,7 +606,7 @@ paths:
         "404":
           description: Not Found
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -625,13 +618,13 @@ paths:
     get:
       tags:
         - 2FA OTP Service
-      summary: OTP status
+      summary: Read OTP status
       description: Returns the status of an OTP.
       operationId: getOtpStatusUsingGET
       parameters:
         - name: otpId
           in: path
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be re-sent to.
           required: true
           schema:
             type: string
@@ -647,13 +640,13 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: OTP code not found
+          description: OTP code was not found.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -661,25 +654,25 @@ paths:
     post:
       tags:
         - 2FA OTP Service
-      summary: Resend an OTP
+      summary: Re-send an OTP
       description: >
-        In case the end user didn’t receive the OTP in a reasonable timeframe
-        you can use this operation to resend the same OTP code.
+        In the case the end user didn’t receive the OTP in a reasonable time frame,
+        you can use this operation to re-send the same OTP code.
 
         The OTP code will be the same as the original one, but you have the option to choose a different delivery channel.
       operationId: resendOtpStatusUsingPOST
       parameters:
         - name: otpId
           in: path
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be re-sent to
           required: true
           schema:
             type: string
         - name: via
           in: query
-          description: You can force a delivery channel by using this parameter. Posible
-            values are AUTO, SMS or VOICE. The default is “AUTO” which will use
-            SMS in case of a mobile number and VOICE in case of a landline
+          description: You can force a delivery channel by using this parameter. Possible
+            values are AUTO, SMS, or VOICE. The default is “AUTO”, which will use
+            SMS in the case of a mobile number and VOICE in the case of a landline
             number.
           required: false
           schema:
@@ -687,21 +680,21 @@ paths:
             default: AUTO
         - name: sender
           in: query
-          description: In case you want to override the sender set in the application's
-            configuration, you can specify a sender name for this OTP delivery
+          description: In the case you want to override the sender set in the application's
+            configuration, you can specify a sender's name for this OTP delivery.
           required: false
           schema:
             type: string
         - name: caller
           in: query
-          description: In case you want to override the caller set in the application's
-            configuration, you can specify a caller id for this OTP delivery
+          description: In the case you want to override the caller set in the application's
+            configuration, you can specify a caller's ID for this OTP delivery.
           required: false
           schema:
             type: string
       responses:
         "200":
-          description: OTP resend
+          description: OTP was re-sent
           content:
             application/json:
               schema:
@@ -709,13 +702,13 @@ paths:
         "201":
           description: Created
         "400":
-          description: Not valid parameter provided
+          description: The provided parameter is not valid.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "401":
-          description: OTP is not valid anymore
+          description: OTP is not valid anymore.
           content:
             application/json:
               schema:
@@ -723,13 +716,13 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: OTP not found
+          description: OTP was not found.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -737,13 +730,13 @@ paths:
     delete:
       tags:
         - 2FA OTP Service
-      summary: Delete OTP
-      description: You can delete the status of an OTP by using this operation
+      summary: Delete an OTP
+      description: You can delete the status of an OTP by using this operation.
       operationId: deleteOtpStatusUsingDELETE
       parameters:
         - name: otpId
           in: path
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be resent to
           required: true
           schema:
             type: string
@@ -761,9 +754,9 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: OTP not found
+          description: OTP was not found.
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -772,14 +765,14 @@ paths:
     get:
       tags:
         - 2FA OTP Service
-      summary: OTP events status
+      summary: List OTP events
       operationId: getOtpEventsUsingGET
-      description: You can query the events endpoint of an OTP delivery instance to get
-        back a list of events reported for this delivery.
+      description: You can query the event's endpoint of an OTP delivery instance to get
+        a list of events reported for this delivery.
       parameters:
         - name: otpId
           in: path
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be re-sent to
           required: true
           schema:
             type: string
@@ -802,7 +795,7 @@ paths:
         "403":
           description: Forbidden
         "404":
-          description: OTP code not found
+          description: OTP code was not found.
           content:
             application/json:
               schema:
@@ -811,7 +804,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -823,19 +816,19 @@ paths:
     post:
       tags:
         - 2FA OTP Service
-      summary: OTP Validate
+      summary: Validate an OTP
       description: >
-        This operation will verify if the OTP code used matched the OTP code
+        This operation will verify whether the OTP code used matched the OTP code
         that was generated for this user.
 
-        To verify an OTP code, you need to provide
+        To verify an OTP code, you need to provide:
             1) the unique OTPId that refers the the OTP delivery request
             2) the OTP code sent to the user
       operationId: checkOtpUsingPOST
       parameters:
         - name: otpId
           in: path
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be re-sent to
           required: true
           schema:
             type: string
@@ -855,33 +848,33 @@ paths:
         "201":
           description: Created
         "202":
-          description: OTP provided is valid
+          description: The provided OTP is valid.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OtpStatusEntity"
         "401":
-          description: OTP code provided is not valid
+          description: The provided OTP code is not valid.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OtpStatusEntity"
         "403":
-          description: OTP has been expired of too many attempts already
+          description: OTP expired because of too many attempts made.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OtpStatusEntity"
         "404":
-          description: OTP not found
+          description: OTP was not found.
         "410":
-          description: OTP is not active anymore
+          description: OTP is not active anymore.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OtpStatusEntity"
         "500":
-          description: Something went wrong :-(
+          description: Something went wrong. :-(
           content:
             application/json:
               schema:
@@ -899,7 +892,7 @@ components:
       properties:
         accountId:
           description: This is your 2FA accountId in the tyntec system. You cannot change
-            this value
+            this value.
           type: string
         applicationId:
           description: The Universally Unique ID (UUID) that identifies the specific
@@ -910,19 +903,19 @@ components:
           type: integer
           format: int32
         created:
-          description: The time that the OTP request was created in milliseconds
+          description: The time in milliseconds in which the OTP request was created
           type: integer
           format: int64
         expire:
-          description: The time that the OTP will expire in milliseconds
+          description: The time in milliseconds in which the OTP will expire
           type: integer
           format: int64
         number:
-          description: The destination telephone number in
-            [E.164](https://en.wikipedia.org/wiki/E.164) format
+          description: The destination phone number in
+            the [E.164](https://en.wikipedia.org/wiki/E.164) format
           type: string
         otpId:
-          description: The OTP ID that the code should be resent
+          description: The OTP ID that the code should be re-sent to
           type: string
         otpStatus:
           description: >
@@ -932,7 +925,7 @@ components:
             EXPIRED, when the OTP expired; TOO_MANY_ATTEMPTS, when the OTP validation requests exceeded the maximum allowed by the application configuration.
           type: string
         referenceId:
-          description: Set your custom reference ID
+          description: Set your custom reference ID.
           type: string
         timestampCreated:
           description: The string timestamp “created” representation in UTC Z format
@@ -945,30 +938,30 @@ components:
       description: Status schema
       properties:
         created:
-          description: Timestamp in [Epoch/Unix
+          description: Timestamp in the [Epoch/Unix
             time](https://en.wikipedia.org/wiki/Unix_time)
           type: integer
           format: int64
         status:
-          description: Event status. Possible values success/failed/null
+          description: Event status; possible values are success/failed/null.
           type: string
         statusText:
-          description: The status reported by the deivery system
+          description: The status reported by the delivery system
           type: string
         timestampCreated:
           description: The string timestamp “created” representation in UTC Z format
           type: string
         type:
-          description: Refere to the next table regarding all event types
+          description: Refer to the next table regarding all event types.
           type: string
     TwoFactorAuthApplicationEntity:
       type: object
-      description: Two Factor Authentication Application structure
+      description: Two-Factor Authentication Application structure
       properties:
         alphanumeric:
           type: boolean
           example: false
-          description: If the OTP is alphanumeric or not
+          description: Whether the OTP is alphanumeric or not
         attempts:
           type: integer
           format: int32
@@ -978,14 +971,14 @@ components:
           type: integer
           format: int64
           example: 300
-          description: How many seconds until OTP expires
+          description: After how many seconds the OTP expires
         name:
           type: string
           description: Custom application name
         pinLength:
           type: integer
           format: int32
-          description: The length of the auto generated PIN length. PIN length can be
+          description: The length of the auto-generated PIN length. PIN length can be
             between 4-11 digits.
           example: 4
         sender:
@@ -996,7 +989,7 @@ components:
           type: string
           example: VERIFY
           description: The caller used for TTS delivery. Using a valid number will improve
-            filtering issues caused by anonymous calls
+            filtering issues caused by anonymous calls.
     ErrorResponse:
       type: object
       description: Error Response schema

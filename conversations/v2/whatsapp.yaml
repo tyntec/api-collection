@@ -1,40 +1,12 @@
 openapi: '3.0.0'
 info:
-  title: Conversations API (duplicate)
+  title: WhatsApp
   description: |
-    The Conversations API allows you to easily send messages to your customers via messaging services like WhatsApp
-    and still reach customers with classic SMS.
-    Additionally, you can define a chain of channels that will be used for messaging attempts until one succeeds.
-    Notifications and messages from your users are sent by us to your system via the HTTP ```POST``` method.
+    Conversations allows you to easily send messages to your customers via  WhatsApp
 
     **Channel specific prerequisites**
 
-    - *2-way SMS:* Please contact us to get the details for the 2-way SMS setup
-    - *WhatsApp:* A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
-    - *Viber:* A Viber Service ID is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-conversational-api-viber-business)
-
-    **Adhered web standards**
-
-    One goal of the API is to follow best practices and standards around HTTP-based services.
-    A building block of this is to follow the RFCs:
-
-    - [RFC 5988 - Web Linking](https://tools.ietf.org/html/rfc5988)
-    - [RFC 7807 - Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
-
-    *RFC 5988* is implemented in a way that all API calls that return a list of resources, make use of the following pagination headers:
-
-    - `first` – The first page in the resource list pagination
-    - `previous` – The predecessor page of the current page in the resource list pagination
-    - `current` – The current page in the resource list pagination
-    - `next` – The successor page of the current of page in the resource list pagination
-    - `last` – The last page in the resource list pagination
-
-    In addition, the following custom headers are provided for convenience:
-
-    - `x-total-pages` – Total number of pages in the list of requested sub-resources
-    - `x-total-items` – Total number of items in the list of requested sub-resources
-    - `x-page-size` – Maximum size of a page (number of items in a single page)
-    - `x-current-page` – Page number of the current page in the list of requested sub-resources
+    - *WhatsApp:* A WhatsApp Business Account is required in order to use this channel. Please, [request your access here](https://www.tyntec.com/form-whatsapp-setup-your-waba).
 
   contact:
     name: tyntec API Support
@@ -47,100 +19,45 @@ info:
 servers:
   - url: https://api.tyntec.com/chat-api/v2
 security:
-  - ApiKeyHeader: []
+  - ApiKeyHeader: [ ]
 tags:
-  - name: "Send messages"
+  - name: "Messaging"
     description: |
       In this section, we guide you on how to send messages, get information about the status and the events happening
       during delivery.
-  - name: "Receive messages"
+  - name: "Account management"
     description: |
-      In order to receive messages sent by the user, you need to configure a publicly available endpoint first.
+      Account management grants you access to information about the WhatsApp accounts provisioned to you.
 
-      We use the HTTP ```POST``` method to send the user messages to your system as defined in MoMessage.
+      At the moment, it does not support requesting new WhatsApp accounts or editing existing ones.
 
-      Media sent by the user can be downloaded by:
-
-        - following the link in the MoMedia object, or
-        - using the received media ID and query our system via _/media/{media-id}_ (see below)
-  - name: "Notifications"
-    description: |
-      Notifications or DLRs are **sent** to your system when:
-
-       - a message reaches a final state, or
-       - a message reaches an intermediate state and you opt-in to receive this,
-       - a user decides to delete a message previously send **to** you,
-       - a user interacts with a group, such as joining or leaving the group.
-
-      We treat
-
-        - delivered
-        - seen / read
-        - finally failed
-
-      as final states for a message sent by you.
-
-      All other states are treated as intermediate states.
-
-      We will use HTTP ```POST``` method to send the notifications to your system.
-
-      The notification message has the same model as the message status you can query as MessageStatus.
-  - name: "Applications"
-    description: |
-      Conversations allows you to freely define which events should be sent via a callback URL to your webhook
-      implementation.
-
-      **Important**:
-
-       - By now, only a default application is supported. The extension to custom applications is planned for future releases
-       - The API merges events pointing to the same callback URL into one set.
-       - When an update of a callback URL is executed, the whole webhook definition must be restated.
-  - name: "WA Account management"
-    description: |
-      The WA Account management grants you access to information about the WhatsApp accounts
-      provisioned for you.
-
-      At the moment it does not support requesting new WhatsApp accounts or editing existing ones.
-
-      The WhatsApp account and it's subresources can *only* be managed by one of your CPaaS API Account.
+      The WhatsApp account and its subresources can *only* be managed by one of your CPaaS API Accounts.
 
       Read access to an account is available for all accounts that are associated with a phone number and thus eligible
       for sending messages.
-  - name: "WA Template management"
+  - name: "Template management"
     description: |
-      The WA Template management enables you to interact with the templates defined for your WhatsApp account.
+      Template management enables you to interact with the templates defined for your WhatsApp account.
 
       We support creating or deleting templates and adding new localizations to an existing template.
 
-      Due to restrictions by WhatsApp editing is not support yet.
-  - name: "WA Phone Number insights"
+      Due to restrictions by WhatsApp, editing is not supported yet.
+  - name: "Phone Number insights"
     description: |
-      The WA Phone Number insights allows you to get information about the status of a phone number.
+      Phone Number insights allow you to get information about the status of a phone number in your account.
 
-      It also provides *read* access to the templates usable by the phone number.
-x-tagGroups:
-  - name: Messaging
-    tags:
-      - "Send messages"
-      - "Receive messages"
-      - "Notifications"
-  - name: General
-    tags:
-      - "Applications"
-  - name: WhatsApp
-    tags:
-      - "WA Account management"
-      - "WA Template management"
-      - "WA Phone Number insights"
-      - "WA Settings management"
+      It also provides *read* access to the templates usable with the phone number.
+  - name: "Profile management"
+    description: |
+      Profile management allows you to read and update profile settings of your WhatsApp phone numbers.
 paths:
   /messages:
     post:
       operationId: sendMessage
       summary: Send a message
       tags:
-        - "Send messages"
-      description: Send chat messages via this path.
+        - "Messaging"
+      description: Send a WhatsApp message.
       requestBody:
         description: The message you would like to send
         required: true
@@ -149,8 +66,6 @@ paths:
             schema:
               $ref: '#/components/schemas/MessageRequest'
             examples:
-              SMS - Text:
-                $ref: '#/components/examples/SMSTextMessage'
               WA - Text:
                 $ref: '#/components/examples/WhatsAppTextMessage'
               WA - Audio:
@@ -171,17 +86,9 @@ paths:
                 $ref: '#/components/examples/WhatsAppInteractiveCallToActionMessage'
               WA - Quick reply Template:
                 $ref: '#/components/examples/WhatsAppInteractiveQuickReplyMessage'
-              Viber - Text:
-                $ref: '#/components/examples/ViberTextMessage'
-              Viber - Image:
-                $ref: '#/components/examples/ViberImageMessage'
-              Viber - Text & Button:
-                $ref: '#/components/examples/ViberTextButtonMessage'
-              Viber - Text & Image & Button:
-                $ref: '#/components/examples/ViberTextImageButtonMessage'
       responses:
         202:
-          description: The message is accepted by our system
+          description: The message was accepted by our system.
           content:
             application/json:
               schema:
@@ -198,13 +105,15 @@ paths:
       operationId: retrieveMessage
       summary: Retrieve the message
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
 
-        Returns back a message previously send by you.
+        Returns a message previously sent by you.
 
-        **Important** After a final status notification (delivered, read or failed) the message
-        is only available for the next 48 hours. After this period we delete the message in our system.
+        **Important**
+
+        After a final status notification (delivered, read or failed), the message
+        is only available for the next 48 hours. After this period, we delete the message from our system.
       parameters:
         - $ref: '#/components/parameters/MessageId'
       responses:
@@ -218,39 +127,16 @@ paths:
           $ref: '#/components/responses/MessageIdUnknown'
         default:
           $ref: '#/components/responses/Default'
-  /messages/{message-id}/history:
-    get:
-      operationId: getMessageHistory
-      summary: View message history
-      tags:
-        - "Send messages"
-      description: |
-        Get the history of the message.
-
-        This will give you detailed information about the delivery flow of the message.
-      parameters:
-        - $ref: '#/components/parameters/MessageId'
-      responses:
-        200:
-          description: The history of the message ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageHistory'
-        404:
-          $ref: '#/components/responses/MessageIdUnknown'
-        default:
-          $ref: '#/components/responses/Default'
   /bulks:
     post:
       operationId: sendBulkMessage
       summary: Send a bulk of messages
       tags:
-        - "Send messages"
+        - "Messaging"
       description: |
         Send a bulk of messages via one channel to one recipient.
 
-        The system guarantees that the messages are send in order to the recipient
+        The system guarantees that the messages are sent in order to the recipient
       requestBody:
         description: The message bulk you want to send
         required: true
@@ -260,54 +146,12 @@ paths:
               $ref: '#/components/schemas/BulkRequest'
       responses:
         202:
-          description: The bulk was accepted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/BulkAccepted'
+          description: The bulk was accepted.
+          $ref: 'common.yaml#/components/responses/BulkAccepted'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
           $ref: '#/components/responses/Forbidden'
-        default:
-          $ref: '#/components/responses/Default'
-  /media/{media-id}:
-    parameters:
-      - $ref: '#/components/parameters/MediaId'
-    get:
-      operationId: downloadMedia
-      summary: Download received media
-      tags:
-        - "Receive messages"
-      description: Retrieve the media associated with the ID
-      responses:
-        200:
-          description: The media associated with the ID requested exists.
-          content:
-            'audio/*':
-              schema:
-                type: string
-                format: binary
-            'application/*':
-              schema:
-                type: string
-                format: binary
-            'text/*':
-              schema:
-                type: string
-                format: binary
-            'video/*':
-              schema:
-                type: string
-                format: binary
-        404:
-          description: The media associated with the ID does not exist in our system
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-              example:
-                status: 404
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/messages/{message-id}:
@@ -315,10 +159,10 @@ paths:
       - $ref: '#/components/parameters/MoMessageId'
     put:
       operationId: markWhatsAppMessageAsRead
-      summary: Mark whatsapp message as read
-      description: Marks a previously received whatsapp message as read
+      summary: Mark a message as read
+      description: Marks a previously received WhatsApp message as read
       tags:
-        - "Receive messages"
+        - "Messaging"
       requestBody:
         description: The status change to execute
         required: true
@@ -328,29 +172,9 @@ paths:
               $ref: '#/components/schemas/WhatsAppMessageStatusUpdate'
       responses:
         200:
-          description: Message was successfully marked as read
+          description: Message was successfully marked as read.
         404:
           $ref: '#/components/responses/MoMessageNotFound'
-        default:
-          $ref: '#/components/responses/Default'
-  /messages/{message-id}/status:
-    get:
-      operationId: checkMessageStatus
-      summary: Check message status
-      tags:
-        - "Notifications"
-      description: Check status of the message
-      parameters:
-        - $ref: '#/components/parameters/MessageId'
-      responses:
-        200:
-          description: The message ID requested exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageStatus'
-        404:
-          $ref: '#/components/responses/MessageIdUnknown'
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/accounts:
@@ -358,35 +182,35 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PhoneNumberQuery'
       operationId: listAllWhatsAppAccounts
-      summary: List WhatsApp accounts
+      summary: List accounts
       tags:
-        - "WA Account management"
+        - "Account management"
       description: |
-        Lists all WhatsApp accounts managed by this access credentials.
+        Lists all WhatsApp accounts managed by these access credentials.
 
         If the phone number query parameter is set, only the phone numbers account is listed.
       responses:
         200:
-          description: WhatsApp accounts managed by this access credentials
+          description: Returned a list of WhatsApp accounts
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppAccounts'
           headers:
             x-total-pages:
-              description: how many pages are available
+              description: How many pages are available
               schema:
                 type: integer
             x-total-items:
-              description: how many items are available in total
+              description: How many items are available in total
               schema:
                 type: integer
             x-page-size:
-              description: maximum number of items per page
+              description: Maximum number of items per page
               schema:
                 type: integer
             x-current-page:
-              description: current page
+              description: The current page
               schema:
                 type: integer
             Link:
@@ -402,13 +226,13 @@ paths:
       - $ref: '#/components/parameters/WhatsAppAccountId'
     get:
       operationId: getWhatsAppAccount
-      summary: Get details of an account
+      summary: Read an account
       tags:
-        - "WA Account management"
-      description: Get WhatsApp account
+        - "Account management"
+      description: Returns details of a WhatsApp account.
       responses:
         200:
-          description: WhatsApp account
+          description: Returned a WhatsApp account
           content:
             application/json:
               schema:
@@ -422,32 +246,32 @@ paths:
       - $ref: '#/components/parameters/WhatsAppAccountId'
     get:
       operationId: listPhoneNumbersOfWhatsAppAccount
-      summary: List accounts phone numbers
+      summary: List phone numbers
       tags:
-        - "WA Account management"
-      description: List all phone numbers of a WhatsApp account
+        - "Account management"
+      description: Lists all phone numbers of a WhatsApp account.
       responses:
         200:
-          description: Phone numbers of a WhatsApp account
+          description: Returned phone numbers of a WhatsApp account
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppPhoneNumbers'
           headers:
             x-total-pages:
-              description: how many pages are available
+              description: How many pages are available
               schema:
                 type: integer
             x-total-items:
-              description: how many items are available in total
+              description: How many items are available in total
               schema:
                 type: integer
             x-page-size:
-              description: maximum number of items per page
+              description: Maximum number of items per page
               schema:
                 type: integer
             x-current-page:
-              description: current page
+              description: The current page
               schema:
                 type: integer
             Link:
@@ -465,33 +289,33 @@ paths:
       - $ref: '#/components/parameters/WhatsAppAccountId'
     get:
       operationId: listTemplatesOfWhatsAppAccount
-      summary: List accounts templates
+      summary: List templates
       tags:
-        - "WA Template management"
-        - "WA Account management"
-      description: List all templates of a WhatsApp account
+        - "Template management"
+        - "Account management"
+      description: Lists all templates of your WhatsApp account.
       responses:
         200:
-          description: Templates of a WhatsApp account
+          description: Returned the templates
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppTemplates'
           headers:
             x-total-pages:
-              description: how many pages are available
+              description: How many pages are available
               schema:
                 type: integer
             x-total-items:
-              description: how many items are available in total
+              description: How many items are available in total
               schema:
                 type: integer
             x-page-size:
-              description: maximum number of items per page
+              description: Maximum number of items per page
               schema:
                 type: integer
             x-current-page:
-              description: current page
+              description: The current page
               schema:
                 type: integer
             Link:
@@ -507,12 +331,12 @@ paths:
     post:
       operationId: waSubmitTemplateForReview
       summary: Submit a template for review
-      description: Creates a new template that is submitted for review
+      description: Creates a new template that is submitted for review to Facebook.
       tags:
-        - "WA Template management"
+        - "Template management"
       requestBody:
         description: |
-          The template for review by Facebook
+          The template to be submitted
         required: true
         content:
           application/json:
@@ -531,6 +355,8 @@ paths:
                 $ref: '#/components/examples/WhatsAppRichTemplateWithVideo'
               Location header:
                 $ref: '#/components/examples/WhatsAppRichTemplateWithLocation'
+              Footer:
+                $ref: '#/components/examples/WhatsAppTextWithFooterTemplate'
               Quick replies:
                 $ref: '#/components/examples/WhatsAppInteractiveTemplateWithQuickReply'
               Call to action:
@@ -552,13 +378,13 @@ paths:
       - $ref: '#/components/parameters/TemplateId'
     get:
       operationId: waGetTemplate
-      summary: Get details of a template
-      description: Get details of a template
+      summary: Read a template
+      description: Returns details of a template in your WhatsApp account.
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         200:
-          description: Specified template of the account
+          description: Returned the template from your account
           content:
             application/json:
               schema:
@@ -571,15 +397,15 @@ paths:
       operationId: waDeleteTemplate
       summary: Delete a template
       description: |
-        Deletes the template.
+        Deletes the template from your WhatsApp account.
 
-        After deleting the template a 30 days grace period is starting.
-        This is indicated by the `expiresAt` property of the localizations
+        After deleting the template, a 30-days grace period is starting.
+        This is indicated by the `expiresAt` property of the localizations.
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         204:
-          description: Deletion of the template is pendind now
+          description: Deletion of the template is pending now.
         404:
           $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
@@ -590,13 +416,13 @@ paths:
       - $ref: '#/components/parameters/TemplateId'
     get:
       operationId: waListLocalizations
-      summary: List localizations of a template
-      description: List localizations of a template
+      summary: List localizations
+      description: Lists localizations of a template.
       tags:
-        - "WA Template management"
+        - "Template management"
       responses:
         200:
-          description: Localizations of a template.
+          description: Returned localizations of the template.
           content:
             application/json:
               schema:
@@ -611,12 +437,12 @@ paths:
     post:
       summary: Add a localization
       operationId: waTemplateAddLocalization
-      description: Adds a localizations to the template. Will be separately reviewed by Facebook
+      description: Adds a localization to a template. The localization will be separately reviewed by Facebook.
       tags:
-        - "WA Template management"
+        - "Template management"
       requestBody:
         description: |
-          The localization for review @ facebook
+          The localization to be submitted
         required: true
         content:
           application/json:
@@ -634,32 +460,32 @@ paths:
   /channels/whatsapp/phone-numbers:
     get:
       tags:
-        - "WA Phone Number insights"
+        - "Phone Number insights"
       operationId: listAllWhatsAppPhoneNumbers
-      summary: Lists phone numbers
-      description: Lists all phone numbers accessible for the given credentials
+      summary: List phone numbers
+      description: Lists all phone numbers accessible for the given credentials.
       responses:
         200:
-          description: Phone numbers assigned to the account
+          description: Phone numbers assigned to your account
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppPhoneNumbers'
           headers:
             x-total-pages:
-              description: how many pages are available
+              description: How many pages are available
               schema:
                 type: integer
             x-total-items:
-              description: how many items are available in total
+              description: How many items are available in total
               schema:
                 type: integer
             x-page-size:
-              description: maximum number of items per page
+              description: Maximum number of items per page
               schema:
                 type: integer
             x-current-page:
-              description: current page
+              description: The current page
               schema:
                 type: integer
             Link:
@@ -675,14 +501,14 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getWhatsAppPhoneNumber
-      summary: Get details of a phone number
+      summary: Read a phone number
       tags:
-        - "WA Phone Number insights"
-      description: Retrieves information about the phone number
+        - "Phone Number insights"
+      description: Returns details about a phone number.
 
       responses:
         200:
-          description: Information about the phone number
+          description: Returned the details about the phone number
           content:
             application/json:
               schema:
@@ -696,36 +522,36 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getAvailableWhatsAppTemplates
-      summary: List templates available to a phone number
+      summary: List available templates
       tags:
-        - "WA Phone Number insights"
+        - "Phone Number insights"
       description: Lists all available templates for a phone number
       responses:
         200:
-          description: Available templates for a phone number
+          description: Returned templates available for the phone number
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WhatsAppTemplates'
           headers:
             x-total-pages:
-              description: how many pages are available
+              description: How many pages are available
               schema:
                 type: integer
             x-total-items:
-              description: how many items are available in total
+              description: How many items are available in total
               schema:
                 type: integer
             x-page-size:
-              description: maximum number of items per page
+              description: Maximum number of items per page
               schema:
                 type: integer
             x-current-page:
-              description: current page
+              description: The current page
               schema:
                 type: integer
             Link:
-              description: Links describing pagination.
+              description: Links describing pagination
               schema:
                 properties:
                   rel:
@@ -739,13 +565,13 @@ paths:
       - $ref: '#/components/parameters/PhoneNumber'
     get:
       operationId: getCurrentWAProfile
-      summary: Get the current profile
-      description: Get the current profile settings
+      summary: Read the profile
+      description: Returns profile settings of a WhatsApp phone number
       tags:
-        - "WA Settings management"
+        - "Profile management"
       responses:
         200:
-          description: The current profile settings
+          description: Returned the current profile settings
           content:
             application/json:
               schema:
@@ -764,10 +590,9 @@ paths:
 
         Supports also selective updates.
 
-        Removal of an information is done by setting its value to an empty
-        string.
+        To remove a particular field, set its value to an empty string.
       tags:
-        - "WA Settings management"
+        - "Profile management"
       requestBody:
         description: Information in order to create the group
         required: true
@@ -792,13 +617,13 @@ paths:
       - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
       operationId: getCurrentWALogo
-      summary: Get the logo
-      description: Returns the current logo
+      summary: Read the logo
+      description: Returns the current logo assigned to a WhatsApp phone number profile.
       tags:
-        - "WA Settings management"
+        - "Profile management"
       responses:
         200:
-          description: Current logo
+          description: Returned the current logo
           content:
             image/png:
               schema:
@@ -821,16 +646,16 @@ paths:
       operationId: updateCurrentWALogo
       summary: Update the logo
       description: |
-        Updates the logo
+        Updates the logo assigned to a WhatsApp phone number profile.
 
-        The logo must have a minimal edge size of 500 pixel and must not exceed 5 MB in size.
+        The logo must have a minimal edge size of 500 pixels and must not exceed 5 MB in size.
 
-        Recommended size is 640x640 pixel
+        The recommended size is 640x640 pixels.
       tags:
-        - "WA Settings management"
+        - "Profile management"
       requestBody:
         required: true
-        description: Image that should be used as a profile logo
+        description: Image that should be used as the profile logo
         content:
           image/png:
             schema:
@@ -842,65 +667,13 @@ paths:
               format: binary
       responses:
         204:
-          description: Logo successfully updated
+          description: Updated the logo successfully
         400:
           $ref: '#/components/responses/BadRequest'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
-        default:
-          $ref: '#/components/responses/Default'
-  /applications:
-    get:
-      tags:
-        - "Applications"
-      summary: List all applications
-      operationId: listApplications
-      description: Lists all applications configured for the APIKey
-      responses:
-        200:
-          description: List of applications. Will never be empty
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationList'
-  /applications/default:
-    get:
-      tags:
-        - "Applications"
-      summary: Get default application
-      operationId: getDefaultApplication
-      description: Returns default application configured for the APIKey
-      responses:
-        200:
-          description: Current definition of the default application
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultApplicationResponse'
-    patch:
-      tags:
-        - "Applications"
-      summary: Update default application
-      operationId: updateDefaultApplication
-      description: |
-        The operation will save the specified webhooks. Makes merge(replacement)
-        operation on existing event types for newly defined webhooks.
-        Any other event type of the existing webhooks will remain associated
-        with the previous callback URL.
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DefaultApplicationUpdate"
-      responses:
-        204:
-          description: Webhooks have been successfully saved.
-        400:
-          $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/Default'
 components:
@@ -914,7 +687,7 @@ components:
         (either on sending messages or interacting with other phone number based features) assigned.
   responses:
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: Default response in case of any other error. Check the _Problem_ object for details.
       content:
         application/problem+json:
           schema:
@@ -928,7 +701,8 @@ components:
           example:
             status: 404
     WhatsAppProfileUpdateFailed:
-      description: Updating the whatsapp profile failed. In case a partial update failed please retrieve the current profile, change the required information and retry with the whole profile.
+      description: |
+        Profile update failed. In the case a partial update failed: retrieve the current profile, change the required information and retry with the whole profile.
       content:
         application/problem+json:
           schema:
@@ -940,10 +714,10 @@ components:
                 description: error code
           example:
             status: 400
-            title: Updating profile failed
+            title: Profile update failed.
             code: 1009
     WhatsAppAccountUnknown:
-      description: The WhatsApp account does not exist
+      description: The WhatsApp account does not exist.
       content:
         application/problem+json:
           schema:
@@ -952,7 +726,7 @@ components:
             status: 404
             title: WhatsApp account unknown
     PhoneNumberUnknown:
-      description: The phone number does not exist
+      description: The phone number does not exist.
       content:
         application/problem+json:
           schema:
@@ -961,7 +735,7 @@ components:
             status: 404
             title: Phone number unknown
     MoMessageNotFound:
-      description: No MO Message found for the given ID
+      description: No MoMessage found for the given Message ID.
       content:
         application/problem+json:
           schema:
@@ -969,17 +743,8 @@ components:
           example:
             status: 404
             title: Not Found
-    PhoneNumberOrGroupIdUnknown:
-      description: The phone number or group ID does not exist
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            status: 404
-            title: Group ID unknown
     BadRequest:
-      description: The request does not match our expectations. Please check the Problems object for details
+      description: The request does not match our expectations. Check the _Problem_ object for details.
       content:
         application/problem+json:
           schema:
@@ -987,14 +752,14 @@ components:
           example:
             status: 400
             violations: [
-            {
-              field: validate.request.whatsapp.contentType,
-              message: must not be empty
-            }
+              {
+                field: validate.request.whatsapp.contentType,
+                message: must not be empty
+              }
             ]
             title: Constraint Violation
     Forbidden:
-      description: You attempting to use a number that is not assigned to your account
+      description: You're attempting to use a number that is not assigned to your account.
       content:
         application/problem+json:
           schema:
@@ -1004,14 +769,14 @@ components:
             title: Forbidden
             status: 403
     ResourceCreated:
-      description: The requested resource was created
+      description: The requested resource was created.
       headers:
         Location:
           schema:
             type: string
           description: Location URI of the newly created resource
     BulkAccepted:
-      description: The requested bulk was accepted
+      description: The requested bulk was accepted.
       content:
         application/json:
           schema:
@@ -1030,23 +795,6 @@ components:
                 minItems: 2
                 maxItems: 20
   parameters:
-    GroupId:
-      name: group-id
-      in: path
-      required: true
-      description: Group ID
-      schema:
-        type: string
-      example: 4923147790717-1564131378
-    MediaId:
-      name: media-id
-      in: path
-      required: true
-      description: The ID of the media to be downloaded
-      schema:
-        type: string
-        format: uuid
-        example: 77185196-664a-43ec-b14a-fe97036c697f
     MessageId:
       name: message-id
       in: path
@@ -1060,7 +808,7 @@ components:
       name: message-id
       in: path
       required: true
-      description: The ID of the mo message
+      description: The ID of the MoMessage
       schema:
         type: string
         example: ABEGSRcolTdUAhCDTh0Viu2YwDb751d6V33t
@@ -1083,18 +831,10 @@ components:
         minLength: 4
         maxLength: 15
       example: 4923147790717
-    WhatsAppId:
-      name: whats-app-id
-      in: path
-      required: true
-      description: Whatsapp ID of a user
-      schema:
-        type: string
-        example: 4923147790717
     WhatsAppProfileLogoFormat:
       name: format
       in: query
-      description: The format the icon should be returned
+      description: The format in which the icon should be returned
       schema:
         type: string
         enum:
@@ -1119,15 +859,7 @@ components:
       example: welcome_message
   examples:
     ## Messaging section
-    SMSTextMessage:
-      value:
-        to: "12331132"
-        channels:
-          - sms
-        sms:
-          from: "1233423454"
-          contentType: text
-          text: hi!
+
     WhatsAppTextMessage:
       value:
         to: "12331132"
@@ -1303,58 +1035,6 @@ components:
                 parameters:
                   - type: text
                     payload: 1233131-2020
-    ViberTextMessage:
-      value:
-        to: "12331132"
-        channels:
-          - viber
-        viber:
-          from: "1233423454"
-          components:
-            - type: text
-              text: "hi!"
-    ViberImageMessage:
-      value:
-        to: "12331132"
-        channels:
-          - whatsapp
-        whatsapp:
-          from: "1233423454"
-          components:
-            - type: image
-              image:
-                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
-    ViberTextButtonMessage:
-      value:
-        to: "12331132"
-        channels:
-          - whatsapp
-        viber:
-          from: "1233423454"
-          components:
-            - type: text
-              text: Do you want to know more?
-            - type: button
-              button:
-                caption: Yes
-                callback: https://api.tyntec.com/opt-in/4587db99-0e79-4231-a797-2ac1cf11239b
-    ViberTextImageButtonMessage:
-      value:
-        to: "12331132"
-        channels:
-          - whatsapp
-        viber:
-          from: "1233423454"
-          components:
-            - type: text
-              text: This is our offer
-            - type: image
-              image:
-                url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
-            - type: button
-              button:
-                caption: I accept
-                callback: https://api.tyntec.com/offers/2b87db99-0e79-4231-a797-2ac1cf11009b
     ## Template management section
     WhatsAppTextTemplate:
       value:
@@ -1554,7 +1234,8 @@ components:
             The recipient of the message.
 
             Could be one of
-              - phone number in international format. In this it should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+
+              - phone number in the international format. It should follow the guidelines of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is accepted as well.
               - group ID create via the WA Group management
           example: "+1233423454"
         channels:
@@ -1574,23 +1255,11 @@ components:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
           $ref: '#/components/schemas/MessageRequestContext'
-        defaultContent:
-          $ref: '#/components/schemas/DefaultContent'
-        sms:
-          $ref: '#/components/schemas/SMSRequest'
         whatsapp:
           $ref: '#/components/schemas/WhatsappMessageRequest'
-        tyntecEcho:
-          description: |
-            This channel can be used for integration purposes without sending any message to an actual device.
-            A detailed description is provided on the object definition.
-          allOf:
-            - $ref: '#/components/schemas/TyntecEchoRequest'
-        viber:
-          $ref: '#/components/schemas/ViberMessageRequest'
       example:
         to: "+123234234"
-        channels: ["whatsapp"]
+        channels: [ "whatsapp" ]
         whatsapp:
           from: "545345345"
           contentType: text
@@ -1605,8 +1274,8 @@ components:
           type: string
           pattern: '^(00|\+)\d{1,15}$'
           description: |
-            The recipient phone number in international format. It should follow the guidelines
-            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is as well accepted
+            The recipient phone number in the international format. It should follow the guidelines
+            of [E.164](https://en.wikipedia.org/wiki/E.164) but leading 00 is accepted as well.
           example: '+1233423454'
         channels:
           type: array
@@ -1620,234 +1289,29 @@ components:
               - sms
               - whatsapp
               - tyntecEcho
-        sms:
-          $ref: '#/components/schemas/SMSRequest'
         whatsapp:
           $ref: '#/components/schemas/WhatsappMessageRequest'
-        tyntecEcho:
-          description: |
-            This channel can be used for integration purposes without sending any message to an actual device.
-            A detailed description is provided on the object definition.
-          allOf:
-            - $ref: '#/components/schemas/TyntecEchoRequest'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         to: "+123234234"
-        channels: ["whatsapp"]
+        channels: [ "whatsapp" ]
         whatsapp:
           from: "545345345"
           contentType: text
           text: A simple text message
-    DefaultContent:
-      deprecated: true
-      description: |
-        The default content that is applied to all channels.
-
-        Each component might be overrwritten or extended by channel specific settings.
-
-        This can be used to specify the text for a message once, but the _from_ per used channel.
-
-        **Note** The default content will be discontinued in a future release, please migrate to the channel
-        specific properties _whatsapp_, _sms_ and/or _tyntecEcho_
-      type: object
-      required:
-        - contentType
-        - from
-      properties:
-        from:
-          type: string
-          description: The sender of the message
-          example: "1233423454"
-        contentType:
-          type: string
-          enum:
-            - template
-            - text
-            - url
-            - media
-          description: What kind of payload is used
-          example: template
-        text:
-          type: string
-          description: The text to be sent
-          example: Thanks for contacting our support. We will get back to you in 5 minutes.
-        url:
-          type: string
-          description: the URL you would like to send. Must be a valid http(s) URL
-          example: https://www.tyntec.com
-        media:
-          $ref: '#/components/schemas/Media'
-        template:
-          $ref: '#/components/schemas/Template'
-      example:
-        from: "1233423454"
-        contentType: template
-        template:
-          templateId: welcome_message
-          language:
-            policy: deterministic
-            code: en
-          parameters:
-            - default: Mr.
-            - default: Doe
-    SMSRequest:
-      type: object
-      description: |
-        Normal SMS to be sent.
-
-        If Content is used as well this will override the specification made there.
-
-        In case URL type is specified the recipient will receive the plain URL as SMS.
-      required:
-        - contentType
-      properties:
-        contentType:
-          type: string
-          enum:
-            - text
-            - url
-          description: What kind of payload should be sent
-          example: text
-        from:
-          type: string
-          description: The sender of the message
-          example: "1233423454"
-        text:
-          type: string
-          maxLength: 3000
-          description: The message to be sent
-          example: Thanks for contacting our support. We will get back to you in 5 minutes.
-        url:
-          type: string
-          deprecated: true
-          description: |
-            The URL you would like to send. Must be a valid http(s) URL.
-
-            **Note** This property will be removed in a future release. Please use ``text`` instead.
-          example: https://www.tyntec.com
-      example:
-        contentType: text
-        from: "1233423454"
-        text: Thanks for contacting our support. We will get back to you in 5 minutes.
-    ViberMessageRequest:
-      type: object
-      description: |
-        Viber message to be sent
-
-        The following content / service type combination sare valid
-
-        | Service Type | Text | Image | Text & Button | Text & Button & Image |
-        | ---: | :---: | :---: | :---: | :---: |
-        | One way | ✔ | ✔ | ✔ | ✔ |
-        | Two way | ✔ | ✔ | ✔ | ✔ |
-        | Session | ✔ | ✔ | ❌ | ❌ |
-      required:
-        - components
-        - messagePurpose
-      properties:
-        from:
-          type: string
-          description: Viber channel ID
-          example: "1233423454"
-        components:
-          type: array
-          description: |
-            Components to be used for sending a viber message.
-
-            Only these combinations are supported
-
-             - text
-             - image
-             - text & button
-             - text & image & button
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/ViberTextComponent'
-              - $ref: '#/components/schemas/ViberImageComponent'
-              - $ref: '#/components/schemas/ViberButtonComponent'
-          minItems: 1
-          maxItems: 3
-        messagePurpose:
-          type: string
-          enum:
-            - promotion
-            - transaction
-          default: promotion
-          description: Purpose of the message
-          example: promotion
-      example:
-        from: "1233423454"
-        messagePurpose: transaction
-        components:
-          - type: text
-            text: Thanks for contacting our support. We will get back to you in 5 minutes.
-    ViberTextComponent:
-      type: object
-      description: Text component for viber
-      properties:
-        type:
-          type: string
-          enum:
-            - text
-          description: Text component for viber
-        text:
-          type: string
-          maxLength: 1000
-          description: The message to be sent
-          example: Thanks for contacting our support. We will get back to you in 5 minutes.
-    ViberButtonComponent:
-      type: object
-      description: Button component for viber
-      properties:
-        type:
-          type: string
-          enum:
-            - button
-        button:
-          type: object
-          description: The button to be used
-          properties:
-            caption:
-              type: string
-              maxLength: 30
-              description: Caption of the button
-              example: click me!
-            callback:
-              type: string
-              maxLength: 1000
-              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
-              description: Action callback that is executed when the user clicks on the button
-              example: https://my.callba.ck/clicked
-    ViberImageComponent:
-      type: object
-      description: Image component for viber
-      properties:
-        type:
-          type: string
-          description: Image component for Viber
-          enum:
-            - image
-        image:
-          type: object
-          description: The image to be sent
-          properties:
-            url:
-              type: string
-              pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
-              description: Url location of the image, must be accessible from the public network
     WhatsappMessageRequest:
       type: object
       description: |
         Whatsapp message to be sent.
 
-        This will override defaults from DefaultContent
+        This will override the defaults from DefaultContent.
       required:
         - contentType
         - from
       properties:
         from:
           type: string
-          description: The phone number of the sending whatsapp account
+          description: The phone number of the sending WhatsApp account
           example: "1233423454"
         contentType:
           type: string
@@ -1869,10 +1333,10 @@ components:
           type: string
           deprecated: true
           description: |
-            The URL you would like to send. Must be a valid http(s) URL.
+            The URL you would like to send. Must be a valid HTTP(S) URL.
 
-            **Note** This property will be removed in a future release.
-            Please switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
+            **Note:** This property will be removed in a future release.
+            Please, switch to ``text`` with ``urlPreviewDisplayed`` set to ``true``.
           example: https://www.tyntec.com
         media:
           $ref: '#/components/schemas/Media'
@@ -1883,7 +1347,7 @@ components:
         urlPreviewDisplayed:
           type: boolean
           default: false
-          description: Should a preview of the url be rendered. This will only have an effect on text messages.
+          description: Should a preview of the URL be rendered. This will only have an effect on text messages.
           example: true
         contacts:
           type: array
@@ -1896,63 +1360,6 @@ components:
           type: audio
           url: 'https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.svg'
           caption: Tyntec Logo
-    TyntecEchoRequest:
-      type: object
-      description: |
-        This channel can be used for integration purposes without sending any message to an actual device.
-
-        It has two modes
-
-          - only send the delivered dlr back
-          - send additionally a message back
-
-        The messages send back follow these rules :
-
-          - media, text and url are send back as they are
-          - templates are formatted as
-            `TemplateId[templateId] LanguagePolicy[language.policy] LanguageCode[language.code] Parameter<N>[parameters[N]]`
-          - from and to switch positions
-          - messageId will be the same as for the request
-
-      required:
-        - contentType
-        - from
-      properties:
-        from:
-          type: string
-          description: The sending tyntecEcho account
-          example: "1233423454"
-        contentType:
-          type: string
-          enum:
-            - template
-            - text
-            - url
-            - media
-          description: What kind of payload is used
-          example: template
-        text:
-          type: string
-          maxLength: 100
-          description: The text to be sent
-          example: Thanks for contacting our support. We will get back to you in 5 minutes.
-        url:
-          type: string
-          description: the URL you would like to send. Must be a valid http(s) URL
-          example: https://www.tyntec.com
-        media:
-          $ref: '#/components/schemas/Media'
-        template:
-          $ref: '#/components/schemas/Template'
-        replyBack:
-          type: boolean
-          description: Should the channel reply back the send message
-          default: false
-      example:
-        from: "1233423454"
-        contentType: url
-        url: 'https://www.tyntec.com'
-        replyBack: false
     Media:
       type: object
       description: Media file to be sent
@@ -2001,7 +1408,7 @@ components:
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
         caption:
           type: string
-          description: additional caption for the image. It is shown on the uploaded image when the channel supports this
+          description: An additional caption for the image. It is shown on the uploaded image when the channel supports this
           example: Tyntec Logo
       example:
         type: image
@@ -2015,7 +1422,7 @@ components:
       properties:
         type:
           type: string
-          description: What kind of media should be sent. Can only be webp
+          description: What kind of media should be sent. It can only be a website
           enum:
             - sticker
           example: sticker
@@ -2045,7 +1452,7 @@ components:
           example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
         caption:
           type: string
-          description: Additional caption for the document. It is shown on the uploaded document when the channel supports this
+          description: An additional caption for the document. It is shown on the uploaded document when the channel supports this
           example: Tyntec Pricelist
         filename:
           type: string
@@ -2075,7 +1482,7 @@ components:
           example: http://techslides.com/demos/sample-videos/small.mp4
         caption:
           type: string
-          description: Additional caption for the video. It is shown on the uploaded video when the channel supports this
+          description: An additional caption for the video. It is shown on the uploaded video when the channel supports this
           example: Tyntec Party
       example:
         type: video
@@ -2090,7 +1497,7 @@ components:
       properties:
         templateId:
           type: string
-          description: the identifier of the template that should be used
+          description: The identifier of the template that should be used
           example: welcome_message
         language:
           $ref: '#/components/schemas/Language'
@@ -2100,7 +1507,7 @@ components:
 
             Header and body components can only be used once.
 
-            The button components can be used up to 3 times (quick replies) or 1 time (url)
+            The button components can be used up to 3 times (quick replies) or 1 time (URL)
           type: array
           items:
             anyOf:
@@ -2112,8 +1519,8 @@ components:
           description: |
             Parameter for replacement in the template.
 
-            **NOTE:** This parameter is deprecated by version 2.7 and will be removed in the next major release.
-            Instead use components.
+            **Note:** This parameter is deprecated by version 2.7 and will be removed in the next major release.
+            Instead, use components.
           deprecated: true
           type: array
           items:
@@ -2139,24 +1546,24 @@ components:
                 text: Hi!
     Language:
       type: object
-      description: Language settings for the template
+      description: Language settings for the template.
       properties:
         policy:
           type: string
           description: |
             Used for multi-language template resolution.
 
-            **Note** We got notified by WhatsApp that they will drop the fallback policy on template messages.
+            **Note:** We got notified by WhatsApp that they will drop the fallback policy on template messages.
             As we need to stay up-to-date with the WhatsApp API, we will also drop this policy in the next month.
-            Please switch to language policy _deterministic_.
+            Please, switch to the language policy _deterministic_.
           enum:
             - fallback
             - deterministic
           default: deterministic
         code:
           description: |
-            The code of the language or locale to use —
-            Accepts both language and language_locale formats (e.g., en and en_US).
+            The code of the language or locale to use.
+            Accepts both language and language_locale formats (e.g. en and en_US).
           type: string
           example: en
     TemplateParameter:
@@ -2165,16 +1572,16 @@ components:
       description: |
         Parameter for replacement in the template.
 
-        The value can contain any character except of :
+        The value can contain any character except:
 
           - newline
           - tabulator
           - more then 4 consecutive spaces.
 
-        It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
+        It can be formatted according to [How to format your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
 
         **NOTE:** This parameter is deprecated by version 2.7 and will be removed in the next major release.
-            Instead use components.
+            Instead, use components.
       properties:
         default:
           type: string
@@ -2182,7 +1589,7 @@ components:
           example: Mr. Doe
     HeaderComponent:
       type: object
-      description: Header component
+      description: Header component.
       properties:
         type:
           type: string
@@ -2209,7 +1616,7 @@ components:
               url: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
     BodyComponent:
       type: object
-      description: Body component
+      description: Body component.
       properties:
         type:
           type: string
@@ -2232,7 +1639,7 @@ components:
             text: nice replacement
     QuickReplyButtonComponent:
       type: object
-      description: This type can be used up to three times
+      description: This type can be used up to three times.
       properties:
         type:
           type: string
@@ -2251,7 +1658,7 @@ components:
           maximum: 2
         parameters:
           type: array
-          description: Parameter for this quick reply button
+          description: Parameters for this quick reply button.
           items:
             properties:
               type:
@@ -2262,12 +1669,12 @@ components:
               payload:
                 type: string
                 maxLength: 128
-                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+                description: Payload for this quick reply button that is sent back on the `MoMessage::PostBack` event.
           minItems: 0
           maxItems: 1
     UrlButtonComponent:
       type: object
-      description: This type can be used up to one time
+      description: This type can be used up to one time.
       properties:
         type:
           type: string
@@ -2297,7 +1704,7 @@ components:
               text:
                 type: string
                 maxLength: 2000
-                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+                description: Which text should be appended to a dynamic URL. **Note:** The requested template for a Button URL must end with {{1}}.
           minItems: 0
           maxItems: 1
     TextParameter:
@@ -2315,20 +1722,20 @@ components:
           description: |
             Text for replacement in the template.
 
-            The value can contain any character except of :
+            The value can contain any character except:
 
               - newline
               - tabulator
               - more then 4 consecutive spaces.
 
-            It can be formatted accordingly to [Formatting your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
+            It can be formatted according to [How to format your messages](https://faq.whatsapp.com/en/android/26000002/?fbclid=IwAR1-VtKzKAxleQD-nnWbZpIhLtkNY6Hpjjb4echlEmcfLV2l0C5We4HnsUM).
           minLength: 1
       example:
         type: text
         text: Hi! Cool replacement
     LocationParameter:
       type: object
-      description: Location to be sent
+      description: Location to be sent.
       properties:
         type:
           type: string
@@ -2344,7 +1751,7 @@ components:
           latitude: 51.5005765
     TemplateHeaderLocation:
       type: object
-      description: Location used in template headers
+      description: Location used in template headers.
       required:
         - longitude
         - latitude
@@ -2393,7 +1800,7 @@ components:
           example: image
         url:
           type: string
-          description: The URL of the location where the media is stored
+          description: The URL of the location where the media is stored.
           example: https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf
         filename:
           type: string
@@ -2415,14 +1822,14 @@ components:
           example: video
         url:
           type: string
-          description: The URL of the location where the media is stored
+          description: The URL of the location where the media is stored.
           example: http://techslides.com/demos/sample-videos/small.mp4
       example:
         type: video
         url: http://techslides.com/demos/sample-videos/small.mp4
     Location:
       type: object
-      description: Location received or send
+      description: Location received or sent
       required:
         - longitude
         - latitude
@@ -2448,7 +1855,7 @@ components:
         address:
           type: string
           maxLength: 256
-          description: Optional address, will only be rendered if name is set
+          description: Optional address, will only be rendered if the name is set
           example:
             tyntec GmbH, Semerteichstraße, Dortmund
     Contact:
@@ -2486,7 +1893,7 @@ components:
             $ref: '#/components/schemas/ContactPhone'
         urls:
           type: array
-          description: List of urls assigned to the contact
+          description: List of URLs assigned to the contact
           items:
             $ref: '#/components/schemas/ContactUrl'
     Address:
@@ -2503,7 +1910,7 @@ components:
           example: Germany
         countryCode:
           type: string
-          description: Two-letter code abbreviation
+          description: Two-letter country abbreviation
           example: de
         state:
           type: string
@@ -2547,7 +1954,7 @@ components:
     Name:
       type: object
       description: |
-        The name of a contact. Apart from the property ``formattedName`` at least one of the other must be set
+        The name of a contact. In addition to the property ``formattedName``, at least one of the other properties must be set.
       required:
         - formattedName
       properties:
@@ -2630,395 +2037,11 @@ components:
           type: string
           format: date-time
           description: Point in time when the API confirms that the message request was accepted
-    APIEvent:
-      type: object
-      description: Basic type for events produced such as MessageStatus, InboundMessage and GroupEvent
-      required:
-        - event
-      properties:
-        event:
-          $ref: '#/components/schemas/EventTypes'
-        channel:
-          type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-            - viber
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happened
-          example:
-            2019-06-26T11:41:00
-        from:
-          type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
-          example:
-            491672634678
-      example:
-        event: MessageStatus::accepted
-        channel: sms
-        from: 491672634678
-        timestamp: 2019-06-26T11:41:00
-    EventTypes:
-      type: string
-      description: Determines which event type is emitted by the API
-      enum:
-        - MoMessage
-        - MoMessage::Postback
-        - MessageStatus::accepted
-        - MessageStatus::channelFailed
-        - MessageStatus::deleted
-        - MessageStatus::delivered
-        - MessageStatus::failed
-        - MessageStatus::seen
-        - MessageStatus::unknown
-    MessageStatus:
-      type: object
-      description: |
-        The current status of a message.
 
-        It is used for messages send and received by you.
-
-        In case you send a message the status will inform you about the delivery process.
-
-        In the case that you receive a message from a user, the user may decide to delete the message.
-        Then and only then status deleted is triggered.
-      required:
-        - messageId
-        - event
-        - status
-        - timestamp
-      allOf:
-        - $ref: '#/components/schemas/APIEvent'
-      properties:
-        event:
-          type: string
-          description: Determines which event type is sent.
-          enum:
-            - MessageStatus::accepted
-            - MessageStatus::delivered
-            - MessageStatus::seen
-            - MessageStatus::failed
-            - MessageStatus::unknown
-        messageId:
-          type: string
-          description: Global Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        channel:
-          type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        deliveryChannel:
-          type: string
-          deprecated: true
-          description:  |
-            Channel which was used for delivery.
-
-            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        status:
-          description: |
-            Indicates the status of the message. Be aware that not all channels support all status.
-
-            **Note** This property will be replaced by the property _event_ in a future release.
-          deprecated: true
-          type: string
-          example: seen
-          enum:
-            - accepted
-            - delivered
-            - seen
-            - failed
-            - unknown
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
-        userContext:
-          type: string
-          description: Contextual information set on the message request
-          example:
-            my-message-reference
-        from:
-          type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
-          example:
-            491672634678
-        details:
-          $ref: '#/components/schemas/HistoryDetails'
-      example:
-        event: MessageStatus::seen
-        messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        channel: whatsapp
-        status: seen
-        userContext: my-message-reference
-        timestamp: 2019-06-26T11:41:28Z
-        from: 491672634678
-    MessageStatusChannelFailed:
-      type: object
-      description: |
-        Indicates that a channel delivery has failed.
-
-        This is an _intermediate_ event. It might  be followed by additional intermediate events.
-        But finally the message status will reach one of the final states.
-      required:
-        - messageId
-        - event
-        - channel
-        - timestamp
-        - details
-      allOf:
-        - $ref: '#/components/schemas/APIEvent'
-      properties:
-        event:
-          type: string
-          description: Determines which event type is sent.
-          enum:
-            - MessageStatus::channelFailed
-        messageId:
-          type: string
-          description: Global Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        channel:
-          type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        deliveryChannel:
-          type: string
-          deprecated: true
-          description:  |
-            Channel which was used for delivery.
-
-            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        status:
-          description: |
-            Indicates the status of the message. Be aware that not all channels support all status.
-
-            **Note** This property will be replaced by the property _event_ in a future release.
-          deprecated: true
-          type: string
-          example: seen
-          enum:
-            - channelFailed
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
-        userContext:
-          type: string
-          description: Contextual information set on the message request
-          example:
-            my-message-reference
-        details:
-          $ref: '#/components/schemas/HistoryDetails'
-      example:
-        event: MessageStatus::channelFailed
-        messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        channel: whatsapp
-        status: channelFailed
-        userContext: my-message-reference
-        timestamp: 2019-06-26T11:41:28Z
-        details:
-          code: whatsapp::error::noValidContact
-          message: No valid contact for msisdn +123234234
-    MessageStatusDeletedEvent:
-      type: object
-      description: |
-        Indicates that a previously send inbound MOMessage is deleted by the user.
-      required:
-        - messageId
-        - event
-        - status
-        - channel
-        - from
-        - to
-        - timestamp
-      allOf:
-        - $ref: '#/components/schemas/APIEvent'
-      properties:
-        event:
-          type: string
-          description: Determines which event type is sent.
-          enum:
-            - MessageStatus::deleted
-        messageId:
-          type: string
-          description: Global Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        channel:
-          type: string
-          description: Channel which triggered the event. Can be empty in case of an internal source.
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        deliveryChannel:
-          type: string
-          deprecated: true
-          description:  |
-            Channel which was used for delivery.
-
-            **Note** This property will be replaced in the future by the _channel_ property from the APIEvent.
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        status:
-          description: |
-            Indicates the status of the message. Be aware that not all channels support all status.
-
-            **Note** This property will be replaced by the property _event_ in a future release.
-          deprecated: true
-          type: string
-          example: seen
-          enum:
-            - deleted
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
-        userContext:
-          type: string
-          description: Contextual information set on the message request
-          example:
-            my-message-reference
-        from:
-          type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
-          example:
-            491672634678
-        to:
-          type: string
-          description: Which channel specific account ID is the recipient of this event.
-          example:
-            4923147790813
-      example:
-        event: MessageStatus::deleted
-        messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        channel: whatsapp
-        status: deleted
-        userContext: my-message-reference
-        timestamp: 2019-06-26T11:41:28Z
-        from: 491672634678
-        to: 4923147790813
-    MessageHistory:
-      type: object
-      properties:
-        messageId:
-          type: string
-          format: uuid
-          description: Global Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        userContext:
-          type: string
-          description: Contextual information set on the message request
-          example:
-            my-message-reference
-        history:
-          type: array
-          description: Ordered list of current available events for your message
-          items:
-            $ref: '#/components/schemas/HistoryItem'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697f
-        userContext: my-message-reference
-        history:
-          - deliveryChannel: whatsapp
-            happenedAt: '2019-03-13T12:57:27.048Z'
-            state: accepted
-    HistoryItem:
-      type: object
-      description: Contains information about a specific event occuring in the delivery process
-      properties:
-        deliveryChannel:
-          type: string
-          deprecated: true
-          description: The channel triggering this event
-          example: whatsapp
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        channel:
-          type: string
-          description: The channel triggering this event
-          example: whatsapp
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-        happenedAt:
-          type: string
-          description: When did the event happen
-          format: date-time
-        state:
-          type: string
-          description: State of the message delivery
-          example: accepted
-          enum:
-            - accepted
-            - dispatched
-            - dispatching_failed
-            - success
-            - failed
-            - unknown
-        details:
-          $ref: '#/components/schemas/HistoryDetails'
-      example:
-        deliveryChannel: whatsapp
-        happenedAt: '2019-03-13T13:15:22Z'
-        state: accepted
-    HistoryDetails:
-      description: Further information available for this event
-      type: object
-      additionalProperties: true
-      properties:
-        code:
-          type: string
-          description: Code specific to the details
-          example: tyntec::error:noFurtherChannelAvailable
-        message:
-          type: string
-          description: Textual representation of the code, containing further information
-          example: No further channel after Channel[whatsapp] available
-        from:
-          type: string
-          description: Who triggered this event. Usually the phonenumber or whatsapp account ID
-          example:
-            491672634678
     Problem:
       type: object
       additionalProperties: true
-      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      description: The problem object follows the [RFC 7807](https://tools.ietf.org/html/rfc7807).
       required:
         - type
         - title
@@ -3026,7 +2049,7 @@ components:
         - detail
       properties:
         type:
-          description: A URI reference [RFC3986] that identifies the problem type
+          description: A URI reference [RFC 3986](https://tools.ietf.org/html/rfc3986) that identifies the problem type
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
@@ -3034,7 +2057,7 @@ components:
           example: Data given was not parsable
           description: A short, human-readable summary of the problem type.
         status:
-          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          description: The HTTP status code ([RFC 7231](https://tools.ietf.org/html/rfc7231), Section 6) generated by the origin server for this occurrence of the problem.
           type: string
           example: 400
         detail:
@@ -3042,367 +2065,6 @@ components:
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
-    MoMessagePostBack:
-      type: object
-      description: |
-        Postbacks are triggered, when a user clicks on a button or interacts with any element that supports this.
-
-        For WhatsApp only Quick Reply buttons trigger this event.
-      required:
-        - messageId
-        - event
-        - status
-        - timestamp
-      allOf:
-        - $ref: '#/components/schemas/APIEvent'
-      properties:
-        event:
-          type: string
-          description: Determines which event type is sent. Always _MoMessage::PostBack_
-          enum:
-            - MoMessage::Postback
-        channel:
-          type: string
-          description: Channel which triggered the event.
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-            - viber
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the message was received
-          example:
-            2019-06-26T11:41:00
-        messageId:
-          type: string
-          description: Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        from:
-          type: string
-          description: the sender of the message
-          example: "49123512314"
-        to:
-          type: string
-          description: Receiving account of the message. The format is channel specific
-          example: "49123512315"
-        groupId:
-          type: string
-          description: Group ID from which the event originates from. Only present if the message was send into a group
-          example:
-            4923147790717-1564134658
-        postback:
-          $ref: '#/components/schemas/PostBack'
-        context:
-          $ref: '#/components/schemas/MoContext'
-        whatsapp:
-          $ref: '#/components/schemas/WhatsAppPostBack'
-      example:
-        event: MoMessage::PostBack
-        messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: whatsapp
-        postback:
-          data: EventVisited::2020-04-04::WhatsAppFair
-        context:
-          messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        whatsapp:
-          senderName: open api sample
-          text: I liked the event
-    PostBack:
-      type: object
-      description: Payload or data requested
-      properties:
-        data:
-          type: string
-          description: Payload or data that was specified on when requesting the button based message
-          example: EventVisited::2020-04-04::WhatsAppFair
-    WhatsAppPostBack:
-      type: object
-      description: Postback data for a WhatsApp quick reply button
-      allOf:
-        - $ref: '#/components/schemas/Whatsapp'
-      properties:
-        text:
-          type: string
-          description: Caption of the button that was clicked
-          example: Yes
-    MoMessage:
-      type: object
-      description: |
-        Message received by us and delivered to your system via a webhook provided by your system.
-
-        MoMessages are transferred by using HTTP ```POST``` method.
-      required:
-        - messageId
-        - event
-        - channel
-        - from
-        - content
-      properties:
-        event:
-          type: string
-          description: Determines which event type is sent. Always _MoMessage_
-          enum:
-            - MoMessage
-        channel:
-          type: string
-          description: Channel which triggered the event.
-          example: sms
-          enum:
-            - sms
-            - whatsapp
-            - tyntecEcho
-            - viber
-        receivedAt:
-          deprecated: true
-          type: string
-          format: 'date-time'
-          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
-          example:
-            2019-06-26T11:41:00
-        timestamp:
-          type: string
-          format: 'date-time'
-          description: Point in time when the message was received
-          example:
-            2019-06-26T11:41:00
-        messageId:
-          type: string
-          description: Message ID reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        from:
-          type: string
-          description: the sender of the message
-          example: "49123512314"
-        to:
-          type: string
-          description: Receiving account of the message. The format is channel specific
-          example: "49123512315"
-        groupId:
-          type: string
-          description: Group ID from which the event originates from. Only present if the message was send into a group
-          example:
-            4923147790717-1564134658
-        content:
-          $ref: '#/components/schemas/MoContent'
-        context:
-          $ref: '#/components/schemas/MoContext'
-        sms:
-          $ref: '#/components/schemas/SMS'
-        whatsapp:
-          $ref: '#/components/schemas/Whatsapp'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: MoMessage
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: sms
-        content:
-          contentType: text
-          text: 'hi, thanks for your support message'
-        sms:
-          origin:
-            mcc: string
-            mnc: string
-            ttId: string
-          totalPrice: 0
-          size: 1
-          missingParts: false
-          parts:
-            - messageId: string
-              sentDate: '2019-03-13T13:15:22Z'
-              price: 0
-              currency: string
-              priceEffective: '2019-03-13T13:15:22Z'
-              sequenceNumber: 1
-    MoContent:
-      type: object
-      description: Content of the mobile originated message
-      required:
-        - contentType
-      properties:
-        contentType:
-          type: string
-          enum:
-            - text
-            - url
-            - media
-            - location
-            - contacts
-          description: What kind of payload is used
-          example: media
-        text:
-          type: string
-          description: The received text
-          example: hi, thanks for your support message
-        url:
-          type: string
-          description: the URL received
-          example: https://www.tyntec.com
-        media:
-          $ref: '#/components/schemas/MoMedia'
-        location:
-          $ref: '#/components/schemas/Location'
-        contacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Contact'
-      example:
-        contentType: media
-        media:
-          type: audio
-          url: 'https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f'
-          mediaId: 77185196-664a-43ec-b14a-fe97036c697f
-    MoContext:
-      type: object
-      description: Contextual information of the mobile originated message
-      properties:
-        messageId:
-          type: string
-          description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
-          example: 77185196-664a-43ec-b14a-fe97036c697a
-    MoMedia:
-      type: object
-      description: Media information
-      properties:
-        type:
-          type: string
-          description: What kind of media was received
-          enum:
-            - image
-            - document
-            - audio
-            - voice
-            - video
-          example: audio
-        url:
-          type: string
-          description: The URL of the location where the media is stored
-          example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
-        mediaId:
-          type: string
-          description: plain ID of the media to download
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        caption:
-          type: string
-          description: caption specified by the user or the file name of the document
-          example: This is an picture of my cat!
-    SMS:
-      type: object
-      description: specifics of the sms channel
-      properties:
-        origin:
-          $ref: '#/components/schemas/SMSOrigin'
-        totalPrice:
-          type: number
-          description: The sum of prices for each message part listed in “contentList”.
-          example: 0.1
-        size:
-          type: number
-          description: The amount of respective concatenated SMS parts.
-          minimum: 1
-          maximum: 255
-          example: 1
-        missingParts:
-          type: boolean
-          description: True in case a part of an over-length was not received by the tyntec platform and the forwarded message text is incomplete.
-          default: false
-          example: false
-        parts:
-          type: array
-          description: |
-            tyntec merges over-length (concatenated) SMS into one string before sending it to your webserver.
-            Information for each individual part are collected here
-          items:
-            $ref: '#/components/schemas/SMSContent'
-      example:
-        origin:
-          mcc: "49"
-          mnc: "176"
-          ttId: "25"
-        totalPrice: 0.1
-        size: 1
-        missingParts: false
-        parts:
-          - messageId: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
-            sentDate: '2019-03-13T13:15:22Z'
-            price: 0
-            currency: EUR
-            priceEffective: '2019-03-13T13:15:22Z'
-            sequenceNumber: 1
-    SMSOrigin:
-      type: object
-      description: Origin Information of the message
-      properties:
-        mcc:
-          type: string
-          description: A representative MCC (Mobile Network Code) of the originating network.
-          example: "49"
-        mnc:
-          type: string
-          description: A representative MNC (Mobile Network Code) of the originating network.
-          example: "176"
-        ttId:
-          type: string
-          description: The respective tyntec ID of the originating network.
-          example: "25"
-    SMSContent:
-      type: object
-      description: SMS channel specific information
-      properties:
-        messageId:
-          type: string
-          description: The unique identifier provided by tyntec for each message part.
-          example: 48514285-4e78-4eef-b0c6-4ce68d40c1c3
-        sentDate:
-          type: string
-          description: |
-            The time stamp when the SMS has been received by the sending MSC (if available).
-
-            or
-
-            The time stamp when the respective message was received by tyntec.
-          format: date-time
-        price:
-          type: number
-          description: |
-            The price per message from the respective network.
-
-            Negative prices represent payout in favor of tyntec’s customer.
-          example: 0.1
-        currency:
-          type: string
-          description: The currency in which the pricing is given; corresponding to the currency of the invoice.
-          example: EUR
-        priceEffective:
-          type: string
-          description: The date when the “price” became effective.
-          format: date-time
-        sequenceNumber:
-          type: number
-          description: |
-            In case an over-length message is received tyntec recomposes the full message text before forwarding.
-            The “sequenceNumber” indicates the order of the message part.
-          minimum: 1
-          maximum: 255
-          example: 1
-    Whatsapp:
-      type: object
-      description: specifics of the whatsapp channel
-      properties:
-        senderName:
-          type: string
-          description: Name of the sender, set in his or her profile
-          example: Peter
-      example:
-        senderName: Peter
-      additionalProperties: true
     MessageRequestContext:
       type: object
       description: Contextual information for the message request
@@ -3422,8 +2084,8 @@ components:
           type: string
           pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
           description: |
-            When present this url is used for sending the delivery notifications to your webhook.
-            Can be used for debugging use cases or individual routings.
+            When present, this URL is used to send delivery notifications to your webhook.
+            Can be used for debugging or individual routings.
           example:
             https://en4u5fpprib5i.x.pipedream.net
     WhatsAppProfile:
@@ -3482,7 +2144,7 @@ components:
         about:
           type: string
           maxLength: 139
-          description: Text to display in your profile's About section
+          description: Text to display in the _About_ section of your profile
           example: Hey there! I am using WhatsApp.
       example:
         address: Hofmannstrasse 25 - 27, 81379 Munich, Germany
@@ -3495,93 +2157,13 @@ components:
         about: Hey there! I am using WhatsApp.
     WhatsAppMessageStatusUpdate:
       type: object
-      description: Change of the message status of a previously send WhatsApp message
+      description: Change in the message status of a previously sent WhatsApp message
       properties:
         status:
           type: string
           description: WhatsApp message status
           enum:
             - read
-    DefaultApplicationUpdate:
-      type: object
-      description: Update of the default application
-      properties:
-        webhooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-      example:
-        webhooks:
-          - events:
-              - MoMessage
-            callbackUrl: https://some-call-back.service.com
-          - events:
-              - MessageStatus::deleted
-              - MessageStatus::accepted
-            callbackUrl: https://some-other-call-back.service.com
-    ApplicationList:
-      type: array
-      description: List of configured applications. Never be empty
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/DefaultApplicationResponse'
-      minItems: 1
-    DefaultApplicationResponse:
-      type: object
-      description: The default application
-      properties:
-        id:
-          type: string
-          description: The default application ID
-          enum:
-            - default
-        name:
-          type: string
-          description: The default application name
-          enum:
-            - Default Application
-        webhooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-          minLength: 1
-      example:
-        id: default
-        name: Default Application
-        webhooks:
-          - events:
-              - MoMessage
-            callbackUrl: https://some-call-back.service.com
-          - events:
-              - MessageStatus::deleted
-              - MessageStatus::accepted
-            callbackUrl: https://some-other-call-back.service.com
-    Webhook:
-      description: >
-        A webhook associates one or more event types to a callback URL. In other words,
-        it specifies where the events of those types should be forwarded to.
-      type: object
-      properties:
-        events:
-          description: >
-            The types of events that this webhook should be triggered. Note that, although mandatory,
-            the array can be empty. In such a case, the webhook will be triggerred on every
-            event, if no other webhook specific to the type of the event exists.
-          type: array
-          items:
-            $ref: "#/components/schemas/EventTypes"
-          minLength: 0
-        callbackUrl:
-          type: string
-          pattern: "^https://.*"
-          description: The URL to forward the event to. Callback URLs should start with 'https://'.
-          example:
-            https://some-call-back.service.com
-      example:
-        events:
-          - MessageStatus::deleted
-          - MessageStatus::accepted
-        callbackUrl: https://some-other-call-back.service.com
     WhatsAppProfileLogoLink:
       type: object
       description: Link to the profile logo
@@ -3616,19 +2198,19 @@ components:
             Swagger Sample Account
         businessName:
           type: string
-          description: Name of the business owning the facebook business manager
+          description: Name of the business owning the Facebook Business Manager
           example:
             Swagger Sample business
         templateNamespace:
           description: |
             Template namespace assigned to the WhatsApp Business Account.
 
-            This is used internally and here stated for completeness
+            This is used internally and here stated for completeness.
           type: string
           example:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
-          description: The Facebook business manager ID provided by Facebook
+          description: The Facebook Business Manager ID provided by Facebook
           type: string
           example: 1791147717848878
         whatsAppBusinessAccountId:
@@ -3638,7 +2220,7 @@ components:
         accountStatus:
           $ref: '#/components/schemas/WhatsAppAccountStatus'
         managedBy:
-          description: Account that can manage (edit, ..) an entity
+          description: Account that can manage (edit, ...) an entity
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
       example:
@@ -3667,7 +2249,7 @@ components:
             49123456789
         displayPhoneNumber:
           type: string
-          description: The phone number as it is displayed on the app
+          description: The phone number as it is displayed in the app
           example:
             +49 123 456789
         verifiedName:
@@ -3675,16 +2257,16 @@ components:
           description: |
             The name shown aside to the number.
 
-            This name will be shown immediately for Official Business Accounts
+            This name will be shown immediately for Official Business Accounts.
           example:
             Swagger Sample
         qualityRating:
           type: string
           description: |
-            Whats the current quality rating of phone number
+            The current quality rating of the phone number.
 
-            A RED rating will lead to status flagged if the number still receives
-            negative feedback from the users.
+            A RED rating will lead to the `flagged` status if the number keeps receiving
+            negative feedback from users.
           enum:
             - GREEN
             - RED
@@ -3708,7 +2290,7 @@ components:
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         managedBy:
-          description: Account that can manage (edit, ..) an entity
+          description: Account that can manage (edit, ...) an entity
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
         messagingVia:
@@ -3737,7 +2319,7 @@ components:
         name: someaccount
     WhatsAppTemplateRequest:
       type: object
-      description: Definition of additional WhatsApp Template
+      description: Request for an additional WhatsApp template
       properties:
         name:
           type: string
@@ -3752,18 +2334,18 @@ components:
           minItems: 1
     LocalizationRequest:
       type: object
-      description: Request of a localization of a template
+      description: Request for a new localization of a template
       properties:
         language:
           $ref: '#/components/schemas/LanguageCode'
         components:
-          description: Components the template is defined of
+          description: Components defining the template
           oneOf:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
     NotificationTemplateRequest:
       type: array
-      description: Notification template
+      description: Request for a standard template (notification) without rich media components
       items:
         type: object
         description: Standard template request without rich media parts
@@ -3773,21 +2355,21 @@ components:
         properties:
           type:
             type: string
-            description: Template part
+            description: Template component type. Always BODY
             enum:
               - BODY
             default: BODY
           text:
             type: string
             description: |
-              Template text.
+              Template text (1--1024 chars)
             maxLength: 1024
             minLength: 1
       maxLength: 1
       minLength: 1
     RichMediaTemplateRequest:
       type: array
-      description: Rich media template definition. Must contain at least body component
+      description: Rich media template definition. Must contain at least the body component
       items:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
@@ -3804,7 +2386,7 @@ components:
         - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponentRequest'
     WhatsAppTemplateTextHeaderComponentRequest:
       type: object
-      description: Header component of a template
+      description: Text header component of a template
       required:
         - type
         - format
@@ -3812,7 +2394,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the component
+          description: Determines the type of the component. Always HEADER
           enum:
             - HEADER
           example: HEADER
@@ -3831,14 +2413,14 @@ components:
 
     WhatsAppTemplateLocationHeaderComponentRequest:
       type: object
-      description: Header component of a template
+      description: Location header component of a template
       required:
         - type
         - format
       properties:
         type:
           type: string
-          description: Determines the type of the component
+          description: Determines the type of the component. Always HEADER
           enum:
             - HEADER
           example: HEADER
@@ -3851,14 +2433,14 @@ components:
             LOCATION
     WhatsAppTemplateMediaHeaderComponentRequest:
       type: object
-      description: Header component of a template
+      description: Media header component of a template
       required:
         - type
         - format
       properties:
         type:
           type: string
-          description: Determines the type of the component
+          description: Determines the type of the component. Always HEADER
           enum:
             - HEADER
         format:
@@ -3879,12 +2461,12 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the component
+          description: Determines the type of the component. Always BODY
           enum:
             - BODY
         text:
           type: string
-          description: Specification of the body text
+          description: Specification of the body text (1--160 chars)
           maxLength: 160
           minLength: 1
           example:
@@ -3903,7 +2485,7 @@ components:
             - FOOTER
         text:
           type: string
-          description: Specification of the footer text
+          description: Specification of the footer text (1--60 chars)
           maxLength: 60
           minLength: 1
           example:
@@ -3952,7 +2534,7 @@ components:
           example: I liked it!
     WhatsAppCallToActionButtons:
       type: array
-      description: Call to action buttons. At most one of each button types can be used.
+      description: Call to action buttons. At most one of each button type can be used.
       items:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppURLButton'
@@ -4087,7 +2669,7 @@ components:
             DELETED
         rejectionReason:
           type: string
-          description: Descriptive text in case of status REJECTED
+          description: Descriptive text in the case the status is REJECTED
           example:
             not yet
         language:
@@ -4110,14 +2692,14 @@ components:
           example: 2020-02-15T23:28:34.442Z
         lastUpdated:
           type: string
-          description: At which point in time the last update happen
+          description: At which point in time the last update happened
           format: date-time
           example: 2020-02-15T25:28:34.442Z
         expiresAt:
           type: string
           description: |
             When does the localization expire.
-            Only present, when a template is deleted
+            Only present when a template was deleted.
           format: date-time
           example: 2020-03-15T23:28:34.442Z
     WhatsAppTemplateHeaderComponentResponse:
@@ -4129,7 +2711,7 @@ components:
       properties:
         type:
           type: string
-          description: Components type
+          description: Component type
           enum:
             - HEADER
         format:
@@ -4155,7 +2737,7 @@ components:
       properties:
         type:
           type: string
-          description: Components type
+          description: Component type
           enum:
             - BODY
         text:
@@ -4172,7 +2754,7 @@ components:
       properties:
         type:
           type: string
-          description: Components type
+          description: Component type
           enum:
             - FOOTER
         text:
@@ -4272,7 +2854,7 @@ components:
       properties:
         messageOnBehalf:
           type: string
-          description: Indicates the status of message on behalf request
+          description: Indicates the status of a message on behalf request
           enum:
             - PENDING
             - APPROVED
@@ -4284,13 +2866,13 @@ components:
       description: |
         What kind of relation is this link.
 
-        The relations are defined as following:
+        The relations are defined as follows:
 
-        - `first` – First page of the resource list pagination
-        - `previous` – Predecessor page of the current page of the resource list pagination
-        - `current` – Actual page of the resource list pagination
-        - `next` – Successor page of the current of page of the resource list pagination
-        - `last` – Last page of the resource list pagination
+        - `first` – The first page in the resource list pagination
+        - `previous` – The preceding page in the resource list pagination
+        - `current` – The current page in the resource list pagination
+        - `next` – The following page in the resource list pagination
+        - `last` – The last page in the resource list pagination
 
       enum:
         - first
@@ -4300,7 +2882,7 @@ components:
         - last
     BulkRequest:
       type: object
-      description: Bulk request to be sent. The items are guaranted to be sent in order of appearance
+      description: Bulk request to be sent. The items are guaranteed to be sent in order of appearance
       properties:
         to:
           type: string
@@ -4309,46 +2891,16 @@ components:
         channel:
           type: string
           description: Channel which should be used for the bulk
-          example: sms
+          example: whatsapp
           enum:
-            - sms
             - whatsapp
-            - viber
-        sms:
-          type: array
-          description: SMS to be sent
-          items:
-            $ref: '#/components/schemas/BulkSMSRequest'
-          minItems: 2
-          maxItems: 20
         whatsapp:
           type: array
-          description: WhatsApp messages to be sent
+          description: WhatsApp messages to be sent (2--20 messages)
           items:
             $ref: '#/components/schemas/BulkWhatsAppRequest'
           minItems: 2
           maxItems: 20
-        viber:
-          type: array
-          description: Viber messages to be sent
-          items:
-            $ref: '#/components/schemas/BulkViberRequest'
-          minItems: 2
-          maxItems: 20
-    BulkSMSRequest:
-      type: object
-      properties:
-        contentType:
-          type: string
-          enum:
-            - text
-          description: What kind of payload should be sent
-          example: text
-        text:
-          type: string
-          maxLength: 3000
-          description: The message to be sent
-          example: Thanks for contacting our support. We will get back to you in 5 minutes.
     BulkWhatsAppRequest:
       type: object
       properties:
@@ -4377,38 +2929,9 @@ components:
         urlPreviewDisplayed:
           type: boolean
           default: false
-          description: Should a preview of the url be rendered. This will only have an effect on text messages.
+          description: Should a preview of the URL be rendered. This will only have an effect on text messages.
           example: true
         contacts:
           type: array
           items:
             $ref: '#/components/schemas/Contact'
-    BulkViberRequest:
-      type: object
-      properties:
-        components:
-          type: array
-          description: |
-            Components to be used for sending a viber message.
-
-            Only these combinations are supported
-
-             - text
-             - image
-             - text & button
-             - text & image & button
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/ViberTextComponent'
-              - $ref: '#/components/schemas/ViberImageComponent'
-              - $ref: '#/components/schemas/ViberButtonComponent'
-          minItems: 1
-          maxItems: 3
-        messagePurpose:
-          type: string
-          enum:
-            - promotion
-            - transaction
-          default: promotion
-          description: Purpose of the message
-          example: promotion
