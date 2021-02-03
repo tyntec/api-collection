@@ -1,0 +1,69 @@
+openapi: '3.0.0'
+info:
+  title: Conversations API
+  description: |
+    The Conversations API allows you to easily send messages to your customers via messaging services like WhatsApp
+    or Viber and still reach customers with classic SMS, with a harmonized data model over all channels.
+
+    This API is designed for 2-way messaging (sending and receiving), which allows interactive conversations
+    with your customers.
+
+    Delivery notifications (message status updates) and inbound messages from your customers are sent by us to your
+    system via the HTTP ```POST``` method. For details see [Receiving status updates](#receiving-status-updates) and
+    [Receiving inbound messages](#receiving-inbound-messages).
+
+
+    ## Adhered web standards
+
+    In addition to the [compliance common to all our APIs](/index.html#general-web-standards),
+    the Conversations API complies also with:
+
+    - [RFC 5988 – Web Linking](https://tools.ietf.org/html/rfc5988)
+
+    *RFC 5988* is implemented to allow all API calls that return a list of resources, to make use of the following
+    _Link_ headers:
+
+    - `first` – The first page in the resource list pagination
+    - `previous` – The preceding page of the current page in the resource list pagination
+    - `current` – The current page in the resource list pagination
+    - `next` – The following page in the current page of the resource list pagination
+    - `last` – The last page in the resource list pagination
+
+    In addition, the following custom headers are provided for convenience:
+
+    - `x-total-pages` – The total number of pages in the list of requested sub-resources
+    - `x-total-items` – The total number of items in the list of requested sub-resources
+    - `x-page-size` – The size of a page (maximum number of items on a single page)
+    - `x-current-page` – The page number of the current page in the list of requested sub-resources
+
+
+    ## Channels
+
+    The Conversations API provides messaging services via several channels, currently:
+
+    - WhatsApp
+    - Viber
+    - 2-way SMS (sending and receiving)
+    - Telegram
+    - WeChat
+
+    **Note:** If you want to send SMS only, check out our [SMS API](/sms/current.html), which is preferred for 1-way
+    SMS messaging.
+
+    **Channel specific prerequisites**
+
+    - *WhatsApp:* A WhatsApp Business Account (WABA) is required in order to use this channel.<br>
+      Please [request your access here](https://www.tyntec.com/form-whatsapp-setup-your-waba).
+    - *Viber:* A Viber Service ID is required in order to use this channel.<br>
+      Please [request your access here](https://www.tyntec.com/form-conversational-api-viber-business).
+    - *2-way SMS:* Please [contact us](/help.html) to get the details for the 2-way SMS setup.
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v3
+  x-postman-collection: postman.zip
+
+paths: {}
