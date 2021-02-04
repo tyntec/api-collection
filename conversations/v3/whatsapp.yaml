@@ -123,7 +123,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: './common.yaml#/components/schemas/MessageResponse'
+            $ref: '#/components/schemas/MessageResponse'
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
@@ -156,6 +156,21 @@ components:
             title: Forbidden
             status: 403
   schemas:
+    MessageResponse:
+      type: object
+      required:
+        - messageId
+        - acceptedAt
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global unique Message Id reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        acceptedAt:
+          type: string
+          format: date-time
+          description: Point in time when the API confirms that the message request was accepted
     MessageRequest:
       type: object
       description: The message you would like to send
