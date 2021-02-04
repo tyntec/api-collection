@@ -118,11 +118,7 @@ paths:
       description: Check the status of a message
       responses:
         200:
-          description: The status of a message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageStatus'
+          $ref: '#/components/responses/MessageStatus'
         404:
           $ref: '#/components/responses/NotFound'
         default:
@@ -280,9 +276,21 @@ components:
     MessageResponse:
       description: Response after the server has accepted the request
       content:
-        application/problem+json:
+        application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      description: Response after the server has accepted the bulk request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkMessageResponse'
+    MessageStatus:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageStatus'
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
@@ -418,6 +426,13 @@ components:
       type: object
     BulkMessageResponse:
       type: object
+      properties:
+        bulkId:
+          type: string
+        messageId:
+          type: array
+          items:
+            type: string
     MediaUploadResponse:
       type: object
       required:

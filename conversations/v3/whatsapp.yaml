@@ -20,7 +20,7 @@ info:
 servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
-  - ApiKeyAuth: {}
+  - ApiKeyAuth: []
 paths:
   /messages:
     post:
@@ -76,12 +76,7 @@ paths:
                             variable: amount
       responses:
         202:
-          description: The message is accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/MessageResponse'
-
+          $ref: '#/components/responses/MessageResponse'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -104,12 +99,7 @@ paths:
               $ref: '#/components/schemas/BulkMessageRequest'
       responses:
         202:
-          description: The message is accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: './common.yaml#/components/responses/BulkMessageResponse'
-
+          $ref: 'common.yaml#/components/responses/BulkMessageResponse'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -117,11 +107,16 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   responses:
     MessageResponse:
       description: Response after the server has accepted the request
       content:
-        application/problem+json:
+        application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     Default:
@@ -129,13 +124,13 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: './common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
     BadRequest:
       description: The request does not match our expectations. Please check the Problems object for details
       content:
         application/problem+json:
           schema:
-            $ref: './common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
           example:
             status: 400
             violations: [
@@ -150,12 +145,14 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: './common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
           example:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
-  schemas:
+  schemas:  
+    Problem:
+      $ref: './common.yaml#/components/schemas/Problem'
     MessageResponse:
       type: object
       required:
@@ -622,6 +619,7 @@ components:
           minItems: 0
           maxItems: 1
           items:
+            oneOf:
             - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
             - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
             - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
