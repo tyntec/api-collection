@@ -94,7 +94,7 @@ info:
 servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
-  - ApiKeyAuth: [ ]
+  - ApiKeyAuth: []
 tags:
   - name: "Message details"
     description: |
@@ -256,6 +256,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     MessageId:
       required: true
@@ -314,7 +319,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
           example:
             type: https://httpstatuses.com/404
             title: Not Found
