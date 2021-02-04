@@ -108,7 +108,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'common.yaml#/components/responses/BulkMessageResponse'
+                $ref: './common.yaml#/components/responses/BulkMessageResponse'
 
         400:
           $ref: '#/components/responses/BadRequest'
@@ -123,19 +123,19 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/MessageResponse'
+            $ref: './common.yaml#/components/schemas/MessageResponse'
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: './common.yaml#/components/schemas/Problem'
     BadRequest:
       description: The request does not match our expectations. Please check the Problems object for details
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: './common.yaml#/components/schemas/Problem'
           example:
             status: 400
             violations: [
@@ -150,7 +150,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: './common.yaml#/components/schemas/Problem'
           example:
             type: https://httpstatuses.com/403
             title: Forbidden
