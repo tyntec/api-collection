@@ -99,7 +99,7 @@ paths:
               $ref: '#/components/schemas/BulkMessageRequest'
       responses:
         202:
-          $ref: 'common.yaml#/components/responses/BulkMessageResponse'
+          $ref: '#/components/responses/BulkMessageResponse'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -119,6 +119,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkMessageResponse'
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
@@ -154,20 +160,9 @@ components:
     Problem:
       $ref: './common.yaml#/components/schemas/Problem'
     MessageResponse:
-      type: object
-      required:
-        - messageId
-        - acceptedAt
-      properties:
-        messageId:
-          type: string
-          format: uuid
-          description: Global unique Message Id reference
-          example: 77185196-664a-43ec-b14a-fe97036c697f
-        acceptedAt:
-          type: string
-          format: date-time
-          description: Point in time when the API confirms that the message request was accepted
+      $ref: './common.yaml#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      $ref: './common.yaml#/components/schemas/BulkMessageResponse'
     MessageRequest:
       type: object
       description: The message you would like to send

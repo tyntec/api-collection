@@ -103,12 +103,7 @@ paths:
               $ref: '#/components/schemas/BulkMessageRequest'
       responses:
         202:
-          description: The message is accepted by our system
-          content:
-            application/json:
-              schema:
-                $ref: 'common.yaml#/components/responses/BulkMessageResponse'
-
+          $ref: '#/components/responses/BulkMessageResponse'
         400:
           $ref: '#/components/responses/BadRequest'
         403:
@@ -120,21 +115,27 @@ components:
     MessageResponse:
       description: Response after the server has accepted the request
       content:
-        application/problem+json:
+        application/json:
           schema:
-            $ref: 'common.yaml#/components/schemas/MessageResponse'
+            $ref: '#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkMessageResponse'
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
     BadRequest:
       description: The request does not match our expectations. Please check the Problems object for details
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
           example:
             status: 400
             violations: [
@@ -149,12 +150,18 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: 'common.yaml#/components/schemas/Problem'
+            $ref: '#/components/schemas/Problem'
           example:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
   schemas:
+    Problem:
+      $ref: './common.yaml#/components/schemas/Problem'
+    MessageResponse:
+      $ref: './common.yaml#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      $ref: './common.yaml#/components/schemas/BulkMessageResponse'
     MessageRequest:
       type: object
       description: The message you would like to send
@@ -196,7 +203,7 @@ components:
       example:
         to: "+123234234"
         from: "545345345"
-        channel:  "whatsapp"
+        channel: "whatsapp"
         whatsapp:
           contentType: text
           text: A simple text message
