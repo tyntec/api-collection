@@ -20,7 +20,7 @@ info:
 servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
-  - ApiKeyAuth: [ ]
+  - ApiKeyAuth: {}
 paths:
   /messages:
     post:
@@ -253,6 +253,7 @@ components:
           maxItems: 20
           minItems: 2
           items:
+            oneOf:
             - $ref: '#/components/schemas/WhatsAppTextContent'
             - $ref: '#/components/schemas/WhatsAppImageContent'
             - $ref: '#/components/schemas/WhatsAppDocumentContent'
