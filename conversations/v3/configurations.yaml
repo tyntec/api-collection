@@ -19,6 +19,12 @@ tags:
       The Configurations allows you setup certain parts of a channels settings.
 
       Such as callback settings, credentials (where appropriate)
+
+      <pre class="inline-code">
+        ljulkj
+        kdfjglkjl
+        kjhlkdfjgfdg
+      </pre>
 paths:
   /configurations:
     get:
