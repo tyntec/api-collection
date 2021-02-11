@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
-  title: Number Information API
+  title: Portability Check
   description: |
-    tyntec's  Number Information Services (NIS)
+    tyntec's Portability Check (formerly know as Number information service - NIS)
   version: '1.0'
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  x-repository: https://github.com/tyntec/api-collection/blob/master/number-information-service
+  x-repository: https://github.com/tyntec/api-collection/blob/master/portability-check
   x-major-version: v1
 servers:
   - url: https://api.tyntec.com/nis/v1/
