@@ -82,7 +82,6 @@ info:
   version: '1.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/third-party/eazy
   x-major-version: v1
-  x-postman-collection: postman.zip
 servers:
   - url: https://api.cmd.tyntec.com/
 security:

@@ -15,7 +15,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
-  x-repository: https://github.com/tyntec/api-collection/blob/master/2fa
+  x-repository: https://github.com/tyntec/api-collection/blob/master/authentication/2fa
   x-major-version: v1
 servers:
   - url: https://api.tyntec.com
