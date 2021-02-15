@@ -143,39 +143,47 @@ components:
       description: Configuration of an API account
       properties:
         scopes:
-          $ref: '#/components/schemas/Scopes'
+          $ref: '#/components/schemas/AccountScopes'
         callback:
           $ref: '#/components/schemas/Callback'
-    Scopes:
+    AccountScopes:
       type: string
+      description: Scopes available to your account.
       enum:
-        - messages:read
-        - messages:write
         - channels:read
-        - channels:write
+        - channels.telegram:write
+        - channels.wechat:write
         - callbacks:read
         - callbacks:write
         - media:read
         - media:write
     Callback:
       type: object
+      description: Configuration of callbacks to your system
       properties:
         callbackVersion:
-          type: integer
-          minimum: 2
-          maximum: 3
+          type: string
+          description: Event version to be used.
+          enum:
+            - 2.11
         signature:
           $ref: '#/components/schemas/Signature'
         header:
           $ref: '#/components/schemas/Header'
         inboundMessageUrl:
           type: string
+          description: Webhook for events related to inbound messages
+          pattern: "^https://.*"
           maxLength: 2000
         messageStatusUrl:
           type: string
+          description: Webhook for events related to message status changes
+          pattern: "^https://.*"
           maxLength: 2000
-        messageStatusEventFilter:
+        eventFilter:
           type: array
+          description: |
+            List of status events to listen on. If empty all events are submitted.
           items:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
@@ -202,10 +210,12 @@ components:
       properties:
         secret:
           type: string
+          description: Shared secret key
           minLength: 8
           maxLength: 125
         method:
           type: string
+          description: cryptographic algorithm used for the signature calculation
           enum:
             - HS256
             - HS512
@@ -219,9 +229,11 @@ components:
         - value
       properties:
         key:
+          description: name of the http header
           type: string
         value:
           type: string
+          description: value of the http header
           minLength: 8
           maxLength: 125
     Problem:
