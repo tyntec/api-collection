@@ -82,18 +82,18 @@ info:
 
     Channel resources can have the following scopes:
 
-    | Scope | Description |
-    | ---: | :---: |
-    | `callbacks:read` | Grants read access on channel level callbacks |
-    | `callbacks:write` | Grants write access on channel level callbacks |
-    | `credentials:read` | Grants read access on the channels credentials |
-    | `credentials:write` | Grants write access on the channels credentials |
-    | `messages:read` | Grants read access on messages of a channel |
-    | `messages:write` | Grants access to send messages via a channel |
-    | `profile:read` | Grants read access on a channels profile. eg WhatsApp |
-    | `profile:write` | Grants write access on a channels profile. eg WhatsApp |
-    | `templates:read` | Grants read access on a channels templates. eg WhatsApp |
-    | `templates:write` | Grants write access on a channels templates. eg WhatsApp |
+    | Scope | Description | Available on |
+    | ---: | :---: | :---: |
+    | `callbacks:read` | Grants read access on channel level callbacks | All |
+    | `callbacks:write` | Grants write access on channel level callbacks | All |
+    | `credentials:read` | Grants read access on the channels credentials | Telegram, WeChat |
+    | `credentials:write` | Grants write access on the channels credentials | Telegram, WeChat |
+    | `messages:read` | Grants read access on messages of a channel | - |
+    | `messages:write` | Grants access to send messages via a channel | All |
+    | `profile:read` | Grants read access on a channels profile. eg WhatsApp | WhatsApp |
+    | `profile:write` | Grants write access on a channels profile. eg WhatsApp | WhatsApp |
+    | `templates:read` | Grants read access on a channels templates. eg WhatsApp | WhatsApp |
+    | `templates:write` | Grants write access on a channels templates. eg WhatsApp | WhatsApp |
 
     The scopes available to a channel differ from channel to channel.
     The following table gives you an overview about the scopes available to a channel.
