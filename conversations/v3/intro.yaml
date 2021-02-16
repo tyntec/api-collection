@@ -57,6 +57,24 @@ info:
     - *Viber:* A Viber Service ID is required in order to use this channel.<br>
       Please [request your access here](https://www.tyntec.com/form-conversational-api-viber-business).
     - *2-way SMS:* Please [contact us](/help.html) to get the details for the 2-way SMS setup.
+
+    **Scope based access control**
+
+    Conversations uses the concept of scopes to control access to different aspects of your Conversations account and
+    channels available to you.
+
+    Scopes are devided into two distinct classes `read` and  `write`.
+
+    `read` grants you read only access - `GET` http calls - .
+
+    `write` provides access to data modification or message submission - `POST`, `PUT`, `DELETE` http calls -.
+
+    Scopes are used on 2 layers, your API key account and the channels available to it.
+
+    You can inspect the scopes available to both layers by fetching the information via [Configurations](#configurations).
+
+    We reserve us the right to revoke any granted scope in case we do detect abusive usage of the API.
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support

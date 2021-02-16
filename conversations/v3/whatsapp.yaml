@@ -32,7 +32,11 @@ tags:
 
       At the moment, it does not support requesting new WhatsApp accounts or editing existing ones.
 
-      The WhatsApp account and its subresources can *only* be managed by one of your CPaaS API Accounts.
+      The subresources of a WhatsApp account can *only* be managed by API accounts with the respective scopes.
+
+      Manageable subresources are:
+
+       - templates
 
       Read access to an account is available for all accounts that are associated with a phone number and thus eligible
       for sending messages.

@@ -81,6 +81,8 @@ info:
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
       nearly indefinitely (attempts repeat less and less often)
     - *Viber:* TODO
+    - *WeChat:* TODO
+    - *Telegram:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
       delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
   contact:
@@ -152,14 +154,7 @@ paths:
         - "Outbound media"
       responses:
         200:
-          description: List of uploaded media files
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MediaResponse'
-                minItems: 0
+          $ref: '#/components/responses/ListMediaResponse'
         default:
           $ref: '#/components/responses/Default'
     post:
@@ -260,6 +255,7 @@ components:
   parameters:
     MessageId:
       required: true
+      description: Message id provided by tyntec
       name: messageId
       in: path
       schema:
@@ -267,6 +263,7 @@ components:
         format: uuid
     MediaId:
       required: true
+      description: Media provided by tyntec
       name: mediaId
       in: path
       schema:
@@ -291,6 +288,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageStatus'
+    ListMediaResponse:
+      description: list of stored media files
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/MediaResponse'
+            minItems: 0
     Default:
       description: Default response in case of any other error. Please check the error object for details
       content:
