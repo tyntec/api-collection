@@ -65,5 +65,6 @@ info:
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v3
   x-postman-collection: postman.zip
+  x-link-to-repo: true
 
 paths: {}

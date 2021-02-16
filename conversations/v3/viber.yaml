@@ -24,8 +24,8 @@ info:
     email: support@tyntec.com
   version: '3.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-specification-file: viber.yaml
   x-major-version: v3
-  x-postman-collection: postman.zip
 servers:
   - url: https://api.tyntec.com/conversations/v3
 security:

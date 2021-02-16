@@ -5,10 +5,10 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.11'
+  version: '3.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
-  x-major-version: v2
-  x-postman-collection: postman.zip
+  x-specification-file: configurations.yaml
+  x-major-version: v3
 servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
