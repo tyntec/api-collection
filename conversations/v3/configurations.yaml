@@ -69,7 +69,7 @@ info:
     The API account can have the following scopes:
 
     | Scope | Description |
-    | ---: | :---: |
+    | :--- | :--- |
     | `callbacks:read` | Grants read access on the account level callbacks |
     | `callbacks:write` | Grants write access on the account level callbacks |
     | `channels:read` | Grants read access on assigned channels |
@@ -83,7 +83,7 @@ info:
     Channel resources can have the following scopes:
 
     | Scope | Description | Available on |
-    | ---: | :---: | :---: |
+    | :--- | :--- | :--- |
     | `callbacks:read` | Grants read access on channel level callbacks | All |
     | `callbacks:write` | Grants write access on channel level callbacks | All |
     | `credentials:read` | Grants read access on the channels credentials | Telegram, WeChat |
@@ -99,7 +99,7 @@ info:
     The following table gives you an overview about the scopes available to a channel.
 
     | Scope | WhatsApp | Viber | Telegram | WeChat | SMS |
-    | ---: | :---: | :---: | :---: | :---: | :---: |
+    | :--- | :---: | :---: | :---: | :---: | :---: |
     | `messages:read` | ✔ | ✔ | ✔ | ✔ | ✔ |
     | `messages:write` | ✔ | ✔ | ✔ | ✔ | ✔ |
     | `profile:read` | ✔ | ❌ | ❌ | ❌ | ❌ |
