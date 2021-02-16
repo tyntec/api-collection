@@ -5,6 +5,112 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
+  description: |
+    The Configurations allows you to setup certain parts of settings on account or channel level.
+
+    Included are callback settings, credentials (where appropriate) and a signature for incoming events.
+
+    ## Credentials
+
+    Some channels require you to provide tyntec with credentials, for example telegram bots or WeChat applications.
+    Conversations allows you to configure these credentials via the API directly
+
+    ## Signature
+
+    Validating that the message content hasn't been tampered is a crucial part of a secure
+    message exchange.
+
+    Conversations can provide you with a message signature that encrypts the actual event
+    content with a keyed-hash message authentication code [HMAC](https://en.wikipedia.org/wiki/HMAC).
+
+    The signature is transfered in the header `x-signature` as a Base64 URL encoded value.
+
+    As a preparation both parties need to align on
+
+    - the algorithm used
+    - the shared secret
+
+    With these information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`)
+    and the actual event we calculate the signature.
+
+    If you want to check if the message has been tampered on transmission you need to calculate the
+    signature yourself and compare it with the signature provided in the header `x-signature`.
+
+    The following pseudo code examples show you how to calculate the signature
+
+    **Signature version: V1.0**
+
+    <pre class="inline-code">
+      secret = "secret key"
+      algorithm = "SHA256"
+
+      requestTimestamp = request.headers["x-request-timestamp"]
+      body = request.body // String representation without any modifications
+
+      data = requestTimestamp + "\n" + body
+      signature_bytes = HMAC(algorithm, secret, data)
+
+      tt_signature = request.headers["x-signature"]
+      if (Base64URLEncode(signature_bytes) == tt_signature)
+      then
+        echo "Verified"
+      else
+        echo "Tampered!"
+      fi
+    </pre>
+
+    We advise as well to verify if the request timestamp is not too old (couple of minutes at most) and discard
+    the message otherwise.
+
+    ## Scopes
+
+    ### Account scopes
+    
+    The API account can have the following scopes:
+
+    | Scope | Description |
+    | ---: | :---: |
+    | `callbacks:read` | Grants read access on the account level callbacks |
+    | `callbacks:write` | Grants write access on the account level callbacks |
+    | `channels:read` | Grants read access on assigned channels |
+    | `channels.wechat:write` | Grants write access on WeChat channels |
+    | `channels.telegram:write` | Grants write access on Telegram channels |
+    | `media:read` | Grants read access on media files (inbound/outbound) |
+    | `media:write` | Grants write access on outbound media files |
+
+    ### Channel scopes
+
+    Channel resources can have the following scopes:
+
+    | Scope | Description |
+    | ---: | :---: |
+    | `callbacks:read` | Grants read access on channel level callbacks |
+    | `callbacks:write` | Grants write access on channel level callbacks |
+    | `credentials:read` | Grants read access on the channels credentials |
+    | `credentials:write` | Grants write access on the channels credentials |
+    | `messages:read` | Grants read access on messages of a channel |
+    | `messages:write` | Grants access to send messages via a channel |
+    | `profile:read` | Grants read access on a channels profile. eg WhatsApp |
+    | `profile:write` | Grants write access on a channels profile. eg WhatsApp |
+    | `templates:read` | Grants read access on a channels templates. eg WhatsApp |
+    | `templates:write` | Grants write access on a channels templates. eg WhatsApp |
+
+    The scopes available to a channel differ from channel to channel.
+    The following table gives you an overview about the scopes available to a channel.
+
+    | Scope | WhatsApp | Viber | Telegram | WeChat | SMS |
+    | ---: | :---: | :---: | :---: | :---: | :---: |
+    | `messages:read` | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | `messages:write` | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | `profile:read` | ✔ | ❌ | ❌ | ❌ | ❌ |
+    | `profile:write` | ✔ | ❌ | ❌ | ❌ | ❌ |
+    | `callbacks:read` | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | `callbacks:write` | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | `credentials:read` | ❌ | ❌ | ✔ | ✔ | ❌ |
+    | `credentials:write` | ❌ | ❌ | ✔ | ✔ | ❌ |
+    | `templates:read` | ✔ | ❌ | ❌ | ❌ | ❌ |
+    | `templates:write` | ✔ | ❌ | ❌ | ❌ | ❌ |
+
   version: '3.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
