@@ -84,32 +84,16 @@ info:
 
     | Scope | Description | Available on |
     | :--- | :--- | :--- |
-    | `callbacks:read` | Grants read access on channel level callbacks | All |
-    | `callbacks:write` | Grants write access on channel level callbacks | All |
-    | `credentials:read` | Grants read access on the channels credentials | Telegram, WeChat |
-    | `credentials:write` | Grants write access on the channels credentials | Telegram, WeChat |
+    | `callbacks:read` | Grants read access on channel level callbacks | ![SMS](../images/icon_sms_18px_color_.svg) ![Telegram](../images/icon_telegram_18px_color_.svg) ![Viber](../images/icon_viber_business_18px_color_.svg) ![WeChat](../images/icon_wechat_18px_color_.svg) ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `callbacks:write` | Grants write access on channel level callbacks | ![SMS](../images/icon_sms_18px_color_.svg) ![](../images/icon_telegram_18px_color_.svg) ![](../images/icon_viber_business_18px_color_.svg) ![](../images/icon_wechat_18px_color_.svg) ![Telegram](../images/icon_whatsapp_business_18px_color_.svg) |![SMS](../images/icon_sms_18px_color_.svg) ![Telegram](../images/icon_telegram_18px_color_.svg) ![Viber](../images/icon_viber_business_18px_color_.svg) ![WeChat](../images/icon_wechat_18px_color_.svg) ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `credentials:read` | Grants read access on the channels credentials | ![Telegram](../images/icon_telegram_18px_color_.svg) ![WeChat](../images/icon_wechat_18px_color_.svg) |
+    | `credentials:write` | Grants write access on the channels credentials | ![Telegram](../images/icon_telegram_18px_color_.svg) ![WeChat](../images/icon_wechat_18px_color_.svg) |
     | `messages:read` | Grants read access on messages of a channel | - |
-    | `messages:write` | Grants access to send messages via a channel | All |
-    | `profile:read` | Grants read access on a channels profile. eg WhatsApp | WhatsApp |
-    | `profile:write` | Grants write access on a channels profile. eg WhatsApp | WhatsApp |
-    | `templates:read` | Grants read access on a channels templates. eg WhatsApp | WhatsApp |
-    | `templates:write` | Grants write access on a channels templates. eg WhatsApp | WhatsApp |
-
-    The scopes available to a channel differ from channel to channel.
-    The following table gives you an overview about the scopes available to a channel.
-
-    | Scope | WhatsApp | Viber | Telegram | WeChat | SMS |
-    | :--- | :---: | :---: | :---: | :---: | :---: |
-    | `messages:read` | ✔ | ✔ | ✔ | ✔ | ✔ |
-    | `messages:write` | ✔ | ✔ | ✔ | ✔ | ✔ |
-    | `profile:read` | ✔ | ❌ | ❌ | ❌ | ❌ |
-    | `profile:write` | ✔ | ❌ | ❌ | ❌ | ❌ |
-    | `callbacks:read` | ✔ | ✔ | ✔ | ✔ | ✔ |
-    | `callbacks:write` | ✔ | ✔ | ✔ | ✔ | ✔ |
-    | `credentials:read` | ❌ | ❌ | ✔ | ✔ | ❌ |
-    | `credentials:write` | ❌ | ❌ | ✔ | ✔ | ❌ |
-    | `templates:read` | ✔ | ❌ | ❌ | ❌ | ❌ |
-    | `templates:write` | ✔ | ❌ | ❌ | ❌ | ❌ |
+    | `messages:write` | Grants access to send messages via a channel | ![SMS](../images/icon_sms_18px_color_.svg) ![Telegram](../images/icon_telegram_18px_color_.svg) ![Viber](../images/icon_viber_business_18px_color_.svg) ![WeChat](../images/icon_wechat_18px_color_.svg) ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `profile:read` | Grants read access on a channels profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `profile:write` | Grants write access on a channels profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
+    | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg) |
 
   version: '3.0'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
