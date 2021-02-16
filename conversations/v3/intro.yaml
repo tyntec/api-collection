@@ -58,7 +58,9 @@ info:
       Please [request your access here](https://www.tyntec.com/form-conversational-api-viber-business).
     - *2-way SMS:* Please [contact us](/help.html) to get the details for the 2-way SMS setup.
 
-    **Scope based access control**
+
+
+    ## Scope based access control
 
     Conversations uses the concept of scopes to control access to different aspects of your Conversations account and
     channels available to you.
