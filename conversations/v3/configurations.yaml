@@ -468,9 +468,9 @@ components:
           $ref: '#/components/schemas/TelegramCredentials'
     SMSChannelResponses:
       type: array
-        items:
-          anyOf:
-              - $ref: '#/components/schemas/SMSChannelResponse'
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/SMSChannelResponse'
     SMSChannelResponse:
       type: object
       allOf:
@@ -548,6 +548,18 @@ components:
       properties:
         botToken:
           type: string
+
+    ViberChannelConfigs:
+      type: object
+      required:
+        - serviceType
+      properties:
+        serviceType:
+          type: string
+          enum:
+            - session
+            - two-way
+            - one-way
     Problem:
       type: object
       additionalProperties: true
