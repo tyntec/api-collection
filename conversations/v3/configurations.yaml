@@ -242,59 +242,37 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/SMSChannelResponse'
-                - $ref: '#/components/schemas/TelegramChannelResponse'
-                - $ref: '#/components/schemas/ViberChannelResponse'
-                - $ref: '#/components/schemas/WeChatChannelResponse'
-                - $ref: '#/components/schemas/WhatsAppChannelResponse'
+            $ref: '#/components/schemas/AllChannelResponses'
     ListAllSMSChannelsResponse:
       description: A list of SMS channel configurations
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/SMSChannelResponse'
+            $ref: '#/components/schemas/SMSChannelResponses'
     ListAllTelegramChannelsResponse:
       description: A list of Telegram channel configurations
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/TelegramChannelResponse'
+            $ref: '#/components/schemas/TelegramChannelResponses'
     ListAllViberChannelsResponse:
       description: A list of Viber channel configurations
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/ViberChannelResponse'
+            $ref: '#/components/schemas/ViberChannelResponses'
     ListAllWeChatChannelsResponse:
       description: A list of WeChat channel configurations
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/WeChatChannelResponse'
+            $ref: '#/components/schemas/WeChatChannelResponses'
     ListAllWhatsAppChannelsResponse:
       description: A list of Whatsapp channel configurations
       content:
         application/json:
           schema:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/WhatsAppChannelResponse'
+            $ref: '#/components/schemas/WhatsAppChannelResponses'
   schemas:
     AccountConfiguration:
       type: object
@@ -396,6 +374,15 @@ components:
           description: value of the http header
           minLength: 8
           maxLength: 125
+    AllChannelResponses:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/SMSChannelResponse'
+          - $ref: '#/components/schemas/TelegramChannelResponse'
+          - $ref: '#/components/schemas/ViberChannelResponse'
+          - $ref: '#/components/schemas/WeChatChannelResponse'
+          - $ref: '#/components/schemas/WhatsAppChannelResponse'
     ChannelResponse:
       type: object
       description: General channel configuration
@@ -451,6 +438,11 @@ components:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
           default: []
+    WeChatChannelResponses:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WeChatChannelResponse'
     WeChatChannelResponse:
       type: object
       allOf:
@@ -460,6 +452,11 @@ components:
           $ref: '#/components/schemas/WeChatId'
         credentials:
           $ref: '#/components/schemas/WeChatCredentials'
+    TelegramChannelResponses:
+      type: array
+      items:
+        anyOf:
+            - $ref: '#/components/schemas/TelegramChannelResponse'
     TelegramChannelResponse:
       type: object
       allOf:
@@ -469,6 +466,11 @@ components:
           $ref: '#/components/schemas/TelegramId'
         credentials:
           $ref: '#/components/schemas/TelegramCredentials'
+    SMSChannelResponses:
+      type: array
+        items:
+          anyOf:
+              - $ref: '#/components/schemas/SMSChannelResponse'
     SMSChannelResponse:
       type: object
       allOf:
@@ -476,6 +478,11 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/PhoneNumberId'
+    WhatsAppChannelResponses:
+      type: array
+      items:
+        anyOf:
+           - $ref: '#/components/schemas/WhatsAppChannelResponse'
     WhatsAppChannelResponse:
       type: object
       allOf:
@@ -483,6 +490,11 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/PhoneNumberId'
+    ViberChannelResponses:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/ViberChannelResponse'
     ViberChannelResponse:
       type: object
       allOf:
