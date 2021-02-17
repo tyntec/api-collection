@@ -104,69 +104,19 @@ servers:
 security:
   - ApiKeyAuth: [ ]
 tags:
-  - name: "Configurations"
+  - name: "API Account Configurations"
     description: |
-      The Configurations allows you to setup certain parts of settings on account or channel level.
+      API Account configurations allows you to configure settings global to your API account.
+  - name: "Channel Configurations"
+      description: |
+        Channel Account configurations allows you to configure settings local to a specific channel.
 
-      Included are callback settings, credentials (where appropriate) and a signature for incoming events.
-
-      #### Credentials
-
-      Some channels require you to provide tyntec with credentials, for example telegram bots or WeChat applications.
-      Conversations allows you to configure these credentials via the API directly
-
-      #### Signature
-
-      Validating that the message content hasn't been tampered is a crucial part of a secure
-      message exchange.
-
-      Conversations can provide you with a message signature that encrypts the actual event
-      content with a keyed-hash message authentication code [HMAC](https://en.wikipedia.org/wiki/HMAC).
-
-      The signature is transfered in the header `x-signature` as a Base64 URL encoded value.
-
-      As a preparation both parties need to align on
-
-      - the algorithm used
-      - the shared secret
-
-      With these information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`)
-      and the actual event we calculate the signature.
-
-      If you want to check if the message has been tampered on transmission you need to calculate the
-      signature yourself and compare it with the signature provided in the header `x-signature`.
-
-      The following pseudo code examples show you how to calculate the signature
-
-      **Signature version: V1.0**
-
-      <pre class="inline-code">
-        secret = "secret key"
-        algorithm = "SHA256"
-
-        requestTimestamp = request.headers["x-request-timestamp"]
-        body = request.body // String representation without any modifications
-
-        data = requestTimestamp + "\n" + body
-        signature_bytes = HMAC(algorithm, secret, data)
-
-        tt_signature = request.headers["x-signature"]
-        if (Base64URLEncode(signature_bytes) == tt_signature)
-        then
-          echo "Verified"
-        else
-          echo "Tampered!"
-        fi
-      </pre>
-
-      We advise as well to verify if the request timestamp is not too old (couple of minutes at most) and discard
-      the message otherwise.
-
+        A channel here is refered as a the identity you use to send messages to your clients.
 paths:
   /configurations:
     get:
       tags:
-        - "Configurations"
+        - "API Account Configurations"
       summary: Get account configuration
       operationId: getAccountConfiguration
       description: Returns the configuration of the API account
@@ -180,7 +130,7 @@ paths:
   /callback:
     put:
       tags:
-        - "Configurations"
+        - "API Account Configurations"
       summary: Update the callback
       operationId: updateAccountCallback
       description: Update the callback settings of the account. **Note** The complete object must be provided
@@ -196,6 +146,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountConfiguration'
+  /channels:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all channels
+      operationId: listAllChannels
+      description: List all channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllChannelsResponse'
+  /channels/sms:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all SMS channels
+      operationId: listAllSMSChannels
+      description: List all SMS channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllSMSChannelsResponse'
+  /channels/telegram:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all Telegram channels
+      operationId: listAllTelegramChannels
+      description: List all Telegram channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllTelegramChannelsResponse'
+  /channels/viber:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all Viber channels
+      operationId: listAllViberChannels
+      description: List all Viber channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllViberChannelsResponse'
+  /channels/wechat:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all WeChat channels
+      operationId: listAllWeChatChannels
+      description: List all WeChat channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllWeChatChannelsResponse'
+  /channels/whatsapp:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all WhatsApp channels
+      operationId: listAllWhatsAppChannels
+      description: List all WhatsApp channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllWhatsAppChannelsResponse'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -227,13 +237,73 @@ components:
               }
             ]
             title: Constraint Violation
+    ListAllChannelsResponse:
+      description: A list of all channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/SMSChannelResponse'
+                - $ref: '#/components/schemas/TelegramChannelResponse'
+                - $ref: '#/components/schemas/ViberChannelResponse'
+                - $ref: '#/components/schemas/WeChatChannelResponse'
+                - $ref: '#/components/schemas/WhatsAppChannelResponse'
+    ListAllSMSChannelsResponse:
+      description: A list of SMS channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/SMSChannelResponse'
+    ListAllTelegramChannelsResponse:
+      description: A list of Telegram channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/TelegramChannelResponse'
+    ListAllViberChannelsResponse:
+      description: A list of Viber channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/ViberChannelResponse'
+    ListAllWeChatChannelsResponse:
+      description: A list of WeChat channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/WeChatChannelResponse'
+    ListAllWhatsAppChannelsResponse:
+      description: A list of Whatsapp channel configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/WhatsAppChannelResponse'
   schemas:
     AccountConfiguration:
       type: object
       description: Configuration of an API account
       properties:
         scopes:
-          $ref: '#/components/schemas/AccountScopes'
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountScopes'
         callback:
           $ref: '#/components/schemas/Callback'
     AccountScopes:
@@ -326,6 +396,146 @@ components:
           description: value of the http header
           minLength: 8
           maxLength: 125
+    ChannelResponse:
+      type: object
+      description: General channel configuration
+      properties:
+        channel:
+          type: string
+        apiAcountId:
+          type: string
+          format: uuid
+        apiAccountName:
+          type: string
+        scopes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelScopes'
+        callback:
+          $ref: '#/components/schemas/ChannelCallbacks'
+    ChannelScopes:
+      type: string
+      description: Scopes available to a channel.
+      enum:
+        - channels:read
+        - channels.telegram:write
+        - channels.wechat:write
+        - callbacks:read
+        - callbacks:write
+        - media:read
+        - media:write
+    ChannelCallback:
+      type: object
+      description: Configuration of callbacks to your system
+      properties:
+        callbackVersion:
+          type: string
+          description: Event version to be used.
+          enum:
+            - 2.11
+        inboundMessageUrl:
+          type: string
+          description: Webhook for events related to inbound messages
+          pattern: "^https://.*"
+          maxLength: 2000
+        messageStatusUrl:
+          type: string
+          description: Webhook for events related to message status changes
+          pattern: "^https://.*"
+          maxLength: 2000
+        eventFilter:
+          type: array
+          description: |
+            List of status events to listen on. If empty all events are submitted.
+          items:
+            $ref: "#/components/schemas/EventTypes"
+          minLength: 0
+          default: []
+    WeChatChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/WeChatId'
+        credentials:
+          $ref: '#/components/schemas/WeChatCredentials'
+    TelegramChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/TelegramId'
+        credentials:
+          $ref: '#/components/schemas/TelegramCredentials'
+    SMSChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/PhoneNumberId'
+    WhatsAppChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/PhoneNumberId'
+    ViberChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/ServiceId'
+        config:
+          $ref: '#/components/schemas/ViberChannelConfigs'
+    #
+    # Channel id specs
+    #
+    PhoneNumberId:
+      type: object
+      description: Definition of the Phone Number Id
+      properties:
+        phoneNumber:
+          type: string
+    ServiceId:
+      type: object
+      description: Definition of the Viber Service id
+      properties:
+        serviceId:
+          type: string
+    WeChatId:
+      type: object
+      description: Definition of the WeChat id
+      properties:
+        weChatId:
+          type: string
+    TelegramId:
+      type: object
+      description: Definition of the Telegram id
+      properties:
+        botId:
+          type: string
+
+    #
+    # Channel Secret Spec
+    #
+    WeChatCredentials:
+      type: object
+      properties:
+        appId:
+          type: string
+        appSecret:
+          type: string
+
+    TelegramCredentials:
+      type: object
+      properties:
+        botToken:
+          type: string
     Problem:
       type: object
       additionalProperties: true
