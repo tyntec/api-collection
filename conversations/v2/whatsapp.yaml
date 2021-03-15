@@ -2305,7 +2305,6 @@ components:
             - TIER_1K
             - TIER_10K
             - TIER_100K
-            - UNLIMITED
       example:
         phoneNumber: 4912345678
         displayPhonenumber: +49 123 45678
