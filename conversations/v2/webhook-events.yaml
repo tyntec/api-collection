@@ -418,6 +418,14 @@ components:
           type: string
           description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
+        isForwarded:
+          type: boolean
+          description: Is the message forwarded by the user
+          example: true
+        isFrequentlyForwarded:
+          type: boolean
+          description: Is the message frequently forwarded. The definition of frequently depends on the channel
+          example: true
     MoMedia:
       type: object
       description: Media information
