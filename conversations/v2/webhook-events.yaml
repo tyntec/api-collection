@@ -309,14 +309,6 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        - WhatsAppGroupEvent::userJoined
-        - WhatsAppGroupEvent::userLeft
-        - WhatsAppGroupEvent::userPromoted
-        - WhatsAppGroupEvent::userDemoted
-        - WhatsAppGroupEvent::descriptionChanged
-        - WhatsAppGroupEvent::subjectChanged
-        - WhatsAppGroupEvent::iconChanged
-        - WhatsAppGroupEvent::iconDeleted
     MoMessage:
       type: object
       description: |
