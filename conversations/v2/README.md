@@ -1,5 +1,38 @@
 # Release notes
 
+## 2.12
+
+**Important** Last release before 3.x
+
+This release makes the messaging tier visible on the phone numbers of a WhatsApp Business Account.
+
+Also the indicator if a message is forwarded or frequently forwarded.
+
+### Features
+
+#### WhatsApp Messaging Tier
+
+Beginning with this release the phone numbers resource of whatsapp provides also the information about
+the current messaging tier a number is on.
+
+The messaging tier determines to how many unique users during a 24h window  notifications can be sent.
+
+Available are 
+
+-  Tier 1 : 1k
+-  Tier 2 : 10k
+-  Tier 3 : 100k
+
+#### Forwarded message flag
+
+Beginning with this release the MoMessage context provides as well the information if a message was forwarded
+or frequently forwarded. By now only WhatsApp supports this.
+
+#### Viber removed defaulting to promotional messages
+
+We removed the defaulting to promotional messages when sending via Viber. The prior decision leads to confusion 
+and was dropped to make the decision conscious and explicit.
+
 ## 2.11
 
 This release introduces bulk messaging on the Chat API.  
