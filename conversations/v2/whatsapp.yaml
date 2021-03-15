@@ -2297,6 +2297,15 @@ components:
           description: Account that must be used for messaging
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
+        messagingTier:
+          type: string
+          description: Which [messaging tier](https://developers.facebook.com/docs/whatsapp/api/rate-limits#messaging) the number is currently on
+          enum:
+            - TIER_NOT_SET
+            - TIER_1K
+            - TIER_10K
+            - TIER_100K
+            - UNLIMITED
       example:
         phoneNumber: 4912345678
         displayPhonenumber: +49 123 45678
