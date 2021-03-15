@@ -399,7 +399,7 @@ components:
           items:
             $ref: '#/components/schemas/ChannelScopes'
         callback:
-          $ref: '#/components/schemas/ChannelCallbacks'
+          $ref: '#/components/schemas/ChannelCallback'
     ChannelScopes:
       type: string
       description: Scopes available to a channel.
