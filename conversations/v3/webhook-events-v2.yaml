@@ -1,6 +1,6 @@
 asyncapi: '2.0.0'
 info:
-  title: Webhook Events
+  title: Webhook Events V3
   version: '3.0'
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
@@ -306,6 +306,7 @@ components:
         channel:
           type: string
           description: Channel that triggered the event. Always set.
+          x-since: v2
           example: sms
           enum:
             - sms
@@ -318,16 +319,19 @@ components:
           type: string
           format: 'date-time'
           description: Point in time when the event happened
+          x-since: v2
           example:
             2019-06-26T11:41:00
         from:
           type: string
           description: Who triggered this event. Usually a phone number or WhatsApp account ID
+          x-since: v2
           example:
             491672634678
         to:
           type: string
           description: Receiver of the event.
+          x-since: v2
           example:
             491672634678
       example:
@@ -339,6 +343,7 @@ components:
     EventTypes:
       type: string
       description: Determines the event types emitted by the API
+      x-since: v2
       enum:
         - InboundMessage
         - InboundMessage::Postback
@@ -366,11 +371,13 @@ components:
         event:
           type: string
           description: Determines which type of event is sent. Always _InboundMessage_
+          x-since: v2
           enum:
             - InboundMessage
         channel:
           type: string
           description: Channel that triggered the event.
+          x-since: v2
           example: sms
           enum:
             - sms
@@ -379,30 +386,27 @@ components:
             - viber
             - telegram
             - wechat
-        receivedAt:
-          deprecated: true
-          type: string
-          format: 'date-time'
-          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
-          example:
-            2019-06-26T11:41:00
         timestamp:
           type: string
           format: 'date-time'
           description: Point in time when the message was received
+          x-since: v2
           example:
             2019-06-26T11:41:00
         messageId:
           type: string
           description: Message ID reference
+          x-since: v2
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
           description: The sender of the message
+          x-since: v2
           example: "49123512314"
         to:
           type: string
           description: Receiving account of the message. The format is channel specific.
+          x-since: v2
           example: "49123512315"
         content:
           $ref: '#/components/schemas/MoContent'
