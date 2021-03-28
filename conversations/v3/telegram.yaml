@@ -93,7 +93,7 @@ components:
             status: 400
             violations: [
               {
-                field: validate.request.whatsapp.contentType,
+                field: validate.request.content.contentType,
                 message: must not be empty
               }
             ]
@@ -155,8 +155,8 @@ components:
       example:
         to: "+123234234"
         from: "545345345"
-        channel:  "whatsapp"
-        whatsapp:
+        channel:  "telegram"
+        telegram:
           contentType: text
           text: A simple text message
     BulkMessageRequest:

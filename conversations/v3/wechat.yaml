@@ -140,7 +140,7 @@ components:
             status: 400
             violations: [
               {
-                field: validate.request.whatsapp.contentType,
+                field: validate.request.content.contentType,
                 message: must not be empty
               }
             ]
@@ -203,8 +203,8 @@ components:
       example:
         to: "+123234234"
         from: "545345345"
-        channel: "whatsapp"
-        whatsapp:
+        channel: "wechat"
+        content:
           contentType: text
           text: A simple text message
     BulkMessageRequest:
@@ -230,11 +230,11 @@ components:
         channel:
           type: string
           description: Channel selected for delivery.
-          example: WhatsApp
+          example: wechat
           items:
             type: string
             enum:
-              - whatsapp
+              - wechat
         messages:
           type: array
           maxItems: 20
