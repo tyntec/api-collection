@@ -162,7 +162,7 @@ paths:
         - "Channel Configurations"
       summary: List all SMS channels
       operationId: listAllSMSChannels
-      description: List all SMS channels available to your API account
+      description: List all Inbound SMS channels available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllSMSChannelsResponse'
