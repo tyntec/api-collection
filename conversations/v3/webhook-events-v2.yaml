@@ -1,6 +1,6 @@
 asyncapi: '2.0.0'
 info:
-  title: Webhook Events
+  title: Webhook Events V2
   version: '2.12'
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
