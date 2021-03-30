@@ -159,6 +159,24 @@ channels:
         http:
           type: request
           method: POST
+  "Message Status: Dispatched":
+    description: |
+      This event is triggered when the message has been submitted sucessfully to the
+      channel
+
+      **Supporting channels**
+
+      - All
+
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/MessageStatusDispatched'
+      bindings:
+        http:
+          type: request
+          method: POST
   "Message Status: Delivered":
     description: |
       This event is triggered when the channel informed us about the successful delivery
@@ -1028,6 +1046,57 @@ components:
           description: sender id from
       example:
         event: MessageStatus::accepted
+        messageId: 77185196-664a-43ec-b14a-fe97036c697f
+        channel: whatsapp
+        userContext: my-message-reference
+        timestamp: 2019-06-26T11:41:28Z
+    MessageStatusDispatched:
+      type: object
+      description: |
+        Indicates the dispatching of the message by the Conversations API to the target channel
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which event type is sent. Always _MessageStatus::dispatched_
+          enum:
+            - MessageStatus::dispatched
+        messageId:
+          type: string
+          description: Global Message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        channel:
+          type: string
+          description: Channel that triggered the event. Can be empty in case of an internal source.
+          example: sms
+          enum:
+            - sms
+            - whatsapp
+            - viber
+            - telegram
+            - wechat
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the event happened
+          example:
+            2019-06-26T11:41:28Z
+        userContext:
+          type: string
+          description: Contextual information set on the message request
+          example:
+            my-message-reference
+        from:
+          type: string
+          description: sender id from
+      example:
+        event: MessageStatus::dispatched
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         channel: whatsapp
         userContext: my-message-reference

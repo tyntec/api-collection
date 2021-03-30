@@ -1,7 +1,7 @@
 asyncapi: '2.0.0'
 info:
-  title: Webhook Events V3
-  version: '3.0'
+  title: Webhook Events
+  version: '2.12'
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
 
@@ -37,79 +37,55 @@ servers:
     description: Server address of tyntec, the events origin from
     protocol: https
 channels:
-  "InboundMessage (Basic)":
+  "MoMessage (Basic)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/InboundMessage'
+        $ref: '#/components/messages/MoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (SMS)":
+  "MoMessage (SMS)":
     description: |
       Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/SMSInboundMessage'
+        $ref: '#/components/messages/SMSMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (WhatsApp)":
+  "MoMessage (WhatsApp)":
     description: |
       Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/WhatsAppInboundMessage'
+        $ref: '#/components/messages/WhatsAppMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage (Telegram)":
-    description: |
-      Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
-    publish:
-      tags:
-        - name: "Received messages"
-      message:
-        $ref: '#/components/messages/TelegramInboundMessage'
-      bindings:
-        http:
-          type: request
-          method: POST
-  "InboundMessage (WeChat)":
-    description: |
-      Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
-    publish:
-      tags:
-        - name: "Received messages"
-      message:
-        $ref: '#/components/messages/WeChatInboundMessage'
-      bindings:
-        http:
-          type: request
-          method: POST
-  "InboundMessage (Viber)":
+  "MoMessage (Viber)":
     description: |
       Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/ViberInboundMessage'
+        $ref: '#/components/messages/ViberMoMessage'
       bindings:
         http:
           type: request
           method: POST
-  "InboundMessage Postback":
+  "MoMessage Postback":
     description: |
       Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
@@ -120,14 +96,14 @@ channels:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/InboundMessagePostback'
+        $ref: '#/components/messages/MoMessagePostback'
       bindings:
         http:
           type: request
           method: POST
   "Message Status: Deleted":
     description: |
-      This event is triggered when a previously sent InboundMessage is deleted by its sender.
+      This event is triggered when a previously sent MoMessage is deleted by its sender.
 
       **Supporting channels**
 
@@ -250,27 +226,21 @@ channels:
           method: POST
 components:
   messages:
-    InboundMessage:
+    MoMessage:
       payload:
-        $ref: '#/components/schemas/InboundMessage'
-    SMSInboundMessage:
+        $ref: '#/components/schemas/MoMessage'
+    SMSMoMessage:
       payload:
-        $ref: '#/components/schemas/SMSInboundMessage'
-    TelegramAppInboundMessage:
+        $ref: '#/components/schemas/SMSMoMessage'
+    WhatsAppMoMessage:
       payload:
-        $ref: '#/components/schemas/TelegramInboundMessage'
-    ViberInboundMessage:
+        $ref: '#/components/schemas/WhatsAppMoMessage'
+    ViberMoMessage:
       payload:
-        $ref: '#/components/schemas/ViberInboundMessage'
-    WeChatAppInboundMessage:
+        $ref: '#/components/schemas/ViberMoMessage'
+    MoMessagePostback:
       payload:
-        $ref: '#/components/schemas/WeChatInboundMessage'
-    WhatsAppInboundMessage:
-      payload:
-        $ref: '#/components/schemas/WhatsAppInboundMessage'
-    InboundMessagePostback:
-      payload:
-        $ref: '#/components/schemas/InboundMessagePostBack'
+        $ref: '#/components/schemas/MoMessagePostBack'
     MessageStatusDeleted:
       payload:
         $ref: '#/components/schemas/MessageStatusDeletedEvent'
@@ -295,59 +265,43 @@ components:
   schemas:
     APIEvent:
       type: object
-      description: Abstract event object produced by the API, such as MessageStatus or InboundMessage
+      description: Abstract event object produced by the API, such as MessageStatus or MoMessage
       required:
         - event
-        - timestamp
-        - channel
       properties:
         event:
           $ref: '#/components/schemas/EventTypes'
         channel:
           type: string
-          description: Channel that triggered the event. Always set.
-          x-since: v2
+          description: Channel that triggered the event. Can be empty in case of an internal source
           example: sms
           enum:
             - sms
             - whatsapp
             - tyntecEcho
             - viber
-            - wechat
-            - telegram
         timestamp:
           type: string
           format: 'date-time'
           description: Point in time when the event happened
-          x-since: v2
           example:
             2019-06-26T11:41:00
         from:
           type: string
           description: Who triggered this event. Usually a phone number or WhatsApp account ID
-          x-since: v2
-          example:
-            491672634678
-        to:
-          type: string
-          description: Receiver of the event.
-          x-since: v2
           example:
             491672634678
       example:
         event: MessageStatus::accepted
         channel: sms
         from: 491672634678
-        to: 492134234234
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string
       description: Determines the event types emitted by the API
-      x-since: v2
       enum:
-        - InboundMessage
-        - InboundMessage::Postback
-        # Message status related events
+        - MoMessage
+        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
@@ -355,9 +309,7 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        # Channel updates
-        - ChannelUpdate
-    InboundMessage:
+    MoMessage:
       type: object
       description: |
         Message received by us and delivered to your system via a webhook provided by your system.
@@ -370,51 +322,55 @@ components:
       properties:
         event:
           type: string
-          description: Determines which type of event is sent. Always _InboundMessage_
-          x-since: v2
+          description: Determines which type of event is sent. Always _MoMessage_
           enum:
-            - InboundMessage
+            - MoMessage
         channel:
           type: string
           description: Channel that triggered the event.
-          x-since: v2
           example: sms
           enum:
             - sms
             - whatsapp
             - tyntecEcho
             - viber
-            - telegram
-            - wechat
+        receivedAt:
+          deprecated: true
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
+          example:
+            2019-06-26T11:41:00
         timestamp:
           type: string
           format: 'date-time'
           description: Point in time when the message was received
-          x-since: v2
           example:
             2019-06-26T11:41:00
         messageId:
           type: string
           description: Message ID reference
-          x-since: v2
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
           description: The sender of the message
-          x-since: v2
           example: "49123512314"
         to:
           type: string
           description: Receiving account of the message. The format is channel specific.
-          x-since: v2
           example: "49123512315"
+        groupId:
+          type: string
+          description: Group ID from which the event originates. Only present if the message was sent into a group.
+          example:
+            4923147790717-1564134658
         content:
           $ref: '#/components/schemas/MoContent'
         context:
           $ref: '#/components/schemas/MoContext'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -429,11 +385,7 @@ components:
           type: string
           enum:
             - text
-            - image
-            - document
-            - audio
-            - voice
-            - video
+            - media
             - location
             - contacts
           description: What kind of payload is used
@@ -442,15 +394,7 @@ components:
           type: string
           description: The received text
           example: Hi, thanks for your support message
-        image:
-          $ref: '#/components/schemas/MoMedia'
-        document:
-          $ref: '#/components/schemas/MoMedia'
-        audio:
-          $ref: '#/components/schemas/MoMedia'
-        voice:
-          $ref: '#/components/schemas/MoMedia'
-        video:
+        media:
           $ref: '#/components/schemas/MoMedia'
       example:
         contentType: media
@@ -464,15 +408,30 @@ components:
       properties:
         messageId:
           type: string
-          description: The message ID the InboundMessage refers to. Usualy set when the sender replies to a specific message
+          description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
+        isForwarded:
+          type: boolean
+          description: Is the message forwarded by the user
+          example: true
+        isFrequentlyForwarded:
+          type: boolean
+          description: Is the message frequently forwarded. The definition of frequently depends on the channel
+          example: true
     MoMedia:
       type: object
       description: Media information
-      required:
-        - mediaId
-        - url
       properties:
+        type:
+          type: string
+          description: What kind of media was received
+          enum:
+            - image
+            - document
+            - audio
+            - voice
+            - video
+          example: audio
         url:
           type: string
           description: The URL of the location where the media is stored
@@ -485,7 +444,7 @@ components:
           type: string
           description: Caption specified by the user or the file name of the document
           example: This is an picture of my cat!
-    SMSInboundMessage:
+    SMSMoMessage:
       type: object
       description: |
         Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
@@ -496,7 +455,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
 
         channel:
@@ -509,7 +468,7 @@ components:
           $ref: '#/components/schemas/SMS'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -631,7 +590,7 @@ components:
           minimum: 1
           maximum: 255
           example: 1
-    WhatsAppInboundMessage:
+    WhatsAppMoMessage:
       type: object
       description: |
         Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
@@ -642,7 +601,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
         channel:
           type: string
@@ -658,7 +617,7 @@ components:
           $ref: '#/components/schemas/Whatsapp'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -690,7 +649,7 @@ components:
             Contextual information that is transfered back on delivery notifications.
           example:
             my-message-reference
-    ViberInboundMessage:
+    ViberMoMessage:
       type: object
       description: |
         Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
@@ -701,7 +660,7 @@ components:
         - from
         - content
       allOf:
-        - $ref: '#/components/schemas/InboundMessage'
+        - $ref: '#/components/schemas/MoMessage'
       properties:
         channel:
           type: string
@@ -715,7 +674,7 @@ components:
           $ref: '#/components/schemas/MoContext'
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
+        event: MoMessage
         from: "49123512314"
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
@@ -723,7 +682,7 @@ components:
         content:
           contentType: text
           text: 'Hi, thanks for your support message'
-    InboundMessagePostBack:
+    MoMessagePostBack:
       type: object
       description: |
         Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
@@ -739,9 +698,9 @@ components:
       properties:
         event:
           type: string
-          description: Determines which event type is sent. Always _InboundMessage::PostBack_
+          description: Determines which event type is sent. Always _MoMessage::PostBack_
           enum:
-            - InboundMessage::Postback
+            - MoMessage::Postback
         channel:
           type: string
           description: Channel that triggered the event.
@@ -781,7 +740,7 @@ components:
         whatsapp:
           $ref: '#/components/schemas/WhatsAppPostBack'
       example:
-        event: InboundMessage::PostBack
+        event: MoMessage::PostBack
         messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
         from: "49123512314"
         to: "49123512315"
@@ -811,121 +770,10 @@ components:
           type: string
           description: Caption of the button that was clicked
           example: Yes
-    TelegramInboundMessage:
-      type: object
-      description: |
-        Message received by us on the Telegram channel and delivered to your system via a webhook provided by your system.
-      required:
-        - messageId
-        - event
-        - channel
-        - from
-        - content
-      allOf:
-        - $ref: '#/components/schemas/InboundMessage'
-      properties:
-        channel:
-          type: string
-          description: Channel that triggered the event.
-          example: telegram
-          enum:
-            - telegram
-        content:
-          $ref: '#/components/schemas/MoContent'
-        context:
-          $ref: '#/components/schemas/MoContext'
-        telegram:
-          oneOf:
-            - $ref: '#/components/schemas/Telegram'
-            - $ref: '#/components/schemas/TelegramGroup'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: telegram
-        content:
-          contentType: text
-          text: 'Hi, thanks for your support message'
-        telegram:
-          senderName: Peter
-    Telegram:
-      type: object
-      description: Details specific to the WhatsApp channel
-      properties:
-        senderName:
-          type: string
-          description: Name of the sender, set in his or her profile
-          example: Peter
-      example:
-        senderName: Peter
-      additionalProperties: true
-    TelegramGroup:
-      type: object
-      description: Details specific to the WhatsApp channel
-      properties:
-        senderName:
-          type: string
-          description: Name of the sender, set in his or her profile
-          example: Peter
-        chatTitle:
-          type: String
-          description: Title of the chat from which the bot was contacted
-          example: tyntec Chat
-        chatType:
-          type: string
-          description: Type of the chat issued the message
-          enum:
-            - supergroup
-            - channel
-          example:
-            group
-        chatId:
-          type: string
-          description: Id of the channel the message origined from
-          example: -1001271529072
-      example:
-        senderName: Peter
-      additionalProperties: true
-
-    WeChatInboundMessage:
-      type: object
-      description: |
-        Message received by us on the Telegram channel and delivered to your system via a webhook provided by your system.
-      required:
-        - messageId
-        - event
-        - channel
-        - from
-        - content
-      allOf:
-        - $ref: '#/components/schemas/InboundMessage'
-      properties:
-        channel:
-          type: string
-          description: Channel that triggered the event.
-          example: telegram
-          enum:
-            - wechat
-        content:
-          $ref: '#/components/schemas/MoContent'
-        context:
-          $ref: '#/components/schemas/MoContext'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: telegram
-        content:
-          contentType: text
-          text: 'Hi, thanks for your support message'
     MessageStatusDeletedEvent:
       type: object
       description: |
-        Indicates that a previously sent inbound InboundMessage was deleted by the user.
+        Indicates that a previously sent inbound MoMessage was deleted by the user.
       required:
         - messageId
         - event
@@ -1034,9 +882,6 @@ components:
           description: Contextual information set on the message request
           example:
             my-message-reference
-        from:
-          type: string
-          description: sender id from
       example:
         event: MessageStatus::accepted
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
@@ -1273,86 +1118,3 @@ components:
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
-    ChannelNotification:
-      type: object
-      examples:
-        WhatsApp::PhoneNumber::QualityRatingChange:
-          event: ChannelNotification
-          channel: WhatsApp
-          scope: Template
-          type: QualityRatingChange
-          phoneNumber: 12312323
-          oldRating: GREEN
-          newRating: RED
-        WhatsApp::Template::QualityRatingChange:
-          event: ChannelNotification
-          channel: WhatsApp
-          scope: PhoneNumber
-          type: QualityRatingChange
-          whatsAppAccountId: 12312323
-          templateName: swagger_sample
-          oldRating: GREEN
-          newRating: RED
-        WhatsApp::Template::StatusChange:
-          event: ChannelNotification
-          channel: WhatsApp
-          scope: Template
-          type: StatusChange
-          whatsAppAccountId: 12312323
-          templateName: swagger_sample
-          oldStatus: PENDING
-          newStatus: REJECTED
-          reason: PROMOTIONAL
-        WhatsApp::PhoneNumber::TierChange:
-          event: ChannelNotification
-          channel: WhatsApp
-          scope: PhoneNumber
-          type: TierChange
-          phoneNumber: 12312323
-          oldTier: TIER 1
-          newTier: TIER 2
-        WhatsApp::User::PhoneNumberChange:
-          event: ChannelNotification
-          channel: WhatsApp
-          scope: User
-          type: PhoneNumberChange
-          phoneNumber: 12312323 
-          oldPhoneNumber: TIER 1
-          newPhoneNumber: TIER 2
-        WeChat::User::Following:
-          event: ChannelNotification
-          channel: WeChat
-          scope: User
-          type: Following
-          userId: 12312323
-          weChatId: 2143123
-        WeChat::User::Unfollowing:
-          event: ChannelNotification
-          channel: WeChat
-          scope: User
-          type: Unfollowing
-          userId: 12312323
-          weChatId: 2143123  
-        WhatsApp::User::PhoneNumberChange_V2:
-          event: ChannelNotification::WhatsApp::User::PhoneNumberChange
-          phoneNumber: 12312323
-          oldUserPhoneNumber: 42342343
-          newUSerPhoneNumber: 989894545
-#
-# Channel updates
-# WhatsApp
-#  - PhoneNumber
-#    - Quality Rating change
-#    - Tier change
-#    - status change
-#  - Template
-#    - Quality Rating change
-#    - Approval change
-#  - User
-#    - Phone number change
-#  - Conversation
-#    - user identity change
-#
-# WeChat
-#  - Following
-#  - Unfollowing
