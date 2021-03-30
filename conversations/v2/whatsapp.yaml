@@ -1431,7 +1431,7 @@ components:
           description: The URL of the location where the sticker is stored
           example: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
       example:
-        type: image
+        type: sticker
         url: https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp
     DocumentMedia:
       type: object
