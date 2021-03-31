@@ -44,8 +44,8 @@ info:
     - WhatsApp
     - Viber
     - 2-way SMS (sending and receiving)
-    - Telegram
-    - WeChat
+    - Telegram (Beta)
+    - WeChat (Beta)
 
     **Note:** If you want to send SMS only, check out our [SMS API](/sms/current.html), which is preferred for 1-way
     SMS messaging.
@@ -56,6 +56,8 @@ info:
       Please [request your access here](https://www.tyntec.com/form-whatsapp-setup-your-waba).
     - *Viber:* A Viber Service ID is required in order to use this channel.<br>
       Please [request your access here](https://www.tyntec.com/form-conversational-api-viber-business).
+    - *Telegram:* Please contact us for getting access to the beta program for Telegram via onboarding@tyntec.com.
+    - *WeChat:* Please contact us for getting access to the beta program for WeChat via onboarding@tyntec.com.
     - *2-way SMS:* Please [contact us](/help.html) to get the details for the 2-way SMS setup.
 
 

@@ -110,7 +110,69 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /configurations/channels/wechat:
+    get:
+      tags:
+        - "WeChat IDs"
+      summary: List WeChat IDs
+      operationId: listAllWeChatChannels
+      description: List all WeCht channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllWeChatChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/wechat/wechat-ids/{wechat-id}:
+    parameters:
+      - $ref: '#/components/parameters/WeChatId'
+    get:
+      tags:
+        - "WeChat IDs"
+      summary: Read a configuration
+      operationId: getWeChatChannelConfig
+      description: Returns the specific channel configuration
+      responses:
+        200:
+          $ref: '#/components/responses/WeChatChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/wechat/wechat-ids/{wechat-id}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/WeChatId'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateWeChatChannelCallback
+      description: Update the callback settings of a specific WeChat ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/WeChatChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
+  parameters:
+    WeChatId:
+      name: wechat-id
+      in: path
+      required: true
+      description: WeChat ID used for WeChat messaging.
+      schema:
+        type: string
+      example: 23cklsdhf2
   responses:
     MessageResponse:
       description: Response after the server has accepted the request
@@ -155,6 +217,18 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    ListAllWeChatChannelsResponse:
+      description: A list of WeChat channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WeChatChannelResponses'
+    WeChatChannelResponse:
+      description: A WeChat Service ID Configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WeChatChannelResponse'
   schemas:
     Problem:
       $ref: './common.yaml#/components/schemas/Problem'
@@ -303,3 +377,9 @@ components:
           type: string
         variable:
           type: string
+    WeChatChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/WeChatChannelResponse'
+    WeChatChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/WeChatChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'

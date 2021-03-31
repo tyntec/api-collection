@@ -546,6 +546,36 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /configurations/channels/whatsapp:
+    get:
+      tags:
+        - "Phone Number Configurations"
+      summary: List Configurations
+      operationId: listAllWhatsAppChannels
+      description: List all WhatsApp channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllWhatsAppChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/whatsapp/phone-numbers/{phone-number}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      tags:
+        - "Phone Number Configurations"
+      summary: Read one configuration
+      operationId: getWhatsAppChannelConfig
+      description: Returns the specific configuration
+      responses:
+        200:
+          $ref: '#/components/responses/WhatsAppChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/settings/profile:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -660,6 +690,29 @@ paths:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/whatsapp/phone-numbers/{phone-number}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateWhatsAppChannelCallback
+      description: Update the callback settings of a specific whatsapp channel.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/WhatsAppChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
 components:
@@ -825,6 +878,18 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    ListAllWhatsAppChannelsResponse:
+      description: A list of WhatsApp phone number configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WhatsAppChannelResponses'
+    WhatsAppChannelResponse:
+      description: WhatsApp phone number configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WhatsAppChannelResponse'
   examples:
     ## Messaging section
 
@@ -2583,3 +2648,9 @@ components:
         - current
         - next
         - last
+    WhatsAppChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/WhatsAppChannelResponse'
+    WhatsAppChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/WhatsAppChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'

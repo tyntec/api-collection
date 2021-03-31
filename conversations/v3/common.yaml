@@ -37,7 +37,7 @@ info:
     The API allows you to automatically receive delivery notifications and status updates about messages that you
     sent to your channels.
 
-    For this service, you will need to provide a URL (`callbackUrl`) at your webserver,
+    For this service, you will need to provide a URL (`messageStatusUrl`) at your webserver,
     e.g. `https://rest.customer.com/messagestatus/`. This URL must serve a webhook able to process POST HTTP requests,
     which the tyntec system will fire upon events in the system, in this case upon message status updates.
 
@@ -66,12 +66,11 @@ info:
     **Note:** For the SMS channel, you need to ask us to enable 2-way interaction,
     see [Channel specific prerequisites](#channels).
 
-    For this service, you will need to provide a URL (`callbackUrl`) at your webserver,
+    For this service, you will need to provide a URL (`inboundMessageUrl`) at your webserver,
     e.g. `https://rest.customer.com/inboundmessages/`. This URL must serve a webhook able to process POST HTTP requests,
-    which the tyntec [application](current.html#webhook-configuration) will fire upon the events of inbound messages.
+    which the tyntec [application](current.html#configurations) will fire upon the events of inbound messages.
 
-    You will also need to subscribe your callback URL to the `MoMessage` event type in the tyntec application,
-    see [Webhook Configuration](#webhook-configuration) and [Webhook Events](#webhook-events).
+    The events fired upon are of type `MoMessage`.
 
     **Retries**
 
@@ -85,6 +84,53 @@ info:
     - *Telegram:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
       delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
+
+    ### Callback Overiding Rules
+
+    We do support specifying callback configurations on the API account level (global) and channel id specific level (local).
+
+    On both levels only a part of the configuration must be present. They will be merged into an effective callback configuration.
+
+    It follows the rule that the local configuration overrides the global configuration on the specified parts.
+
+    For example for the callback configurations on the global level
+
+    <pre class="inline-code">
+    callbackVersion: 2.11
+    inboundMessage: http://my.server.com/inbound
+    messageStatus: http://my.server.com/status
+    eventFilter: []
+    </pre>
+
+    and the Viber Service ID 123:
+
+    <pre class="inline-code">
+    inboundMessage: http://my.server.com/inbound-viber
+    eventFilter:
+     - MessageStatus::accepted
+     - MessageStatus::channelFailed
+    </pre>
+
+    would result in the effective configuration for the Viber Service ID 123
+
+    <pre class="inline-code">
+    callbackVersion: 2.11
+    inboundMessage: http://my.server.com/inbound-viber
+    messageStatus: http://my.server.com/status
+    eventFilter:
+      - MessageStatus::accepted
+      - MessageStatus::channelFailed
+    </pre>
+
+    and for any other channel:
+
+    <pre class="inline-code">
+    callbackVersion: 2.11
+    inboundMessage: http://my.server.com/inbound
+    messageStatus: http://my.server.com/status
+    eventFilter: []
+    </pre>
+
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -105,9 +151,20 @@ tags:
     description: |
       After receiving an inbound message (_MoMessage_ event) with a media ID, this endpoint can be used to download
       the media file.
-  - name: "Outbound media"
+  - name: "Outbound media (Beta)"
     description: |
-      .... to be described ....
+      As an alternative to the download of outbound media on message requests, we enable you to upload a media file
+      and use it later when sending messages.
+
+      After an successful upload we generate an ID which is used as an alternative to the media URL.
+
+      The uploaded media can be stored
+
+      - as a static asset
+      - only for a certain period
+      - for one time usage
+
+      As this is in beta, we grant access to it only via an approved access request.
 paths:
   /messages/{messageId}/status:
     parameters:
@@ -151,7 +208,7 @@ paths:
       summary: List uploaded media files
       description: Lists all uploaded media files
       tags:
-        - "Outbound media"
+        - "Outbound media (Beta)"
       responses:
         200:
           $ref: '#/components/responses/ListMediaResponse'
@@ -177,7 +234,7 @@ paths:
       summary: Upload a media file
       description: Uploads a media file for message sending
       tags:
-        - "Outbound media"
+        - "Outbound media (Beta)"
       requestBody:
         description: the media to be uploaded
         required: true
@@ -203,7 +260,7 @@ paths:
       summary: Delete a media file
       description: Deletes a prior uploaded media.
       tags:
-        - "Outbound media"
+        - "Outbound media (Beta)"
       responses:
         204:
           description: The assiciated media was successfully deleted
@@ -214,7 +271,7 @@ paths:
       summary: Download media file
       tags:
         - "Inbound media"
-        - "Outbound media"
+        - "Outbound media (Beta)"
       description: Retrieve the media associated with the id
       responses:
         200:

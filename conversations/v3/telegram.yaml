@@ -63,7 +63,71 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /configurations/channels/telegram:
+    get:
+      tags:
+        - "Telegram IDs"
+      summary: List Telegram IDs
+      operationId: listAllTelegramChannels
+      description: List all Telegram channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllTelegramChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/telegram/telegram-ids/{telegram-id}:
+    parameters:
+      - $ref: '#/components/parameters/TelegramId'
+    get:
+      tags:
+        - "Telegram IDs"
+      summary: Read a configuration
+      operationId: getTelegramChannelConfig
+      description: Returns the specific channel configuration
+      responses:
+        200:
+          $ref: '#/components/responses/TelegramChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/telegram/telegram-ids/{telegram-id}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/TelegramId'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateWeChatChannelCallback
+      description: Update the callback settings of a specific WeChat ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/TelegramChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
+  parameters:
+    TelegramId:
+      name: telegram-id
+      in: path
+      required: true
+      description: Telegram Bot ID used for Telegram messaging.
+      schema:
+        type: string
+        minLength: 4
+        maxLength: 15
+      example: 398vsnbkj3
   responses:
     MessageResponse:
       description: Response after the server has accepted the request
@@ -108,6 +172,18 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    ListAllTelegramChannelsResponse:
+      description: A list of Telegram channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TelegramChannelResponses'
+    TelegramChannelResponse:
+      description: A Telegram ID configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TelegramChannelResponse'
   schemas:
     Problem:
       $ref: './common.yaml#/components/schemas/Problem'
@@ -226,3 +302,9 @@ components:
         caption:
           type: string
           maxLength: 1024
+    TelegramChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/TelegramChannelResponse'
+    TelegramChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/TelegramChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'
