@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: SMS
   description: |
-    Conversations allows you to easily reach out and communicate with  your clients via 2-way SMS.
+    Conversations allows you to easily reach out and communicate with your clients via 2-way SMS.
 
     **Channel specific pre-conditions**
 
@@ -66,7 +66,71 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /configurations/channels/sms:
+    get:
+      tags:
+        - "Inbound Phone Numbers"
+      summary: List Phone Numbers
+      operationId: listAllSMSChannels
+      description: List all Inbound SMS channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllSMSChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/sms/phone-numbers/{phone-number}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      tags:
+        - "Inbound Phone Numbers"
+      summary: Read a configuration
+      operationId: getSMSChannelConfig
+      description: Returns the specific inbound configuration
+      responses:
+        200:
+          $ref: '#/components/responses/SMSChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/sms/phone-numbers/{phone-number}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateSMSChannelCallback
+      description: Update the callback settings of a specific inbound sms. **Note** The complete object must be provided
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/SMSChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
 components:
+  parameters:
+    PhoneNumber:
+      name: phone-number
+      in: path
+      required: true
+      description: Phone number used for WhatsApp messaging.
+      schema:
+        type: integer
+        minLength: 4
+        maxLength: 15
+      example: 4923147790717
   responses:
     MessageResponse:
       description: Response after the server has accepted the request
@@ -111,6 +175,18 @@ components:
             type: https://httpstatuses.com/403
             title: Forbidden
             status: 403
+    ListAllSMSChannelsResponse:
+      description: A list of SMS channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SMSChannelResponses'
+    SMSChannelResponse:
+      description: A list of SMS channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SMSChannelResponse'
   schemas:
     Problem:
       $ref: './common.yaml#/components/schemas/Problem'
@@ -205,3 +281,9 @@ components:
         text:
           type: string
           maxLength: 3000
+    SMSChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/SMSChannelResponse'
+    SMSChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/SMSChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'
