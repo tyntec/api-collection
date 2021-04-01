@@ -1,6 +1,6 @@
-# Conversations V3
+# Release notes
 
-## BETA - Phase 1
+## 3.0
 
 ### Breaking changes
 
@@ -10,11 +10,61 @@
 - templates define now specific sections, such as `header`, `body`, `buttons` in contrast to a simple list
 - channel specific structures replaced by `content`
 - bulk messages are now configured on the `messages` object instead of the channel specific one
+- The concept of `applications` is replaced by a general `configurations` concept
 
 ### Features
 
-- Harmonized data models between all channels
-- WeChat support
+#### Harmonized data models between all channels
+
+With this release we put a major effort in reworking and harmonizing the data models between all channels.
+
+Switching between channels for the "standard types" text, and most media messages types, can now be done by 
+exchanging the `channel`, `from` and `to`.
+
+We started introducing the concept of components on all places where complex objects are needed. 
+
+#### WeChat (Beta)
+
+With this release an early beta access to our WeChat integration is available. Please reach out to us for details.
+
+#### Telegram (Beta)
+
+With this release an early beta access to our Telegram integration is available. Please reach out to us for details.
+
+#### Upload outbound media files (Beta)
+
+With this release we start providing the option to upload media files prior to the message sending and use them later
+when messages are sent.
+
+Please reach out to us for details.
+
+#### _Configurations_ replacing _Applications_
+
+With this release we introduce a generic Configurations concept. 
+
+The Configurations concept starts with the management of callbacks and provides you insights into the scopes 
+available to your API account and Channels.
+
+##### Callbacks
+We start with providing access to  callback configurations on the API account level (formerly known as Default application), and the channel sender 
+id specific level.
+
+This enables you to have a default for all of your channels and define specific overrides on a per channel base.
+
+The settings are resolved later to an effective callback configuration, which enables you to only override a part of the 
+global callback configuration, when needed.
+
+
+#### Scope based access control
+
+With this release we make use of scope based access control to overcome the known limitations of the formerly used concept
+of messaging and managing accounts.
+
+In case of WhatsApp: 
+
+This enables us to grant the managing (or owning account), and the messaging account rights on the template management
+for modification. As well to control if a profile can be configured by the messaging account.
+
 
 ### Migration 
 

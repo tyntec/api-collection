@@ -85,52 +85,6 @@ info:
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
       delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
 
-    ### Callback Overiding Rules
-
-    We do support specifying callback configurations on the API account level (global) and channel id specific level (local).
-
-    On both levels only a part of the configuration must be present. They will be merged into an effective callback configuration.
-
-    It follows the rule that the local configuration overrides the global configuration on the specified parts.
-
-    For example for the callback configurations on the global level
-
-    <pre class="inline-code">
-    callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound
-    messageStatus: http://my.server.com/status
-    eventFilter: []
-    </pre>
-
-    and the Viber Service ID 123:
-
-    <pre class="inline-code">
-    inboundMessage: http://my.server.com/inbound-viber
-    eventFilter:
-     - MessageStatus::accepted
-     - MessageStatus::channelFailed
-    </pre>
-
-    would result in the effective configuration for the Viber Service ID 123
-
-    <pre class="inline-code">
-    callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound-viber
-    messageStatus: http://my.server.com/status
-    eventFilter:
-      - MessageStatus::accepted
-      - MessageStatus::channelFailed
-    </pre>
-
-    and for any other channel:
-
-    <pre class="inline-code">
-    callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound
-    messageStatus: http://my.server.com/status
-    eventFilter: []
-    </pre>
-
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support

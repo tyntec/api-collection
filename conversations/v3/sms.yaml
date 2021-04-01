@@ -19,6 +19,22 @@ servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section, we guide you on how to send messages, get information about the status and the events happening
+      during delivery.
+  - name: "Inbound Phone Numbers"
+    description: |
+      List all phone numbers configured as Inbound (aka 2-way) Phone Numbers.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per channel bases.
+
+      At the moment this is only supported for Inbound Phone Numbers.
+
+      In case you need to route Message Status events for outbound SMS differently, please use the `overrides.messageStatusUrl`
+      property.
 paths:
   /messages:
     post:

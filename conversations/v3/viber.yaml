@@ -30,6 +30,16 @@ servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening during the delivery.
+  - name: "Service IDs"
+    description: |
+      List all Service IDs configured for your API account.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per channel bases.
 paths:
   /messages:
     post:

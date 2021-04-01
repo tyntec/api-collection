@@ -20,6 +20,17 @@ servers:
   - url: https://api.tyntec.com/conversations/v3
 security:
   - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section, we guide you on how to send messages, get information about the status and the events happening
+      during delivery.
+  - name: "WeChat IDs"
+    description: |
+      List all WeChat IDs configured for your API account.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per channel bases.
 paths:
   /messages:
     post:

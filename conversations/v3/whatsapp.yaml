@@ -55,6 +55,13 @@ tags:
   - name: "Profile management"
     description: |
       Profile management allows you to read and update profile settings of your WhatsApp phone numbers.
+  - name: "Phone Number Configurations"
+    description: |
+      List all phone numbers configured as Inbound (aka 2-way) Phone Numbers.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per channel bases.
+
 paths:
   /messages:
     post:
