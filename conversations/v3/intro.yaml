@@ -12,31 +12,6 @@ info:
     system via the HTTP ```POST``` method. For details see [Receiving status updates](#receiving-status-updates) and
     [Receiving inbound messages](#receiving-inbound-messages).
 
-
-    ## Adhered web standards
-
-    In addition to the [compliance common to all our APIs](/index.html#general-web-standards),
-    the Conversations API complies also with:
-
-    - [RFC 5988 – Web Linking](https://tools.ietf.org/html/rfc5988)
-
-    *RFC 5988* is implemented to allow all API calls that return a list of resources, to make use of the following
-    _Link_ headers:
-
-    - `first` – The first page in the resource list pagination
-    - `previous` – The preceding page of the current page in the resource list pagination
-    - `current` – The current page in the resource list pagination
-    - `next` – The following page in the current page of the resource list pagination
-    - `last` – The last page in the resource list pagination
-
-    In addition, the following custom headers are provided for convenience:
-
-    - `x-total-pages` – The total number of pages in the list of requested sub-resources
-    - `x-total-items` – The total number of items in the list of requested sub-resources
-    - `x-page-size` – The size of a page (maximum number of items on a single page)
-    - `x-current-page` – The page number of the current page in the list of requested sub-resources
-
-
     ## Channels
 
     The Conversations API provides messaging services via several channels, currently:
@@ -78,6 +53,29 @@ info:
     You can inspect the scopes available to both layers by fetching the information via [Configurations](#configurations).
 
     We reserve us the right to revoke any granted scope in case we do detect abusive usage of the API.
+
+    ## Adhered web standards
+
+    In addition to the [compliance common to all our APIs](/index.html#general-web-standards),
+    the Conversations API complies also with:
+
+    - [RFC 5988 – Web Linking](https://tools.ietf.org/html/rfc5988)
+
+    *RFC 5988* is implemented to allow all API calls that return a list of resources, to make use of the following
+    _Link_ headers:
+
+    - `first` – The first page in the resource list pagination
+    - `previous` – The preceding page of the current page in the resource list pagination
+    - `current` – The current page in the resource list pagination
+    - `next` – The following page in the current page of the resource list pagination
+    - `last` – The last page in the resource list pagination
+
+    In addition, the following custom headers are provided for convenience:
+
+    - `x-total-pages` – The total number of pages in the list of requested sub-resources
+    - `x-total-items` – The total number of items in the list of requested sub-resources
+    - `x-page-size` – The size of a page (maximum number of items on a single page)
+    - `x-current-page` – The page number of the current page in the list of requested sub-resources
 
   contact:
     name: tyntec API Support
