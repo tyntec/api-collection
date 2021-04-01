@@ -54,6 +54,10 @@ This enables you to have a default for all of your channels and define specific 
 The settings are resolved later to an effective callback configuration, which enables you to only override a part of the 
 global callback configuration, when needed.
 
+The formerly used **PATCH** `/applications/default` is translated to change the API account level callback configuration.
+
+In addition, we start providing you control over the HTTP header sent which each request and configure 
+a message signature to detect tampering during the transport. 
 
 #### Scope based access control
 
