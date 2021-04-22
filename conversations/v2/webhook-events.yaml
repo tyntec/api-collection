@@ -88,6 +88,7 @@ channels:
   "MoMessage Postback":
     description: |
       Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
+      The event is treated as a MoMessage event for the purpose of callback lookups.
 
       **Supporting channels**
 
@@ -1020,12 +1021,26 @@ components:
           description: Contextual information set on the message request
           example:
             my-message-reference
+        details:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code to identify the reason
+              example: whatsapp::external::1009
+            message:
+              type: string
+              description: Additional error message about the error reason
+              example: Parameter value is not valid. Button at index 0 of type Url does not require parameters
       example:
         event: MessageStatus::channelFailed
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
+        details:
+          code: whatsapp::external::1009
+          message: Parameter value is not valid. Button at index 0 of type Url does not require parameters
     MessageStatusFailed:
       type: object
       description: |
