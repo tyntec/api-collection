@@ -89,6 +89,8 @@ channels:
     description: |
       Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
+      The event is treated as a MoMessage event for the purpose of callback lookups.
+
       **Supporting channels**
 
       - WhatsApp: Quick Reply buttons
