@@ -25,6 +25,8 @@ tags:
        - By now, only a single application (the default application) is supported. The extension to custom applications is planned in future releases.
        - The API merges events pointing to the same callback URL into one set.
        - When an update of a callback URL is executed, the whole webhook definition is restated.
+
+      The MoMessage::Postback event is treated as a MoMessage event for the purpose of callback lookups.
 paths:
   /applications:
     get:
@@ -114,7 +116,6 @@ components:
       description: Determines the event type emitted by the API.
       enum:
         - MoMessage
-        - MoMessage::Postback
         - MessageStatus::accepted
         - MessageStatus::channelFailed
         - MessageStatus::deleted
