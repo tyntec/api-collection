@@ -1,7 +1,7 @@
 asyncapi: '2.0.0'
 info:
   title: Webhook Events
-  version: '2.11'
+  version: '2.12'
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
 
@@ -310,14 +310,6 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
-        - WhatsAppGroupEvent::userJoined
-        - WhatsAppGroupEvent::userLeft
-        - WhatsAppGroupEvent::userPromoted
-        - WhatsAppGroupEvent::userDemoted
-        - WhatsAppGroupEvent::descriptionChanged
-        - WhatsAppGroupEvent::subjectChanged
-        - WhatsAppGroupEvent::iconChanged
-        - WhatsAppGroupEvent::iconDeleted
     MoMessage:
       type: object
       description: |
