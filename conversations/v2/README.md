@@ -1,5 +1,46 @@
 # Release notes
 
+## 2.12
+
+This release adds new information to the phone number and template data you can fetch for WhatsApp. 
+
+### Features
+
+#### WhatsApp Messaging Tier
+
+Beginning with this release the phone numbers resource of whatsapp provides also the information about
+the current messaging tier a number is on.
+
+The messaging tier determines to how many unique users during a 24h window  notifications can be sent.
+
+Available are 
+
+-  Tier 1 : 1k
+-  Tier 2 : 10k
+-  Tier 3 : 100k
+
+#### WhatsApp Quality Score
+
+Beginning with this release the phone numbers and templates resource of whatsapp provides also the information about
+the current quality score.
+
+The quality score of both is influenced by the feedback of the end users on messages sent from your business to them.
+
+The quality score ranges between
+
+ - unknown
+ - green
+ - yellow
+ - red
+
+The reasons why the quality score is red or yellow is also available.
+
+
+#### Viber removed defaulting to promotional messages
+
+We removed the defaulting to promotional messages when sending via Viber. The prior decision leads to confusion 
+and was dropped to make the decision conscious and explicit.
+
 ## 2.11
 
 This release introduces bulk messaging on the Chat API.  
