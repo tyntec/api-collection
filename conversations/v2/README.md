@@ -2,11 +2,7 @@
 
 ## 2.12
 
-**Important** Last release before 3.x
-
-This release makes the messaging tier visible on the phone numbers of a WhatsApp Business Account.
-
-Also the indicator if a message is forwarded or frequently forwarded.
+This release adds new information to the phone number and template data you can fetch for WhatsApp. 
 
 ### Features
 
@@ -23,10 +19,22 @@ Available are
 -  Tier 2 : 10k
 -  Tier 3 : 100k
 
-#### Forwarded message flag
+#### WhatsApp Quality Score
 
-Beginning with this release the MoMessage context provides as well the information if a message was forwarded
-or frequently forwarded. By now only WhatsApp supports this.
+Beginning with this release the phone numbers and templates resource of whatsapp provides also the information about
+the current quality score.
+
+The quality score of both is influenced by the feedback of the end users on messages sent from your business to them.
+
+The quality score ranges between
+
+ - unknown
+ - green
+ - yellow
+ - red
+
+The reasons why the quality score is red or yellow is also available.
+
 
 #### Viber removed defaulting to promotional messages
 
