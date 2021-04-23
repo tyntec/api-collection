@@ -2072,6 +2072,16 @@ components:
           description: Account that must be used for messaging
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
+        messagingTier:
+          type: string
+          description: Which [messaging tier](https://developers.facebook.com/docs/whatsapp/api/rate-limits#messaging) the number is currently on
+          enum:
+            - TIER_NOT_SET
+            - TIER_1K
+            - TIER_10K
+            - TIER_100K
+        qualityScore:
+          $ref: '#/components/schemas/QualityScore'
       example:
         phoneNumber: 4912345678
         displayPhonenumber: +49 123 45678
@@ -2477,6 +2487,8 @@ components:
             Only present when a template was deleted.
           format: date-time
           example: 2020-03-15T23:28:34.442Z
+        qualityScore:
+          $ref: '#/components/schemas/QualityScore'
     WhatsAppTemplateHeaderComponentResponse:
       type: object
       description: Header component of a template
@@ -2661,3 +2673,28 @@ components:
       $ref: './configurations.yaml#/components/schemas/WhatsAppChannelResponses'
     ChannelCallback:
       $ref: './configurations.yaml#/components/schemas/ChannelCallback'
+    QualityScore:
+      type: object
+      description: The quality score provided by WhatsApp and calculated from user feedback on your messages
+      required:
+        - score
+      properties:
+        score:
+          type: string
+          description: The current scoring
+          enum:
+            - unknown
+            - GREEN
+            - YELLOW
+            - RED
+        reasons:
+          type: array
+          description: |
+            Textual description why the quality score is set to the value.
+            Only present when score is YELLOW or RED
+          items:
+            type: string
+      example:
+        score: RED
+        reasons:
+          - Users are choosing "didn't sign up" as a reason for blocking this phone number. Businesses must obtain opt-in before sending notifications. Please review your opt-in flow(s) and see our Business Policy for more detail.
