@@ -295,3 +295,19 @@ In order to use the new API the following changes need to be applied
       }
       ]
     }
+    
+#### context.userContext -> context
+
+*V2*
+
+    {
+      "context" : {
+        "userContext": "my context"
+      }
+    }
+
+*V3*
+
+    {
+      "context": "my context"
+    }
