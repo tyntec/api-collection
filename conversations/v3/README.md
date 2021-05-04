@@ -1,0 +1,313 @@
+# Release notes
+
+## 3.0
+
+### Breaking changes
+
+- multi channel support dropped
+- `from` moved to the top level object
+- `media` container object replaced by simple media type structures
+- templates define now specific sections, such as `header`, `body`, `buttons` in contrast to a simple list
+- channel specific structures replaced by `content`
+- bulk messages are now configured on the `messages` object instead of the channel specific one
+- The concept of `applications` is replaced by a general `configurations` concept
+
+### Features
+
+#### Harmonized data models between all channels
+
+With this release we put a major effort in reworking and harmonizing the data models between all channels.
+
+Switching between channels for the "standard types" text, and most media messages types, can now be done by 
+exchanging the `channel`, `from` and `to`.
+
+We started introducing the concept of components on all places where complex objects are needed. 
+
+#### WeChat (Beta)
+
+With this release an early beta access to our WeChat integration is available. Please reach out to us for details.
+
+#### Telegram (Beta)
+
+With this release an early beta access to our Telegram integration is available. Please reach out to us for details.
+
+#### Upload outbound media files (Beta)
+
+With this release we start providing the option to upload media files prior to the message sending and use them later
+when messages are sent.
+
+Please reach out to us for details.
+
+#### _Configurations_ replacing _Applications_
+
+With this release we introduce a generic Configurations concept. 
+
+The Configurations concept starts with the management of callbacks and provides you insights into the scopes 
+available to your API account and Channels.
+
+##### Callbacks
+We start with providing access to  callback configurations on the API account level (formerly known as Default application), and the channel sender 
+id specific level.
+
+This enables you to have a default for all of your channels and define specific overrides on a per channel base.
+
+The settings are resolved later to an effective callback configuration, which enables you to only override a part of the 
+global callback configuration, when needed.
+
+The formerly used **PATCH** `/applications/default` is translated to change the API account level callback configuration.
+
+In addition, we start providing you control over the HTTP header sent which each request and configure 
+a message signature to detect tampering during the transport. 
+
+#### Scope based access control
+
+With this release we make use of scope based access control to overcome the known limitations of the formerly used concept
+of messaging and managing accounts.
+
+In case of WhatsApp: 
+
+This enables us to grant the managing (or owning account), and the messaging account rights on the template management
+for modification. As well to control if a profile can be configured by the messaging account.
+
+
+### Migration 
+
+In order to use the new API the following changes need to be applied
+
+(!) the WhatsApp channel is used as an example
+
+(!) this is not exhaustive for all media types
+
+#### channels -> channel
+
+*V2*
+
+    {
+      "channels" : ["whatsapp"] 
+    }
+*V3*
+
+    {
+      "channel" : "whatsapp"
+    }
+
+#### {channelType}.from -> from
+
+*V2*
+
+    {
+      "whatsapp" : {
+        "from": "1324213432"
+      }
+    }
+
+*V3*
+
+    {
+      "from": "1324213432"
+    }
+
+#### {channelType} -> content
+
+*V2*
+
+    {
+      "whatsapp" : {
+        "contentType": "text"
+      }
+    }
+
+*V3*
+
+    {
+      "content" : {
+        "contentType": "text"
+      }
+    }
+
+#### media -> specific media
+
+*V2*
+
+    {
+      "whatsapp" : {
+        "contentType": "media",
+        "media" : {
+          "type": image",
+          "url" : "https://www.my.cool.image.png"
+        }
+      }
+    }
+
+*V3*
+
+    {
+      "content" : {
+        "contentType": "image",
+        "image" : {
+          "url" : "https://www.my.cool.image.png"
+        }
+      }
+    }
+
+#### template components -> specific components
+
+*V2*
+
+    "template": {
+    "templateId": "event_review",
+    "language": {
+      "policy": "deterministic",
+      "code": "en"
+    },
+    "components": [
+      {
+        "type": "header",
+        "parameters": [
+          {
+            "type": "media",
+            "media": {
+              "url": "https://images.freeimages.com/images/small-previews/fec/sunset-rays-1391805.jpg",
+              "type": "image"
+            }
+          }
+        ]
+      },
+      {
+        "type": "body",
+        "parameters": [
+          {
+            "type": "text",
+            "text": "Peter"
+          },
+          {
+            "type": "text",
+            "text": "API Beta"
+          },
+          {
+            "type": "text",
+            "text": "December 2020"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "subType": "quick_reply",
+        "index": 0,
+        "parameters": [
+          {
+            "type": "payload",
+            "payload": "test payload"
+          }
+        ]
+      }
+    ]
+    }
+
+*V3*
+
+    "template": {
+    "templateId": "event_review",
+    "templateLanguage": "en",
+    "components" : {
+      "header" : [
+        {
+          "type": "image",
+          "image": {
+            "url" : "https://images.freeimages.com/images/small-previews/fec/sunset-rays-1391805.jpg"
+          }
+        }
+      ],
+      "body" : [
+        {
+          "type": "text",
+          "text": "Peter"
+        },
+        {
+          "type": "text",
+          "text": "API Beta"
+        },
+        {
+          "type": "text",
+          "text": "December 2020"
+        }
+      ],
+      "button" : [
+        {
+          "type" : "quick_reply",
+          "index": 0,
+          "payload": "test payload"
+        }
+      ]
+    }
+    }
+
+#### Bulk messages
+
+*v2*
+
+    {
+    "channel": "whatsapp",
+    "from": "4923147790813",
+    "to": "491728953754",
+    "whatsapp": [
+        {
+          "contentType": "media",
+          "media": {
+            "type": "media",
+            "url" : "https://www.tyntec.com/sites/default/files/uploads/1608_tyntec_CorporateBackground.pdf",
+ 	        "caption" : "tyntec corporate background",
+            "filename" : "background.pdf"
+          }
+        },
+        {
+          "contentType": "media",
+          "media": {
+            "type": "image",
+            "url" : "https://images.freeimages.com/images/small-previews/fec/sunset-rays-1391805.jpg",
+ 	        "caption" : "nice!"
+          }
+        }
+      ]
+    }
+
+*V3*
+
+    {
+    "channel": "whatsapp",
+    "from": "4923147790813",
+    "to": "491728953754",
+    "messages": [
+      {
+        "contentType": "document",
+        "document": {
+            "url" : "https://www.tyntec.com/sites/default/files/uploads/1608_tyntec_CorporateBackground.pdf",
+ 	        "caption" : "tyntec corporate background",
+            "filename" : "background.pdf"
+        }
+      },
+      {
+        "contentType": "image",
+        "image": {
+            "url" : "https://images.freeimages.com/images/small-previews/fec/sunset-rays-1391805.jpg",
+ 	        "caption" : "nice!"
+        }
+      }
+      ]
+    }
+    
+#### context.userContext -> context
+
+*V2*
+
+    {
+      "context" : {
+        "userContext": "my context"
+      }
+    }
+
+*V3*
+
+    {
+      "context": "my context"
+    }

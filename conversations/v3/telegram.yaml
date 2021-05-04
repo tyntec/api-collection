@@ -1,0 +1,322 @@
+openapi: '3.0.0'
+info:
+  title: Telegram (Beta)
+  description: |
+    Conversations allows you to easily reach out and communicate with  your clients via Telegram Bots.
+
+    For beta access please reach out to [onboarding@tyntec.com](onboarding@tyntec.com)
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-specification-file: telegram.yaml
+  x-major-version: v3
+servers:
+  - url: https://api.tyntec.com/conversations/v3
+security:
+  - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening during the delivery.
+  - name: "Telegram IDs"
+    description: |
+      List all Telegram IDs configured for your API account.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per channel bases.
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          $ref: '#/components/responses/MessageResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /bulks:
+    post:
+      operationId: sendABulkMessage
+      summary: Send a bulk message
+      tags:
+        - "Messaging"
+      description: Send bulk messages. Bulk messages are defined as ordered messages to **one** receiver.
+      requestBody:
+        description: The message bulk you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMessageRequest'
+      responses:
+        202:
+          $ref: '#/components/responses/BulkMessageResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/telegram:
+    get:
+      tags:
+        - "Telegram IDs"
+      summary: List Telegram IDs
+      operationId: listAllTelegramChannels
+      description: List all Telegram channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllTelegramChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/telegram/telegram-ids/{telegram-id}:
+    parameters:
+      - $ref: '#/components/parameters/TelegramId'
+    get:
+      tags:
+        - "Telegram IDs"
+      summary: Read a configuration
+      operationId: getTelegramChannelConfig
+      description: Returns the specific channel configuration
+      responses:
+        200:
+          $ref: '#/components/responses/TelegramChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/telegram/telegram-ids/{telegram-id}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/TelegramId'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateWeChatChannelCallback
+      description: Update the callback settings of a specific WeChat ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/TelegramChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  parameters:
+    TelegramId:
+      name: telegram-id
+      in: path
+      required: true
+      description: Telegram Bot ID used for Telegram messaging.
+      schema:
+        type: string
+        minLength: 4
+        maxLength: 15
+      example: 398vsnbkj3
+  responses:
+    MessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkMessageResponse'
+    Default:
+      description: Default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.content.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    ListAllTelegramChannelsResponse:
+      description: A list of Telegram channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TelegramChannelResponses'
+    TelegramChannelResponse:
+      description: A Telegram ID configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TelegramChannelResponse'
+  schemas:
+    Problem:
+      $ref: './common.yaml#/components/schemas/Problem'
+    MessageResponse:
+      $ref: './common.yaml#/components/schemas/MessageResponse'
+    BulkMessageResponse:
+      $ref: './common.yaml#/components/schemas/BulkMessageResponse'
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channel
+        - from
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "12314123"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "34534532134"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: telegram
+          items:
+            type: string
+            enum:
+              - telegram
+        overrides:
+          $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
+        context:
+          type: string
+          description: Context for this particular message
+          maxLength: 125
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/TelegramTextContent'
+            - $ref: '#/components/schemas/TelegramImageContent'
+      example:
+        to: "+123234234"
+        from: "545345345"
+        channel:  "telegram"
+        telegram:
+          contentType: text
+          text: A simple text message
+    BulkMessageRequest:
+      type: object
+      description: The bulk of messages you would like to send
+      required:
+        - to
+        - channel
+        - from
+        - messages
+      properties:
+        to:
+          type: string
+          description: |
+            The receipient of the messages
+            The format depends on the specific channel
+          example: "+1233423454"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "+1233423454"
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          example: telegram
+          items:
+            type: string
+            enum:
+              - telegram
+        messages:
+          type: array
+          maxItems: 20
+          minItems: 2
+          items:
+            - $ref: '#/components/schemas/TelegramTextContent'
+            - $ref: '#/components/schemas/TelegramImageContent'
+    TelegramTextContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+          default: text
+        text:
+          type: string
+          maxLength: 40
+    TelegramImageContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - image
+        image:
+          $ref: '#/components/schemas/TelegramImage'
+    #
+    # Media
+    #
+    TelegramImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
+          maxLength: 1024
+    TelegramChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/TelegramChannelResponse'
+    TelegramChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/TelegramChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'
