@@ -174,7 +174,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountConfiguration'
-  /callback:
+  /configurations/callback:
     put:
       tags:
         - "API Account Configurations"
@@ -193,7 +193,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountConfiguration'
-  /channels:
+  /configurations/channels:
     get:
       tags:
         - "Channel Configurations"
@@ -203,7 +203,7 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllChannelsResponse'
-  /channels/sms:
+  /configurations/channels/sms:
     get:
       tags:
         - "Channel Configurations"
@@ -213,7 +213,7 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllSMSChannelsResponse'
-  /channels/telegram:
+  /configurations/channels/telegram:
     get:
       tags:
         - "Channel Configurations"
@@ -223,7 +223,7 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllTelegramChannelsResponse'
-  /channels/viber:
+  /configurations/channels/viber:
     get:
       tags:
         - "Channel Configurations"
@@ -233,7 +233,7 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllViberChannelsResponse'
-  /channels/wechat:
+  /configurations/channels/wechat:
     get:
       tags:
         - "Channel Configurations"
@@ -243,7 +243,7 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllWeChatChannelsResponse'
-  /channels/whatsapp:
+  /configurations/channels/whatsapp:
     get:
       tags:
         - "Channel Configurations"
