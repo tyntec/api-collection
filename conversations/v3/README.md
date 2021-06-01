@@ -1,5 +1,29 @@
 # Release notes
 
+## 3.1
+
+### Features
+
+#### WhatsApp - Examples on template submissions
+
+Template submissions allow now to specify examples for the review by WhatsApp.
+
+It's advised to do this at least for the media templates, as WhatsApp has changed the policies due abuse of
+media headers to distribute spam / inappropriate content.  
+
+The examples must be provided up on template submission, later modifications are not supported.
+
+This first release requires the examples to be hosted publicly, a later release will allow a pre-upload of the 
+same and reuse of examples via a media id.
+
+#### WhatsApp - New languages added to template localizations
+
+WhatsApp allows now to submit templates in 
+
+- Hausa (ha)
+- Malayalam (ml) 
+- Zulu (zu)
+
 ## 3.0
 
 ### Breaking changes
