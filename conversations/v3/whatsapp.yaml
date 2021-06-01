@@ -1736,6 +1736,17 @@ components:
         text:
           type: string
           maxLength: 60
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentExample'
+    WhatsAppTemplateTextHeaderComponentExample:
+      type: object
+      description: Example of the header text
+      properties:
+        text:
+          type: string
+          maxLength: 60
+          description: Example text
+          example: John Doe
     WhatsAppTemplateImageHeaderComponent:
       type: object
       properties:
@@ -1745,6 +1756,8 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateVideoHeaderComponent:
       type: object
       properties:
@@ -1754,6 +1767,8 @@ components:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateDocumentHeaderComponent:
       type: object
       properties:
@@ -1763,6 +1778,17 @@ components:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppTemplateDocumentHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
+    WhatsAppTemplateMediaHeaderComponentExample:
+      type: object
+      properties:
+        url:
+          description: This is present until the successful submission to WhatsApp
+          type: string
+        fileHandle:
+          description: This is present after successful submission of the template to WhatsApp
+          type: string
     WhatsAppTemplateLocationHeaderComponent:
       type: object
       properties:
@@ -1787,7 +1813,6 @@ components:
           type: string
           description: Additional info for the filename to be displayed.
           example: Test PDF
-
     WhatsAppTemplateTextBodyComponent:
       type: object
       properties:
@@ -1797,6 +1822,20 @@ components:
             - text
         text:
           type: string
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponentExample'
+    WhatsAppTemplateTextBodyComponentExample:
+      type: object
+      description: Examples of the body parameters.
+      properties:
+        texts:
+          type: array
+          description: Examples of the body parameters
+          items:
+            type: string
+          example:
+            - John Doe
+            - Order ID 123
     WhatsAppQuickReplyButtons:
       type: array
       minItems: 0
@@ -1879,6 +1918,16 @@ components:
                 description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
           minItems: 0
           maxItems: 1
+        example:
+          $ref: '#/components/schemas/UrlButtonComponentExample'
+    UrlButtonComponentExample:
+      type: object
+      description: Example for a **dynamic** URL button.
+      properties:
+        url:
+          type: string
+          description: Example for a **dynamic** URL button.
+          example: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
     WhatsAppProfile:
       type: object
       description: |
