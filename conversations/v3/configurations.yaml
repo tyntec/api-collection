@@ -416,11 +416,12 @@ components:
         key:
           description: name of the http header
           type: string
+          maxLength: 125
         value:
           type: string
           description: value of the http header
           minLength: 8
-          maxLength: 125
+          maxLength: 1024
     AllChannelResponses:
       type: array
       items:
