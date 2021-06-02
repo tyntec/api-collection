@@ -24,6 +24,14 @@ WhatsApp allows now to submit templates in
 - Malayalam (ml) 
 - Zulu (zu)
 
+### Fixes
+
+#### Missing / wrong constraints on Webhook Header
+
+The webhook header key missed the length constraint. It's now correctly documented with 8-125 characters.
+
+The webhook header value had a too short max length documented. It's now updated to 1024 characters max length.
+
 ## 3.0
 
 ### Breaking changes
