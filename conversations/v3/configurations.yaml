@@ -142,7 +142,7 @@ info:
     | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
-  version: '3.0'
+  version: '3.1'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
   x-major-version: v3
