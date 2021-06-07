@@ -12,7 +12,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.12'
+  version: '2.13'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -2420,7 +2420,23 @@ components:
           description: Text that should be displayed as header. Can contain 1 variable
           maxLength: 60
           example: Hi {{1}}
-
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequestExample'
+      example:
+        type: HEADER
+        format: TEXT
+        text: Hi {{1}}
+        example:
+          text: John Doe
+    WhatsAppTemplateTextHeaderComponentRequestExample:
+      type: object
+      description: Example of the header text
+      properties:
+        text:
+          type: string
+          maxLength: 60
+          description: Example text
+          example: John Doe
     WhatsAppTemplateLocationHeaderComponentRequest:
       type: object
       description: Location header component of a template
@@ -2462,6 +2478,23 @@ components:
             - VIDEO
           example:
             IMAGE
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequestExample'
+      example:
+        type: HEADER
+        format: IMAGE
+        example:
+          url: https://www.my.com/image.jpg
+    WhatsAppTemplateMediaHeaderComponentRequestExample:
+      type: object
+      description: Example of a media
+      properties:
+        url:
+          type: string
+          maxLength: 255
+          description: URL of the example media file
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
+          example: https://www.my.com/image.jpg
     WhatsAppTemplateBodyComponentRequest:
       type: object
       description: Body component of a template
@@ -2481,6 +2514,28 @@ components:
           minLength: 1
           example:
             Hi {{1}}! Enjoy the spec!
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequestExample'
+      example:
+        type: BODY
+        text: Hi {{1}}, your order {{2}} is shipped
+        example:
+          texts:
+            - John Doe
+            - 123
+    WhatsAppTemplateBodyComponentRequestExample:
+      type: object
+      description: Examples of the body parameters. All parameters of the body must have an example
+      properties:
+        texts:
+          type: array
+          description: Examples of the body parameters
+          items:
+            type: string
+            maxLength: 100
+          example:
+            - John Doe
+            - Order ID 123
     WhatsAppTemplateFooterComponentRequest:
       type: object
       description: Footer component of a template
@@ -2575,6 +2630,24 @@ components:
           description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
           example: https://www.myservice.com/invoices/{{1}}
+        example:
+          $ref: '#/components/schemas/WhatsAppURLButtonExample'
+      example:
+        type: URL
+        text: Your invoice
+        url: https://www.myservice.com/invoices/{{1}}
+        example:
+          url: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
+    WhatsAppURLButtonExample:
+      type: object
+      description: Example for a **dynamic** URL button.
+      properties:
+        url:
+          type: string
+          description: Example for a **dynamic** URL button. Must start with the same base url as the url  button
+          maxLength: 255
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
+          example: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
     WhatsAppPhoneNumberButton:
       type: object
       description: Call to action button that initiates a call when clicked
