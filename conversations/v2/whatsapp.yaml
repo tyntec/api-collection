@@ -2890,6 +2890,7 @@ components:
         - fr
         - ga
         - gu
+        - ha
         - he
         - hi
         - hr
@@ -2904,6 +2905,7 @@ components:
         - lt
         - lv
         - mk
+        - ml
         - mr
         - ms
         - nb
@@ -2931,6 +2933,7 @@ components:
         - zh_CN
         - zh_HK
         - zh_TW
+        - zu
       example:
         en
     WhatsAppAccountStatus:
