@@ -416,6 +416,7 @@ components:
         key:
           description: name of the http header
           type: string
+          minLength: 4
           maxLength: 125
         value:
           type: string
