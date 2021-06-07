@@ -2485,7 +2485,7 @@ components:
       properties:
         url:
           type: string
-          description: Example for a **dynamic** URL button. Must start with the same base url as the url  button
+          description: Example for a **dynamic** URL button. Must start with the same base url as the url button
           maxLength: 255
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
           example: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
