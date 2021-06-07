@@ -1927,7 +1927,7 @@ components:
         url:
           type: string
           description: Example for a **dynamic** URL button.
-          example: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
+          example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppProfile:
       type: object
       description: |
@@ -2478,7 +2478,7 @@ components:
         text: Your invoice
         url: https://www.myservice.com/invoices/{{1}}
         example:
-          url: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
+          url: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppURLButtonExample:
       type: object
       description: Example for a **dynamic** URL button.
@@ -2488,7 +2488,7 @@ components:
           description: Example for a **dynamic** URL button. Must start with the same base url as the url button
           maxLength: 255
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
-          example: https://www.myservice.com/invoices/24798798723945hbvijhdbnjhdfg.pdf
+          example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppPhoneNumberButton:
       type: object
       description: Call to action button that initiates a call when clicked
