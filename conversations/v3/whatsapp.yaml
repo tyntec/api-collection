@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.0'
+  version: '3.1'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -43,6 +43,13 @@ tags:
   - name: "Template management"
     description: |
       Template management enables you to interact with the templates defined for your WhatsApp account.
+
+      You can specify examples for the parameters on each localization. This is advised to increase the chance of
+      acceptance of templates. If you use examples, all dynamic parts of the template, like media header or body parameters
+      must be specified.
+
+      It's advised to do this at least for the media templates, as WhatsApp has changed the policies due abuse of
+      media headers to distribute spam / inappropriate content.
 
       We support creating or deleting templates and adding new localizations to an existing template.
 
@@ -1422,6 +1429,15 @@ components:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
+    WhatsAppInteractiveContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - interactive
+        interactive:
+          $ref: '#/components/schemas/WhatsAppTemplate'
     #
     # Media
     #
@@ -1720,6 +1736,17 @@ components:
         text:
           type: string
           maxLength: 60
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentExample'
+    WhatsAppTemplateTextHeaderComponentExample:
+      type: object
+      description: Example of the header text
+      properties:
+        text:
+          type: string
+          maxLength: 60
+          description: Example text
+          example: John Doe
     WhatsAppTemplateImageHeaderComponent:
       type: object
       properties:
@@ -1729,6 +1756,8 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateVideoHeaderComponent:
       type: object
       properties:
@@ -1738,6 +1767,8 @@ components:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateDocumentHeaderComponent:
       type: object
       properties:
@@ -1747,6 +1778,17 @@ components:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppTemplateDocumentHeader'
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
+    WhatsAppTemplateMediaHeaderComponentExample:
+      type: object
+      properties:
+        url:
+          description: This is present until the successful submission to WhatsApp
+          type: string
+        fileHandle:
+          description: This is present after successful submission of the template to WhatsApp
+          type: string
     WhatsAppTemplateLocationHeaderComponent:
       type: object
       properties:
@@ -1771,7 +1813,6 @@ components:
           type: string
           description: Additional info for the filename to be displayed.
           example: Test PDF
-
     WhatsAppTemplateTextBodyComponent:
       type: object
       properties:
@@ -1781,6 +1822,20 @@ components:
             - text
         text:
           type: string
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponentExample'
+    WhatsAppTemplateTextBodyComponentExample:
+      type: object
+      description: Examples of the body parameters.
+      properties:
+        texts:
+          type: array
+          description: Examples of the body parameters
+          items:
+            type: string
+          example:
+            - John Doe
+            - Order ID 123
     WhatsAppQuickReplyButtons:
       type: array
       minItems: 0
@@ -1863,6 +1918,16 @@ components:
                 description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
           minItems: 0
           maxItems: 1
+        example:
+          $ref: '#/components/schemas/UrlButtonComponentExample'
+    UrlButtonComponentExample:
+      type: object
+      description: Example for a **dynamic** URL button.
+      properties:
+        url:
+          type: string
+          description: Example for a **dynamic** URL button.
+          example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppProfile:
       type: object
       description: |
@@ -2195,7 +2260,23 @@ components:
           description: Text that should be displayed as header. Can contain 1 variable
           maxLength: 60
           example: Hi {{1}}
-
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequestExample'
+      example:
+        type: HEADER
+        format: TEXT
+        text: Hi {{1}}
+        example:
+          text: John Doe
+    WhatsAppTemplateTextHeaderComponentRequestExample:
+      type: object
+      description: Example of the header text
+      properties:
+        text:
+          type: string
+          maxLength: 60
+          description: Example text
+          example: John Doe
     WhatsAppTemplateLocationHeaderComponentRequest:
       type: object
       description: Location header component of a template
@@ -2237,6 +2318,23 @@ components:
             - VIDEO
           example:
             IMAGE
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequestExample'
+      example:
+        type: HEADER
+        format: IMAGE
+        example:
+          url: https://www.my.com/image.jpg
+    WhatsAppTemplateMediaHeaderComponentRequestExample:
+      type: object
+      description: Example of a media
+      properties:
+        url:
+          type: string
+          maxLength: 255
+          description: URL of the example media file
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
+          example: https://www.my.com/image.jpg
     WhatsAppTemplateBodyComponentRequest:
       type: object
       description: Body component of a template
@@ -2256,6 +2354,29 @@ components:
           minLength: 1
           example:
             Hi {{1}}! Enjoy the spec!
+        example:
+          $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequestExample'
+      example:
+        type: BODY
+        text: Hi {{1}}, your order {{2}} is shipped
+        example:
+          texts:
+           - John Doe
+           - 123
+    WhatsAppTemplateBodyComponentRequestExample:
+      type: object
+      description: Examples of the body parameters. All parameters of the body must have an example
+      properties:
+        texts:
+          type: array
+          description: Examples of the body parameters
+          items:
+            type: string
+            maxLength: 100
+          example:
+            - John Doe
+            - Order ID 123
+
     WhatsAppTemplateFooterComponentRequest:
       type: object
       description: Footer component of a template
@@ -2350,6 +2471,24 @@ components:
           description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
           example: https://www.myservice.com/invoices/{{1}}
+        example:
+          $ref: '#/components/schemas/WhatsAppURLButtonExample'
+      example:
+        type: URL
+        text: Your invoice
+        url: https://www.myservice.com/invoices/{{1}}
+        example:
+          url: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
+    WhatsAppURLButtonExample:
+      type: object
+      description: Example for a **dynamic** URL button.
+      properties:
+        url:
+          type: string
+          description: Example for a **dynamic** URL button. Must start with the same base url as the url button
+          maxLength: 255
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
+          example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppPhoneNumberButton:
       type: object
       description: Call to action button that initiates a call when clicked
@@ -2592,6 +2731,7 @@ components:
         - fr
         - ga
         - gu
+        - ha
         - he
         - hi
         - hr
@@ -2606,6 +2746,7 @@ components:
         - lt
         - lv
         - mk
+        - ml
         - mr
         - ms
         - nb
@@ -2633,6 +2774,7 @@ components:
         - zh_CN
         - zh_HK
         - zh_TW
+        - zu
       example:
         en
     WhatsAppAccountStatus:
