@@ -1004,18 +1004,12 @@ components:
                   - type: text
                     text: "Inv: 1233131-2020"
               buttons:
-                - type: button
-                  subType: quick_reply
+                - type: quick_reply
                   index: 0
-                  parameters:
-                    - type: payload
-                      payload: InvoiceId:1233131-2020
-                - type: button
-                  subType: quick_reply
+                  payload: InvoiceId:1233131-2020
+                - type: quick_reply
                   index: 2
-                  parameters:
-                    - type: payload
-                      payload: CustomerId:13134141
+                  payload: CustomerId:13134141
     WhatsAppInteractiveCallToActionMessage:
       value:
         to: "12331132"
@@ -1030,18 +1024,15 @@ components:
               policy: deterministic
               code: en
             components:
-              - type: body
-                parameters:
+              - body:
                   - type: text
                     text: Mr. Tester
                   - type: text
                     text: "Inv: 1233131-2020"
-              - type: button
-                subType: url
-                index: 0
-                parameters:
-                  - type: text
-                    payload: 1233131-2020
+              - button:
+                  - type: url
+                    index: 0
+                    text: 1233131-2020
     ## Template management section
     WhatsAppTextTemplate:
       value:
@@ -1411,15 +1402,6 @@ components:
           enum:
             - template
         template:
-          $ref: '#/components/schemas/WhatsAppTemplate'
-    WhatsAppInteractiveContent:
-      type: object
-      properties:
-        contentType:
-          type: string
-          enum:
-            - interactive
-        interactive:
           $ref: '#/components/schemas/WhatsAppTemplate'
     #
     # Media
