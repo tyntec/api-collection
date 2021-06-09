@@ -105,23 +105,6 @@ paths:
                       url: https://www.my.com/image
                       filename: UHUH.jpeg
                   context: my-message-reference
-              WhatsApp Template:
-                value:
-                  from: a cool business
-                  to: some number
-                  channel: WhatsApp
-                  content:
-                    contentType: template
-                    template:
-                      templateId: WhatsApp-yeah!
-                      components:
-                        body:
-                          - type: text
-                            text: Z
-                            variable: username
-                          - type: text
-                            text: 2000 €
-                            variable: amount
       responses:
         202:
           $ref: '#/components/responses/MessageResponse'
@@ -1021,18 +1004,12 @@ components:
                   - type: text
                     text: "Inv: 1233131-2020"
               buttons:
-                - type: button
-                  subType: quick_reply
+                - type: quick_reply
                   index: 0
-                  parameters:
-                    - type: payload
-                      payload: InvoiceId:1233131-2020
-                - type: button
-                  subType: quick_reply
+                  payload: InvoiceId:1233131-2020
+                - type: quick_reply
                   index: 2
-                  parameters:
-                    - type: payload
-                      payload: CustomerId:13134141
+                  payload: CustomerId:13134141
     WhatsAppInteractiveCallToActionMessage:
       value:
         to: "12331132"
@@ -1047,18 +1024,15 @@ components:
               policy: deterministic
               code: en
             components:
-              - type: body
-                parameters:
+              - body:
                   - type: text
                     text: Mr. Tester
                   - type: text
                     text: "Inv: 1233131-2020"
-              - type: button
-                subType: url
-                index: 0
-                parameters:
-                  - type: text
-                    payload: 1233131-2020
+              - button:
+                  - type: url
+                    index: 0
+                    text: 1233131-2020
     ## Template management section
     WhatsAppTextTemplate:
       value:
@@ -1416,7 +1390,7 @@ components:
           type: string
           enum:
             - contacts
-        concats:
+        contacts:
           type: array
           items:
             $ref: '#/components/schemas/Contact'
@@ -1428,15 +1402,6 @@ components:
           enum:
             - template
         template:
-          $ref: '#/components/schemas/WhatsAppTemplate'
-    WhatsAppInteractiveContent:
-      type: object
-      properties:
-        contentType:
-          type: string
-          enum:
-            - interactive
-        interactive:
           $ref: '#/components/schemas/WhatsAppTemplate'
     #
     # Media
@@ -1698,7 +1663,7 @@ components:
       properties:
         templateId:
           type: string
-        language:
+        templateLanguage:
           type: string
         components:
           $ref: '#/components/schemas/WhatsAppTemplateComponents'
@@ -1854,12 +1819,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the component. Always _button_.
-          enum:
-            - button
-        subType:
-          type: string
-          description: Determines the sub type of the button. Always _quick_reply_.
+          description: Determines the type of the button. Always _quick_reply_.
           enum:
             - quick_reply
         index:
@@ -1867,34 +1827,17 @@ components:
           description: Determines the index of the button that should be enhanced with the payload.
           minimum: 0
           maximum: 2
-        parameters:
-          type: array
-          description: Parameter for this quick reply button
-          items:
-            properties:
-              type:
-                type: string
-                description: Determines the type of the parameter. Always _payload_.
-                enum:
-                  - payload
-              payload:
-                type: string
-                maxLength: 128
-                description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
-          minItems: 0
-          maxItems: 1
+        payload:
+          type: string
+          maxLength: 128
+          description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
     UrlButtonComponent:
       type: object
       description: This type can be used up to one time
       properties:
         type:
           type: string
-          description: Determines the type of the component. Always _button_.
-          enum:
-            - button
-        subType:
-          type: string
-          description: Determines the type of the component. Always _url_.
+          description: Determines the type of the buttpon. Always _url_.
           enum:
             - url
         index:
@@ -1902,32 +1845,10 @@ components:
           description: Determines the index of the button that should be enhanced with a custom parameter
           minimum: 0
           maximum: 1
-        parameters:
-          type: array
-          description: Parameters to be used in Button's URL
-          items:
-            properties:
-              type:
-                type: string
-                description: Determines the type of the parameter. Always _text_.
-                enum:
-                  - text
-              text:
-                type: string
-                maxLength: 2000
-                description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
-          minItems: 0
-          maxItems: 1
-        example:
-          $ref: '#/components/schemas/UrlButtonComponentExample'
-    UrlButtonComponentExample:
-      type: object
-      description: Example for a **dynamic** URL button.
-      properties:
-        url:
+        text:
           type: string
-          description: Example for a **dynamic** URL button.
-          example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
+          maxLength: 2000
+          description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
     WhatsAppProfile:
       type: object
       description: |

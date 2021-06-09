@@ -446,7 +446,7 @@ components:
       properties:
         bulkId:
           type: string
-        messageId:
+        messageIds:
           type: array
           items:
             type: string
