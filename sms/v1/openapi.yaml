@@ -35,6 +35,11 @@ tags:
     description: Bring Your Own Number (BYON) Numbers Service gives the users the possibility to register new numbers.
   - name: BYON Partner Notification Service
     description: API for sending notifications to the partners
+  - name: SMS Conversion
+    description: |
+      SMS Conversion is a term used in the SMS world to describe the messages that actually received from the end user.
+      tyntec is providing an endpoint for real time conversion events reporting where customers can report if a message
+      received or not received by the end user.
 paths:
   /messaging/v1/sms:
     post:
@@ -893,6 +898,26 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  '/messaging/v1/conversion':
+    post:
+      tags:
+        - SMS Conversion
+      summary: Conversion report
+      security:
+        - APIKeyHeader: []
+      operationId: conversionReportPOST
+      description: |
+        Report either successful or un-successful conversion event for a message.
+      requestBody:
+        description: Conversion
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionEvent'
+      responses:
+        '200':
+          description: OK
 components:
   requestBodies:
     ContactEntity:
@@ -956,6 +981,25 @@ components:
         friendlyName:
           description: List filter based on the friendlyName field
           type: string
+    ConversionEvent:
+      type: object
+      description: This is the event were delivery information regarding the message can be reported back to tyntec
+      required:
+        - requestId
+      properties:
+        requestId:
+          type: string
+          description: The unique identifier provided for each messaging request.
+          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
+        delivered:
+          type: boolean
+          description: Has the message been delivered to the end user or not. By default would be considered as true
+          default: true
+        timestamp:
+          type: string
+          description: The timestamp when the message converted. If empty conversion timestamp will be set tp the timestamp of the event received in the API
+          format: date-time
+          example: '2018-06-01T00:00:00+0200'
     ErrorResponse:
       type: object
       description: Error Response schema
