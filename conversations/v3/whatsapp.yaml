@@ -1266,6 +1266,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppLocationContent'
             - $ref: '#/components/schemas/WhatsAppContactsContent'
             - $ref: '#/components/schemas/WhatsAppTemplateContent'
+            - $ref: '#/components/schemas/WhatsAppInteractiveContent'
       example:
         to: "+123234234"
         from: "545345345"
@@ -1403,6 +1404,37 @@ components:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
+    WhatsAppInteractiveContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - interactive
+        interactive:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppInteractiveButtonMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
+    WhatsAppInteractiveFooterContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+        text:
+          type: string
+          maxLength: 60
+    WhatsAppInteractiveTextContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - text
+        text:
+          type: string
+          maxLength: 1024
     #
     # Media
     #
@@ -1849,6 +1881,217 @@ components:
           type: string
           maxLength: 2000
           description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+
+    #
+    # Interactive messages
+    #
+
+    WhatsAppInteractiveButtonMessage:
+      type: object
+      description: |
+        Interactive message type
+      required:
+        - type
+        - components
+      properties:
+        type:
+          type: string
+          enum:
+            - buttons
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveButtonComponents'
+      example:
+        type: list
+        components:
+          header:
+            type: text
+            text: Your request is queued
+          body: How would you rate your bot experience
+          buttons:
+            - type: reply
+              reply:
+                payload: 987298-40980jvkdm9-234234234
+                title: Poor
+            - type: reply
+                reply:
+                  payload: 987298-dsfgjlkhgdf-dg09u834334
+                  title: OK
+            - type: reply
+                reply:
+                  payload: 9080923445nlkjß0_gß0923845083245dfg
+                  title: Good
+    WhatsAppInteractiveListMessage:
+      type: object
+      description: |
+        Interactive message type
+      required:
+        - type
+        - components
+      properties:
+        type:
+          type: string
+          enum:
+            - list
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveListComponents'
+      example:
+        type: list
+        components:
+          header:
+            type: text
+            text: Choose your menu
+          body: Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on
+          list:
+            title: Your menu
+            sections:
+              - title: Vegan
+                rows:
+                  - title: Green dream
+                    payload: green-dream-34987-234897234-234
+                    description: A bowl full of tasty leaves, soy beans and cucumber
+                  - title: Rainbow meets rice
+                    payload: rainbow-meets-rice-34987-234897234-234
+                    description: A colorful selection of vegetables on a cozy bed of basmati rice
+              - title: Vegetarian
+                rows:
+                  - title: Italo Classic
+                    payload: italo-classic-34987-234897234-234
+                    description: Slices of tomates, with plucked pieces of mozzarella and some basil leaves
+                  - title: Egg & Peas
+                    payload: egg-and-peas-34987-234897234-234
+                    description: Tasty slices of eggs, on a whole wheat pasta salad with peas
+    WhatsAppInteractiveButtonComponents:
+      type: object
+      required:
+        - body
+        - buttons
+      properties:
+        header:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateDocumentHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        buttons:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/WhatsAppInteractiveButton'
+    WhatsAppInteractiveButton:
+      type: object
+      description: Interactive message button
+      required:
+        - type
+        - reply
+      properties:
+        type:
+          type: string
+          description: Type of the button. Always "reply"
+          enum:
+            - reply
+        reply:
+          type: object
+          description: Reply button specification
+          required:
+            - payload
+            - title
+          properties:
+            payload:
+              type: string
+              description: ID of the reply button. Must be unique within the same messaging request
+              minLength: 1
+              maxLength: 256
+            title:
+              type: string
+              description: Caption or title of the button
+              maxLength: 24
+              minLength: 1
+    WhatsAppInteractiveListComponents:
+      type: object
+      description: |
+        List message component. It can have at most 10 rows distributed over at most 10 sections
+      required:
+        - body
+        - list
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        list:
+          $ref: '#/components/schemas/WhatsAppInteractiveListContent'
+    WhatsAppInteractiveListContent:
+      type: object
+      description: |
+        Definition of a WhatsApp interactive list
+      required:
+        - title
+        - sections
+      properties:
+        title:
+          type: string
+          maxLength: 24
+          example: Choose from this list
+        sections:
+          type: array
+          description: Sections of the list message
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/WhatsAppListSection'
+    WhatsAppListSection:
+      type: object
+      description: |
+        Section of a list message.
+      required:
+        - rows
+      properties:
+        title:
+          type: string
+          description: Title of the section mandatory in case of multiple sections
+          maxLength: 24
+          minLength: 1
+        rows:
+          type: array
+          description: Items of the section
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/WhatsAppListSectionRow'
+    WhatsAppListSectionRow:
+      type: object
+      description: Row item of a list message
+      required:
+        - payload
+        - title
+      properties:
+        payload:
+          type: string
+          description: ID of the item, must be unique within the request
+          minLength: 1
+          maxLength: 24
+        title:
+          type: string
+          description: Caption of the item in the list
+          minLength: 1
+          maxLength: 24
+        description:
+          type: string
+          description: Optional description of the item
+          minLength: 1
+          maxLength: 72
+    #
+    # Profile
+    #
+
+
     WhatsAppProfile:
       type: object
       description: |
