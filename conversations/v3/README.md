@@ -1,5 +1,26 @@
 # Release notes
 
+## 3.2
+
+### Features
+
+#### WhatsApp - New outbound message types
+
+This release enables the 2 new message types `list` and `buttons` on the Conversations API.
+
+`buttons` allows you to specify up to 3 quick reply buttons alongside with an optional header (text or media), a body and an optional footer.
+
+`list` allows you to define up to 10 list option the user can choose from alongside with an optional text header, a body and an optional footer.
+
+#### WhatsApp - New MoMessage::Postback data
+
+With the new outbound message types the `MoMessage::Postback` data model has been adapted to transfer back also the
+
+ - title (list & buttons)
+ - description (list only)
+
+information in the `whatsapp` property.
+
 ## 3.1
 
 ### Features
