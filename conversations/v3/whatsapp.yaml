@@ -1906,7 +1906,12 @@ components:
           header:
             type: text
             text: Your request is queued
-          body: How would you rate your bot experience
+          body:
+           type: text
+           text: How would you rate your bot experience
+          footer:
+            type: text
+            text: Your service bot
           buttons:
             - type: reply
               reply:
@@ -1940,7 +1945,12 @@ components:
           header:
             type: text
             text: Choose your menu
-          body: Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on
+          body:
+            type: text
+            text: Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on
+          footer:
+            type: text
+            text: Your tyntec food team
           list:
             title: Your menu
             sections:
@@ -1956,7 +1966,7 @@ components:
                 rows:
                   - title: Italo Classic
                     payload: italo-classic-34987-234897234-234
-                    description: Slices of tomates, with plucked pieces of mozzarella and some basil leaves
+                    description: Slices of tomates, with plucked pieces of mozzarella and basil leaves
                   - title: Egg & Peas
                     payload: egg-and-peas-34987-234897234-234
                     description: Tasty slices of eggs, on a whole wheat pasta salad with peas
