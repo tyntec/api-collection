@@ -1901,7 +1901,7 @@ components:
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveButtonComponents'
       example:
-        type: list
+        type: buttons
         components:
           header:
             type: text
