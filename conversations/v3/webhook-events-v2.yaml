@@ -772,6 +772,14 @@ components:
           type: string
           description: Caption of the button that was clicked
           example: Yes
+        title:
+          type: string
+          description: Title of the interactive item clicked
+          example: This is the button you clicked
+        description:
+          type: string
+          description: Description of the interactive item clicked
+          example: This is the description of a list item
     MessageStatusDeletedEvent:
       type: object
       description: |
