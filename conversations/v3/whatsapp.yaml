@@ -1918,13 +1918,13 @@ components:
                 payload: 987298-40980jvkdm9-234234234
                 title: Poor
             - type: reply
-                reply:
-                  payload: 987298-dsfgjlkhgdf-dg09u834334
-                  title: OK
+              reply:
+                payload: 987298-dsfgjlkhgdf-dg09u834334
+                title: OK
             - type: reply
-                reply:
-                  payload: 9080923445nlkjß0_gß0923845083245dfg
-                  title: Good
+              reply:
+                payload: 9080923445nlkjß0_gß0923845083245dfg
+                title: Good
     WhatsAppInteractiveListMessage:
       type: object
       description: |
