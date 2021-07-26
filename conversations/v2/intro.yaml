@@ -12,6 +12,13 @@ info:
     system via the HTTP ```POST``` method. For details see [Receiving status updates](#receiving-status-updates) and
     [Receiving inbound messages](#receiving-inbound-messages).
 
+    ## Sunset note
+
+    This version of the API will be discontinued on 31.12.2022.
+
+    The last feature update will happen on 31.06.2022.
+
+    Please start your migration to Version 3.
 
     ## Adhered web standards
 
@@ -59,7 +66,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.12'
+  version: '2.14'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
