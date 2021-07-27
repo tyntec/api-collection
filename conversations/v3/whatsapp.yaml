@@ -2760,7 +2760,7 @@ components:
             - PENDING
             - APPROVED
             - REJECTED
-            - DELETE_PENDING
+            - DELETION_PENDING
             - DELETED
             - SUBMITTED
           example:
