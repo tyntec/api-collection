@@ -12,7 +12,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.14'
+  version: '2.15'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -1491,6 +1491,7 @@ components:
           example: https://www.tyntec.com/themes/custom/tyntec/image/tyntec-logo-color.png
         caption:
           type: string
+          maxLength: 4096
           description: An additional caption for the image. It is shown on the uploaded image when the channel supports this
           example: Tyntec Logo
       example:
@@ -1535,6 +1536,7 @@ components:
           example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
         caption:
           type: string
+          maxLength: 4096
           description: An additional caption for the document. It is shown on the uploaded document when the channel supports this
           example: Tyntec Pricelist
         filename:
@@ -1565,6 +1567,7 @@ components:
           example: http://techslides.com/demos/sample-videos/small.mp4
         caption:
           type: string
+          maxLength: 4096
           description: An additional caption for the video. It is shown on the uploaded video when the channel supports this
           example: Tyntec Party
       example:
