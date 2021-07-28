@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.1'
+  version: '3.2'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -1460,6 +1460,7 @@ components:
       properties:
         caption:
           type: string
+          maxLength: 4096
     WhatsAppDocument:
       type: object
       description: Document media specification
@@ -1468,6 +1469,7 @@ components:
       properties:
         caption:
           type: string
+          maxLength: 4096
         filename:
           type: string
     WhatsAppVideo:
@@ -1478,6 +1480,7 @@ components:
       properties:
         caption:
           type: string
+          maxLength: 4096
     WhatsAppAudio:
       type: object
       description: Audio media specification

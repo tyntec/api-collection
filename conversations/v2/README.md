@@ -4,6 +4,20 @@
 
 Version 2 of Conversations API will be discontinued on 31.12.2022. 
 
+## 2.15
+
+### Bugfixes
+
+#### Template status on pending deletes corrected
+
+The prior documented status `DELETE_PENDING` has been replaced by the returned `DELETION_PENDING`.
+
+### Features
+
+#### WhatsApp - Restriction of media caption
+
+The maximal length of  media caption is now 4096 chars.
+
 ## 2.14
 
 ### Features

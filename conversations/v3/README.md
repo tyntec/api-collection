@@ -1,5 +1,20 @@
 # Release notes
 
+## 3.3
+
+### Bugfixes
+
+#### Template status on pending deletes corrected
+
+The prior documented status `DELETE_PENDING` has been replaced by the returned `DELETION_PENDING`.
+
+### Features
+
+#### WhatsApp - Restriction of media caption
+
+The maximal length of  media caption is now 4096 chars.
+
+
 ## 3.2
 
 ### Features
