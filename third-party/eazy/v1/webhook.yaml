@@ -1,0 +1,483 @@
+asyncapi: '2.0.0'
+info:
+  title: Support Inbox - Web Hook Specifications
+  description: Support Inbox - Web Hook Specifications
+  version: 1.0.0
+servers:
+  production:
+    url: 78.110.226.11
+    description: Server address of tyntec, the events origin from
+    protocol: https
+channels:
+  "Received Message (Basic)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+         - $ref: '#/components/messages/BasicInboundMessage'
+         - $ref: '#/components/messages/BasicInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (WhatsApp)":
+    description: |
+      WhatsApp Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/WhatsAppInboundMessage'
+          - $ref: '#/components/messages/WhatsAppInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (Messenger)":
+    description: |
+      Messenger Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/MessengerInboundMessage'
+          - $ref: '#/components/messages/MessengerInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (Twitter)":
+    description: |
+      Twitter Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/TwitterInboundMessage'
+          - $ref: '#/components/messages/TwitterInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (Viber)":
+    description: |
+      Viber Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/ViberInboundMessage'
+          - $ref: '#/components/messages/ViberInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (LiveChat)":
+    description: |
+      LiveChat Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/LiveChatInboundMessage'
+          - $ref: '#/components/messages/LiveChatInboundMediaMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Received Message (SMS)":
+    description: |
+      SMS Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        oneOf:
+          - $ref: '#/components/messages/SMSInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+components:
+  messages:
+    BasicInboundMessage:
+      payload:
+        $ref: '#/components/schemas/BasicInboundMessage'
+    BasicInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/BasicInboundMediaMessage'
+    WhatsAppInboundMessage:
+      payload:
+        $ref: '#/components/schemas/WhatsAppInboundMessage'
+    WhatsAppInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/WhatsAppInboundMediaMessage'
+    WhatsAppMessageDeleted:
+      payload:
+        $ref: '#/components/schemas/WhatsAppMessageDeleted'
+    MessengerInboundMessage:
+      payload:
+        $ref: '#/components/schemas/MessengerInboundMessage'
+    MessengerInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/MessengerInboundMediaMessage'
+    TwitterInboundMessage:
+      payload:
+        $ref: '#/components/schemas/TwitterInboundMessage'
+    TwitterInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/TwitterInboundMediaMessage'
+    ViberInboundMessage:
+      payload:
+        $ref: '#/components/schemas/ViberInboundMessage'
+    ViberInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/ViberInboundMediaMessage'
+    LiveChatInboundMessage:
+      payload:
+        $ref: '#/components/schemas/LiveChatInboundMessage'
+    LiveChatInboundMediaMessage:
+      payload:
+        $ref: '#/components/schemas/LiveChatInboundMediaMessage'
+  schemas:
+    BasicInboundMessage:
+      type: object
+      required:
+        - from
+        - message
+        - timestamp
+        - to
+        - type
+        - version
+      properties:
+        from:
+          $ref: '#/components/schemas/From'
+        message:
+          $ref: '#/components/schemas/TextMessage'
+        timestamp:
+          type: integer
+        to:
+          type: string
+        type:
+          type: string
+          enum:
+            - message
+        version:
+          type: integer
+          min: 2
+          max: 2
+    BasicInboundMediaMessage:
+      type: object
+      required:
+        - media
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        media:
+          $ref: '#/components/schemas/Media'
+        message:
+          type: object
+          description: refined per channel
+    From:
+      type: object
+      properties:
+        jid:
+          type: string
+        name:
+          type: string
+    Media:
+      type: object
+      properties:
+        size:
+          type: integer
+        url:
+          type: string
+    AudioMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - audio
+    ContactMessage:
+      type: object
+      properties:
+        contacts:
+          --
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - contact
+    DocumentMessage:
+      type: object
+      properties:
+        fileName:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+          enum:
+            - document
+    GIFMessage:
+      type: object
+      properties:
+        caption:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - gif
+    ImageMessage:
+      type: object
+      properties:
+        caption:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - image
+    LocationMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        latitude:
+          type: integer
+        longitude:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - location
+        url:
+          type: string
+    StickerMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - sticker
+    TextMessage:
+      type: object
+      properties:
+        body:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - text
+    VideoMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - video
+    VoiceMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - ptt
+    # WhatsApp
+    WhatsAppInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        contextInfo:
+          $ref: '#/components/schemas/WhatsAppContextInfo'
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+            - $ref: '#/components/schemas/ContactMessage'
+            - $ref: '#/components/schemas/LocationMessage'
+    WhatsAppInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        contextInfo:
+          $ref: '#/components/schemas/WhatsAppContextInfo'
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/AudioMessage'
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VoiceMessage'
+            - $ref: '#/components/schemas/StickerMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+    WhatsAppContextInfo:
+      type: object
+      properties:
+        quotedMessage:
+          $ref: '#/components/schemas/WhatsAppQuotedMessage'
+    WhatsAppQuotedMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        jid:
+          type: string
+    WhatsAppMessageDeleted:
+      type: object
+      required:
+        - from
+        - message
+        - timestamp
+        - to
+        - type
+        - version
+      properties:
+        from:
+          $ref: '#/components/schemas/From'
+        message:
+          type: object
+          properties:
+            id:
+              type: string
+        timestamp:
+          type: integer
+        to:
+          type: string
+        type:
+          type: string
+          enum:
+            - revoke
+        version:
+          type: integer
+          min: 2
+          max: 2
+    # Messenger
+    MessengerInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+    MessengerInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/AudioMessage'
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/GifMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VoiceMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+    # Twitter
+    TwitterInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+    TwitterInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/GifMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+    # Viber
+    ViberInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+            - $ref: '#/components/schemas/LocationMessage'
+    ViberInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+    # LiveChat
+    LiveChatInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+    LiveChatInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+    # SMS
+    SMSInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
