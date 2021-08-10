@@ -1,4 +1,4 @@
-asyncapi: '2.0.0'
+asyncapi: '2.1.0'
 info:
   title: Support Inbox - Web Hook Specifications
   description: Support Inbox - Web Hook Specifications
@@ -9,7 +9,7 @@ servers:
     description: Server address of tyntec, the events origin from
     protocol: https
 channels:
-  "Received Message (Basic)":
+  "receivedMessage/basic":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -23,7 +23,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (WhatsApp)":
+  "receivedMessage/whatsapp":
     description: |
       WhatsApp Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -37,7 +37,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (Messenger)":
+  "receivedMessage/messenger":
     description: |
       Messenger Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -51,7 +51,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (Twitter)":
+  "receivedMessage/twitter":
     description: |
       Twitter Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -65,7 +65,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (Viber)":
+  "receivedMessage/viber":
     description: |
       Viber Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -79,7 +79,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (LiveChat)":
+  "receivedMessage/liveChat":
     description: |
       LiveChat Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -93,7 +93,7 @@ channels:
         http:
           type: request
           method: POST
-  "Received Message (SMS)":
+  "receivedMessage/sms":
     description: |
       SMS Message received by us and delivered to your system via a webhook provided by your system.
     publish:
@@ -147,6 +147,9 @@ components:
     LiveChatInboundMediaMessage:
       payload:
         $ref: '#/components/schemas/LiveChatInboundMediaMessage'
+    SMSInboundMessage:
+      payload:
+        $ref: '#/components/schemas/SMSInboundMessage'
   schemas:
     BasicInboundMessage:
       type: object
@@ -215,7 +218,7 @@ components:
       type: object
       properties:
         contacts:
-          --
+          type: object
         id:
           type: string
         type:
@@ -237,7 +240,7 @@ components:
           type: string
           enum:
             - document
-    GIFMessage:
+    GifMessage:
       type: object
       properties:
         caption:
@@ -337,6 +340,18 @@ components:
             - $ref: '#/components/schemas/TextMessage'
             - $ref: '#/components/schemas/ContactMessage'
             - $ref: '#/components/schemas/LocationMessage'
+      example:
+        from:
+          jid: 123123@whatsapp.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@whatsapp.eazy.im
+        type: message
+        version: 2
     WhatsAppInboundMediaMessage:
       type: object
       allOf:
@@ -352,6 +367,26 @@ components:
             - $ref: '#/components/schemas/VoiceMessage'
             - $ref: '#/components/schemas/StickerMessage'
             - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@whatsapp.eazy.im
+          name:  John
+        contextInfo:
+          quotedMessage:
+            id: 89729834zuiujhvkijdfngidgh897432hr5234
+            jid: 123131414@whatsapp.eazy.im
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@whatsapp.eazy.im
+        type: message
+        version: 2
     WhatsAppContextInfo:
       type: object
       properties:
@@ -402,6 +437,18 @@ components:
         message:
           oneOf:
             - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@messenger.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@messenger.eazy.im
+        type: message
+        version: 2
     MessengerInboundMediaMessage:
       type: object
       allOf:
@@ -415,6 +462,22 @@ components:
             - $ref: '#/components/schemas/ImageMessage'
             - $ref: '#/components/schemas/VoiceMessage'
             - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@messenger.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@messenger.eazy.im
+        type: message
+        version: 2
     # Twitter
     TwitterInboundMessage:
       type: object
@@ -424,6 +487,18 @@ components:
         message:
           oneOf:
             - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@twitter.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@twitter.eazy.im
+        type: message
+        version: 2
     TwitterInboundMediaMessage:
       type: object
       allOf:
@@ -434,6 +509,22 @@ components:
             - $ref: '#/components/schemas/GifMessage'
             - $ref: '#/components/schemas/ImageMessage'
             - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@twitter.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@twitter.eazy.im
+        type: message
+        version: 2
     # Viber
     ViberInboundMessage:
       type: object
@@ -444,6 +535,18 @@ components:
           oneOf:
             - $ref: '#/components/schemas/TextMessage'
             - $ref: '#/components/schemas/LocationMessage'
+      example:
+        from:
+          jid: 123123@viber.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@viber.eazy.im
+        type: message
+        version: 2
     ViberInboundMediaMessage:
       type: object
       allOf:
@@ -454,6 +557,22 @@ components:
             - $ref: '#/components/schemas/DocumentMessage'
             - $ref: '#/components/schemas/ImageMessage'
             - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@viber.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@viber.eazy.im
+        type: message
+        version: 2
     # LiveChat
     LiveChatInboundMessage:
       type: object
@@ -463,6 +582,18 @@ components:
         message:
           oneOf:
             - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@livechat.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@sms.livechat.im
+        type: message
+        version: 2
     LiveChatInboundMediaMessage:
       type: object
       allOf:
@@ -472,6 +603,22 @@ components:
           oneOf:
             - $ref: '#/components/schemas/DocumentMessage'
             - $ref: '#/components/schemas/ImageMessage'
+      example:
+        from:
+          jid: 123123@livechat.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@sms.livechat.im
+        type: message
+        version: 2
     # SMS
     SMSInboundMessage:
       type: object
@@ -481,3 +628,15 @@ components:
         message:
           oneOf:
             - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@sms.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@sms.eazy.im
+        type: message
+        version: 2
