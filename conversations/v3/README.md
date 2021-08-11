@@ -1,5 +1,15 @@
 # Release notes
 
+## 3.4
+
+### Features
+
+#### Channel support now names
+
+With this release the listing of channels can carry now a custom name aside to the channel id.
+
+This name is at the moment not configurable,
+
 ## 3.3
 
 ### Bugfixes

@@ -142,7 +142,7 @@ info:
     | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
-  version: '3.1'
+  version: '3.2'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
   x-major-version: v3
@@ -444,6 +444,9 @@ components:
             $ref: '#/components/schemas/ChannelScopes'
         callback:
           $ref: '#/components/schemas/ChannelCallback'
+        name:
+          type: string
+          maxLength: 256
     ChannelScopes:
       type: string
       description: Scopes available to a channel.
@@ -504,6 +507,7 @@ components:
           - callbacks:read
         id:
           weChatId: 12341234
+        name: your application
         credentials:
           appId: 12334
           appSecret: 98ujhkjnvjhb832rbnj
@@ -536,6 +540,7 @@ components:
           - callbacks:read
         id:
           telegramId: 12341234
+        name: your bot!
         credentials:
           botToken: 987923hrbnhjfedf87z324:fsdhf8n2r543j4hgr
         callback:
@@ -622,6 +627,7 @@ components:
           - callbacks:read
         id:
           serviceId: 1234
+        name: Your Company
         callback:
           callbackVersion: 2.11
           inboundMessageUrl: https://your.server.com/inbound
