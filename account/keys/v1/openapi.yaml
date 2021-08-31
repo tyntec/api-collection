@@ -33,7 +33,7 @@ paths:
     get:
       tags:
         - Account keys
-      summary: Returns the authentication tokens for this account.
+      summary: List keys available.
       security:
         - ApiKeyHeader: []
       operationId: keysGET
@@ -73,7 +73,7 @@ paths:
     post:
       tags:
         - Account keys
-      summary: Create a new API key authentication token for this account.
+      summary: Create a secondary key.
       security:
         - ApiKeyHeader: []
       operationId: keysPOST
@@ -113,12 +113,12 @@ paths:
     delete:
       tags:
         - Account keys
-      summary: Delete the api key. You can not delete the key used for this request.
+      summary: Delete an API key.
       security:
         - ApiKeyHeader: []
       operationId: ipRestrictionDELETE
       description: |
-        Returns available keys for this account.
+        Returns available keys for this account. You can not delete the key used for this request.
       parameters:
         - name: deleteApiKey
           in: query
