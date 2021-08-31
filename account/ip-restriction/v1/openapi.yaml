@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  title: Account IP Restriction API
+  description: |
+    The IP restriction API helps you manage your account and whitelist IPs and subnets that are only allowed to use your API key.
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/tts
+  x-major-version: v1
+servers:
+  - url: https://api.tyntec.com/
+security:
+  - APIKeyHeader: []
+tags:
+  - name: IP restriction
+    description: |
+      tyntec’s IP restriction service allow you to:
+
+      - Enable or disable IP whitelisting on your account
+      - Add multiple IPs or even IP subnets to the whitelist
+
+      **Important**
+
+      Be extra careful while using this as it will have immediate effect and potentially block your ongoing traffic.
+
+      Also you can not exclude from the whitelist the IP you use to call this API.
+paths:
+  /account/v1/ip/restriction:
+    post:
+      tags:
+        -  IP restriction
+      summary: Updates the IP whitelisting for this account.
+      security:
+        - ApiKeyHeader: []
+      operationId: ipRestrictionPOST
+      description: |
+        Modifies the IP whitelisting or this account. The operation is idempotent and will override the list of IPs and ranges that already exist. 
+      responses:
+        "200":
+          description: The IP whitelist as modified by this request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpRestrictionEntity"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+      requestBody:
+        description: IP restriction whitelist
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IpRestrictionEntity"
+    get:
+      tags:
+        -  IP restriction
+      summary: Gets the IP whitelisting for this account.
+      security:
+        - ApiKeyHeader: []
+      operationId: ipRestrictionGET
+      description: |
+        Returns the current state of the IP whitelisting for this account.
+      responses:
+        "200":
+          description: The IP whitelist as modified by this request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpRestrictionEntity"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: apikey
+      description: |
+        The API key used for this operation; we check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
+  schemas:
+    IpRestrictionEntity:
+      type: object
+      description: The IP whitelist schema.
+      required:
+        - enabled
+        - whiteList
+      properties:
+        enabled:
+          type: boolean
+          description: If the whitelist restriction is enabled or not for this account.
+          example: "false"
+        whiteList:
+          type: array
+          items:
+            type: string
+          description: List of IPs and/or subnets that are allowed to use this account.
+          example: ["127.0.0.1", "10.0.0.0/8"]
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows [RFC-7807](https://tools.ietf.org/html/rfc7807).
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: The URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          description: Short, human-readable summary of the problem type
+          type: string
+          example: The given data were not parsable.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem
+          type: string
+          example: 400
+        detail:
+          description: Human-readable explanation specific to this problem occurrence
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]

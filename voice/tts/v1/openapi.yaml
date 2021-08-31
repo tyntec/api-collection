@@ -1,0 +1,344 @@
+openapi: 3.0.0
+info:
+  version: "beta"
+  title: TTS API
+  description: |
+    The TTS API enables you to send voice messages to your customers using variety of text to speech engines. 
+    
+    The service is currently on closed beta. If you are interested in using it, don't hesitate to contact us at support@tyntec.com.
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/tts
+  x-major-version: v1
+servers:
+  - url: https://api.tyntec.com/
+security:
+  - APIKeyHeader: []
+tags:
+  - name: TTS Messaging
+    description: |
+      tyntec’s TTS service is governed by two operations that allow you:
+
+      - to send an TTS and
+      - to query the status of a previously sent TTS
+
+      **Important**
+
+      tyntec stores status details for up to 3 months after the final delivery state is known.
+paths:
+  /tss/v1/calls:
+    post:
+      tags:
+        - TTS Messaging
+      summary: Send TTS (POST)
+      security:
+        - ApiKeyHeader: []
+      operationId: sendTTSUsingPOST
+      description: |
+        Sends an TTS via the POST HTTP method with parameters defined in the request body.
+      responses:
+        "200":
+          description: The callId of your request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextToSpeechResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+      requestBody:
+        description: TTS message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextToSpeechRequest"
+  "/tts/v1/calls/{callId}/events":
+    get:
+      tags:
+        - TTS Messaging
+      summary: TTS status events
+      security:
+        - ApiKeyHeader: []
+      operationId: getTTSEventsUsingGET
+      description: |
+        Returns the events recorded for this call ID.
+
+        **Important**
+
+        The TTS Message Status is available for 3 months after a final delivery state is reached.
+      parameters:
+        - name: callId
+          in: path
+          description: The unique identifier provided for each request. (UUID format)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TextToSpeechEvent"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: "Something went wrong. :-("
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: apikey
+      description: |
+        The API key used for this operation; we check as well that the API key has the phone number
+        (either on sending messages or interacting with other phone number based features) assigned.
+  schemas:
+    TextToSpeechRequest:
+      type: object
+      description: Contract Array Response schema
+      required:
+        - from
+        - to
+        - message
+        - language
+      properties:
+        from:
+          type: string
+          description: Phone number of the calling party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "49123456789"
+        to:
+          type: string
+          description: Phone number of the callee party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "1987654321"
+        message:
+          type: string
+          description: "The message you want to send via TTS call"
+          example: "This is an example
+- the data is garbage."
+        language:
+          description: language
+          type: string
+          enum:
+            - ar_eg
+            - ar_sa
+            - bg_bg
+            - ca_es
+            - zh_cn
+            - zh_hk
+            - zh_tw
+            - hr_hr
+            - cs_cz
+            - da_dk
+            - nl_be
+            - nl_nl
+            - en_au
+            - en_ca
+            - en_gb
+            - en_in
+            - en_ie
+            - en_us
+            - fi_fi
+            - fr_ca
+            - fr_fr
+            - fr_ch
+            - de_at
+            - de_de
+            - de_ch
+            - el_gr
+            - he_il
+            - hi_in
+            - hu_hu
+            - id_id
+            - it_it
+            - ja_jp
+            - ko_kr
+            - ms_my
+            - nb_no
+            - pl_pl
+            - pt_pt
+            - ro_ro
+            - ru_ru
+            - sk_sk
+            - sl_si
+            - es_mx
+            - es_es
+            - sv_se
+            - ta_in
+            - th_th
+            - tr_tr
+            - vi_vn
+        initialDelay:
+          description: The initial pause before the TTS is announced through the call.
+          type: integer
+          format: int32
+        eventsUrl:
+          description: Your URL for delivering the events for this call; leave empty for no events push.
+          type: string
+    TextToSpeechResponse:
+      type: object
+      description: Contract Entity schema
+      properties:
+        callId:
+          description: Company's postal address
+          type: string
+          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
+          format: uuid
+        status:
+          description: Status of the call
+          type: string
+          enum:
+            - starting
+        from:
+          type: string
+          description: Phone number of the calling party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "49123456789"
+        to:
+          type: string
+          description: Phone number of the callee party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "1987654321"
+    TextToSpeechEvent:
+      type: object
+      description: This is the event object containing informations regarding the call.
+      properties:
+        callId:
+          description: Company's postal address
+          type: string
+          example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
+          format: uuid
+        direction:
+          type: string
+          description: The direction of the call
+          enum:
+            - outbound
+            - inbound
+        from:
+          type: string
+          description: Phone number of the calling party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "49123456789"
+        to:
+          type: string
+          description: Phone number of the callee party in the international format [E.164](https://en.wikipedia.org/wiki/E.164)
+          example: "1987654321"        
+        startTime:
+          type: string
+          description: The timestamp when the call started.
+          format: date-time
+          example: '2018-06-01T00:00:00+0200'
+        answerTime:
+          type: string
+          description: The timestamp when the call was answered.
+          format: date-time
+          example: '2018-06-01T00:00:00+0200'
+        endTime:
+          type: string
+          description: The timestamp when the call completed.
+          format: date-time
+          example: '2018-06-01T00:00:00+0200'
+        duration:
+          type: string
+          description: The duration in seconds of the call.
+          example: '10'
+        country:
+          type: string
+          description: The alpha 2 code of the destionation country.
+          example: 'DE'
+        rate:
+          type: string
+          description: The rate charge per minute for this country.
+          example: '0.0728'
+        price:
+          type: string
+          description: The price charged for this call.
+          example: '0.0001'
+        currency:
+          type: string
+          description: The currency used for this charge.
+          example: 'EUR'
+        network:
+          type: string
+          description: The name of the network for the destination call.
+          example: 'Germany-ACME mobile'
+        status:
+          type: string
+          description: The status reported for this event.
+          enum:
+            - started
+            - early
+            - hangup
+            - ringing
+            - completed
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows [RFC-7807](https://tools.ietf.org/html/rfc7807).
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: The URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          description: Short, human-readable summary of the problem type
+          type: string
+          example: The given data were not parsable.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem
+          type: string
+          example: 400
+        detail:
+          description: Human-readable explanation specific to this problem occurrence
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
