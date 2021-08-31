@@ -18,7 +18,7 @@ servers:
 security:
   - APIKeyHeader: []
 tags:
-  - name: TTS Messaging
+  - name: Text to speech
     description: |
       tyntec’s TTS service is governed by two operations that allow you:
 
@@ -32,8 +32,8 @@ paths:
   /tss/v1/calls:
     post:
       tags:
-        - TTS Messaging
-      summary: Send TTS
+        - Text to speech
+      summary: Initiate a Text to speech call
       security:
         - ApiKeyHeader: []
       operationId: sendTTSUsingPOST
@@ -80,8 +80,8 @@ paths:
   "/tts/v1/calls/{callId}/events":
     get:
       tags:
-        - TTS Messaging
-      summary: TTS status events
+        - Text to speech
+      summary: Text to speech status events
       security:
         - ApiKeyHeader: []
       operationId: getTTSEventsUsingGET
