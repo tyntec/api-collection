@@ -33,7 +33,7 @@ paths:
     post:
       tags:
         - TTS Messaging
-      summary: Send TTS (POST)
+      summary: Send TTS
       security:
         - ApiKeyHeader: []
       operationId: sendTTSUsingPOST
@@ -161,8 +161,7 @@ components:
         message:
           type: string
           description: "The message you want to send via TTS call"
-          example: "This is an example
-- the data is garbage."
+          example: "This is an example - the data is garbage."
         language:
           description: language
           type: string

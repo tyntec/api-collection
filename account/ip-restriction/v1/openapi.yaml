@@ -33,7 +33,7 @@ paths:
     post:
       tags:
         -  IP restriction
-      summary: Update IP whitelisting.
+      summary: Update IP whitelisting
       security:
         - ApiKeyHeader: []
       operationId: ipRestrictionPOST
@@ -80,7 +80,7 @@ paths:
     get:
       tags:
         -  IP restriction
-      summary: Get IP whitelisting.
+      summary: Get IP whitelisting
       security:
         - ApiKeyHeader: []
       operationId: ipRestrictionGET

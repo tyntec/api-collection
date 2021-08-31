@@ -33,7 +33,7 @@ paths:
     get:
       tags:
         - Account keys
-      summary: List keys available.
+      summary: List keys available
       security:
         - ApiKeyHeader: []
       operationId: keysGET
@@ -73,7 +73,7 @@ paths:
     post:
       tags:
         - Account keys
-      summary: Create a secondary key.
+      summary: Create a secondary key
       security:
         - ApiKeyHeader: []
       operationId: keysPOST
