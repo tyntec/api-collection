@@ -4,7 +4,6 @@ info:
   title: Account Keys API
   description: |
     The keys API helps you manage your account API keys. You can add a secondary key for your account and delete the old. With this mechanism you can safely rotate a key, on runtime, to keep your account safe.
-
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -189,12 +188,13 @@ components:
                 type: string
                 description: The authentication token
           description: If the whitelist restriction is enabled or not for this account.
-          example: [
-        {
-            "id": "deadbeef-b111-111f-8c6e-05f1fd3f825c",
-            "key": "ABCDEFG1234567890ABCDEFG1234567890"
-        }
-    ]
+          example: |
+            [
+              {
+                "id": "deadbeef-b111-111f-8c6e-05f1fd3f825c",
+                "key": "ABCDEFG1234567890ABCDEFG1234567890"
+              }
+            ] 
     Problem:
       type: object
       additionalProperties: true
