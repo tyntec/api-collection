@@ -3,7 +3,7 @@ info:
   version: "1.0"
   title: Account IP Restriction API
   description: |
-    The IP restriction API helps you manage your account and whitelist IPs and subnets that are only allowed to use your API key.
+    The IP restriction API helps you managing your account and whitelisting your IPs and subnets for higher security when using your tyntec API key.
 
   contact:
     name: tyntec API Support
@@ -18,16 +18,16 @@ security:
 tags:
   - name: IP restriction
     description: |
-      tyntec’s IP restriction service allow you to:
+      tyntec’s IP restriction service allows you to:
 
       - Enable or disable IP whitelisting on your account
       - Add multiple IPs or even IP subnets to the whitelist
 
       **Important**
 
-      Be extra careful while using this as it will have immediate effect and potentially block your ongoing traffic.
+      Be extra careful while using this service, as it will have immediate effect and potentially block your ongoing traffic.
 
-      Also you can not exclude from the whitelist the IP you use to call this API.
+      The current IP used for calling tyntec's API cannot be excluded from whitelisted IPs. If you need to exclude this specific IP then the API call should be done from a different IP.
 paths:
   /account/v1/ip/restriction:
     post:
@@ -137,7 +137,7 @@ components:
       properties:
         enabled:
           type: boolean
-          description: If the whitelist restriction is enabled or not for this account.
+          description: Whitelisting restriction is enabled or not for this account
           example: "false"
         whiteList:
           type: array

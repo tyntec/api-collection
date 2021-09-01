@@ -3,7 +3,7 @@ info:
   version: "1.0"
   title: Account Keys API
   description: |
-    The keys API helps you manage your account API keys. You can add a secondary key for your account and delete the old. With this mechanism you can safely rotate a key, on runtime, to keep your account safe.
+    The keys API helps you managing your account API keys. You can add a secondary key for your account and delete the old one. With this mechanism you can safely rotate a key, on runtime, to keep your account safe.
   contact:
     name: tyntec API Support
     url: http://www.tyntec.com/support
@@ -20,7 +20,7 @@ tags:
       tyntec’s account keys service allow you to:
 
       - Add a secondary authentication token key on your account. Both keys (old and new) will be valid and active.
-      - Delete the old key you want to remove once you have roated to your systems the new key.
+      - You can delete the old key once your new key is replaced at your systems.
 
       **Important**
 
