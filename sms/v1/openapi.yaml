@@ -27,6 +27,17 @@ tags:
       **Important**
 
       tyntec stores status details for up to 3 months after the final delivery state is known.
+
+      ### Delivery states
+
+      | State | Description |
+      | :--- | :--- |
+      | ACCEPTED | The message was accepted for delivery by Tyntec's platform and will be scheduled for delivery. |
+      | DELIVERED | Message is delivered to destination. The message has been delivered to the destination. No further deliveries will occur. |
+      | BUFFERED | The message is in buffered state. This is a general state used to describe a message as being active within the tyntec's platform. The message may be in retry or dispatched to a mobile network for delivery to the mobile. |
+      | EXPIRED | Message validity period has expired. The message has failed to be delivered within its validity period and/or retry period. No further delivery attempts will be made. |
+      | REJECTED | Message was rejected by the tyntec platform or destination network. Reasons for rejections can be insufficient funds, illegal content/senderId. More specific reasons are given on the `errorCode`. |
+      | UNDELIVERABLE | Message is undeliverable. The message has encountered a delivery error and is deemed permanently undeliverable. No further delivery attempts will be made. Certain network or platform internal errors result in the permanent non-delivery of a message. Examples of such errors would be an unknown subscriber or network error that indicated that the given destination mobile was denied SMS service or could not support SMS. More specific reasons are given on the `errorCode`.|
   - name: BYON Contact Service
     description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
   - name: BYON Phone Book Service
@@ -1375,13 +1386,13 @@ components:
           example: EUR
         deliveryState:
           type: string
-          description: The delivery status of this specific part; possible values are given in the following table.
+          description: The delivery status of this specific part; possible values can be found [here] (#delivery-states)
         doneDate:
           type: string
           description: The time stamp when the message was successfully delivered
         errorCode:
           type: string
-          description: The reason for an unsuccessful delivery attempt
+          description: The reason for an unsuccessful delivery attempt. [GSM error codes](https://www.tyntec.com/docs/docs-center-sms-api-gsm-error-codes)
         partId:
           type: string
           description: The identification number of the specific message part
@@ -1409,10 +1420,10 @@ components:
           description: The time stamp when the message was successfully delivered
         errorCode:
           type: string
-          description: The error code
+          description: The error code. [GSM error codes](https://www.tyntec.com/docs/docs-center-sms-api-gsm-error-codes)
         errorReason:
           type: string
-          description: The reason for an unsuccessful attempt
+          description: The reason for an unsuccessful attempt. 
         from:
           type: string
           description: The phone number of the sending party in the international format if available
@@ -1453,7 +1464,7 @@ components:
           format: int32
           example: 1
         status:
-          description: The message status; the values can be DELIVERED/UNDELIVERED/EXPIRED/UNDELIVERABLE/REJECTED.
+          description: The message status; the values can be found can be found [here] (#delivery-states)
           type: string
           example: "DELIVERED"
         submitDate:
