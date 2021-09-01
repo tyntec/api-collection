@@ -28,7 +28,7 @@ tags:
 
       tyntec stores status details for up to 3 months after the final delivery state is known.
 
-      ## Delivery states
+      ### Delivery states
 
       | State | Description |
       | :--- | :--- |
@@ -1386,7 +1386,7 @@ components:
           example: EUR
         deliveryState:
           type: string
-          description: The delivery status of this specific part; possible values can be found on the table located on the top of this page..
+          description: The delivery status of this specific part; possible values can be found [here] (#delivery-states)
         doneDate:
           type: string
           description: The time stamp when the message was successfully delivered
@@ -1464,7 +1464,7 @@ components:
           format: int32
           example: 1
         status:
-          description: The message status; the values can be found on the table located on the top of this page.
+          description: The message status; the values can be found can be found [here] (#delivery-states)
           type: string
           example: "DELIVERED"
         submitDate:

@@ -77,7 +77,7 @@ paths:
         - ApiKeyHeader: []
       operationId: keysPOST
       description: |
-        Creates a secondary key for this account that will be active in parallel with the old one. No more than two keys are allowed to exist for one account.
+        Creates a secondary key for this account that will be active in parallel with the old one. No more than two keys are allowed to exist per account.
       responses:
         "200":
           description: The keys that are available for your account.
