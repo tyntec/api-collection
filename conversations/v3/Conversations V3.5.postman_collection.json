@@ -113,7 +113,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n     \"type\": \"oauth2\",\r\n     \"oauth2\": {\r\n         \"clientId\": \"your client id\",\r\n         \"clientSecret\": \"your client secret\",\r\n         \"url\": \"your authentication server url\"\r\n     }\r\n}",
+							"raw": " {\r\n     \"type\": \"oauth2\",\r\n     \"oauth2\": {\r\n         \"clientId\": \"your client id\",\r\n         \"clientSecret\": \"your client secret\",\r\n         \"url\": \"https://www.test.de\"\r\n     }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -121,13 +121,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/configurations/callbacks",
+							"raw": "{{baseUrl}}/configurations/mediaCredentials",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"configurations",
-								"callbacks"
+								"mediaCredentials"
 							]
 						},
 						"description": "This example omits the update with the custom header and signature"
@@ -146,13 +146,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/configurations/callbacks",
+							"raw": "{{baseUrl}}/configurations/mediaCredentials",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"configurations",
-								"callbacks"
+								"mediaCredentials"
 							]
 						},
 						"description": "This example omits the update with the custom header and signature"
