@@ -898,6 +898,15 @@ components:
         content:
           contentType: text
           text: hi!
+    WhatsAppTextMessageWithUrlRendering:
+      value:
+        to: "12331132"
+        from: "1233423454"
+        channel: whatsapp
+        content:
+          contentType: text
+          text: hi! Check out this page https://www.tyntec.com
+          renderUrlPreview: true
     WhatsAppImageMessage:
       value:
         to: "12331132"
@@ -1322,6 +1331,9 @@ components:
     #
     WhatsAppTextContent:
       type: object
+      required:
+        - contentType
+        - text
       properties:
         contentType:
           type: string
@@ -1330,8 +1342,14 @@ components:
         text:
           type: string
           maxLength: 4096
+        renderUrlPreview:
+          type: boolean
+          default: false
     WhatsAppImageContent:
       type: object
+      required:
+        - contentType
+        - image
       properties:
         contentType:
           type: string
@@ -1341,6 +1359,9 @@ components:
           $ref: '#/components/schemas/WhatsAppImage'
     WhatsAppDocumentContent:
       type: object
+      required:
+        - contentType
+        - document
       properties:
         contentType:
           type: string
@@ -1350,6 +1371,9 @@ components:
           $ref: '#/components/schemas/WhatsAppDocument'
     WhatsAppVideoContent:
       type: object
+      required:
+        - contentType
+        - video
       properties:
         contentType:
           type: string
@@ -1359,6 +1383,9 @@ components:
           $ref: '#/components/schemas/WhatsAppVideo'
     WhatsAppAudioContent:
       type: object
+      required:
+        - contentType
+        - audio
       properties:
         contentType:
           type: string
@@ -1368,6 +1395,9 @@ components:
           $ref: '#/components/schemas/WhatsAppAudio'
     WhatsAppStickerContent:
       type: object
+      required:
+        - contentType
+        - sticker
       properties:
         contentType:
           type: string
@@ -1377,6 +1407,9 @@ components:
           $ref: '#/components/schemas/WhatsAppSticker'
     WhatsAppLocationContent:
       type: object
+      required:
+        - contentType
+        - location
       properties:
         contentType:
           type: string
@@ -1386,6 +1419,9 @@ components:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppContactsContent:
       type: object
+      required:
+        - contentType
+        - contacts
       properties:
         contentType:
           type: string
@@ -1397,6 +1433,9 @@ components:
             $ref: '#/components/schemas/Contact'
     WhatsAppTemplateContent:
       type: object
+      required:
+        - contentType
+        - template
       properties:
         contentType:
           type: string
@@ -1406,6 +1445,9 @@ components:
           $ref: '#/components/schemas/WhatsAppTemplate'
     WhatsAppInteractiveContent:
       type: object
+      required:
+        - contentType
+        - interactive
       properties:
         contentType:
           type: string
@@ -1417,6 +1459,9 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
     WhatsAppInteractiveFooterContent:
       type: object
+      required:
+        - contentType
+        - text
       properties:
         contentType:
           type: string
@@ -1427,6 +1472,9 @@ components:
           maxLength: 60
     WhatsAppInteractiveTextContent:
       type: object
+      required:
+        - contentType
+        - text
       properties:
         contentType:
           type: string
@@ -1695,6 +1743,9 @@ components:
 
     WhatsAppTemplate:
       type: object
+      required:
+        - templateId
+        - templateLanguage
       properties:
         templateId:
           type: string
@@ -1728,6 +1779,9 @@ components:
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
     WhatsAppTemplateTextHeaderComponent:
       type: object
+      required:
+        - type
+        - text
       properties:
         type:
           type: string
@@ -1749,6 +1803,9 @@ components:
           example: John Doe
     WhatsAppTemplateImageHeaderComponent:
       type: object
+      required:
+        - type
+        - image
       properties:
         type:
           type: string
@@ -1756,10 +1813,11 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
-        example:
-          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateVideoHeaderComponent:
       type: object
+      required:
+        - type
+        - video
       properties:
         type:
           type: string
@@ -1767,10 +1825,11 @@ components:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppTemplateMediaHeader'
-        example:
-          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
     WhatsAppTemplateDocumentHeaderComponent:
       type: object
+      required:
+        - type
+        - document
       properties:
         type:
           type: string
@@ -1778,29 +1837,21 @@ components:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppTemplateDocumentHeader'
-        example:
-          $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentExample'
-    WhatsAppTemplateMediaHeaderComponentExample:
-      type: object
-      properties:
-        url:
-          description: This is present until the successful submission to WhatsApp
-          type: string
-        fileHandle:
-          description: This is present after successful submission of the template to WhatsApp
-          type: string
     WhatsAppTemplateLocationHeaderComponent:
       type: object
+      required:
+        - type
+        - location
       properties:
         type:
           type: string
           enum:
             - document
-        document:
+        location:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppTemplateMediaHeader:
       type: object
-      description: Document media specification
+      description: Media header specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
     WhatsAppTemplateDocumentHeader:
@@ -1815,6 +1866,10 @@ components:
           example: Test PDF
     WhatsAppTemplateTextBodyComponent:
       type: object
+      description: Body parameter replacement of a template
+      required:
+        - type
+        - text
       properties:
         type:
           type: string
@@ -1851,6 +1906,10 @@ components:
     QuickReplyButtonComponent:
       type: object
       description: This type can be used up to three times
+      required:
+        - type
+        - index
+        - payload
       properties:
         type:
           type: string
@@ -1869,6 +1928,10 @@ components:
     UrlButtonComponent:
       type: object
       description: This type can be used up to one time
+      required:
+        - type
+        - index
+        - text
       properties:
         type:
           type: string
@@ -2347,6 +2410,10 @@ components:
     WhatsAppTemplateRequest:
       type: object
       description: Request for an additional WhatsApp template
+      required:
+        - name
+        - category
+        - localizations
       properties:
         name:
           type: string
@@ -2362,6 +2429,9 @@ components:
     LocalizationRequest:
       type: object
       description: Request for a new localization of a template
+      required:
+        - language
+        - components
       properties:
         language:
           $ref: '#/components/schemas/LanguageCode'
@@ -2373,6 +2443,7 @@ components:
     NotificationTemplateRequest:
       type: array
       description: Request for a standard template (notification) without rich media components
+
       items:
         type: object
         description: Standard template request without rich media parts
@@ -2526,8 +2597,8 @@ components:
             - BODY
         text:
           type: string
-          description: Specification of the body text (1--160 chars)
-          maxLength: 160
+          description: Specification of the body text (1--1024 chars)
+          maxLength: 1024
           minLength: 1
           example:
             Hi {{1}}! Enjoy the spec!
@@ -2543,6 +2614,8 @@ components:
     WhatsAppTemplateBodyComponentRequestExample:
       type: object
       description: Examples of the body parameters. All parameters of the body must have an example
+      required:
+        - texts
       properties:
         texts:
           type: array
