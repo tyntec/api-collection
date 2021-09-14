@@ -1331,100 +1331,118 @@ components:
     #
     WhatsAppTextContent:
       type: object
+      description: Plain text message
       required:
         - contentType
         - text
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _text_.
           enum:
             - text
         text:
           type: string
+          description: Text to be sent
           maxLength: 4096
         renderUrlPreview:
           type: boolean
+          description: In case a URL is present on the text should a preview tried to be rendered
           default: false
     WhatsAppImageContent:
       type: object
+      description: Image message
       required:
         - contentType
         - image
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _image_.
           enum:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppImage'
     WhatsAppDocumentContent:
       type: object
+      description: Document message
       required:
         - contentType
         - document
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _document_.
           enum:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppDocument'
     WhatsAppVideoContent:
       type: object
+      description: Video message
       required:
         - contentType
         - video
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _video_.
           enum:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppVideo'
     WhatsAppAudioContent:
       type: object
+      description: Audio message
       required:
         - contentType
         - audio
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _audio_.
           enum:
             - audio
         audio:
           $ref: '#/components/schemas/WhatsAppAudio'
     WhatsAppStickerContent:
       type: object
+      description: Sticker message
       required:
         - contentType
         - sticker
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _sticker_.
           enum:
             - sticker
         sticker:
           $ref: '#/components/schemas/WhatsAppSticker'
     WhatsAppLocationContent:
       type: object
+      description: Location message
       required:
         - contentType
         - location
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _location_.
           enum:
             - location
         location:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppContactsContent:
       type: object
+      description: Message with contacts
       required:
         - contentType
         - contacts
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _contacts_.
           enum:
             - contacts
         contacts:
@@ -1433,24 +1451,28 @@ components:
             $ref: '#/components/schemas/Contact'
     WhatsAppTemplateContent:
       type: object
+      description: Templated message
       required:
         - contentType
         - template
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _template_.
           enum:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
     WhatsAppInteractiveContent:
       type: object
+      description: Interactive message (buttons & lists)
       required:
         - contentType
         - interactive
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _interactive_.
           enum:
             - interactive
         interactive:
@@ -1459,29 +1481,35 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
     WhatsAppInteractiveFooterContent:
       type: object
+      description: Footer of an interactive message
       required:
         - contentType
         - text
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _text_.
           enum:
             - text
         text:
           type: string
+          description: Footer to be displayed on the message
           maxLength: 60
     WhatsAppInteractiveTextContent:
       type: object
+      description: Message body of an interactive message
       required:
         - contentType
         - text
       properties:
         contentType:
           type: string
+          description: Determines the type of the message. Always _text_.
           enum:
             - text
         text:
           type: string
+          description: Text body of the message
           maxLength: 1024
     #
     # Media
