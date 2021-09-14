@@ -119,6 +119,8 @@ info:
     | :--- | :--- |
     | `callbacks:read` | Grants read access on the account level callbacks |
     | `callbacks:write` | Grants write access on the account level callbacks |
+    | `credentials:read` | Grants read access on the account level credentials, eg media credentials |
+    | `credentials:write` | Grants write access on the account level credentials, eg media credentials |
     | `channels:read` | Grants read access on assigned channels |
     | `channels.wechat:write` | Grants write access on WeChat channels |
     | `channels.telegram:write` | Grants write access on Telegram channels |
@@ -142,7 +144,7 @@ info:
     | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
-  version: '3.2'
+  version: '3.3'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
   x-major-version: v3
@@ -186,6 +188,38 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Callback'
+      responses:
+        200:
+          description: Configuration of the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountConfiguration'
+  /configurations/mediaCredentials:
+    put:
+      tags:
+        - "API Account Configurations"
+      summary: Update the media credentials
+      operationId: updateAccountMediaCredentialsCallback
+      description: Update the media credentials of the account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaCredentials'
+      responses:
+        200:
+          description: Configuration of the account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountConfiguration'
+    delete:
+      tags:
+        - "API Account Configurations"
+      summary: Remove the media credentials
+      operationId: removeAccountMediaCredentials
+      description: Remove the media credentials of the account.
       responses:
         200:
           description: Configuration of the account
@@ -331,6 +365,8 @@ components:
             $ref: '#/components/schemas/AccountScopes'
         callback:
           $ref: '#/components/schemas/Callback'
+        config:
+          $ref: '#/components/schemas/DetailedAccountConfig'
     AccountScopes:
       type: string
       description: Scopes available to your account.
@@ -340,6 +376,8 @@ components:
         - channels.wechat:write
         - callbacks:read
         - callbacks:write
+        - credentials:read
+        - credentials:write
         - media:read
         - media:write
     Callback:
@@ -423,6 +461,58 @@ components:
           description: value of the http header
           minLength: 8
           maxLength: 1024
+    DetailedAccountConfig:
+      type: object
+      properties:
+        mediaCredentials:
+          $ref: '#/components/schemas/MediaCredentials'
+    MediaCredentials:
+      type: object
+      description: Credentials to download media from your remote service
+      oneOf:
+        - $ref: '#/components/schemas/OAuth2MediaCredentials'
+        - $ref: '#/components/schemas/BasicMediaCredentials'
+    OAuth2MediaCredentials:
+      type: object
+      description: Oauth 2 credentials. **Only** supports _client secret_ flow
+      properties:
+        type:
+          type: string
+          description: Determines the type of the credentials. Always _oauth2_.
+          enum:
+            - oauth2
+        oauth2:
+          type: object
+          required:
+            - clientId
+            - clientSecret
+            - url
+          properties:
+            clientId:
+              type: string
+            clientSecret:
+              type: string
+            url:
+              type: string
+    BasicMediaCredentials:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Determines the type of the credentials. Always _basic_.
+          enum:
+            - basic
+        basic:
+          type: object
+          required:
+            - username
+            - password
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+
     AllChannelResponses:
       type: array
       items:
