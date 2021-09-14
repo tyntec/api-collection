@@ -1,5 +1,25 @@
 # Release notes
 
+## 3.5
+
+### Features
+
+#### Media credentials
+
+With this release we support on the account level basic and oauth2 client secret flow for protecting 
+media downloads **from** your server when sending messages with media files.
+
+#### WhatsApp - Preview URL on text messages
+
+With this release we support now the missing toggle to preview urls on pure text messages.
+
+The property is called `renderUrlPreview`
+
+### Fixes
+
+Small fixes on the WhatsApp documentation
+
+
 ## 3.4
 
 ### Features
