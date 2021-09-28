@@ -1988,14 +1988,14 @@ components:
         - type
         - components
       properties:
-        type:
+        subType:
           type: string
           enum:
             - buttons
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveButtonComponents'
       example:
-        type: buttons
+        subType: buttons
         components:
           header:
             type: text
@@ -2028,13 +2028,13 @@ components:
         - components
       properties:
         type:
-          type: string
+          subType: string
           enum:
             - list
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveListComponents'
       example:
-        type: list
+        subType: list
         components:
           header:
             type: text
