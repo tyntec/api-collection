@@ -33,7 +33,7 @@ tags:
       | State | Description |
       | :--- | :--- |
       | ACCEPTED | The message was accepted for delivery by Tyntec's platform and will be scheduled for delivery. |
-      | DELIVERED | Message is delivered to destination. The message has been delivered to the destination. No further deliveries will occur. |
+      | DELIVERED | The message has been delivered to the destination. No further deliveries will occur. |
       | BUFFERED | The message is in buffered state. This is a general state used to describe a message as being active within the tyntec's platform. The message may be in retry or dispatched to a mobile network for delivery to the mobile. |
       | EXPIRED | Message validity period has expired. The message has failed to be delivered within its validity period and/or retry period. No further delivery attempts will be made. |
       | REJECTED | Message was rejected by the tyntec platform or destination network. Reasons for rejections can be insufficient funds, illegal content/senderId. More specific reasons are given on the `errorCode`. |
