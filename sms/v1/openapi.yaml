@@ -388,10 +388,7 @@ paths:
         "2XX":
           description: Message was accepted by your system.
         "default":
-          description: |
-            Message was not accepted by your system.
-
-            The tyntec's inbound system will retry the delivery.
+          description: Message was not accepted by your system. The tyntec's inbound system will retry the delivery.
 
   /byon/phonebook/v1/numbers:
     get:
