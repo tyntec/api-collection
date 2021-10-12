@@ -446,6 +446,13 @@ paths:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "403":
           description: Forbidden
         "404":
