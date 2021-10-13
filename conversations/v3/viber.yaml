@@ -365,7 +365,7 @@ components:
           enum:
             - file
         file:
-          $ref: '#/components/schemas/ViberImage'
+          $ref: '#/components/schemas/ViberFile'
     ViberButtonContent:
       type: object
       properties:
