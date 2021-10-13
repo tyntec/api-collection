@@ -64,11 +64,11 @@ info:
     *RFC 5988* is implemented to allow all API calls that return a list of resources, to make use of the following
     _Link_ headers:
 
-    - `first` – The first page in the resource list pagination
-    - `previous` – The preceding page of the current page in the resource list pagination
-    - `current` – The current page in the resource list pagination
-    - `next` – The following page in the current page of the resource list pagination
-    - `last` – The last page in the resource list pagination
+    - `first` – The first page in the list of requested sub-resources
+    - `previous` – The page preceding the current page in the list of requested sub-resources
+    - `current` – The current page in the list of requested sub-resources
+    - `next` – The page following the current page in the list of requested sub-resources
+    - `last` – The last page in the list of requested sub-resources
 
     In addition, the following custom headers are provided for convenience:
 
