@@ -42,7 +42,7 @@ info:
     which the tyntec system will fire upon events in the system, in this case upon message status updates.
 
     You may also configure a opt-in filter on one or more `MessageStatus::*` event types in the tyntec
-    application, see [Webhook Configuration](#configurations) and [Webhook Events](#webhook-events).
+    application, see [Webhook Configuration](#configurations) and [Webhook Events V2](#webhook-events-v2).
     The set of available event types slightly varies on each channel:
 
     | Channel | Accepted | Dispatched | Delivered | Seen | Channel failed | Deleted |
