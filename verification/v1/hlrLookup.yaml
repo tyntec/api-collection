@@ -46,7 +46,7 @@ paths:
           description: |
             The asynchronous response can be triggered by this request parameter.
 
-            In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for a maximum of 48 hours.
+            In this case, tyntec's system will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's system will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for a maximum of 48 hours.
           example: https://my.callback.io/gnv-response
       responses:
         '200':

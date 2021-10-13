@@ -41,8 +41,8 @@ info:
     e.g. `https://rest.customer.com/messagestatus/`. This URL must serve a webhook able to process POST HTTP requests,
     which the tyntec system will fire upon events in the system, in this case upon message status updates.
 
-    You may also configure an opt-in filter on one or more `MessageStatus::*` event types in the tyntec
-    application, see [Webhook Configuration](#configurations) and [Webhook Events V2](#webhook-events-v2).
+    You may also configure an opt-in filter on one or more `MessageStatus::*` event types in the Configuration, see
+    [Webhook Configuration](#configurations) and [Webhook Events V2](#webhook-events-v2).
     The set of available event types slightly varies on each channel:
 
     | Channel | Accepted | Dispatched | Delivered | Seen | Channel failed | Deleted |
@@ -56,7 +56,7 @@ info:
 
     **Retries**
 
-    The tyntec application will retry to post the request 2 more times in the case your
+    The tyntec system will retry to post the request 2 more times in the case your
     webhook does not accept the request (final response codes other than 2xx).
 
     ### Receiving inbound messages
@@ -68,13 +68,13 @@ info:
 
     For this service, you will need to provide a URL (`inboundMessageUrl`) at your webserver,
     e.g. `https://rest.customer.com/inboundmessages/`. This URL must serve a webhook able to process POST HTTP requests,
-    which the tyntec [application](current.html#configurations) will fire upon the events of inbound messages.
+    which the tyntec system will fire upon the events of inbound messages.
 
     The events fired upon are of type `MoMessage`.
 
     **Retries**
 
-    The tyntec application will retry to post the request in the case your webhook does not accept the request
+    The tyntec system will retry to post the request in the case your webhook does not accept the request
     (final response codes other than 2xx), depending on the channel as follows:
 
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
@@ -83,7 +83,7 @@ info:
     - *WeChat:* TODO
     - *Telegram:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
-      delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
+      delivery attempts. tyntec's system will keep trying for a maximum of 48 hours.
 
   contact:
     name: tyntec API Support

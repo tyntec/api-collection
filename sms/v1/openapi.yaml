@@ -368,15 +368,15 @@ paths:
         For this service, you will need to provide tyntec with an URL
         (`callbackUrl`) at your webserver, e.g. `https://rest.customer.com/inboundmessages/`.
 
-        tyntec's application will do either the `POST` or `GET` call to your
-        server; this can be configured by tyntec.
+        tyntec's system will do either the `POST` or `GET` call to your server;
+        this can be configured by tyntec.
 
         **Retries**
 
-        tyntec's application will retry delivery every 10 seconds in the case your
+        tyntec's system will retry delivery every 10 seconds in the case your
         application does not accept the inbound message. Retries are paused for
         10 minutes after every 100 consecutive unsuccessful delivery attempts.
-        tyntec's application will keep trying for a maximum of 48 hours.
+        tyntec's system will keep trying for a maximum of 48 hours.
       requestBody:
         description: The message that tyntec delivers to your system
         required: true
