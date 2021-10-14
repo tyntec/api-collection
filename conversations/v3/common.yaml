@@ -274,7 +274,7 @@ components:
         format: uuid
     MediaId:
       required: true
-      description: Media provided by tyntec
+      description: Media ID provided by tyntec
       name: mediaId
       in: path
       schema:
