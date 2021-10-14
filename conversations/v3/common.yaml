@@ -437,6 +437,55 @@ components:
           description: Point in time when status has been entered
     MessageDeliveryEvents:
       type: object
+      required:
+        - messageId
+        - events
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global unique Message Id reference
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDeliveryEvent'
+    MessageDeliveryEvent:
+      type: object
+      required:
+        - timestamp
+        - event
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Point in time when the event has happened.
+          example: 2021-11-19T06:39:28.081Z
+        event:
+          type: string
+          description: Determines which kind of event has happened.
+          example: MessageStatus::channelFailed
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          enum:
+            - sms
+            - whatsapp
+            - wechat
+            - viber
+          example: whatsapp
+        details:
+          type: object
+          description: Channel specific details.
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: whatsapp::error::470
+            message:
+              type: string
+              example: Message failed to send because more than 24 hours have passed since the customer last replied to this number
     BulkMessageRequest:
       type: object
     BulkMessageResponse:
