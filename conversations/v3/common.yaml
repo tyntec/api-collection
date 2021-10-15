@@ -471,15 +471,20 @@ components:
         mediaId:
           type: string
           format: uuid
+          description: The media ID provided by tyntec
         contentType:
           type: string
+          description: The media type
         validity:
           type: string
           format: date-time
+          description: How long is the media stored in minutes
         fileName:
           type: string
+          description: The name of the file
         fileSize:
           type: integer
+          description: The size of the file in bytes
     Problem:
       type: object
       additionalProperties: true
