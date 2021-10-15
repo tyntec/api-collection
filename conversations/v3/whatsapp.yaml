@@ -873,7 +873,7 @@ components:
             ]
             title: Constraint Violation
     Forbidden:
-      description: You attempting to use a number that is not assigned to your account
+      description: You are attempting to use a sender configuration (WhatsApp Business Account Phone Number) that is not assigned to your tyntec account
       content:
         application/problem+json:
           schema:
