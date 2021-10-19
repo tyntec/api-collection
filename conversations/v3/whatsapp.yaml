@@ -763,12 +763,13 @@ components:
     WhatsAppProfileLogoFormat:
       name: format
       in: query
-      description: The format in which the icon should be returned
+      description: The format in which the icon should be returned. The default is binary.
       schema:
         type: string
         enum:
           - link
           - binary
+        default: binary
     WhatsAppAccountId:
       name: whatsapp-account-id
       in: path
