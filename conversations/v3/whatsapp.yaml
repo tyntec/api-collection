@@ -632,8 +632,9 @@ paths:
   /channels/whatsapp/phone-numbers/{phone-number}/settings/logo:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
+      parameters:
+        - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
       operationId: getCurrentWALogo
       summary: Read the logo
       description: Returns the current logo assigned to a WhatsApp phone number profile.
