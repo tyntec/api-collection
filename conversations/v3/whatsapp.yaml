@@ -1693,7 +1693,7 @@ components:
       properties:
         service:
           type: string
-          description: Type of the email
+          description: Type of the service
           example: WhatsApp
         userId:
           type: string
