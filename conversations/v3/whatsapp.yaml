@@ -554,7 +554,7 @@ paths:
         - "Phone Number Configurations"
       summary: List Configurations
       operationId: listAllWhatsAppChannels
-      description: List all WhatsApp channels available to your API account
+      description: List all WhatsApp phone number configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllWhatsAppChannelsResponse'

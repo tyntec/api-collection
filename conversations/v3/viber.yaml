@@ -95,7 +95,7 @@ paths:
         - "Service IDs"
       summary: List Service IDs
       operationId: listAllViberChannels
-      description: List all Viber channels available to your API account
+      description: List all Service ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllViberChannelsResponse'

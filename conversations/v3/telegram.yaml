@@ -81,7 +81,7 @@ paths:
         - "Telegram IDs"
       summary: List Telegram IDs
       operationId: listAllTelegramChannels
-      description: List all Telegram channels available to your API account
+      description: List all Telegram ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllTelegramChannelsResponse'

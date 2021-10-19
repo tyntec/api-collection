@@ -127,7 +127,7 @@ paths:
         - "WeChat IDs"
       summary: List WeChat IDs
       operationId: listAllWeChatChannels
-      description: List all WeCht channels available to your API account
+      description: List all WeChat ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllWeChatChannelsResponse'
