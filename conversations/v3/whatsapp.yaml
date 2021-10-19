@@ -612,7 +612,7 @@ paths:
       tags:
         - "Profile management"
       requestBody:
-        description: Information in order to create the group
+        description: Updated profile settings
         required: true
         content:
           application/json:
