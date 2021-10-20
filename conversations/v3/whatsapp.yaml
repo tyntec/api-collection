@@ -2027,8 +2027,8 @@ components:
         - type
         - components
       properties:
-        type:
-          subType: string
+        subType:
+          type: string
           enum:
             - list
         components:
@@ -2064,6 +2064,72 @@ components:
                   - title: Egg & Peas
                     payload: egg-and-peas-34987-234897234-234
                     description: Tasty slices of eggs, on a whole wheat pasta salad with peas
+    WhatsAppInteractiveProductMessage:
+      type: object
+      description: |
+        Interactive message type
+      required:
+        - type
+        - components
+      properties:
+        subType:
+          type: string
+          enum:
+            - product
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductComponents'
+      example:
+        subType: product
+        components:
+          header:
+            type: text
+            text: What about?
+          body:
+            type: text
+            text: According to your query we found this matching product
+          footer:
+            type: text
+            text: Your service bot
+          product:
+            catalogId: 123987987498123
+            productId: My-Product-SKU
+    WhatsAppInteractiveProductListMessage:
+      type: object
+      description: |
+        Interactive message type
+      required:
+        - type
+        - components
+      properties:
+        subType:
+          type: string
+          enum:
+            - productList
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductListComponents'
+      example:
+        subType: productList
+        components:
+          header:
+            type: text
+            text: What about?
+          body:
+            type: text
+            text: According to your query we found this matching products
+          footer:
+            type: text
+            text: Your service bot
+          productList:
+            catalogId: 12314123123
+            sections:
+              - title: Vegan
+                items:
+                  - productId: sku-1
+                  - productId: sku-2
+              - title: Vegetarian
+                items:
+                  - productId: sku-3
+                  - productId: sku-4
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -2191,6 +2257,95 @@ components:
           description: Optional description of the item
           minLength: 1
           maxLength: 72
+
+    WhatsAppInteractiveProductComponents:
+      type: object
+      required:
+        - body
+        - product
+      properties:
+        header:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateDocumentHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        product:
+          type: object
+          required:
+            - catalogId
+            - productId
+          properties:
+            catalogId:
+              type: string
+            productId:
+              type: string
+
+    WhatsAppInteractiveProductListComponents:
+      type: object
+      description: |
+        Product List message component. It can have at most 10 products distributed over at most 10 sections
+      required:
+        - body
+        - productList
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        productList:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductListContent'
+    WhatsAppInteractiveProductListContent:
+      type: object
+      description: |
+        Definition of a WhatsApp  product list
+      required:
+        - title
+        - sections
+      properties:
+        title:
+          type: string
+          maxLength: 24
+          example: Choose from this list
+        sections:
+          type: array
+          description: Sections of the list message
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/WhatsAppProductListSection'
+    WhatsAppProductListSection:
+        type: object
+        description: |
+          Section of a product list message.
+        required:
+          - rows
+        properties:
+          title:
+            type: string
+            description: Title of the section mandatory in case of multiple sections
+            maxLength: 24
+            minLength: 1
+          productItems:
+            type: array
+            description: Items of the section
+            minItems: 1
+            maxItems: 10
+            items:
+              $ref: '#/components/schemas/WhatsAppProductListItem'
+    WhatsAppProductListItem:
+      type: object
+      required:
+        - productId
+      properties:
+        productId:
+          type: string
     #
     # Profile
     #
