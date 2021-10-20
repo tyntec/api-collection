@@ -143,6 +143,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     ServiceId:
       name: service-id

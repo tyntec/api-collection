@@ -129,6 +129,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     TelegramId:
       name: telegram-id
