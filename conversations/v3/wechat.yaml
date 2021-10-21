@@ -90,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/MessageResponse'
+                $ref: '#/components/schemas/MessageResponse'
 
         400:
           $ref: '#/components/responses/BadRequest'
@@ -190,12 +190,6 @@ components:
         type: string
       example: 23cklsdhf2
   responses:
-    MessageResponse:
-      description: The response after the server has accepted the request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
       description: The response after the server has accepted the request
       content:
