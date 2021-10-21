@@ -333,11 +333,12 @@ components:
           maxItems: 20
           minItems: 2
           items:
-            - $ref: '#/components/schemas/ViberTextContent'
-            - $ref: '#/components/schemas/ViberImageContent'
-            - $ref: '#/components/schemas/ViberFileContent'
-            - $ref: '#/components/schemas/ViberVideoContent'
-            - $ref: '#/components/schemas/ViberComponentsContent'
+            oneOf:
+              - $ref: '#/components/schemas/ViberTextContent'
+              - $ref: '#/components/schemas/ViberImageContent'
+              - $ref: '#/components/schemas/ViberFileContent'
+              - $ref: '#/components/schemas/ViberVideoContent'
+              - $ref: '#/components/schemas/ViberComponentsContent'
     ViberTextContent:
       type: object
       properties:

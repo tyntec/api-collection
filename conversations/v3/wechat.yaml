@@ -320,9 +320,10 @@ components:
           maxItems: 20
           minItems: 2
           items:
-            - $ref: '#/components/schemas/WeChatTextContent'
-            - $ref: '#/components/schemas/WeChatImageContent'
-            - $ref: '#/components/schemas/WeChatTemplateContent'
+            oneOf:
+              - $ref: '#/components/schemas/WeChatTextContent'
+              - $ref: '#/components/schemas/WeChatImageContent'
+              - $ref: '#/components/schemas/WeChatTemplateContent'
     WeChatTextContent:
       type: object
       properties:
