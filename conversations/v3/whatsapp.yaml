@@ -1262,10 +1262,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: WhatsApp
-          items:
-            type: string
-            enum:
-              - whatsapp
+          enum:
+            - whatsapp
         context:
           type: string
           description: The context for this particular message
@@ -1313,10 +1311,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: WhatsApp
-          items:
-            type: string
-            enum:
-              - whatsapp
+          enum:
+            - whatsapp
         messages:
           type: array
           maxItems: 20

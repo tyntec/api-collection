@@ -373,13 +373,11 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
-              - whatsapp
-              - wechat
-              - viber
+          enum:
+            - sms
+            - whatsapp
+            - wechat
+            - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:

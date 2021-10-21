@@ -238,10 +238,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
+          enum:
+            - sms
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -281,10 +279,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
+          enum:
+            - sms
         messages:
           type: array
           maxItems: 20

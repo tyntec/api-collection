@@ -262,10 +262,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: viber
-          items:
-            type: string
-            enum:
-              - viber
+          enum:
+            - viber
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -328,10 +326,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: viber
-          items:
-            type: string
-            enum:
-              - viber
+          enum:
+            - viber
         messages:
           type: array
           maxItems: 20

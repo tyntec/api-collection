@@ -231,10 +231,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: telegram
-          items:
-            type: string
-            enum:
-              - telegram
+          enum:
+            - telegram
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -276,10 +274,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: telegram
-          items:
-            type: string
-            enum:
-              - telegram
+          enum:
+            - telegram
         messages:
           type: array
           maxItems: 20
