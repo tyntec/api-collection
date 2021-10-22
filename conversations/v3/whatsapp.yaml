@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.3'
+  version: '3.4'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -2288,7 +2288,7 @@ components:
     WhatsAppInteractiveProductListComponents:
       type: object
       description: |
-        Product List message component. It can have at most 10 products distributed over at most 10 sections
+        Product List message component. It can have at most 30 products distributed over at most 30 sections
       required:
         - body
         - productList
@@ -2317,7 +2317,7 @@ components:
           type: array
           description: Sections of the list message
           minItems: 1
-          maxItems: 10
+          maxItems: 30
           items:
             $ref: '#/components/schemas/WhatsAppProductListSection'
     WhatsAppProductListSection:
@@ -2336,7 +2336,7 @@ components:
             type: array
             description: Items of the section
             minItems: 1
-            maxItems: 10
+            maxItems: 30
             items:
               $ref: '#/components/schemas/WhatsAppProductListItem'
     WhatsAppProductListItem:
