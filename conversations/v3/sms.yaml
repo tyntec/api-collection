@@ -120,7 +120,7 @@ paths:
         - "Callback configuration"
       summary: Update the callback
       operationId: updateSMSChannelCallback
-      description: Update the callback settings of a specific inbound sms. **Note** The complete object must be provided
+      description: Update the callback settings for a specific inbound phone number. **Note** The complete object must be provided
       requestBody:
         content:
           application/json:
