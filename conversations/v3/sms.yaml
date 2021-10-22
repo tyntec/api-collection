@@ -146,7 +146,7 @@ components:
       name: phone-number
       in: path
       required: true
-      description: Phone number used for WhatsApp messaging.
+      description: Phone number used for SMS.
       schema:
         type: integer
         minLength: 4
