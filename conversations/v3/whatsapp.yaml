@@ -2320,14 +2320,14 @@ components:
         description: |
           Section of a product list message.
         required:
-          - rows
+          - items
         properties:
           title:
             type: string
             description: Title of the section mandatory in case of multiple sections
             maxLength: 24
             minLength: 1
-          productItems:
+          items:
             type: array
             description: Items of the section
             minItems: 1
