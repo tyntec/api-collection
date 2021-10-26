@@ -4,6 +4,22 @@
 
 Version 2 of Conversations API will be discontinued on 31.12.2022. 
 
+## 2.17
+
+### Features
+
+#### WhatsApp supporting Product and Product Lists
+
+WhatsApp supports now sending products from a Facebook catalog.
+
+This could be either a single product or multiple products via a product list.
+
+The message to be used is of type `interactive` with the respective subtype `product` or `productList`.
+
+The catalog must be prior connected to the WhatsApp Business Account that shall have access to it.
+
+The customer can place an order via the app, in this case the new MoMessage event `MoMessage::Order` is triggered.
+
 ## 2.16
 
 ### Features
