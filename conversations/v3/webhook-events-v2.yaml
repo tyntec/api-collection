@@ -111,12 +111,12 @@ channels:
 
       **Supporting channels**
 
-      - WhatsApp: Order
+      - WhatsApp: Product and ProductLists
     publish:
       tags:
         - name: "Received messages"
       message:
-        $ref: '#/components/messages/MoMessagePostback'
+        $ref: '#/components/messages/MoMessageOrder'
       bindings:
         http:
           type: request
@@ -441,6 +441,20 @@ components:
           type: boolean
           description: Is the message frequently forwarded. The definition of frequently depends on the channel
           example: true
+        product:
+          $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      description: Product that got a question
+      properties:
+        catalogId:
+          type: string
+          description: Id of the catalog
+          example: "23343-12342"
+        productId:
+          type: string
+          description: ID or SKU of the product
+          example: 123-SKU-12432
     MoMedia:
       type: object
       description: Media information

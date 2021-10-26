@@ -102,6 +102,24 @@ channels:
         http:
           type: request
           method: POST
+  "MoMessage Order":
+    description: |
+      Orders are triggered when a user places an order from a pre-filled shopping cart.
+
+      The event is treated as a MoMessage event for the purpose of callback lookups.
+
+      **Supporting channels**
+
+      - WhatsApp: Product and ProductLists
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/MoMessageOrder'
+      bindings:
+        http:
+          type: request
+          method: POST
   "Message Status: Deleted":
     description: |
       This event is triggered when a previously sent MoMessage is deleted by its sender.
@@ -411,6 +429,20 @@ components:
           type: string
           description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
+        product:
+          $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      description: Product that got a question
+      properties:
+        catalogId:
+          type: string
+          description: Id of the catalog
+          example: "23343-12342"
+        productId:
+          type: string
+          description: ID or SKU of the product
+          example: 123-SKU-12432
     MoMedia:
       type: object
       description: Media information
