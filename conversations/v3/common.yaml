@@ -171,7 +171,7 @@ paths:
     post:
       parameters:
         - name: validity
-          description: How long is the media stored in minutes.
+          description: For how long is the media stored in minutes.
           required: false
           in: query
           schema:
@@ -478,7 +478,7 @@ components:
         validity:
           type: string
           format: date-time
-          description: How long is the media stored in minutes
+          description: For how long is the media stored in minutes
         fileName:
           type: string
           description: The name of the file
