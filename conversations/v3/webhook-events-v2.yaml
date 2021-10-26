@@ -103,6 +103,24 @@ channels:
         http:
           type: request
           method: POST
+  "MoMessage Order":
+    description: |
+      Orders are triggered when a user places an order from a pre-filled shopping cart.
+
+      The event is treated as a MoMessage event for the purpose of callback lookups.
+
+      **Supporting channels**
+
+      - WhatsApp: Order
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/MoMessagePostback'
+      bindings:
+        http:
+          type: request
+          method: POST
   "Message Status: Deleted":
     description: |
       This event is triggered when a previously sent MoMessage is deleted by its sender.
@@ -243,6 +261,9 @@ components:
     MoMessagePostback:
       payload:
         $ref: '#/components/schemas/MoMessagePostBack'
+    MoMessageOrder:
+      payload:
+        $ref: '#/components/schemas/MoMessageOrder'
     MessageStatusDeleted:
       payload:
         $ref: '#/components/schemas/MessageStatusDeletedEvent'
@@ -755,6 +776,74 @@ components:
         whatsapp:
           senderName: open api sample
           text: I liked the event
+    MoMessageOrder:
+      type: object
+      description: |
+        Orders are triggered when a user places an order from a shopping cart.
+      required:
+        - messageId
+        - event
+        - status
+        - timestamp
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which event type is sent. Always _MoMessage::Order_
+          enum:
+            - MoMessage::Order
+        channel:
+          type: string
+          description: Channel that triggered the event.
+          example: whatsapp
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: Point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: Message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: The sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: Receiving account of the message. The format is channel specific.
+          example: "49123512315"
+        order:
+          $ref: '#/components/schemas/Order'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/Whatsapp'
+      example:
+        event: MoMessage::Order
+        messageId: ABGHSRdiRDUxLwIQHWZNgHd-WIdpPHTMERqTgQ
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        order:
+          catalogId: 2378972934234
+          text: Please let me know where I can pick up the order.
+          items:
+            - productId: 24-2597234-sdfk
+              quantity: 123
+              itemPrice: 123.22
+              currency: "EUR"
+            - productId: 24-1111134-sdfk
+              quantity: 1
+              itemPrice: 1.22
+              currency: "USD"
+        whatsapp:
+          senderName: Test User
     PostBack:
       type: object
       properties:
@@ -780,6 +869,48 @@ components:
           type: string
           description: Description of the interactive item clicked
           example: This is the description of a list item
+    Order:
+      type: object
+      description: Represents an order sent from a channel
+      required:
+        - items
+      properties:
+        catalogId:
+          type: string
+          description: ID of the catalog the items origin from
+          example: 123980-12313123
+        text:
+          type: string
+          description: Optional message from the customer
+          example: Hi, please make sure it's delivered on the afternoon
+        items:
+          type: array
+          description: Products placed into the basket for this order
+          items:
+            $ref: '#/components/schemas/SelectedProduct'
+    SelectedProduct:
+      type: object
+      description: Product selected for an order
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          description: ID or SKU of the product selected
+          example: test-sku-1234
+        quantity:
+          type: string
+          description: How many items are selected
+          example: 1
+        itemPrice:
+          type: string
+          description: Price presented to the customer, when chosing the product
+          example: 0.11
+        currency:
+          type: string
+          description: Currency of the products price
+          example: EUR
     MessageStatusDeletedEvent:
       type: object
       description: |
