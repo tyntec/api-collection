@@ -1284,7 +1284,7 @@ components:
         to: "+123234234"
         from: "545345345"
         channel: "whatsapp"
-        whatsapp:
+        content:
           contentType: text
           text: A simple text message
     BulkMessageRequest:
