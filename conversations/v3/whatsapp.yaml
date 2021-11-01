@@ -2520,7 +2520,7 @@ components:
           type: string
           description: The phone number
           example:
-            49123456789
+            "49123456789"
         displayPhoneNumber:
           type: string
           description: The phone number as it is displayed in the app
@@ -2582,7 +2582,7 @@ components:
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
       example:
-        phoneNumber: 4912345678
+        phoneNumber: "49123456789"
         displayPhonenumber: +49 123 45678
         verifiedName: Swagger Sample
         qualityRating: YELLOW
