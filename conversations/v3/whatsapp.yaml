@@ -1675,7 +1675,7 @@ components:
         zip:
           type: string
           description: ZIP or postal code
-          example: 44231
+          example: "44231"
     Email:
       type: object
       description: Email of the contact
