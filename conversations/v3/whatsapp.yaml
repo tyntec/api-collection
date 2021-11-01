@@ -2999,7 +2999,7 @@ components:
                 text: Your specification team!
       example:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name: swagger_test
+        templateName: swagger_test
         category: TICKET_UPDATE
         localizations:
           - status: REJECTED
