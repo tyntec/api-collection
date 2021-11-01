@@ -1588,7 +1588,7 @@ components:
           example:
             7.4954884
         latitude:
-          type: integer
+          type: number
           format: double
           description: The latitude part of the coordinate
           example:
