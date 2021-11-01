@@ -1487,10 +1487,10 @@ components:
       type: object
       description: Footer of an interactive message
       required:
-        - contentType
+        - type
         - text
       properties:
-        contentType:
+        type:
           type: string
           description: Determines the type of the message. Always _text_.
           enum:
