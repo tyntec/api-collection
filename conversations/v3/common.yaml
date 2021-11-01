@@ -538,11 +538,6 @@ components:
       type: object
       additionalProperties: true
       description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
-      required:
-        - type
-        - title
-        - status
-        - detail
       properties:
         type:
           description: A URI reference [RFC3986] that identifies the problem type
