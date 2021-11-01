@@ -2600,7 +2600,7 @@ components:
           type: string
           description: Name of the CPaaSAccount
       example:
-        name: someaccount
+        accountName: someaccount
     WhatsAppTemplateRequest:
       type: object
       description: Request for an additional WhatsApp template
