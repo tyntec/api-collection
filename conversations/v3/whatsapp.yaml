@@ -2485,7 +2485,7 @@ components:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
           description: The Facebook Business Manager ID provided by Facebook
-          type: string
+          type: number
           example: 1791147717848878
         whatsAppBusinessAccountId:
           description: The WhatsApp Business Account ID provided by WhatsApp
