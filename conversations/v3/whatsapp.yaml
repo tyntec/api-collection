@@ -2583,7 +2583,7 @@ components:
           $ref: '#/components/schemas/QualityScore'
       example:
         phoneNumber: "49123456789"
-        displayPhonenumber: +49 123 45678
+        displayPhoneNumber: +49 123 45678
         verifiedName: Swagger Sample
         qualityRating: YELLOW
         status: FLAGGED
