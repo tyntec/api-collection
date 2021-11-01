@@ -94,7 +94,7 @@ paths:
                 value:
                   from: a cool business
                   to: some number
-                  channel: WhatsApp
+                  channel: whatsapp
                   content:
                     contentType: text
                     text: hi there
@@ -103,7 +103,7 @@ paths:
                 value:
                   from: a cool business
                   to: some number
-                  channel: WhatsApp
+                  channel: whatsapp
                   content:
                     contentType: image
                     image:
@@ -1261,7 +1261,7 @@ components:
         channel:
           type: string
           description: The channel selected for delivery.
-          example: WhatsApp
+          example: whatsapp
           enum:
             - whatsapp
         context:
@@ -1310,7 +1310,7 @@ components:
         channel:
           type: string
           description: The channel selected for delivery.
-          example: WhatsApp
+          example: whatsapp
           enum:
             - whatsapp
         messages:
