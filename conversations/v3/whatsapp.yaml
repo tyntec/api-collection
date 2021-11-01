@@ -1699,7 +1699,7 @@ components:
         userId:
           type: string
           description: IMS user id
-          example: 123123123
+          example: "123123123"
     Name:
       type: object
       description: |
