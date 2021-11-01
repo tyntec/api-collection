@@ -685,7 +685,7 @@ components:
           - callbacks:write
           - callbacks:read
         id:
-          phoneNumber: 12341234
+          phoneNumber: "12341234"
         callback:
           callbackVersion: "2.11"
           inboundMessageUrl: https://your.server.com/inbound
