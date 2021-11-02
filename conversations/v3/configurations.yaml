@@ -629,7 +629,7 @@ components:
           - callbacks:write
           - callbacks:read
         id:
-          telegramId: 12341234
+          botId: "12341234"
         name: your bot!
         credentials:
           botToken: 987923hrbnhjfedf87z324:fsdhf8n2r543j4hgr
