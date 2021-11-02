@@ -713,7 +713,7 @@ components:
           - callbacks:write
           - callbacks:read
         id:
-          serviceId: 1234
+          serviceId: "1234"
         name: Your Company
         callback:
           callbackVersion: "2.11"
