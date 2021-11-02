@@ -247,7 +247,7 @@ components:
         to: "+123234234"
         from: "545345345"
         channel:  "telegram"
-        telegram:
+        content:
           contentType: text
           text: A simple text message
     BulkMessageRequest:
