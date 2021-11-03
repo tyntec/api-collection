@@ -787,6 +787,7 @@ components:
         - event
         - status
         - timestamp
+        - order
       allOf:
         - $ref: '#/components/schemas/APIEvent'
       properties:

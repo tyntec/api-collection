@@ -12,7 +12,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '2.16'
+  version: '2.17'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v2
   x-postman-collection: postman.zip
@@ -90,6 +90,11 @@ paths:
                 $ref: '#/components/examples/WhatsAppInteractiveQuickReplyMessage'
               WA - List message:
                 $ref: '#/components/examples/WhatsAppInteractiveListMessage'
+              WA - Product message:
+                $ref: '#/components/examples/WhatsAppInteractiveProductMessage'
+              WA - Product List message:
+                $ref: '#/components/examples/WhatsAppInteractiveProductListMessage'
+
       responses:
         202:
           description: The message was accepted by our system.
@@ -1112,6 +1117,61 @@ components:
                       - title: Egg & Peas
                         payload: egg-and-peas-34987-234897234-234
                         description: Tasty slices of eggs, on a whole wheat pasta salad with peas
+
+    WhatsAppInteractiveProductMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: interactive
+          interactive:
+            subType: product
+            components:
+              header:
+                type: text
+                text: Choose your menu
+              body:
+                type: text
+                text: Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on
+              footer:
+                type: text
+                text: Your tyntec food team
+              product:
+                catalogId: 1231412412
+                productId: Green dream
+    WhatsAppInteractiveProductListMessage:
+      value:
+        to: "12331132"
+        channels:
+          - whatsapp
+        whatsapp:
+          from: "1233423454"
+          contentType: interactive
+          interactive:
+            subType: productList
+            components:
+              header:
+                type: text
+                text: Choose your menu
+              body:
+                type: text
+                text: Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on
+              footer:
+                type: text
+                text: Your tyntec food team
+              productList:
+                catalogId: 12314214124
+                items:
+                  - title: Vegan
+                    items:
+                      - productId: Green dream
+                      - productId: Rainbow meets rice
+                  - title: Vegetarian
+                    rows:
+                      - productId: Italo Classic
+                      - productId: Egg & Peas
 
     ## Template management section
     WhatsAppTextTemplate:

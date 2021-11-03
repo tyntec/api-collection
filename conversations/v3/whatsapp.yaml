@@ -2067,13 +2067,14 @@ components:
     WhatsAppInteractiveProductMessage:
       type: object
       description: |
-        Interactive message type
+        Interactive Product Message
       required:
         - type
         - components
       properties:
         subType:
           type: string
+          description: Determines the type of interactive message. **Always** `product`
           enum:
             - product
         components:
@@ -2096,13 +2097,14 @@ components:
     WhatsAppInteractiveProductListMessage:
       type: object
       description: |
-        Interactive message type
+        Interactive Product List Message
       required:
         - type
         - components
       properties:
         subType:
           type: string
+          description: Determines the type of interactive message. **Always** `productList`
           enum:
             - productList
         components:
@@ -2260,6 +2262,7 @@ components:
 
     WhatsAppInteractiveProductComponents:
       type: object
+      description: Interactive Product Component
       required:
         - body
         - product
@@ -2270,14 +2273,19 @@ components:
           $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
         product:
           type: object
+          description: Product specification to be send to the customer
           required:
             - catalogId
             - productId
           properties:
             catalogId:
+              description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
               type: string
+              example: "12432134"
             productId:
+              description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
               type: string
+              example: Test SKU
 
     WhatsAppInteractiveProductListComponents:
       type: object
@@ -2304,10 +2312,10 @@ components:
         - title
         - sections
       properties:
-        title:
+        catalogId:
           type: string
-          maxLength: 24
-          example: Choose from this list
+          description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
+          example: 2134432423
         sections:
           type: array
           description: Sections of the list message
@@ -2329,18 +2337,21 @@ components:
             minLength: 1
           items:
             type: array
-            description: Items of the section
+            description: Products of this section
             minItems: 1
             maxItems: 30
             items:
               $ref: '#/components/schemas/WhatsAppProductListItem'
     WhatsAppProductListItem:
       type: object
+      description: Singel Item on the product list
       required:
         - productId
       properties:
         productId:
+          description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
           type: string
+          example: Test SKU
     #
     # Profile
     #
