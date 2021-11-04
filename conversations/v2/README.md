@@ -4,6 +4,29 @@
 
 Version 2 of Conversations API will be discontinued on 31.12.2022. 
 
+## 2.16
+
+### Features
+
+#### Viber support for files
+
+Viber supports now sending files up to 200 MB.
+
+At least the properties `url` and the `filename` must be specified.
+The optional property `type` is determined from the `url` value if not set.
+
+It's advised to set that value always to avoid false resolutions or failed messages.
+
+#### Viber dropped service id types
+
+As of 4th of October 2021 Viber dropped the support of different service id types (one way, two way, session) and 
+replaced them by rate types for transaction, promotion and session messages.
+
+The rate types determine the charging applied by Viber per message.
+
+In order to avoid breaking existing clients, the message purpose field is made an alias for the new property
+`rateType` and supports also the type _session_ to indicate session based messages.
+
 ## 2.15
 
 ### Bugfixes

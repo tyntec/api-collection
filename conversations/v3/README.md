@@ -1,5 +1,58 @@
 # Release notes
 
+## 3.6
+
+### Features
+
+#### Viber support for files
+
+Viber supports now sending files up to 200 MB.
+
+At least the properties `url` and the `filename` must be specified.
+The optional property `type` is determined from the `url` value if not set.
+
+It's advised to set that value always to avoid false resolutions or failed messages.
+
+#### Viber dropped service id types
+
+As of 4th of October 2021 Viber dropped the support of different service id types (one way, two way, session) and
+replaced them by rate types for transaction, promotion and session messages.
+
+The rate types determine the charging applied by Viber per message.
+
+In order to avoid breaking existing clients, the message purpose field is made an alias for the new property
+`rateType` and supports also the type _session_ to indicate session based messages.
+
+## 3.5
+
+### Features
+
+#### Media credentials
+
+With this release we support on the account level basic and oauth2 client secret flow for protecting 
+media downloads **from** your server when sending messages with media files.
+
+#### WhatsApp - Preview URL on text messages
+
+With this release we support now the missing toggle to preview urls on pure text messages.
+
+The property is called `renderUrlPreview`
+
+### Fixes
+
+Small fixes on the WhatsApp documentation
+
+
+## 3.4
+
+### Features
+
+#### Channel support now names
+
+With this release the listing of channels can carry now a custom name aside to the channel id.
+
+This name is at the moment not configurable,
+
 ## 3.3
 
 ### Bugfixes

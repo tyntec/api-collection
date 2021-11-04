@@ -3224,17 +3224,17 @@ components:
       description: |
         Interactive message type
       required:
-        - type
+        - subtype
         - components
       properties:
-        type:
+        subtype:
           type: string
           enum:
             - buttons
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveButtonComponents'
       example:
-        type: buttons
+        subtype: buttons
         components:
           header:
             type: text
@@ -3263,17 +3263,17 @@ components:
       description: |
         Interactive message type
       required:
-        - type
+        - subtype
         - components
       properties:
-        type:
+        subtype:
           type: string
           enum:
             - list
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveListComponents'
       example:
-        type: list
+        subtype: list
         components:
           header:
             type: text

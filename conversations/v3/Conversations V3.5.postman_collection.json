@@ -1,0 +1,2184 @@
+{
+	"info": {
+		"_postman_id": "e50a1ed1-1133-4e5e-a074-56377e23c7ca",
+		"name": "Conversations V3.5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API Account Configurations",
+			"item": [
+				{
+					"name": "Get the current account configuration",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{apikey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/configurations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"configurations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update the callback configuration",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{apikey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/configurations/callbacks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"configurations",
+								"callbacks"
+							]
+						},
+						"description": "This example omits the update with the custom header and signature"
+					},
+					"response": []
+				},
+				{
+					"name": "Set BASIC media credentials",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{apikey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n     \"type\": \"basic\",\r\n     \"basic\": {\r\n         \"username\": \"your username\",\r\n         \"password\": \"your password\"\r\n     }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/configurations/mediaCredentials",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"configurations",
+								"mediaCredentials"
+							]
+						},
+						"description": "This example omits the update with the custom header and signature"
+					},
+					"response": []
+				},
+				{
+					"name": "Set Oauth2 media credentials",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{apikey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n     \"type\": \"oauth2\",\r\n     \"oauth2\": {\r\n         \"clientId\": \"your client id\",\r\n         \"clientSecret\": \"your client secret\",\r\n         \"url\": \"https://www.test.de\"\r\n     }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/configurations/mediaCredentials",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"configurations",
+								"mediaCredentials"
+							]
+						},
+						"description": "This example omits the update with the custom header and signature"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove media credentials",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{apikey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/configurations/mediaCredentials",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"configurations",
+								"mediaCredentials"
+							]
+						},
+						"description": "This example omits the update with the custom header and signature"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WhatsApp",
+			"item": [
+				{
+					"name": "Profile Management",
+					"item": [
+						{
+							"name": "Get Profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/settings/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"settings",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Complete Profile",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"address\": \"<<address>>\",\r\n    \"description\": \"<<description>>\",\r\n    \"email\": \"<<email>>\",\r\n    \"vertical\": \"<<vertical>>\",\r\n    \"websites\": [\r\n        \"<<website>>\"\r\n    ],\r\n    \"about\": \"<<about>>\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/settings/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"settings",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Partial Profile Copy",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"address\": \"<<address>>\",\r\n    \"description\": \"<<description>>\",\r\n    \"email\": \"<<email>>\",\r\n    \"about\": \"<<about>>\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/settings/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"settings",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Logo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/settings/logo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"settings",
+										"logo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Logo",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/settings/logo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"settings",
+										"logo"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account Information",
+					"item": [
+						{
+							"name": "Template Management",
+							"item": [
+								{
+									"name": "Get one template",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/templates/{{whatsAppTemplateName}}",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"channels",
+												"whatsapp",
+												"accounts",
+												"{{whatsAppAccountId}}",
+												"templates",
+												"{{whatsAppTemplateName}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get localizations of a template",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/templates/{{whatsAppTemplateName}}/localizations",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"channels",
+												"whatsapp",
+												"accounts",
+												"{{whatsAppAccountId}}",
+												"templates",
+												"{{whatsAppTemplateName}}",
+												"localizations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"welcome_template2\",\r\n  \"category\": \"AUTO_REPLY\",\r\n  \"localizations\": [\r\n    {\r\n      \"language\": \"en\",\r\n      \"components\": [\r\n        {\r\n          \"type\": \"BODY\",\r\n          \"text\": \"hello {{1}}\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/templates",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"channels",
+												"whatsapp",
+												"accounts",
+												"{{whatsAppAccountId}}",
+												"templates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add localization to template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "",
+												"type": "text",
+												"value": "",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "    {\r\n      \"language\": \"de\",\r\n      \"components\": [\r\n        {\r\n          \"type\": \"BODY\",\r\n          \"text\": \"guten tag {{1}}\"\r\n        }\r\n      ]\r\n     }\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/templates/{{whatsAppTemplateName}}/localizations",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"channels",
+												"whatsapp",
+												"accounts",
+												"{{whatsAppAccountId}}",
+												"templates",
+												"{{whatsAppTemplateName}}",
+												"localizations"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "List accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman.",
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find account for phone number",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{apikey}}",
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/accounts?phoneNumber={{whatsAppBusinessNumber}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "phoneNumber",
+											"value": "{{whatsAppBusinessNumber}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List templates",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman.",
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/templates",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"accounts",
+										"{{whatsAppAccountId}}",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List phone numbers",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{apikey}}",
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/accounts/{{whatsAppAccountId}}/phone-numbers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"accounts",
+										"{{whatsAppAccountId}}",
+										"phone-numbers"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Phone Number Information",
+					"item": [
+						{
+							"name": "List phone numbers",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman.",
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find one phone number",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{apikey}}",
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List templates available for the phone number",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{apikey}}",
+										"warning": "This is a duplicate header and will be overridden by the apikey header generated by Postman."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/templates",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"templates"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Configurations",
+					"item": [
+						{
+							"name": "List WhatsApp Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/whatsapp",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"whatsapp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific WhatsApp Business Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configure the callback for a specific number",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/whatsapp/phone-numbers/{{whatsAppBusinessNumber}}/callbacks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"whatsapp",
+										"phone-numbers",
+										"{{whatsAppBusinessNumber}}",
+										"callbacks"
+									]
+								},
+								"description": "This example omits the update with the custom header and signature"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Send messages",
+					"item": [
+						{
+							"name": "Media Messages",
+							"item": [
+								{
+									"name": "Send a image message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"image\",\r\n        \"image\" : {\r\n            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\",\r\n            \"caption\" : \"An optional caption\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a video message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"video\",\r\n        \"video\" : {\r\n            \"url\": \"http://techslides.com/demos/sample-videos/small.mp4\",\r\n            \"caption\" : \"An optional caption\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a document message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"document\",\r\n        \"document\" : {\r\n            \"url\": \"https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf\",\r\n            \"caption\" : \"An optional caption\",\r\n            \"filename\" : \"An optional filename\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a audio message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"audio\",\r\n        \"audio\" : {\r\n            \"url\": \"https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.opus\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a sticker message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"sticker\",\r\n        \"sticker\" : {\r\n            \"url\": \"https://www.tyntec.com/sites/default/files/2020-07/tyntec_rocket_sticker_512px_001_.webp\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Template Messages",
+							"item": [
+								{
+									"name": "Send a text body only template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"And a third one\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a Quick Reply button template with payload",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    }\r\n                ],\r\n                \"button\" : [\r\n                    {\r\n                        \"type\" : \"quick_reply\",\r\n                        \"index\": 0,\r\n                        \"payload\" : \"event-id\"\r\n                    },\r\n                    {\r\n                        \"type\" : \"quick_reply\",\r\n                        \"index\": 1,\r\n                        \"payload\" : \"event-id\"\r\n                    },\r\n                    {\r\n                        \"type\" : \"quick_reply\",\r\n                        \"index\": 2,\r\n                        \"payload\" : \"event-id\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a dynamic URL button template Copy",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    }\r\n                ],\r\n                \"button\" : [\r\n                    {\r\n                        \"type\" : \"url\",\r\n                        \"index\": 1,\r\n                        \"text\" : \"test\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a video header template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"header\" : [\r\n                    {\r\n                        \"type\": \"video\",\r\n                        \"video\" : {\r\n                            \"url\": \"http://techslides.com/demos/sample-videos/small.mp4\"\r\n                        }                        \r\n                    }\r\n                ],\r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a document header template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"header\" : [\r\n                    {\r\n                        \"type\": \"document\",\r\n                        \"document\" : {\r\n                            \"url\": \"https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf\"\r\n                        }                        \r\n                    }\r\n                ],                \r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"2nd Parameter\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a image header template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"header\" : [\r\n                    {\r\n                        \"type\": \"image\",\r\n                        \"image\" : {\r\n                            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\"\r\n                        }                        \r\n                    }\r\n                ],                \r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"And a third one\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a location header template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"header\" : [\r\n                    {\r\n                        \"location\" : {\r\n \t\t                    \"longitude\" : 7.4954884,\r\n \t\t                    \"latitude\" : 51.5005765,\r\n \t\t                    \"name\" : \"tyntec GmbH\",\r\n \t\t                    \"address\" : \"tyntec GmbH, Semerteichstraße, Dortmund\"\r\n \t                    },\r\n \t                    \"type\":\"location\"\r\n                    }\r\n                ],  \r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"And a third one\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send a text header template",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"template\",\r\n        \"template\" : {\r\n            \"templateId\" : \"{{whatsAppTemplateName}}\",\r\n            \"templateLanguage\" : \"{{whatsAppTemplateLanguage}}\",\r\n            \"components\" : {\r\n                \"header\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\" : \"Additional header text\"                \r\n                    }\r\n                ],    \r\n                \"body\" : [\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"User\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"Additional Variable\"\r\n                    },\r\n                    {\r\n                        \"type\": \"text\",\r\n                        \"text\": \"And a third one\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/messages",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Send a text message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a quick reply",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n\"content\": {\r\n    \"contentType\": \"interactive\",\r\n    \"interactive\": {\r\n      \"subType\": \"buttons\",\r\n      \"components\": {\r\n        \"header\": {\r\n          \"type\": \"text\",\r\n          \"text\": \"Your request is queued\"\r\n        },\r\n        \"body\": {\r\n          \"type\": \"text\",\r\n          \"text\": \"How would you rate your bot experience\"\r\n        },\r\n        \"footer\": {\r\n          \"type\": \"text\",\r\n          \"text\": \"Your service bot\"\r\n        },\r\n        \"buttons\": [\r\n          {\r\n            \"type\": \"reply\",\r\n            \"reply\": {\r\n              \"payload\": \"987298-40980jvkdm9-234234234\",\r\n              \"title\": \"Poor\"\r\n            }\r\n          },\r\n          {\r\n            \"type\": \"reply\",\r\n            \"reply\": {\r\n              \"payload\": \"987298-dsfgjlkhgdf-dg09u834334\",\r\n              \"title\": \"OK\"\r\n            }\r\n          },\r\n          {\r\n            \"type\": \"reply\",\r\n            \"reply\": {\r\n              \"payload\": \"9080923445nlkjß0_gß0923845083245dfg\",\r\n              \"title\": \"Good\"\r\n            }\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a list",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\": {\r\n    \"contentType\": \"interactive\",\r\n    \"interactive\": {\r\n      \"subType\": \"list\",\r\n      \"components\": {\r\n        \"header\": {\r\n          \"type\": \"text\",\r\n          \"text\": \"Choose your menu\"\r\n        },\r\n        \"body\": {\r\n          \"type\": \"text\",\r\n          \"text\": \"Hi Sarah, select your menu from the bottom list. Dressings and toppings are selected later on\"\r\n        },\r\n        \"footer\" : {\r\n            \"type\": \"text\",\r\n            \"text\": \"Your tyntec food team\"\r\n        },\r\n        \"list\": {\r\n          \"title\": \"Your menu\",\r\n          \"sections\": [\r\n            {\r\n              \"title\": \"Vegan\",\r\n              \"rows\": [\r\n                {\r\n                  \"payload\": \"green-dream-34987-234897234-234\",\r\n                  \"title\": \"Green dream\",\r\n                  \"description\": \"A bowl full of tasty leaves, soy beans and cucumber\"\r\n                },\r\n                 {\r\n                  \"payload\": \"rainbow-meets-rice-34987-234897234-234\",\r\n                  \"title\": \"Rainbow meets rice\",\r\n                  \"description\": \"A colorful selection of vegetables on a cozy bed of basmati rice\"\r\n                }\r\n              ]\r\n            },          \r\n            {\r\n              \"title\": \"Vegetarian\",\r\n              \"rows\": [\r\n                {\r\n                  \"payload\": \"italo-classic-34987-234897234-234\",\r\n                  \"title\": \"Italo Classic\",\r\n                  \"description\": \"Slices of tomates, with plucked pieces of mozzarella and basil leaves\"\r\n                },\r\n                 {\r\n                  \"payload\": \"egg-and-peas-34987-234897234-234\",\r\n                  \"title\": \"Egg & Peas\",\r\n                  \"description\": \"Tasty slices of eggs, on a whole wheat pasta salad with peas\"\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a location message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"location\" : {\r\n \t\t    \"longitude\" : 7.4954884,\r\n \t\t    \"latitude\" : 51.5005765,\r\n \t\t    \"name\" : \"tyntec GmbH\",\r\n \t\t    \"address\" : \"tyntec GmbH, Semerteichstraße, Dortmund\"\r\n \t    },\r\n \t    \"contentType\":\"location\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a contact message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{whatsAppBusinessNumber}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"whatsapp\",\r\n    \"content\" : {\r\n        \"contacts\" : [{\r\n \t\t    \"addresses\": [\r\n        \t    {\r\n            \t    \"city\": \"Munich\",\r\n                    \"country\": \"Germany\",\r\n                    \"countryCode\": \"DE\",\r\n                    \"street\": \"Hofmannstrasse 25-27\",\r\n                    \"type\": \"WORK\",\r\n                    \"zip\": \"81379\"\r\n        \t    }\r\n            ],\r\n            \"name\": {\r\n                \"formattedName\": \"tyntec GmbH Demo\",\r\n                \"lastName\": \"Your last name\"\r\n            }\t\r\n \t    }],\r\n \t    \"contentType\":\"contacts\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Telegram (BETA)",
+			"item": [
+				{
+					"name": "Configurations",
+					"item": [
+						{
+							"name": "List Telegram Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/telegram",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"telegram"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Telegram Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"credentials\": {\r\n            \"botToken\": \"123569:jkhdgkjhdkjhk\"\r\n        }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/telegram",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"telegram"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Telegram Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/telegram/telegram-ids/{{telegramId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"telegram",
+										"telegram-ids",
+										"{{telegramId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configure the callback for a specific Bot",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/telegram/telegram-ids/{{telegramId}}/callbacks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"telegram",
+										"telegram-ids",
+										"{{telegramId}}",
+										"callbacks"
+									]
+								},
+								"description": "This example omits the update with the custom header and signature"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete specific Telegram Account",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/telegram/telegram-ids/{{telegramId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"telegram",
+										"telegram-ids",
+										"{{telegramId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Send messages",
+					"item": [
+						{
+							"name": "Send a text message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{telegramId}}\",\r\n    \"to\" : \"{{telegramRecipientId}}\",\r\n    \"channel\" : \"telegram\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send an image message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{telegramId}}\",\r\n    \"to\" : \"{{telegramRecipientId}}\",\r\n    \"channel\" : \"telegram\",\r\n    \"content\" : {\r\n        \"contentType\" : \"image\",\r\n        \"image\" : {\r\n            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\",\r\n            \"caption\" : \"An optional caption\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send an document message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{telegramId}}\",\r\n    \"to\" : \"{{telegramRecipientId}}\",\r\n    \"channel\" : \"telegram\",\r\n    \"content\" : {\r\n        \"contentType\" : \"document\",\r\n        \"document\" : {\r\n            \"url\": \"https://s1.q4cdn.com/806093406/files/doc_downloads/test.pdf\",\r\n            \"caption\" : \"An optional caption\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WeChat (BETA)",
+			"item": [
+				{
+					"name": "Configurations",
+					"item": [
+						{
+							"name": "List WeChat Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/wechat",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"wechat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add WeChat Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" :{\r\n        \"weChatId\" : \"123123\"\r\n    },\r\n    \"credentials\": {\r\n        \"appId\" : \"sdfdsf\",\r\n        \"appSecret\" : \"sdfdsf\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/wechat/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"wechat",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific WeChat Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/wechat/wechat-ids/{{weChatAppId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"wechat",
+										"wechat-ids",
+										"{{weChatAppId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configure the callback for a specific WeChat ID",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/wechat/wechat-ids/{{weChatAppId}}/callbacks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"wechat",
+										"wechat-ids",
+										"{{weChatAppId}}",
+										"callbacks"
+									]
+								},
+								"description": "This example omits the update with the custom header and signature"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete specific WeChat Account",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/wechat/wechat-ids/{{weChatAppId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"wechat",
+										"wechat-ids",
+										"{{weChatAppId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Send messages",
+					"item": [
+						{
+							"name": "Send a text message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{weChatAppId}}\",\r\n    \"to\" : \"{{weChatUserId}}\",\r\n    \"channel\" : \"wechat\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send an image message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{weChatAppId}}\",\r\n    \"to\" : \"{{weChatUserId}}\",\r\n    \"channel\" : \"wechat\",\r\n    \"content\" : {\r\n        \"contentType\" : \"image\",\r\n        \"image\" : {\r\n            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Viber",
+			"item": [
+				{
+					"name": "Configurations",
+					"item": [
+						{
+							"name": "List Viber Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/viber",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"viber"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Viber account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/viber/service-ids/{{viberServiceId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"viber",
+										"service-ids",
+										"{{viberServiceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configure the callback for a specific service id",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/viber/service-ids/{{viberServiceId}}/callbacks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"viber",
+										"service-ids",
+										"{{viberServiceId}}",
+										"callbacks"
+									]
+								},
+								"description": "This example omits the update with the custom header and signature"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Send messages",
+					"item": [
+						{
+							"name": "Send a image message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{viberServiceId}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"viber\",\r\n    \"messagePurpose\": \"transaction|promotion\",\r\n    \"content\" : {\r\n        \"contentType\" : \"image\",\r\n        \"image\" : {\r\n            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a text message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{viberServiceId}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"viber\",\r\n    \"messagePurpose\": \"transaction|promotion\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send a complex message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"from\" : \"{{viberServiceId}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"viber\",\r\n    \"messagePurpose\": \"transaction|promotion\",\r\n    \"content\" : {\r\n        \"contentType\" : \"components\",\r\n        \"components\" : {\r\n            \"body\" : [\r\n                {\r\n                    \"type\" : \"text\",\r\n                    \"text\" : \"I'm mandatory\"\r\n                },\r\n                {\r\n                    \"type\" : \"image\",\r\n                    \"image\" : {\r\n                        \"url\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/Sample_EPC_QR_code.png\"\r\n                    }\r\n                },\r\n                {\r\n                    \"type\" : \"button\",\r\n                    \"button\" : {\r\n                        \"caption\" : \"click me\",\r\n                        \"callback\" : \"some callback\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "SMS",
+			"item": [
+				{
+					"name": "Configurations",
+					"item": [
+						{
+							"name": "List Inbound SMS Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/sms",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"sms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific SMS Inbound Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/sms/phone-numbers/{{smsSender}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"sms",
+										"phone-numbers",
+										"{{smsSender}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configure the callback for a specific inbound number",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{apikey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"callbackVersion\": \"2.11\",\r\n        \"inboundMessageUrl\": \"<your server>\",\r\n        \"messageStatusUrl\": \"<your server>\",        \r\n        \"eventFilter\": [\r\n            \"MessageStatus::accepted\",\r\n            \"MessageStatus::channelFailed\",\r\n            \"MessageStatus::deleted\",\r\n            \"MessageStatus::delivered\",\r\n            \"MessageStatus::failed\",\r\n            \"MessageStatus::seen\"\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configurations/channels/sms/phone-numbers/{{smsSender}}/callbacks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configurations",
+										"channels",
+										"sms",
+										"phone-numbers",
+										"{{smsSender}}",
+										"callbacks"
+									]
+								},
+								"description": "This example omits the update with the custom header and signature"
+							},
+							"response": []
+						}
+					],
+					"description": "**Note** the configurations do apply at the moment **only** to inbound messages.\n\nThe outbound message status updates are using either the API Account level configuration or the settings from the message request _overrides.messageStatusUrl_"
+				},
+				{
+					"name": "Send a text message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\" : \"{{smsSender}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"sms\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customize requests",
+			"item": [
+				{
+					"name": "Send a message with a status update callback override",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\" : \"{{smsSender}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"sms\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    }, \r\n    \"overrides\" : {\r\n        \"messageStatusUrl\" : \"https://a.different.server.com\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send a message with a user context",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\" : \"{{smsSender}}\",\r\n    \"to\" : \"{{receiverPhoneNumber}}\",\r\n    \"channel\" : \"sms\",\r\n    \"content\" : {\r\n        \"contentType\" : \"text\",\r\n        \"text\" : \"test message 2\"\r\n    },\r\n    \"context\" : \"Some user defined context for status updates\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Check the message events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/messages/{{messageId}}/events",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"messages",
+						"{{messageId}}",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check the message status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/messages/{{messageId}}/status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"messages",
+						"{{messageId}}",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "apikey",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{apikey}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.tyntec.com/conversations/v3"
+		}
+	]
+}
