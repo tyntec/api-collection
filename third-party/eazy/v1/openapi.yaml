@@ -2078,7 +2078,7 @@ paths:
           description: No Content
   /custom/e96eb049-ec39-4a19-9973-c6f770c4e636/unread:
     get:
-      summary: Get unread messages for the given agent
+      summary: Get unread messages
       tags:
         - 'Conversation Management'
       parameters:

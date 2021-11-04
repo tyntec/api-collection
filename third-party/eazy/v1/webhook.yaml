@@ -1,7 +1,7 @@
 asyncapi: '2.1.0'
 info:
-  title: Support Inbox - Web Hook Specifications
-  description: Support Inbox - Web Hook Specifications
+  title: Web Hook Specifications
+  description: Web Hook Specifications
   version: 1.0.0
 servers:
   production:
@@ -9,99 +9,86 @@ servers:
     description: Server address of tyntec, the events origin from
     protocol: https
 channels:
-  "receivedMessage/basic":
+  "Inbound Message (Basic)":
     description: |
       Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-         - $ref: '#/components/messages/BasicInboundMessage'
-         - $ref: '#/components/messages/BasicInboundMediaMessage'
+        $ref: '#/components/messages/BasicInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/whatsapp":
+  "Inbound Message (WhatsApp)":
     description: |
       WhatsApp Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/WhatsAppInboundMessage'
-          - $ref: '#/components/messages/WhatsAppInboundMediaMessage'
+        $ref: '#/components/messages/WhatsAppInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/messenger":
+  "Inbound Message (Messenger)":
     description: |
       Messenger Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/MessengerInboundMessage'
-          - $ref: '#/components/messages/MessengerInboundMediaMessage'
+        $ref: '#/components/messages/MessengerInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/twitter":
+  "Inbound Message (Twitter)":
     description: |
       Twitter Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/TwitterInboundMessage'
-          - $ref: '#/components/messages/TwitterInboundMediaMessage'
+        $ref: '#/components/messages/TwitterInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/viber":
+  "Inbound Message (Viber)":
     description: |
       Viber Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/ViberInboundMessage'
-          - $ref: '#/components/messages/ViberInboundMediaMessage'
+        $ref: '#/components/messages/ViberInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/liveChat":
+  "Inbound Message (LiveChat)":
     description: |
       LiveChat Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/LiveChatInboundMessage'
-          - $ref: '#/components/messages/LiveChatInboundMediaMessage'
+        $ref: '#/components/messages/LiveChatInboundMessage'
       bindings:
         http:
           type: request
           method: POST
-  "receivedMessage/sms":
+  "Inbound Message (SMS)":
     description: |
       SMS Message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
       message:
-        oneOf:
-          - $ref: '#/components/messages/SMSInboundMessage'
+        $ref: '#/components/messages/SMSInboundMessage'
       bindings:
         http:
           type: request
@@ -110,43 +97,37 @@ components:
   messages:
     BasicInboundMessage:
       payload:
-        $ref: '#/components/schemas/BasicInboundMessage'
-    BasicInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/BasicInboundMediaMessage'
+        oneOf:
+         - $ref: '#/components/schemas/BasicInboundMessage'
+         - $ref: '#/components/schemas/BasicInboundMediaMessage'
     WhatsAppInboundMessage:
       payload:
-        $ref: '#/components/schemas/WhatsAppInboundMessage'
-    WhatsAppInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/WhatsAppInboundMediaMessage'
+        oneOf:
+          - $ref: '#/components/schemas/WhatsAppInboundMessage'
+          - $ref: '#/components/schemas/WhatsAppInboundMediaMessage'
     WhatsAppMessageDeleted:
       payload:
         $ref: '#/components/schemas/WhatsAppMessageDeleted'
     MessengerInboundMessage:
       payload:
-        $ref: '#/components/schemas/MessengerInboundMessage'
-    MessengerInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/MessengerInboundMediaMessage'
+        oneOf:
+         - $ref: '#/components/schemas/MessengerInboundMessage'
+         - $ref: '#/components/schemas/MessengerInboundMediaMessage'
     TwitterInboundMessage:
       payload:
-        $ref: '#/components/schemas/TwitterInboundMessage'
-    TwitterInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/TwitterInboundMediaMessage'
+        oneOf:
+          - $ref: '#/components/schemas/TwitterInboundMessage'
+          - $ref: '#/components/schemas/TwitterInboundMediaMessage'
     ViberInboundMessage:
       payload:
-        $ref: '#/components/schemas/ViberInboundMessage'
-    ViberInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/ViberInboundMediaMessage'
+        oneOf:
+          - $ref: '#/components/schemas/ViberInboundMessage'
+          - $ref: '#/components/schemas/ViberInboundMediaMessage'
     LiveChatInboundMessage:
       payload:
-        $ref: '#/components/schemas/LiveChatInboundMessage'
-    LiveChatInboundMediaMessage:
-      payload:
-        $ref: '#/components/schemas/LiveChatInboundMediaMessage'
+        oneOf:
+          - $ref: '#/components/schemas/LiveChatInboundMessage'
+          - $ref: '#/components/schemas/LiveChatInboundMediaMessage'
     SMSInboundMessage:
       payload:
         $ref: '#/components/schemas/SMSInboundMessage'
