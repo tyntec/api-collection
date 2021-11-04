@@ -214,6 +214,9 @@ tags:
           ]
       }
       ```
+  - name: 'Quick Reply Management'
+    description: |
+      Operations around management of quick replies.
   - name: 'Contact Management'
     description: |
       Operations regarding contacts.
@@ -753,6 +756,20 @@ paths:
       responses:
         204:
           description: No Content
+  /companies/current/quick-replies:
+    get:
+      summary: List of available quick replies
+      tags:
+        - 'Quick Reply Management'
+      operationId: listQuickReplies
+      description: Quick replies available for the current company
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/quickRepliesResponse'
   /channels:
     get:
       summary: List all channels
@@ -1996,7 +2013,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/webhookResponse'
+                $ref: '#/components/schemas/webhookResponse'
   /channels/{channelJid}/webhooks/{id}:
     patch:
       summary: Update a webhook
@@ -2033,7 +2050,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/webhookResponse'
+                $ref: '#/components/schemas/webhookResponse'
     delete:
       summary: Delete a webhook
       tags:
@@ -2059,6 +2076,27 @@ paths:
       responses:
         204:
           description: No Content
+  /custom/e96eb049-ec39-4a19-9973-c6f770c4e636/unread:
+    get:
+      summary: Get unread messages for the given agent
+      tags:
+        - 'Conversation Management'
+      parameters:
+        - in: query
+          name: agent
+          required: true
+          description: Agents mail
+          schema:
+            type: string
+            format: email
+            example: 'agent@company.com'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unreadMessagesResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -2585,6 +2623,57 @@ components:
       description: Website URL
       type: string
       example: "https://your-company.com"
+    quickRepliesResponse:
+      type: array
+      description: List of quick replies
+      items:
+        $ref: '#/components/schemas/quickReply'
+    quickReply:
+      type: object
+      required:
+        - createdAt
+        - name
+        - message
+      properties:
+        category:
+          type: string
+          description: Custom category
+          example: Welcome Message
+        createdAt:
+          type: string
+          description: Creation date of the quick reply
+          format: date-time
+          example: 2021-07-05T06:20:33.000000Z
+        jids:
+          type: array
+          description: List of channels the quick reply is assigned to
+          items:
+            - type: string
+              example: 123152345245@whatsapp.eazy.im
+        message:
+          type: string
+          description: Message of the quick reply
+          example: Hi {{1}}, how can we help you?
+        name:
+          type: string
+          description: Name of the quick reply
+          example: welcome
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update of the quick reply
+          example: 2021-07-05T06:28:33.000000Z
+    unreadMessagesResponse:
+      type: object
+      description: How many messages are unread for the selected agent
+      required:
+        - unread
+      properties:
+        unread:
+          type: integer
+          description: How many messages are unread for the selected agent
+          minimum: 0
+          example: 100
   parameters:
     components:
       name: components
