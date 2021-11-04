@@ -2097,6 +2097,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/unreadMessagesResponse'
+
 components:
   securitySchemes:
     bearerAuth:
