@@ -380,7 +380,7 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiving account of the message. The format is channel specific.
+          description: Receiver. The format is channel specific
           example: "49123512315"
         groupId:
           type: string
@@ -763,7 +763,7 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiving account of the message. The format is channel specific.
+          description: Receiver. The format is channel specific
           example: "49123512315"
         groupId:
           type: string
@@ -830,7 +830,7 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiving account of the message. The format is channel specific.
+          description: Receiver. The format is channel specific
           example: "49123512315"
         order:
           $ref: '#/components/schemas/Order'

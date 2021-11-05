@@ -4,17 +4,17 @@
 
 ### Features
 
-#### WhatsApp supporting Product and Product Lists
+#### WhatsApp supports Product and Product Lists
 
 WhatsApp supports now sending products from a Facebook catalog.
 
-This could be either a single product or multiple products via a product list.
+It can be either a single product or multiple products through the product list.
 
-The message to be used is of type `interactive` with the respective subtype `product` or `productList`.
+The message type is `interactive` with the subtype `product` or `productList`.
 
-You need to link your Facebook Catalog to your WhatsApp Business Account. 
+You need to link your Facebook Catalog to your WhatsApp Business Account.
 
-The customer can place an order via the app, in this case the new MoMessage event `MoMessage::Order` is triggered.
+The customer can place an order through their app. Then a new MoMessage event `MoMessage::Order` is triggered.
 
 ## 3.6
 
