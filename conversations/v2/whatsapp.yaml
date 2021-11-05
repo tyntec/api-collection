@@ -1496,6 +1496,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppInteractiveButtonMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveProductMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
       example:
         from: "1233423454"
         contentType: media

@@ -1470,7 +1470,7 @@ components:
           $ref: '#/components/schemas/WhatsAppTemplate'
     WhatsAppInteractiveContent:
       type: object
-      description: Interactive message (buttons & lists)
+      description: Interactive message
       required:
         - contentType
         - interactive
@@ -1484,6 +1484,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppInteractiveButtonMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveProductMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
     WhatsAppInteractiveFooterContent:
       type: object
       description: Footer of an interactive message
