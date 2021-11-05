@@ -900,7 +900,7 @@ components:
           example: Hi, please make sure it's delivered on the afternoon
         items:
           type: array
-          description: Products placed into the basket for this order
+          description: Products placed into the shopping cart for this order
           items:
             $ref: '#/components/schemas/SelectedProduct'
     SelectedProduct:
