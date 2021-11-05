@@ -897,7 +897,7 @@ components:
         text:
           type: string
           description: Optional message from the customer
-          example: Hi, please make sure it's delivered on the afternoon
+          example: Hi, please make sure you deliver it in the afternoon
         items:
           type: array
           description: Products placed into the shopping cart for this order
