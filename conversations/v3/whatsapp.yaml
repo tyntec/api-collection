@@ -13,7 +13,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.3'
+  version: '3.4'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -2027,8 +2027,8 @@ components:
         - type
         - components
       properties:
-        type:
-          subType: string
+        subType:
+          type: string
           enum:
             - list
         components:
@@ -2064,6 +2064,74 @@ components:
                   - title: Egg & Peas
                     payload: egg-and-peas-34987-234897234-234
                     description: Tasty slices of eggs, on a whole wheat pasta salad with peas
+    WhatsAppInteractiveProductMessage:
+      type: object
+      description: |
+        Interactive Product Message
+      required:
+        - type
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `product`
+          enum:
+            - product
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductComponents'
+      example:
+        subType: product
+        components:
+          header:
+            type: text
+            text: What about?
+          body:
+            type: text
+            text: According to your query we found this matching product
+          footer:
+            type: text
+            text: Your service bot
+          product:
+            catalogId: 123987987498123
+            productId: My-Product-SKU
+    WhatsAppInteractiveProductListMessage:
+      type: object
+      description: |
+        Interactive Product List Message
+      required:
+        - type
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `productList`
+          enum:
+            - productList
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductListComponents'
+      example:
+        subType: productList
+        components:
+          header:
+            type: text
+            text: What about?
+          body:
+            type: text
+            text: According to your query we found this matching products
+          footer:
+            type: text
+            text: Your service bot
+          productList:
+            catalogId: 12314123123
+            sections:
+              - title: Vegan
+                items:
+                  - productId: sku-1
+                  - productId: sku-2
+              - title: Vegetarian
+                items:
+                  - productId: sku-3
+                  - productId: sku-4
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -2191,6 +2259,99 @@ components:
           description: Optional description of the item
           minLength: 1
           maxLength: 72
+
+    WhatsAppInteractiveProductComponents:
+      type: object
+      description: Interactive Product Component
+      required:
+        - body
+        - product
+      properties:
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        product:
+          type: object
+          description: Product specification to be send to the customer
+          required:
+            - catalogId
+            - productId
+          properties:
+            catalogId:
+              description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
+              type: string
+              example: "12432134"
+            productId:
+              description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
+              type: string
+              example: Test SKU
+
+    WhatsAppInteractiveProductListComponents:
+      type: object
+      description: |
+        Product List message component. It can have at most 30 products distributed over at most 10 sections
+      required:
+        - header
+        - body
+        - productList
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        productList:
+          $ref: '#/components/schemas/WhatsAppInteractiveProductListContent'
+    WhatsAppInteractiveProductListContent:
+      type: object
+      description: |
+        Definition of a WhatsApp  product list
+      required:
+        - title
+        - sections
+      properties:
+        catalogId:
+          type: string
+          description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
+          example: 2134432423
+        sections:
+          type: array
+          description: Sections of the list message
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/WhatsAppProductListSection'
+    WhatsAppProductListSection:
+        type: object
+        description: |
+          Section of a product list message.
+        required:
+          - items
+        properties:
+          title:
+            type: string
+            description: Title of the section mandatory in case of multiple sections
+            maxLength: 24
+            minLength: 1
+          items:
+            type: array
+            description: Products of this section
+            minItems: 1
+            maxItems: 30
+            items:
+              $ref: '#/components/schemas/WhatsAppProductListItem'
+    WhatsAppProductListItem:
+      type: object
+      description: Singel Item on the product list
+      required:
+        - productId
+      properties:
+        productId:
+          description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
+          type: string
+          example: Test SKU
     #
     # Profile
     #

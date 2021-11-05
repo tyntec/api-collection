@@ -346,10 +346,29 @@ components:
         text:
           type: string
           maxLength: 3000
+    ViberTextBody:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+        text:
+          type: string
+          maxLength: 3000
     ViberImageContent:
       type: object
       properties:
         contentType:
+          type: string
+          enum:
+            - image
+        image:
+          $ref: '#/components/schemas/ViberImage'
+    ViberImageBody:
+      type: object
+      properties:
+        type:
           type: string
           enum:
             - image
@@ -366,7 +385,18 @@ components:
             - file
         file:
           $ref: '#/components/schemas/ViberFile'
-    ViberButtonContent:
+    ViberFileBody:
+      type: object
+      description: File content wrapper for viber
+      properties:
+        contentType:
+          type: string
+          description: Defines the content type. Always **file**
+          enum:
+            - file
+        file:
+          $ref: '#/components/schemas/ViberFile'
+    ViberButtonBody:
       type: object
       properties:
         contentType:
@@ -378,6 +408,10 @@ components:
     ViberComponentsContent:
       type: object
       properties:
+        contentType:
+          type: string
+          enum:
+            - components
         components:
           type: object
           properties:
@@ -385,10 +419,10 @@ components:
               type: array
               items:
                 anyOf:
-                  - $ref: '#/components/schemas/ViberTextContent'
-                  - $ref: '#/components/schemas/ViberImageContent'
-                  - $ref: '#/components/schemas/ViberFileContent'
-                  - $ref: '#/components/schemas/ViberButtonContent'
+                  - $ref: '#/components/schemas/ViberTextBody'
+                  - $ref: '#/components/schemas/ViberImageBody'
+                  - $ref: '#/components/schemas/ViberFileBody'
+                  - $ref: '#/components/schemas/ViberButtonBody'
     ViberImage:
       type: object
       properties:
