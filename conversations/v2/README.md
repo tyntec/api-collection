@@ -12,7 +12,7 @@ Version 2 of Conversations API will be discontinued on 31.12.2022.
 
 WhatsApp supports now sending products from a Facebook catalog.
 
-This could be either a single product or multiple products via a product list.
+It can be either a single product or multiple products through the product list.
 
 The message to be used is of type `interactive` with the respective subtype `product` or `productList`.
 
