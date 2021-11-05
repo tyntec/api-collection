@@ -16,7 +16,7 @@ It can be either a single product or multiple products through the product list.
 
 The message type is `interactive` with the subtype `product` or `productList`.
 
-The catalog must be prior connected to the WhatsApp Business Account that shall have access to it.
+You need to link your Facebook Catalog to your WhatsApp Business Account. 
 
 The customer can place an order through their app. Then a new MoMessage event `MoMessage::Order` is triggered.
 
