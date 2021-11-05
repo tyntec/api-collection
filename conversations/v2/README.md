@@ -8,7 +8,7 @@ Version 2 of Conversations API will be discontinued on 31.12.2022.
 
 ### Features
 
-#### WhatsApp supporting Product and Product Lists
+#### WhatsApp supports Product and Product Lists
 
 WhatsApp supports now sending products from a Facebook catalog.
 
