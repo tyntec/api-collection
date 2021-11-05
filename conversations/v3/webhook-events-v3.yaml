@@ -345,17 +345,17 @@ components:
           type: string
           description: Who triggered this event. Usually a phone number or WhatsApp account ID
           example:
-            491672634678
+            "491672634678"
         to:
           type: string
           description: Receiver of the event.
           example:
-            491672634678
+            "491672634678"
       example:
         event: MessageStatus::accepted
         channel: sms
-        from: 491672634678
-        to: 492134234234
+        from: "491672634678"
+        to: "492134234234"
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string

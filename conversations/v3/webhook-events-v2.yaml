@@ -313,11 +313,11 @@ components:
           type: string
           description: Who triggered this event. Usually a phone number or WhatsApp account ID
           example:
-            491672634678
+            "491672634678"
       example:
         event: MessageStatus::accepted
         channel: sms
-        from: 491672634678
+        from: "491672634678"
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string
