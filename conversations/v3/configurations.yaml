@@ -600,7 +600,7 @@ components:
           weChatId: "12341234"
         name: your application
         credentials:
-          appId: 12334
+          appId: "12334"
           appSecret: 98ujhkjnvjhb832rbnj
         callback:
           callbackVersion: "2.11"
