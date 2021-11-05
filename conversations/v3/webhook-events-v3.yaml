@@ -989,12 +989,12 @@ components:
           type: string
           description: Who triggered this event. Usually the phone number or WhatsApp account ID.
           example:
-            491672634678
+            "491672634678"
         to:
           type: string
           description: Which channel specific account ID is the recipient of this event.
           example:
-            4923147790813
+            "4923147790813"
       example:
         event: MessageStatus::deleted
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
@@ -1002,8 +1002,8 @@ components:
         status: deleted
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
-        from: 491672634678
-        to: 4923147790813
+        from: "491672634678"
+        to: "4923147790813"
     MessageStatusAccepted:
       type: object
       description: |
