@@ -18,7 +18,7 @@ The message to be used is of type `interactive` with the respective subtype `pro
 
 The catalog must be prior connected to the WhatsApp Business Account that shall have access to it.
 
-The customer can place an order via the app, in this case the new MoMessage event `MoMessage::Order` is triggered.
+The customer can place an order through their app. Then a new MoMessage event `MoMessage::Order` is triggered.
 
 ## 2.16
 
