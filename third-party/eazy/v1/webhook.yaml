@@ -1,0 +1,624 @@
+asyncapi: '2.1.0'
+info:
+  title: Web Hook Specifications
+  description: Web Hook Specifications
+  version: 1.0.0
+servers:
+  production:
+    url: 78.110.226.11
+    description: Server address of tyntec, the events origin from
+    protocol: https
+channels:
+  "Inbound Message (Basic)":
+    description: |
+      Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/BasicInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (WhatsApp)":
+    description: |
+      WhatsApp Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/WhatsAppInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (Messenger)":
+    description: |
+      Messenger Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/MessengerInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (Twitter)":
+    description: |
+      Twitter Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/TwitterInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (Viber)":
+    description: |
+      Viber Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/ViberInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (LiveChat)":
+    description: |
+      LiveChat Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/LiveChatInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Inbound Message (SMS)":
+    description: |
+      SMS Message received by us and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/SMSInboundMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+components:
+  messages:
+    BasicInboundMessage:
+      payload:
+        oneOf:
+         - $ref: '#/components/schemas/BasicInboundMessage'
+         - $ref: '#/components/schemas/BasicInboundMediaMessage'
+    WhatsAppInboundMessage:
+      payload:
+        oneOf:
+          - $ref: '#/components/schemas/WhatsAppInboundMessage'
+          - $ref: '#/components/schemas/WhatsAppInboundMediaMessage'
+    WhatsAppMessageDeleted:
+      payload:
+        $ref: '#/components/schemas/WhatsAppMessageDeleted'
+    MessengerInboundMessage:
+      payload:
+        oneOf:
+         - $ref: '#/components/schemas/MessengerInboundMessage'
+         - $ref: '#/components/schemas/MessengerInboundMediaMessage'
+    TwitterInboundMessage:
+      payload:
+        oneOf:
+          - $ref: '#/components/schemas/TwitterInboundMessage'
+          - $ref: '#/components/schemas/TwitterInboundMediaMessage'
+    ViberInboundMessage:
+      payload:
+        oneOf:
+          - $ref: '#/components/schemas/ViberInboundMessage'
+          - $ref: '#/components/schemas/ViberInboundMediaMessage'
+    LiveChatInboundMessage:
+      payload:
+        oneOf:
+          - $ref: '#/components/schemas/LiveChatInboundMessage'
+          - $ref: '#/components/schemas/LiveChatInboundMediaMessage'
+    SMSInboundMessage:
+      payload:
+        $ref: '#/components/schemas/SMSInboundMessage'
+  schemas:
+    BasicInboundMessage:
+      type: object
+      required:
+        - from
+        - message
+        - timestamp
+        - to
+        - type
+        - version
+      properties:
+        from:
+          $ref: '#/components/schemas/From'
+        message:
+          $ref: '#/components/schemas/TextMessage'
+        timestamp:
+          type: integer
+        to:
+          type: string
+        type:
+          type: string
+          enum:
+            - message
+        version:
+          type: integer
+          min: 2
+          max: 2
+    BasicInboundMediaMessage:
+      type: object
+      required:
+        - media
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        media:
+          $ref: '#/components/schemas/Media'
+        message:
+          type: object
+          description: refined per channel
+    From:
+      type: object
+      properties:
+        jid:
+          type: string
+        name:
+          type: string
+    Media:
+      type: object
+      properties:
+        size:
+          type: integer
+        url:
+          type: string
+    AudioMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - audio
+    ContactMessage:
+      type: object
+      properties:
+        contacts:
+          type: object
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - contact
+    DocumentMessage:
+      type: object
+      properties:
+        fileName:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+          enum:
+            - document
+    GifMessage:
+      type: object
+      properties:
+        caption:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - gif
+    ImageMessage:
+      type: object
+      properties:
+        caption:
+          type: string
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - image
+    LocationMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        latitude:
+          type: integer
+        longitude:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - location
+        url:
+          type: string
+    StickerMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - sticker
+    TextMessage:
+      type: object
+      properties:
+        body:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - text
+    VideoMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - video
+    VoiceMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        mimeType:
+          type: string
+        type:
+          type: string
+          enum:
+            - ptt
+    # WhatsApp
+    WhatsAppInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        contextInfo:
+          $ref: '#/components/schemas/WhatsAppContextInfo'
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+            - $ref: '#/components/schemas/ContactMessage'
+            - $ref: '#/components/schemas/LocationMessage'
+      example:
+        from:
+          jid: 123123@whatsapp.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@whatsapp.eazy.im
+        type: message
+        version: 2
+    WhatsAppInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        contextInfo:
+          $ref: '#/components/schemas/WhatsAppContextInfo'
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/AudioMessage'
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VoiceMessage'
+            - $ref: '#/components/schemas/StickerMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@whatsapp.eazy.im
+          name:  John
+        contextInfo:
+          quotedMessage:
+            id: 89729834zuiujhvkijdfngidgh897432hr5234
+            jid: 123131414@whatsapp.eazy.im
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@whatsapp.eazy.im
+        type: message
+        version: 2
+    WhatsAppContextInfo:
+      type: object
+      properties:
+        quotedMessage:
+          $ref: '#/components/schemas/WhatsAppQuotedMessage'
+    WhatsAppQuotedMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        jid:
+          type: string
+    WhatsAppMessageDeleted:
+      type: object
+      required:
+        - from
+        - message
+        - timestamp
+        - to
+        - type
+        - version
+      properties:
+        from:
+          $ref: '#/components/schemas/From'
+        message:
+          type: object
+          properties:
+            id:
+              type: string
+        timestamp:
+          type: integer
+        to:
+          type: string
+        type:
+          type: string
+          enum:
+            - revoke
+        version:
+          type: integer
+          min: 2
+          max: 2
+    # Messenger
+    MessengerInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@messenger.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@messenger.eazy.im
+        type: message
+        version: 2
+    MessengerInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/AudioMessage'
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/GifMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VoiceMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@messenger.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@messenger.eazy.im
+        type: message
+        version: 2
+    # Twitter
+    TwitterInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@twitter.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@twitter.eazy.im
+        type: message
+        version: 2
+    TwitterInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/GifMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@twitter.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@twitter.eazy.im
+        type: message
+        version: 2
+    # Viber
+    ViberInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+            - $ref: '#/components/schemas/LocationMessage'
+      example:
+        from:
+          jid: 123123@viber.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@viber.eazy.im
+        type: message
+        version: 2
+    ViberInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+            - $ref: '#/components/schemas/VideoMessage'
+      example:
+        from:
+          jid: 123123@viber.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@viber.eazy.im
+        type: message
+        version: 2
+    # LiveChat
+    LiveChatInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@livechat.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@sms.livechat.im
+        type: message
+        version: 2
+    LiveChatInboundMediaMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMediaMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/DocumentMessage'
+            - $ref: '#/components/schemas/ImageMessage'
+      example:
+        from:
+          jid: 123123@livechat.eazy.im
+          name:  John
+        media:
+          size: 12341,
+          url: https://cmd.tyntec.com/media/70c881d4a26984ddce795f6f71817c9cf4480e79
+        message:
+          caption: nice image
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          mimeType: image/jpeg
+          type: image
+        timestamp: 12313141
+        to: 432324@sms.livechat.im
+        type: message
+        version: 2
+    # SMS
+    SMSInboundMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasicInboundMessage'
+      properties:
+        message:
+          oneOf:
+            - $ref: '#/components/schemas/TextMessage'
+      example:
+        from:
+          jid: 123123@sms.eazy.im
+          name:  John
+        message:
+          body: Hi!
+          id: 455ca0457cc2b647d6c33954ab0ec27fbfd38661
+          type: text
+        timestamp: 12313141
+        to: 432324@sms.eazy.im
+        type: message
+        version: 2
+
