@@ -6,8 +6,13 @@ info:
 
     **Channel specific pre-conditions**
 
-    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://www.tyntec.com/form-whatsapp-setup-your-waba)
+    - *WhatsApp* : A WhatsApp Business Account is required in order to use this channel. Please [request access here](https://my.tyntec.com)
 
+    **Product & Product Lists (beta)**
+
+    The support for product and product lists is currently in beta status on our API.
+
+    Please contact us via [WhatsApp](https://wa.me/4989202451100) or [support@tyntec.com](mailto:support@tyntec.com)
 
   contact:
     name: tyntec API Support

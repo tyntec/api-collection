@@ -30,7 +30,7 @@ info:
     - *WhatsApp:* A WhatsApp Business Account (WABA) is required in order to use this channel.<br>
       Please [request your access here](https://my.tyntec.com).
     - *Viber:* A Viber Service ID is required in order to use this channel.<br>
-      Please [request your access here](https://www.tyntec.com/form-conversational-api-viber-business).
+      Please [request your access here](https://my.tyntec.com).
     - *Telegram:* Please contact us for getting access to the beta program for Telegram via onboarding@tyntec.com.
     - *WeChat:* Please contact us for getting access to the beta program for WeChat via onboarding@tyntec.com.
     - *2-way SMS:* Please [contact us](/help.html) to get the details for the 2-way SMS setup.
@@ -81,7 +81,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.6'
+  version: '3.7'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v3
   x-postman-collection: postman.zip
