@@ -597,7 +597,7 @@ components:
           - callbacks:write
           - callbacks:read
         id:
-          weChatId: 12341234
+          weChatId: "12341234"
         name: your application
         credentials:
           appId: 12334
