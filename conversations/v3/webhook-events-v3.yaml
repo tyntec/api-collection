@@ -429,6 +429,9 @@ components:
         to: "49123512315"
         timestamp: 2019-06-26T11:41:00
         channel: viber
+        content:
+          contentType: text
+          text: A simple text message
     MoContent:
       type: object
       description: Content of the mobile-originated message
