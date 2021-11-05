@@ -14,7 +14,7 @@ WhatsApp supports now sending products from a Facebook catalog.
 
 It can be either a single product or multiple products through the product list.
 
-The message to be used is of type `interactive` with the respective subtype `product` or `productList`.
+The message type is `interactive` with the subtype `product` or `productList`.
 
 The catalog must be prior connected to the WhatsApp Business Account that shall have access to it.
 
