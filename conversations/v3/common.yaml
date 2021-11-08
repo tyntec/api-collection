@@ -78,7 +78,7 @@ info:
     (final response codes other than 2xx), depending on the channel as follows:
 
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
-      up to 7 days (attempts repeat less and less often)
+      up to 14 days (attempts repeat less and less often)
     - *Viber:* TODO
     - *WeChat:* TODO
     - *Telegram:* TODO
