@@ -74,7 +74,7 @@ info:
     (final response codes other than 2xx), depending on the channel as follows:
 
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
-      nearly indefinitely (attempts repeat less and less often)
+      up to 14 days (attempts repeat less and less often)
     - *Viber:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
       delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
