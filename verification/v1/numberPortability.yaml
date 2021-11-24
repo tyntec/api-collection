@@ -176,8 +176,18 @@ components:
         technology:
           type: string
           description: |
-            The technology used by the operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
+            The technology used by the operator's network.
           example: "GSM"
+          enum:
+            - GSM
+            - MVNO GSM
+            - GSM/CDMA
+            - Satellite
+            - CDMA
+            - iDen
+            - iDen/GSM
+            - Pager
+            - Fixed
         synchronous:
           type: boolean
           description: |
