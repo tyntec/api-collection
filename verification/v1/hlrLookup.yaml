@@ -235,8 +235,18 @@ components:
         imsiTechnology:
           type: string
           description: |
-            The technology used by the subscription network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
+            The technology used by the subscription network.
           example: "GSM"
+          enum:
+            - GSM
+            - MVNO GSM
+            - GSM/CDMA
+            - Satellite
+            - CDMA
+            - iDen
+            - iDen/GSM
+            - Pager
+            - Fixed
         hlrCC:
           type: string
           description: |
