@@ -483,7 +483,7 @@ components:
         caption:
           type: string
           description: Caption specified by the user or the file name of the document
-          example: This is an picture of my cat!
+          example: This is a picture of my cat!
     SMSMoMessage:
       type: object
       description: |

@@ -1061,7 +1061,7 @@ components:
                 text: |
                   Hi {{1}},
 
-                  welcome at our support.
+                  Welcome to our support.
                   How can we help you?
 
                   Your support team
@@ -1076,7 +1076,7 @@ components:
                 text: |
                   Hi {{1}},
 
-                  welcome at our support.
+                  Welcome to our support.
                   How can we help you?
               - type: FOOTER
                 text: Your support team
@@ -2065,10 +2065,10 @@ components:
                 rows:
                   - title: Italo Classic
                     payload: italo-classic-34987-234897234-234
-                    description: Slices of tomates, with plucked pieces of mozzarella and basil leaves
+                    description: Slices of tomatoes with plucked pieces of mozzarella and basil leaves
                   - title: Egg & Peas
                     payload: egg-and-peas-34987-234897234-234
-                    description: Tasty slices of eggs, on a whole wheat pasta salad with peas
+                    description: Tasty slices of eggs on a whole wheat pasta salad with peas
     WhatsAppInteractiveProductMessage:
       type: object
       description: |
@@ -2092,7 +2092,7 @@ components:
             text: What about?
           body:
             type: text
-            text: According to your query we found this matching product
+            text: According to your query, we found this matching product
           footer:
             type: text
             text: Your service bot
@@ -2122,7 +2122,7 @@ components:
             text: What about?
           body:
             type: text
-            text: According to your query we found this matching products
+            text: According to your query, we found this matching products
           footer:
             type: text
             text: Your service bot
