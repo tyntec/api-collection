@@ -138,7 +138,7 @@ components:
         enabled:
           type: boolean
           description: Whitelisting restriction is enabled or not for this account
-          example: "false"
+          example: false
         whiteList:
           type: array
           items:
