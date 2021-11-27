@@ -187,7 +187,7 @@ components:
               key:
                 type: string
                 description: The authentication token
-          description: If the whitelist restriction is enabled or not for this account.
+          description: The keys that are active for this account
           example:
             - id: deadbeef-b111-111f-8c6e-05f1fd3f825c
               key: ABCDEFG1234567890ABCDEFG1234567890
