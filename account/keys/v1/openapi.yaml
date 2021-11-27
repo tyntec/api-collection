@@ -188,13 +188,9 @@ components:
                 type: string
                 description: The authentication token
           description: If the whitelist restriction is enabled or not for this account.
-          example: |
-            [
-              {
-                "id": "deadbeef-b111-111f-8c6e-05f1fd3f825c",
-                "key": "ABCDEFG1234567890ABCDEFG1234567890"
-              }
-            ] 
+          example:
+            - id: deadbeef-b111-111f-8c6e-05f1fd3f825c
+              key: ABCDEFG1234567890ABCDEFG1234567890
     Problem:
       type: object
       additionalProperties: true
