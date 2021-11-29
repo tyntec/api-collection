@@ -324,7 +324,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/apiKeyResponse'
-  /keys/currrent:
+  /keys/current:
     get:
       summary: Current API key
       tags:
