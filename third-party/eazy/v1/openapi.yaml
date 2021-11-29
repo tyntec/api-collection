@@ -330,7 +330,7 @@ paths:
       tags:
         - 'API Keys'
       operationId: currentApiKey
-      description: A specific agent can be requested
+      description: The current key can be retrieved using the GET method.
       responses:
         200:
           description: OK
