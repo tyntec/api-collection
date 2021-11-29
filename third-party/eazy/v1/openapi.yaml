@@ -323,7 +323,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/apiKeyResponse'
+                  $ref: '#/components/schemas/apiKeyResponse'
   /keys/currrent:
     get:
       summary: Current API key
@@ -337,7 +337,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/apiKeyResponse'
+                $ref: '#/components/schemas/apiKeyResponse'
   /companies:
     get:
       summary: List all companies
@@ -443,7 +443,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/agentResponse'
+                $ref: '#/components/schemas/agentResponse'
   /companies/{companyId}/teams:
     post:
       summary: Create a team
@@ -479,7 +479,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/teamResponse'
+                $ref: '#/components/schemas/teamResponse'
     get:
       summary: List all teams
       tags:
@@ -656,7 +656,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/assistantResponse'
+                $ref: '#/components/schemas/assistantResponse'
   /companies/{companyId}/labels:
     post:
       summary: Create a label
@@ -694,7 +694,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/labelResponse'
+                $ref: '#/components/schemas/labelResponse'
     get:
       summary: List all labels
       tags:
@@ -717,7 +717,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/labelResponse'
+                  $ref: '#/components/schemas/labelResponse'
   /companies/{companyId}/labels/{jid}:
     patch:
       summary: Update a label
@@ -766,7 +766,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/labelResponse'
+                $ref: '#/components/schemas/labelResponse'
     delete:
       summary: Delete a label
       tags:
@@ -964,7 +964,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/autoMessageResponse'
+                $ref: '#/components/schemas/autoMessageResponse'
   /channels/{channelJid}/contacts:
     post:
       summary: Create a contact
@@ -1213,7 +1213,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/commentResponse'
+                $ref: '#/components/schemas/commentResponse'
   /channels/{channelJid}/conversations/{contactJid}:
     get:
       summary: Read a conversation
@@ -1326,7 +1326,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/listResponse'
+                  $ref: '#/components/schemas/listResponse'
   /channels/{channelJid}/lists/{listJid}/{contactJid}:
     post:
       summary: Add a contact to a list
