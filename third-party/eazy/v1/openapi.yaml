@@ -2296,27 +2296,27 @@ components:
             format: email
             example: company@domail.com
     apiKeyResponse:
-      description: Current API key response
+      description: The current API key response
       type: object
       properties:
         cipherKey:
           description: Cipher Key
           type: string
         description:
-          description: Description for the key or usage of the key
+          description: A description of the key or usage of the key
           type: string
           example: 'Test environment'
         id:
-          description: Id of the key
+          description: The ID of the key
           type: string
           example: '509000e9-05c9-43a9-b6f1-70f1c6a5448a'
         lastUsed:
-          description: When the key last used
+          description: When the key was last used
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
         objects:
-          description: Array of objects. Check example on the right
+          description: An array of objects. Check the example on the right
           type: array
           items:
             type: array
@@ -2330,7 +2330,7 @@ components:
           type: string
           example: 'CHANNEL'
         whitelist:
-          description: Array of whitelisted IPs. Check example on the right
+          description: An array of whitelisted IPs. Check the example on the right
           type: array
           items:
             type: string
