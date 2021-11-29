@@ -83,7 +83,7 @@ info:
   x-repository: https://github.com/tyntec/api-collection/blob/master/third-party/eazy
   x-major-version: v1
 servers:
-  - url: https://api.cmd.tyntec.com/
+  - url: https://api.cmd.tyntec.com/v3
 security:
   - bearerAuth: []
 tags:
