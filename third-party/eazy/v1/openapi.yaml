@@ -443,7 +443,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/agentsResponse'
+                $ref: '#/components/responses/agentResponse'
   /companies/{companyId}/teams:
     post:
       summary: Create a team
