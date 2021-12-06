@@ -2456,6 +2456,22 @@ components:
           description: Type of the contact
           type: string
           example: 'INDIVIDUAL'
+    name:
+      description: "The contact's name"
+      type: object
+      properties:
+        firstName: 
+          description: "The contact's first name"
+          type: string
+          example: 'John'
+        fullName:
+          description: "The contact's full name"
+          type: string
+          example: 'John Doe'
+        lastName:
+          description: "The contact's last name"
+          type: string
+          example: 'Doe'
     conversationResponse:
       description: Conversation response
       type: object
