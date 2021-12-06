@@ -2778,8 +2778,8 @@ components:
           type: array
           description: List of channels the quick reply is assigned to
           items:
-            - type: string
-              example: 123152345245@whatsapp.eazy.im
+            type: string
+            example: 123152345245@whatsapp.eazy.im
         message:
           type: string
           description: Message of the quick reply
