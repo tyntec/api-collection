@@ -2390,7 +2390,7 @@ components:
       type: object
       properties:
         dataRetentionInDays:
-          description: Body/text of the message
+          description: Data retention time in days
           type: integer
           example: 90
         jid:
