@@ -1868,7 +1868,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/qrCodesResponse'
+                  $ref: '#/components/schemas/qrCodeResponse'
     post:
       summary: Create a QR code
       tags:
