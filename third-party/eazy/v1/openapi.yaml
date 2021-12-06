@@ -2526,12 +2526,10 @@ components:
           description: Number of unread messages
           type: integer
           example: 5
-    emailsResponse:
-      description: List all email addresses
-      type: array
-      items:
-        $ref: '#/components/schemas/email'
-      example: [jane@mycompany1.com, jo@mycompany1.com, john@company2.com]
+    email:
+      description: An email address
+      type: string
+      example: jane@mycompany1.com
     labelResponse:
       description: Single Label Response
       type: object
