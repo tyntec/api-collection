@@ -2087,7 +2087,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/webhooksResponse'
+                  $ref: '#/components/schemas/webhookResponse'
     post:
       summary: Create a webhook
       tags:
