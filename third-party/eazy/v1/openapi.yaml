@@ -2485,7 +2485,7 @@ components:
           description: Labels of the conversation
           type: array
           items:
-            $ref: '#/components/schemas/allLabelsResponse'
+            $ref: '#/components/schemas/labelResponse'
         lastMessageReceivedAt:
           description: Date and time the last message is received
           type: string
