@@ -2319,12 +2319,10 @@ components:
           description: Array of objects. Check example on the right
           type: array
           items:
-            type: array
-            items:
-              type: string
+            type: object
             example:
-              - "'jid': '31612345678@tyntec.com'"
-              - "'type': 'CHANNEL'"
+              jid: '31612345678@tyntec.com'
+              type: 'CHANNEL'
         scope:
           description: The scope of this key
           type: string
