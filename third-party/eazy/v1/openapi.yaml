@@ -2697,7 +2697,7 @@ components:
           description: Array of event on the webhooks
           type: array
           items:
-            $ref: '#/components/schemas/events'
+            $ref: '#/components/schemas/event'
         headers:
           description: Header parameters
           type: object
@@ -2716,6 +2716,10 @@ components:
           description: URL of the webhook
           type: string
           example: "https://your.company.com/webhook"
+    event:
+      description: An event
+      type: string
+      example: "message"
     businessProfile:
       description: WhatsApp for Business profile response
       type: object
