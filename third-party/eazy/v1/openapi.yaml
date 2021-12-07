@@ -1541,7 +1541,7 @@ paths:
         - 'Messaging'
       description: |
         To receive messages, create an endpoint on your webserver that will be able to process POST requests
-        and subscribe its URL via [Webhook Configuration](#webhook-configuration) to the "message" events.
+        and subscribe its URL via [Webhook Configuration](#support-inbox-api-webhook-configuration) to the "message" events.
 
         **Note:** The path above is only an example, you may choose your URL freely.
   /channels/{channelJid}/contacts/{contactJid}/notes:
