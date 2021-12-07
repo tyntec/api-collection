@@ -1450,8 +1450,8 @@ paths:
 
         | **Element** | **Value**	 | **Mandatory**	| **Description**         |
         | ---         | ---        | ---              | ---                     |
-        | latitude	| float	Y	 | Latitude         | coordinate              |
-        | longitude	| float	Y	 | Longitude        | coordinate              |
+        | latitude	| float		 | Y                | Latitude coordinate     |
+        | longitude	| float		 | Y                | Longitude coordinate    |
         | name	    | string	 | N                | Name of the location    |
         | type	    | "location" | Y                | Message type            |
         | url	        | string	 | N                | Website URL             |
