@@ -202,6 +202,10 @@ paths:
           description: Your prefered HTTP method for the Delivery Report callback; possible values POST/GET
           schema:
             type: string
+            enum:
+              - POST
+              - GET
+            default: POST
         - name: partLimit
           in: query
           description: Up to how many parts you allow this message to be concatenated
