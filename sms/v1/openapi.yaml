@@ -185,8 +185,8 @@ paths:
           in: query
           description: Validity in minutes for this message
           schema:
-            type: string
-            default: "2880"
+            type: number
+            default: 2880
         - name: reference
           in: query
           description: A custom reference that will mark the Delivery Report
@@ -1384,8 +1384,8 @@ components:
           type: string
         validity:
           description: Message validity in minutes
-          type: string
-          default: "2880"
+          type: number
+          default: 2880
         reference:
           description: Customer reference attached to the Delivery Reports
           type: string
