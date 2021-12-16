@@ -1092,7 +1092,7 @@ components:
         originMNC:
           type: string
           description: Representative MNC (Mobile Network Code) of the originating network
-          example: 09
+          example: "09"
         originTtId:
           type: string
           description: Operator's tyntec ID
