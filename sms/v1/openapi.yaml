@@ -1205,7 +1205,7 @@ components:
         originTtId:
           type: string
           description: Operator's tyntec ID
-          example: 77292
+          example: "77292"
         totalPrice:
           type: number
           description: Sum of prices for each message part listed in “contentList”
