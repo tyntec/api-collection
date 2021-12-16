@@ -482,9 +482,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "401":
           description: Unauthorized
           content:
