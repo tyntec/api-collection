@@ -435,9 +435,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+                $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
             "*/*":
               schema:
                 type: array
