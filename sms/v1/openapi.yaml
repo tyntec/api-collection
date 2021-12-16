@@ -436,11 +436,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
           content:
@@ -463,9 +458,6 @@ paths:
           description: Something went wrong. :-(
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   "/byon/phonebook/v1/numbers/{phoneNumber}":
@@ -493,11 +485,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
           content:
@@ -520,9 +507,6 @@ paths:
           description: Something went wrong. :-(
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   /byon/contacts/v1:
@@ -551,11 +535,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ContactArrayResponse"
         "204":
           description: Empty list; no contacts were found for this friendly name.
         "401":
@@ -582,9 +561,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
         - BYON Contact Service
@@ -600,9 +576,6 @@ paths:
           description: Created
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "400":
@@ -635,9 +608,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   "/byon/contacts/v1/{contactId}":
     get:
       tags:
@@ -659,9 +629,6 @@ paths:
           description: The contact
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "401":
@@ -688,9 +655,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
         - BYON Contact Service
@@ -713,9 +677,6 @@ paths:
           description: The edited contact
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "400":
@@ -748,9 +709,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags:
         - BYON Contact Service
@@ -771,9 +729,6 @@ paths:
           description: The deleted contact
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "400":
@@ -804,9 +759,6 @@ paths:
           description: Something went wrong. :-(
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   /byon/provisioning/v1:
@@ -842,11 +794,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "204":
           description: Empty list; no phone provisioning requests were found.
         "401":
@@ -871,9 +818,6 @@ paths:
           description: Something went wrong. :-(
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
@@ -917,9 +861,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
           description: Your request was not valid.
           content:
@@ -950,9 +891,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   "/byon/provisioning/v1/{requestId}":
     get:
       tags:
@@ -976,9 +914,6 @@ paths:
           description: Provisioning request
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
@@ -1009,9 +944,6 @@ paths:
           description: Something went wrong. :-(
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   '/messaging/v1/conversion':
