@@ -1197,7 +1197,7 @@ components:
         originMCC:
           type: string
           description: Representative MCC (Mobile Country Code) of the originating network
-          example: 260
+          example: "260"
         originMNC:
           type: string
           description: Representative MNC (Mobile Network Code) of the originating network
