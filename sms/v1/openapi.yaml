@@ -1134,7 +1134,7 @@ components:
           description: Requestor's title
           type: string
         friendlyName:
-          description: List filter based on the friendlyName field
+          description: Friendly name
           type: string
     ConversionEvent:
       type: object
