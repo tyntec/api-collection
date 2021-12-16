@@ -394,6 +394,8 @@ paths:
       description:
         Returns all phone numbers created with your API key; you can specify
         attributes to filter the results. The size limit is 3000.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllPhoneNumbersForAccountUsingGET
       parameters:
         - name: requestId
@@ -470,6 +472,8 @@ paths:
         - BYON Phone Book Service
       summary: Read a phone number
       description: Returns details of the specific phone number entity created with your API key.
+      security:
+        - ApiKeyHeader: []
       operationId: getPhoneNumberForAccountUsingGET
       parameters:
         - name: phoneNumber
@@ -528,6 +532,8 @@ paths:
         Returns all contacts created with your API key; you can get the contact ID
         from the list for editing or deleting the contact. You can specify
         `friendlyName` to filter the results.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllContactsWithFriendlyNameUsingGET
       parameters:
         - name: friendlyName
@@ -584,6 +590,8 @@ paths:
         - BYON Contact Service
       summary: Create a contact
       description: Creates a new contact.
+      security:
+        - ApiKeyHeader: []
       operationId: createContactUsingPOST
       requestBody:
         $ref: "#/components/requestBodies/ContactEntity"
@@ -647,6 +655,8 @@ paths:
         - BYON Contact Service
       summary: Read a contact
       description: Returns the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: getContactUsingGET
       parameters:
         - name: contactId
@@ -697,6 +707,8 @@ paths:
         - BYON Contact Service
       summary: Edit a contact
       description: Edits the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: editContactUsingPOST
       parameters:
         - name: contactId
@@ -757,6 +769,8 @@ paths:
         - BYON Contact Service
       summary: Delete a contact
       description: Deletes the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: deleteContactUsingDELETE
       parameters:
         - name: contactId
@@ -818,6 +832,8 @@ paths:
       description: |
         Returns all phone numbers for which provisioning requests were created.
         You can specify _friendlyName_ or _contactId_ for filtering the results.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllProvisioningPhoneNumbersForAccountUsingGET
       parameters:
         - name: friendlyName
@@ -891,6 +907,8 @@ paths:
         - BYON Number Service
       summary: Register phones
       description: New phone batch registration service for registering multiple numbers
+      security:
+        - ApiKeyHeader: []
       operationId: createPhoneProvisioningRequestUsingPOST
       parameters:
         - name: friendlyName
@@ -980,6 +998,8 @@ paths:
       description:
         Returns the details of the provisioning request for the provided
         requestId.
+      security:
+        - ApiKeyHeader: []
       operationId: getProvisioningRequestUsingGET
       parameters:
         - name: requestId
@@ -1037,7 +1057,7 @@ paths:
         - SMS Conversion
       summary: Conversion report
       security:
-        - APIKeyHeader: []
+        - ApiKeyHeader: []
       operationId: conversionReportPOST
       description: |
         Report either successful or un-successful conversion event for a message.
