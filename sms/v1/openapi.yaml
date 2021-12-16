@@ -596,19 +596,8 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/ContactEntity"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
         "201":
           description: Created
-        "202":
-          description: The contact was created.
           content:
             application/json:
               schema:
@@ -729,8 +718,6 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
-        "201":
-          description: Created
         "400":
           description: Contact can not be edited.
           content:
@@ -789,8 +776,6 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
-        "204":
-          description: No Content
         "400":
           description: Contact can not be deleted.
           content:
@@ -864,17 +849,6 @@ paths:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "204":
           description: Empty list; no phone provisioning requests were found.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
           content:
@@ -937,19 +911,8 @@ paths:
             - country (only optional if the phone number already has included the country code)
         required: true
       responses:
-        "200":
-          description: List of applications
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "201":
           description: Created
-        "204":
-          description: Empty list; no applications were found for your account.
           content:
             application/json:
               schema:
