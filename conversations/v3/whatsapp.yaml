@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: WhatsApp
   description: |
-    Conversations allows you to easily send messages to your customers via  WhatsApp
+    The Conversations API allows you to easily send messages to your customers via  WhatsApp
 
     **Channel specific pre-conditions**
 

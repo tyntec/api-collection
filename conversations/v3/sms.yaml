@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: SMS
   description: |
-    Conversations allows you to easily reach out and communicate with your clients via 2-way SMS.
+    The Conversations API allows you to easily reach out and communicate with your clients via 2-way SMS.
 
     **Channel specific pre-conditions**
 
