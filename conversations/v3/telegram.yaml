@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: Telegram (Beta)
   description: |
-    Conversations allows you to easily reach out and communicate with  your clients via Telegram Bots.
+    The Conversations API allows you to easily reach out and communicate with your clients via Telegram Bots.
 
     For beta access, please reach out to [onboarding@tyntec.com](mailto:onboarding@tyntec.com)
 

@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: Viber
   description: |
-    Conversations allows you to easily send messages to your customers via Viber.
+    The Conversations API allows you to easily send messages to your customers via Viber.
 
     **Channel specific pre-conditions**
 
