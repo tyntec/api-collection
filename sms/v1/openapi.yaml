@@ -64,7 +64,7 @@ paths:
         Sends an SMS via the POST HTTP method with parameters defined in the request body.
       responses:
         "200":
-          description: The messageIds of your request
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
@@ -256,7 +256,7 @@ paths:
             default: false
       responses:
         "200":
-          description: The messageIds of your request
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
@@ -319,7 +319,7 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
