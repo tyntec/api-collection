@@ -990,7 +990,7 @@ components:
           description: Requestor's title
           type: string
         friendlyName:
-          description: List filter based on the friendlyName field
+          description: Contact's friendly name
           type: string
     ConversionEvent:
       type: object
