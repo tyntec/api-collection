@@ -48,8 +48,8 @@ tags:
     description: API for sending notifications to the partners
   - name: SMS Conversion
     description: |
-      SMS Conversion is a term used in the SMS world to describe the messages that actually received from the end user.
-      tyntec is providing an endpoint for real time conversion events reporting where customers can report if a message
+      SMS Conversion is a term used in the SMS world to describe the messages that actually were received from the end user.
+      tyntec is providing an endpoint for real time conversion events reporting where customers can report if a message was
       received or not received by the end user.
 paths:
   /messaging/v1/sms:
