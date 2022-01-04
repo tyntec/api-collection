@@ -1008,7 +1008,7 @@ components:
           default: true
         timestamp:
           type: string
-          description: The timestamp when the message converted. If empty conversion timestamp will be set tp the timestamp of the event received in the API
+          description: The timestamp when the message was converted. If empty, the conversion timestamp is set to the timestamp of the event received in the API
           format: date-time
           example: '2018-06-01T00:00:00+0200'
     ErrorResponse:
