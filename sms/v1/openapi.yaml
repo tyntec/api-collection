@@ -424,7 +424,7 @@ paths:
             format: int32
         - name: size
           in: query
-          description: List filter based on the size field
+          description: Size of the page
           required: false
           schema:
             type: integer
