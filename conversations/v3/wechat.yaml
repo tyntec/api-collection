@@ -258,7 +258,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -268,7 +268,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: WeChat
           items:
             type: string
@@ -278,7 +278,7 @@ components:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           oneOf:
@@ -304,7 +304,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -314,7 +314,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: wechat
           items:
             type: string
