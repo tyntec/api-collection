@@ -154,7 +154,7 @@ components:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
