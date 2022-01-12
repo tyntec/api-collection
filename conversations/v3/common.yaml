@@ -282,19 +282,19 @@ components:
         format: uuid
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the bulk request
+      description: The response after the server has accepted the bulk request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     MessageStatus:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
@@ -417,12 +417,12 @@ components:
         messageId:
           type: string
           format: uuid
-          description: Global unique Message Id reference
+          description: A global unique Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         acceptedAt:
           type: string
           format: date-time
-          description: Point in time when the API confirms that the message request was accepted
+          description: A point in time when the API confirms that the message request was accepted
     MessageStatus:
       type: object
       properties:

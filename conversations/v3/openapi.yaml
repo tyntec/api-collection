@@ -45,7 +45,7 @@ paths:
 components:
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/problem+json:
           schema:
