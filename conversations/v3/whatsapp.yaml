@@ -745,7 +745,7 @@ components:
       name: phone-number
       in: path
       required: true
-      description: Phone number used for WhatsApp messaging.
+      description: The phone number used for WhatsApp messaging
       schema:
         type: integer
         minLength: 4
@@ -754,7 +754,7 @@ components:
     PhoneNumberQuery:
       name: phone-number
       in: query
-      description: Phone number used for WhatsApp messaging.
+      description: The phone number used for WhatsApp messaging
       schema:
         type: integer
         minLength: 4
