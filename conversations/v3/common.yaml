@@ -41,7 +41,7 @@ info:
     e.g. `https://rest.customer.com/messagestatus/`. This URL must serve a webhook able to process POST HTTP requests,
     which the tyntec system will fire upon events in the system, in this case upon message status updates.
 
-    You may also configure a opt-in filter on one or more `MessageStatus::*` event types in the tyntec
+    You may also configure an opt-in filter on one or more `MessageStatus::*` event types in the tyntec
     application, see [Webhook Configuration](#configurations) and [Webhook Events](#webhook-events).
     The set of available event types slightly varies on each channel:
 
