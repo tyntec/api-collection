@@ -142,13 +142,13 @@ components:
       example: 398vsnbkj3
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
