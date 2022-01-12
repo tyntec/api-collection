@@ -248,7 +248,7 @@ paths:
                 type: string
                 format: binary
         404:
-          description: The media associated with the id does not exists in our system
+          description: The media associated with the id does not exist in our system
           content:
             application/problem+json:
               schema:
