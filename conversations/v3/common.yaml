@@ -266,7 +266,7 @@ components:
   parameters:
     MessageId:
       required: true
-      description: Message id provided by tyntec
+      description: The message id provided by tyntec
       name: messageId
       in: path
       schema:
