@@ -813,7 +813,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     MoMessageNotFound:
-      description: No MoMessage found for the given Message ID.
+      description: No MoMessage was found for the given Message ID.
       content:
         application/problem+json:
           schema:
