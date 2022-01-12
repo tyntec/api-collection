@@ -309,7 +309,7 @@ components:
               $ref: '#/components/schemas/MediaResponse'
             minItems: 0
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
