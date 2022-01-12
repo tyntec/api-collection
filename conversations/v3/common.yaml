@@ -217,7 +217,7 @@ paths:
         - "Outbound media (Beta)"
       responses:
         204:
-          description: The assiciated media was successfully deleted
+          description: The associated media was successfully deleted
         default:
           $ref: '#/components/responses/Default'
     get:
