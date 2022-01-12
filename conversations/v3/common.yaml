@@ -110,13 +110,13 @@ tags:
       As an alternative to the download of outbound media on message requests, we enable you to upload a media file
       and use it later when sending messages.
 
-      After an successful upload we generate an ID which is used as an alternative to the media URL.
+      After a successful upload, we generate an ID that is used as an alternative to the media URL.
 
       The uploaded media can be stored
 
       - as a static asset
       - only for a certain period
-      - for one time usage
+      - for one-time usage
 
       As this is in beta, we grant access to it only via an approved access request.
 paths:
