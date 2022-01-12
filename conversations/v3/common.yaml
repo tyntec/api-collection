@@ -7,8 +7,8 @@ info:
     The Conversations API works as a wrapper for messaging on varied channels and aims to provide a common data model
     unified to the greatest possible extent.
 
-    Here are some guidelines on the general usage.
-    For details about interaction on a particular channel, please refer to the channel specific section.
+    Here are some guidelines on general usage.
+    For details about interaction on a particular channel, please refer to the channel-specific section.
 
     ### Sending messages
 
