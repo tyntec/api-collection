@@ -194,7 +194,7 @@ paths:
               schema:
                 type: integer
             x-page-size:
-              description: Maximum number of items per page
+              description: The maximum number of items per page
               schema:
                 type: integer
             x-current-page:
@@ -255,7 +255,7 @@ paths:
               schema:
                 type: integer
             x-page-size:
-              description: Maximum number of items per page
+              description: The maximum number of items per page
               schema:
                 type: integer
             x-current-page:
@@ -299,7 +299,7 @@ paths:
               schema:
                 type: integer
             x-page-size:
-              description: Maximum number of items per page
+              description: The maximum number of items per page
               schema:
                 type: integer
             x-current-page:
@@ -469,7 +469,7 @@ paths:
               schema:
                 type: integer
             x-page-size:
-              description: Maximum number of items per page
+              description: The maximum number of items per page
               schema:
                 type: integer
             x-current-page:
@@ -531,7 +531,7 @@ paths:
               schema:
                 type: integer
             x-page-size:
-              description: Maximum number of items per page
+              description: The maximum number of items per page
               schema:
                 type: integer
             x-current-page:
