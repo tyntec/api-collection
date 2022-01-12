@@ -42,17 +42,17 @@ info:
     The Conversations API uses the concept of scopes to control access to different aspects of your Conversations account and
     channels available to you.
 
-    Scopes are devided into two distinct classes `read` and  `write`.
+    Scopes are divided into two distinct classes `read` and  `write`.
 
-    `read` grants you read only access - `GET` http calls - .
+    `read` grants you read-only access - `GET` HTTP calls -.
 
-    `write` provides access to data modification or message submission - `POST`, `PUT`, `DELETE` http calls -.
+    `write` provides access to data modification or message submission - `POST`, `PATCH`, `PUT`, `DELETE` HTTP calls -.
 
     Scopes are used on 2 layers, your API key account and the channels available to it.
 
     You can inspect the scopes available to both layers by fetching the information via [Configurations](#configurations).
 
-    We reserve us the right to revoke any granted scope in case we do detect abusive usage of the API.
+    We reserve the right to revoke any granted scope in case we do detect abusive usage of the API.
 
     ## Adhered web standards
 
