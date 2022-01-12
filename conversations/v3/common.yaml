@@ -13,17 +13,17 @@ info:
     ### Sending messages
 
     All channels use the same endpoint and generic data model for requests to send messages. However, the components
-    of messages beyond plain text are channel specific. Some channels enforce special policies and restrictions,
-    for example the WhatsApp channel, and you need to watch that you comply with them in the context of your use case.
+    of messages beyond plain text are channel-specific. Some channels enforce special policies and restrictions,
+    for example, the WhatsApp channel, and you need to watch that you comply with them in the context of your use case.
 
     <!-- NOTE Channels are expected to be used separately, not in cascades anymore (discontinued in the next version) -->
 
-    For details on the channels, please refer to the channel specific section.
+    For details on the channels, please refer to the channel-specific section.
 
     **Media and other non-text content**
 
-    Some channels allow you to attach images, video, audio, stickers, buttons or URLs.
-    These kinds of content are channel specific.
+    Some channels allow you to attach images, video, audio, stickers, buttons, or URLs.
+    These kinds of content are channel-specific.
 
     **Bulk messaging**
 
