@@ -1609,26 +1609,26 @@ components:
 
     Contact:
       type: object
-      description: Contact object
+      description: A contact object
       properties:
         birthday:
           type: string
-          description: Birthday of the contact
+          description: The birthday of the contact
           example:
             2018-01-01
         addresses:
           type: array
-          description: List of addresses assigned to the contact
+          description: A list of addresses assigned to the contact
           items:
             $ref: '#/components/schemas/Address'
         emails:
           type: array
-          description: List of emails assigned to the contact
+          description: A list of emails assigned to the contact
           items:
             $ref: '#/components/schemas/Email'
         ims:
           type: array
-          description: List of IMS accounts assigned to the contact
+          description: A list of IMS accounts assigned to the contact
           items:
             $ref: '#/components/schemas/IMS'
         name:
@@ -1637,68 +1637,68 @@ components:
           $ref: '#/components/schemas/Organisation'
         phones:
           type: array
-          description: List of phone numbers assigned to the contact
+          description: A list of phone numbers assigned to the contact
           items:
             $ref: '#/components/schemas/ContactPhone'
         urls:
           type: array
-          description: List of urls assigned to the contact
+          description: A list of URLs assigned to the contact
           items:
             $ref: '#/components/schemas/ContactUrl'
     Address:
       type: object
-      description: Address of a contact
+      description: An address of a contact
       properties:
         city:
           type: string
-          description: City name
+          description: The city name
           example: Dortmund
         country:
           type: string
-          description: Full country name
+          description: The full country name
           example: Germany
         countryCode:
           type: string
-          description: Two-letter code abbreviation
+          description: The two-letter code abbreviation
           example: de
         state:
           type: string
-          description: State abbreviation
+          description: The state abbreviation
           example: NRW
         street:
           type: string
-          description: Street name and number
+          description: The street name and number
         type:
           type: string
-          description: Type of the address
+          description: The type of address
           example: WORK
         zip:
           type: string
-          description: ZIP or postal code
+          description: The ZIP or postal code
           example: "44231"
     Email:
       type: object
-      description: Email of the contact
+      description: An email of the contact
       properties:
         email:
           type: string
-          description: Email address
+          description: The email address
           example: whatsapp@tyntec.com
         type:
           type: string
-          description: Type of the email
+          description: The type of email
           example: WORK
     IMS:
       type: object
-      description: IMS of the contact
+      description: An IMS of the contact
       properties:
         service:
           type: string
-          description: Type of the service
+          description: The type of the the service
           example: WhatsApp
         userId:
           type: string
-          description: IMS user id
+          description: The IMS user id
           example: "123123123"
     Name:
       type: object
@@ -1709,67 +1709,67 @@ components:
       properties:
         prefix:
           type: string
-          description: Prefix of the contacts name
+          description: A prefix of the contact's name
           example: Mr.
         firstName:
           type: string
-          description: First name of the contact
+          description: The first name of the contact
           example: Peter
         middleName:
           type: string
-          description: Middle name of the contact
+          description: The middle name of the contact
           example: Michael
         lastName:
           type: string
-          description: Last name of the contact
+          description: The last name of the contact
           example: Tyntec
         suffix:
           type: string
-          description: Suffix of the contacts name
+          description: A suffix of the contact's name
           example: senior
         formattedName:
           type: string
-          description: Completely formatted name
+          description: The completely formatted name
           example: Mr. Peter Michael Tyntec senior
     Organisation:
       type: object
-      description: Organisation associated with the contact
+      description: An organisation associated with the contact
       properties:
         company:
           type: string
-          description: Name of the contact's company
+          description: The name of the contact's company
           example: tyntec GmbH
         department:
           type: string
-          description: Name of the contact's department
+          description: The name of the contact's department
           example: Development
         title:
           type: string
-          description: Contact's business title
+          description: The contact's business title
           example: API Guardian
     ContactPhone:
       type: object
-      description: Phone entry of a contact
+      description: A phone entry of a contact
       properties:
         phone:
           type: string
-          description: Phone number
+          description: The phone number
           example: +49 231 477 90 813
         type:
           type: string
-          description: Type of phone number
+          description: The type of phone number
           example: WORK
     ContactUrl:
       type: object
-      description: URL of a contact
+      description: An URL of a contact
       properties:
         url:
           type: string
-          description: URL of a contact
+          description: The URL of a contact
           example: https://www.tyntec.com
         type:
           type: string
-          description: Type of URL
+          description: The type of URL
           example: WORK
 
     # Templated messages
