@@ -1486,7 +1486,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
     WhatsAppInteractiveFooterContent:
       type: object
-      description: Footer of an interactive message
+      description: The footer of an interactive message
       required:
         - type
         - text
@@ -1827,7 +1827,7 @@ components:
           $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentExample'
     WhatsAppTemplateTextHeaderComponentExample:
       type: object
-      description: Example of the header text
+      description: An example of the header text
       properties:
         text:
           type: string
@@ -1957,7 +1957,7 @@ components:
         payload:
           type: string
           maxLength: 128
-          description: Payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+          description: A payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
     UrlButtonComponent:
       type: object
       description: This type can be used up to one time
@@ -1968,7 +1968,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the buttpon. Always _url_.
+          description: Determines the type of the button. Always _url_.
           enum:
             - url
         index:
@@ -1979,7 +1979,7 @@ components:
         text:
           type: string
           maxLength: 2000
-          description: Which text should be append to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+          description: Which text should be appended to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
 
     #
     # Interactive messages
@@ -2161,37 +2161,37 @@ components:
             $ref: '#/components/schemas/WhatsAppInteractiveButton'
     WhatsAppInteractiveButton:
       type: object
-      description: Interactive message button
+      description: An interactive message button
       required:
         - type
         - reply
       properties:
         type:
           type: string
-          description: Type of the button. Always "reply"
+          description: The type of button. Always "reply"
           enum:
             - reply
         reply:
           type: object
-          description: Reply button specification
+          description: The reply button specification
           required:
             - payload
             - title
           properties:
             payload:
               type: string
-              description: ID of the reply button. Must be unique within the same messaging request
+              description: The ID of the reply button. Must be unique within the same messaging request
               minLength: 1
               maxLength: 256
             title:
               type: string
-              description: Caption or title of the button
+              description: The caption or title of the button
               maxLength: 24
               minLength: 1
     WhatsAppInteractiveListComponents:
       type: object
       description: |
-        List message component. It can have at most 10 rows distributed over at most 10 sections
+        A list message component. It can have at most 10 rows distributed over at most 10 sections
       required:
         - body
         - list
@@ -2207,7 +2207,7 @@ components:
     WhatsAppInteractiveListContent:
       type: object
       description: |
-        Definition of a WhatsApp interactive list
+        A definition of a WhatsApp interactive list
       required:
         - title
         - sections
@@ -2226,13 +2226,13 @@ components:
     WhatsAppListSection:
       type: object
       description: |
-        Section of a list message.
+        A section of a list message.
       required:
         - rows
       properties:
         title:
           type: string
-          description: Title of the section mandatory in case of multiple sections
+          description: The title of the section mandatory in case of multiple sections
           maxLength: 24
           minLength: 1
         rows:
@@ -2244,30 +2244,30 @@ components:
             $ref: '#/components/schemas/WhatsAppListSectionRow'
     WhatsAppListSectionRow:
       type: object
-      description: Row item of a list message
+      description: A row item of a list message
       required:
         - payload
         - title
       properties:
         payload:
           type: string
-          description: ID of the item, must be unique within the request
+          description: The ID of the item, must be unique within the request
           minLength: 1
           maxLength: 24
         title:
           type: string
-          description: Caption of the item in the list
+          description: The caption of the item in the list
           minLength: 1
           maxLength: 24
         description:
           type: string
-          description: Optional description of the item
+          description: An optional description of the item
           minLength: 1
           maxLength: 72
 
     WhatsAppInteractiveProductComponents:
       type: object
-      description: Interactive Product Component
+      description: An interactive Product Component
       required:
         - body
         - product
@@ -2278,24 +2278,24 @@ components:
           $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
         product:
           type: object
-          description: Product specification to be send to the customer
+          description: A product specification to be sent to the customer
           required:
             - catalogId
             - productId
           properties:
             catalogId:
-              description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
+              description: The Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
               type: string
               example: "12432134"
             productId:
-              description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
+              description: The Own Product ID or SKU for the product. Must be configured on the Facebook catalog
               type: string
               example: Test SKU
 
     WhatsAppInteractiveProductListComponents:
       type: object
       description: |
-        Product List message component. It can have at most 30 products distributed over at most 10 sections
+        A Product List message component. It can have at most 30 products distributed over at most 10 sections
       required:
         - header
         - body
@@ -2312,14 +2312,14 @@ components:
     WhatsAppInteractiveProductListContent:
       type: object
       description: |
-        Definition of a WhatsApp  product list
+        The definition of a WhatsApp product list
       required:
         - title
         - sections
       properties:
         catalogId:
           type: string
-          description: Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
+          description: The Catalog ID of the Facebook catalog, must be linked to the WhatsApp business account
           example: 2134432423
         sections:
           type: array
@@ -2331,13 +2331,13 @@ components:
     WhatsAppProductListSection:
         type: object
         description: |
-          Section of a product list message.
+          A section of a product list message.
         required:
           - items
         properties:
           title:
             type: string
-            description: Title of the section mandatory in case of multiple sections
+            description: The title of the section mandatory in case of multiple sections
             maxLength: 24
             minLength: 1
           items:
@@ -2349,12 +2349,12 @@ components:
               $ref: '#/components/schemas/WhatsAppProductListItem'
     WhatsAppProductListItem:
       type: object
-      description: Singel Item on the product list
+      description: A single item on the product list
       required:
         - productId
       properties:
         productId:
-          description: Own Product ID or SKU for the product. Must be configured on the Facebook catalog
+          description: The Own Product ID or SKU for the product. Must be configured on the Facebook catalog
           type: string
           example: Test SKU
     #
@@ -2370,17 +2370,17 @@ components:
         address:
           type: string
           maxLength: 256
-          description: Address of the business
+          description: The address of the business
           example: Hofmannstrasse 25 - 27, 81379 Munich, Germany
         description:
           type: string
           maxLength: 256
-          description: Brief introduction of the business
+          description: A brief introduction of the business
           example: tyntec WhatsApp Business API Demo
         email:
           type: string
           maxLength: 128
-          description: Contact mail address
+          description: The contact mail address
           example: support@tyntec.com
         websites:
           type: array
@@ -2413,7 +2413,7 @@ components:
             - Travel and Transportation
             - Restaurant
             - Other
-          description: Industry of the business
+          description: The industry of the business
           example: Professional Services
         about:
           type: string
@@ -2431,7 +2431,7 @@ components:
         about: Hey there! I am using WhatsApp.
     WhatsAppMessageStatusUpdate:
       type: object
-      description: Change in the message status of a previously sent WhatsApp message
+      description: A change in the message status of a previously sent WhatsApp message
       properties:
         status:
           type: string
@@ -2440,17 +2440,17 @@ components:
             - read
     WhatsAppProfileLogoLink:
       type: object
-      description: Link to the profile logo
+      description: A link to the profile logo
       required:
         - link
       properties:
         link:
           type: string
-          description: Link to the profile logo
+          description: The link to the profile logo
           example: https://pps.whatsapp.net/v/123123
     WhatsAppAccounts:
       type: array
-      description: List of WhatsApp Business Accounts. Might be empty
+      description: A list of WhatsApp Business Accounts. Might be empty
       items:
         $ref: '#/components/schemas/WhatsAppAccount'
     WhatsAppAccount:
@@ -2461,23 +2461,23 @@ components:
       properties:
         whatsAppAccountId:
           type: string
-          description: ID of the WhatsApp Business Account
+          description: The ID of the WhatsApp Business Account
           format: uuid
           example:
             5637b8a7-51e1-47be-ad0b-b242453dcc1b
         whatsAppAccountName:
           type: string
-          description: Name of the WhatsApp Business Account
+          description: The name of the WhatsApp Business Account
           example:
             Swagger Sample Account
         businessName:
           type: string
-          description: Name of the business owning the Facebook Business Manager
+          description: The name of the business owning the Facebook Business Manager
           example:
             Swagger Sample business
         templateNamespace:
           description: |
-            Template namespace assigned to the WhatsApp Business Account.
+            A template namespace assigned to the WhatsApp Business Account.
 
             This is used internally and here stated for completeness.
           type: string
@@ -2494,7 +2494,7 @@ components:
         accountStatus:
           $ref: '#/components/schemas/WhatsAppAccountStatus'
         managedBy:
-          description: Account that can manage (edit, ...) an entity
+          description: The account that can manage (edit, ...) the entity
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
       example:
@@ -2509,7 +2509,7 @@ components:
           accountName: tynteccpaas
     WhatsAppPhoneNumbers:
       type: array
-      description: List of phone numbers at WhatsApp. Might be empty
+      description: A list of phone numbers on WhatsApp. Might be empty
       items:
         $ref: '#/components/schemas/WhatsAppPhoneNumber'
     WhatsAppPhoneNumber:
@@ -2529,7 +2529,7 @@ components:
         verifiedName:
           type: string
           description: |
-            The name shown aside to the number.
+            The name shown next to the number.
 
             This name will be shown immediately for Official Business Accounts.
           example:
@@ -2549,7 +2549,7 @@ components:
             GREEN
         status:
           type: string
-          description: Status of the number
+          description: The status of the number
           enum:
             - CONNECTED
             - PENDING
@@ -2560,15 +2560,15 @@ components:
             CONNECTED
         whatsAppAccountId:
           type: string
-          description: ID of the WhatsApp Business Account the number belongs to.
+          description: The ID of the WhatsApp Business Account the number belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         managedBy:
-          description: Account that can manage (edit, ...) an entity
+          description: The account that can manage (edit, ...) the entity
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
         messagingVia:
-          description: Account that must be used for messaging
+          description: The account that must be used for messaging
           allOf:
             - $ref: '#/components/schemas/CPaaSAccount'
         messagingTier:
@@ -2598,12 +2598,12 @@ components:
       properties:
         accountName:
           type: string
-          description: Name of the CPaaSAccount
+          description: The name of the CPaaSAccount
       example:
         accountName: someaccount
     WhatsAppTemplateRequest:
       type: object
-      description: Request for an additional WhatsApp template
+      description: A request for an additional WhatsApp template
       required:
         - name
         - category
@@ -2611,7 +2611,7 @@ components:
       properties:
         name:
           type: string
-          description: Name of the template
+          description: The name of the template
         category:
           $ref: '#/components/schemas/TemplateCategory'
         localizations:
@@ -2622,7 +2622,7 @@ components:
           minItems: 1
     LocalizationRequest:
       type: object
-      description: Request for a new localization of a template
+      description: A request for a new localization of a template
       required:
         - language
         - components
@@ -2636,7 +2636,7 @@ components:
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
     NotificationTemplateRequest:
       type: array
-      description: Request for a standard template (notification) without rich media components
+      description: A request for a standard template (notification) without rich media components
 
       items:
         type: object
@@ -2647,7 +2647,7 @@ components:
         properties:
           type:
             type: string
-            description: Template component type. Always BODY
+            description: The template component type. Always BODY
             enum:
               - BODY
             default: BODY
@@ -2661,7 +2661,7 @@ components:
       minLength: 1
     RichMediaTemplateRequest:
       type: array
-      description: Rich media template definition. Must contain at least the body component
+      description: A rich media template definition. Must contain at least the body component
       items:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentRequest'
@@ -2671,14 +2671,14 @@ components:
       minItems: 1
     WhatsAppTemplateHeaderComponentRequest:
       type: object
-      description: Header component of a template
+      description: A header component of a template
       oneOf:
         - $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponentRequest'
         - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
         - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponentRequest'
     WhatsAppTemplateTextHeaderComponentRequest:
       type: object
-      description: Text header component of a template
+      description: A text header component of a template
       required:
         - type
         - format
@@ -2692,14 +2692,14 @@ components:
           example: HEADER
         format:
           type: string
-          description: Which kind of header
+          description: What kind of header
           enum:
             - TEXT
           example:
             TEXT
         text:
           type: string
-          description: Text that should be displayed as header. Can contain 1 variable
+          description: The text that should be displayed as the header. Can contain 1 variable
           maxLength: 60
           example: Hi {{1}}
         example:
@@ -2712,16 +2712,16 @@ components:
           text: John Doe
     WhatsAppTemplateTextHeaderComponentRequestExample:
       type: object
-      description: Example of the header text
+      description: An example of the header text
       properties:
         text:
           type: string
           maxLength: 60
-          description: Example text
+          description: An example text
           example: John Doe
     WhatsAppTemplateLocationHeaderComponentRequest:
       type: object
-      description: Location header component of a template
+      description: A location header component of a template
       required:
         - type
         - format
@@ -2734,14 +2734,14 @@ components:
           example: HEADER
         format:
           type: string
-          description: Which kind of header
+          description: What kind of header
           enum:
             - LOCATION
           example:
             LOCATION
     WhatsAppTemplateMediaHeaderComponentRequest:
       type: object
-      description: Media header component of a template
+      description: A media header component of a template
       required:
         - type
         - format
@@ -2753,7 +2753,7 @@ components:
             - HEADER
         format:
           type: string
-          description: Which kind of header
+          description: What kind of header
           enum:
             - IMAGE
             - DOCUMENT
@@ -2769,17 +2769,17 @@ components:
           url: https://www.my.com/image.jpg
     WhatsAppTemplateMediaHeaderComponentRequestExample:
       type: object
-      description: Example of a media
+      description: An example of a media
       properties:
         url:
           type: string
           maxLength: 255
-          description: URL of the example media file
+          description: The URL of the example media file
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
           example: https://www.my.com/image.jpg
     WhatsAppTemplateBodyComponentRequest:
       type: object
-      description: Body component of a template
+      description: A body component of a template
       required:
         - type
         - text
@@ -2791,7 +2791,7 @@ components:
             - BODY
         text:
           type: string
-          description: Specification of the body text (1--1024 chars)
+          description: The specification of the body text (1--1024 chars)
           maxLength: 1024
           minLength: 1
           example:
@@ -2807,13 +2807,13 @@ components:
            - 123
     WhatsAppTemplateBodyComponentRequestExample:
       type: object
-      description: Examples of the body parameters. All parameters of the body must have an example
+      description: Examples of body parameters. All parameters of the body must have an example
       required:
         - texts
       properties:
         texts:
           type: array
-          description: Examples of the body parameters
+          description: Examples of body parameters
           items:
             type: string
             maxLength: 100
@@ -2823,7 +2823,7 @@ components:
 
     WhatsAppTemplateFooterComponentRequest:
       type: object
-      description: Footer component of a template
+      description: A footer component of a template
       required:
         - type
         - text
@@ -2835,14 +2835,14 @@ components:
             - FOOTER
         text:
           type: string
-          description: Specification of the footer text (1--60 chars)
+          description: The specification of the footer text (1--60 chars)
           maxLength: 60
           minLength: 1
           example:
             The specification team
     WhatsAppTemplateButtonComponentRequest:
       type: object
-      description: Button component of a template
+      description: A button component of a template
       required:
         - type
         - buttons
@@ -2865,20 +2865,20 @@ components:
       maxItems: 3
     WhatsAppQuickReplyButton:
       type: object
-      description: Quick reply button, when clicked the caption and the dynamic payload is returned.
+      description: A quick reply button, when clicked the caption and the dynamic payload are returned.
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of this button
+          description: The type of this button
           enum:
             - QUICK_REPLY
           example: QUICK_REPLY
         text:
           type: string
-          description: Caption of the button
+          description: The caption of the button
           maxLength: 20
           minLength: 1
           example: I liked it!
@@ -2893,26 +2893,26 @@ components:
       maxItems: 2
     WhatsAppURLButton:
       type: object
-      description: Call to action button that opens the specified URL when clicked
+      description: A call to action button that opens the specified URL when clicked
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of this button
+          description: The type of this button
           enum:
             - URL
           example: URL
         text:
           type: string
-          description: Caption of the button
+          description: The caption of the button
           maxLength: 20
           minLength: 1
           example: Your invoice
         url:
           type: string
-          description: the URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
+          description: The URL that will be openend when clicking on the button. Can contain 1 parameter at the end.
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+(\{\{1\}\})?
           example: https://www.myservice.com/invoices/{{1}}
         example:
@@ -2925,67 +2925,67 @@ components:
           url: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppURLButtonExample:
       type: object
-      description: Example for a **dynamic** URL button.
+      description: An example of a **dynamic** URL button.
       properties:
         url:
           type: string
-          description: Example for a **dynamic** URL button. Must start with the same base url as the url button
+          description: An example of a **dynamic** URL button. Must start with the same base url as the url button
           maxLength: 255
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+
           example: https://www.myservice.com/invoices/9424a5c5-9089-4142-9cd2-0365383ce387.pdf
     WhatsAppPhoneNumberButton:
       type: object
-      description: Call to action button that initiates a call when clicked
+      description: A call to action button that initiates a call when clicked
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Type of this button
+          description: The type of this button
           enum:
             - PHONE_NUMBER
           example: PHONE_NUMBER
         text:
           type: string
-          description: Caption of this button
+          description: The caption for this button
           maxLength: 20
           minLength: 1
           example: Call us
         phoneNumber:
           type: string
-          description: Phone number that will be called when clicking on the button.
+          description: The phone number that will be called when clicking on the button.
           pattern: ^\+\d{4,23}$
           example: "+4923147790813"
     WhatsAppTemplates:
       type: array
-      description: List of WhatsApp templates
+      description: A list of WhatsApp templates
       items:
         $ref: '#/components/schemas/WhatsAppTemplateResponse'
     WhatsAppTemplateResponse:
       type: object
-      description: WhatsApp template
+      description: A WhatsApp template
       properties:
         whatsAppAccountId:
           type: string
-          description: ID of the WhatsApp Business Account the template belongs to.
+          description: The ID of the WhatsApp Business Account the template belongs to.
           format: uuid
           example: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         templateName:
           type: string
-          description: Name of the template
+          description: The name of the template
           example:
             swagger_test
         templateId:
           type: string
-          description: ID of the template
+          description: The ID of the template
           example:
             swagger_test
         category:
           $ref: '#/components/schemas/TemplateCategory'
         localízations:
           type: array
-          description: List of localizations of this templates
+          description: The list of localizations of this template
           items:
             $ref: '#/components/schemas/LocalizationResponse'
           example:
@@ -3012,7 +3012,7 @@ components:
                 text: Your specification team!
     LocalizationResponse:
       type: object
-      description: Localization of a template
+      description: A localization of a template
       required:
         - status
         - language
@@ -3074,19 +3074,19 @@ components:
           $ref: '#/components/schemas/QualityScore'
     WhatsAppTemplateHeaderComponentResponse:
       type: object
-      description: Header component of a template
+      description: A header component of a template
       required:
         - type
         - format
       properties:
         type:
           type: string
-          description: Component type
+          description: A component type
           enum:
             - HEADER
         format:
           type: string
-          description: Which kind of header
+          description: What kind of header
           enum:
             - IMAGE
             - TEXT
@@ -3100,41 +3100,41 @@ components:
           example: Hi {{1}}!
     WhatsAppTemplateBodyComponentResponse:
       type: object
-      description: Body component of a template
+      description: A body component of a template
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Component type
+          description: A component type
           enum:
             - BODY
         text:
           type: string
-          description: Specification of the body text
+          description: The specification of the body text
           example:
             Hi {{1}}! Enjoy the spec!
     WhatsAppTemplateFooterComponentResponse:
       type: object
-      description: Footer component of a template
+      description: A footer component of a template
       required:
         - type
         - text
       properties:
         type:
           type: string
-          description: Component type
+          description: A component type
           enum:
             - FOOTER
         text:
           type: string
-          description: Specification of the footer text
+          description: The specification of the footer text
           example:
             The specification team
     TemplateCategory:
       type: string
-      description: Category of the template
+      description: The category of the template
       enum:
         - ACCOUNT_UPDATE
         - ALERT_UPDATE
