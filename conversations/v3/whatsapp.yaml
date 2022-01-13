@@ -49,11 +49,11 @@ tags:
     description: |
       Template management enables you to interact with the templates defined for your WhatsApp account.
 
-      You can specify examples for the parameters on each localization. This is advised to increase the chance of
-      acceptance of templates. If you use examples, all dynamic parts of the template, like media header or body parameters
+      You can specify examples for the parameters of each localization. This is advised to increase the chance of
+      acceptance of templates. If you use examples, all dynamic parts of the template, like media header or body parameters,
       must be specified.
 
-      It's advised to do this at least for the media templates, as WhatsApp has changed the policies due abuse of
+      It's advised to do this at least for the media templates, as WhatsApp has changed the policies due to abuse of
       media headers to distribute spam / inappropriate content.
 
       We support creating or deleting templates and adding new localizations to an existing template.
