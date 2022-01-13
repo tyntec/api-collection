@@ -584,7 +584,7 @@ paths:
     get:
       operationId: getCurrentWAProfile
       summary: Read the profile
-      description: Returns profile settings of a WhatsApp phone number
+      description: Returns the profile settings of a WhatsApp phone number
       tags:
         - "Profile management"
       responses:
