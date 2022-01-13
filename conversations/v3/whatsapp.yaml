@@ -887,7 +887,7 @@ components:
           schema:
             $ref: '#/components/schemas/WhatsAppChannelResponses'
     WhatsAppChannelResponse:
-      description: WhatsApp phone number configuration
+      description: The WhatsApp phone number configuration
       content:
         application/json:
           schema:
