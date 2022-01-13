@@ -382,11 +382,11 @@ components:
         - media:write
     Callback:
       type: object
-      description: Configuration of callbacks to your system
+      description: A configuration of callbacks to your system
       properties:
         callbackVersion:
           type: string
-          description: Event version to be used.
+          description: The event version to be used.
           enum:
             - "2.11"
             - "2.12"
@@ -397,18 +397,18 @@ components:
           $ref: '#/components/schemas/Header'
         inboundMessageUrl:
           type: string
-          description: Webhook for events related to inbound messages
+          description: A webhook for events related to inbound messages
           pattern: "^https://.*"
           maxLength: 2000
         messageStatusUrl:
           type: string
-          description: Webhook for events related to message status changes
+          description: A webhook for events related to message status changes
           pattern: "^https://.*"
           maxLength: 2000
         eventFilter:
           type: array
           description: |
-            List of status events to listen on. If empty all events are submitted.
+            A list of status events to listen to. If empty, all events are submitted.
           items:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
@@ -427,7 +427,7 @@ components:
     Signature:
       type: object
       description: |
-        Signature configuration for incoming events. Can be disabled by setting the
+        A signature configuration for incoming events. Can be disabled by setting the
         signature property to empty.
       required:
         - secret
@@ -435,32 +435,32 @@ components:
       properties:
         secret:
           type: string
-          description: Shared secret key
+          description: A shared secret key
           minLength: 8
           maxLength: 125
         method:
           type: string
-          description: cryptographic algorithm used for the signature calculation
+          description: A cryptographic algorithm used for signature calculation
           enum:
             - HS256
             - HS512
     Header:
       type: object
       description: |
-        Additional custom header to be send with the event transmission. Can be used for setting
+        An additional custom header to be sent with the event transmission. Can be used for setting
         authentication tokens, or similar.
       required:
         - key
         - value
       properties:
         key:
-          description: name of the http header
+          description: The name of the HTTP header
           type: string
           minLength: 4
           maxLength: 125
         value:
           type: string
-          description: value of the http header
+          description: The value of the HTTP header
           minLength: 8
           maxLength: 1024
     DetailedAccountConfig:
@@ -552,27 +552,27 @@ components:
         - media:write
     ChannelCallback:
       type: object
-      description: Configuration of callbacks to your system
+      description: A configuration of callbacks to your system
       properties:
         callbackVersion:
           type: string
-          description: Event version to be used.
+          description: The event version to be used.
           enum:
             - "2.11"
         inboundMessageUrl:
           type: string
-          description: Webhook for events related to inbound messages
+          description: A webhook for events related to inbound messages
           pattern: "^https://.*"
           maxLength: 2000
         messageStatusUrl:
           type: string
-          description: Webhook for events related to message status changes
+          description: A webhook for events related to message status changes
           pattern: "^https://.*"
           maxLength: 2000
         eventFilter:
           type: array
           description: |
-            List of status events to listen on. If empty all events are submitted.
+            A list of status events to listen to. If empty, all events are submitted.
           items:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
