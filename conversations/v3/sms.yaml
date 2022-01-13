@@ -29,7 +29,7 @@ tags:
       List all phone numbers configured as Inbound (aka 2-way) Phone Numbers.
   - name: "Callback configuration"
     description: |
-      In this section, we guide you on how to configure the callbacks on a per channel bases.
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
 
       At the moment this is only supported for Inbound Phone Numbers.
 

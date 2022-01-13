@@ -41,7 +41,7 @@ tags:
       List all Service IDs configured for your API account.
   - name: "Callback configuration"
     description: |
-      In this section, we guide you on how to configure the callbacks on a per channel bases.
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
 paths:
   /messages:
     post:
@@ -127,7 +127,7 @@ paths:
         - "Callback configuration"
       summary: Update the callback
       operationId: updateViberChannelCallback
-      description: Update the callback settings of a specific viber channel.
+      description: Update the callback settings of a specific Service ID.
       requestBody:
         content:
           application/json:

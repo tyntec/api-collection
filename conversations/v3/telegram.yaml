@@ -27,7 +27,7 @@ tags:
       List all Telegram IDs configured for your API account.
   - name: "Callback configuration"
     description: |
-      In this section, we guide you on how to configure the callbacks on a per channel bases.
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
 paths:
   /messages:
     post:
@@ -112,8 +112,8 @@ paths:
       tags:
         - "Callback configuration"
       summary: Update the callback
-      operationId: updateWeChatChannelCallback
-      description: Update the callback settings of a specific WeChat ID.
+      operationId: updateTelegramChannelCallback
+      description: Update the callback settings of a specific Telegram Bot ID.
       requestBody:
         content:
           application/json:
