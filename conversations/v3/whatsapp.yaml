@@ -3023,7 +3023,7 @@ components:
         status:
           type: string
           description: |
-            Status of the localization.
+            The status of the localization.
           enum:
             - REQUESTED
             - SUBMIT_FAILED
@@ -3037,14 +3037,14 @@ components:
             DELETED
         rejectionReason:
           type: string
-          description: Descriptive text in the case the status is REJECTED
+          description: The descriptive text in the case the status is REJECTED
           example:
             not yet
         language:
           $ref: '#/components/schemas/LanguageCode'
         components:
           type: array
-          description: Set of components defining a template
+          description: A set of components defining a template
           items:
             anyOf:
               - $ref: '#/components/schemas/WhatsAppTemplateHeaderComponentResponse'
@@ -3066,7 +3066,7 @@ components:
         expiresAt:
           type: string
           description: |
-            When does the localization expire.
+            When the localization expires.
             Only present when a template was deleted.
           format: date-time
           example: 2020-03-15T23:28:34.442Z
@@ -3149,7 +3149,7 @@ components:
         - TRANSPORTATION_UPDATE
     LanguageCode:
       type: string
-      description: Supported language codes, according to [Supported Languages](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+      description: The supported language codes, according to [Supported Languages](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
       enum:
         - af
         - ar
@@ -3276,8 +3276,8 @@ components:
         reasons:
           type: array
           description: |
-            Textual description why the quality score is set to the value.
-            Only present when score is YELLOW or RED
+            A textual description of why the quality score is set to the value.
+            Only present when the score is YELLOW or RED
           items:
             type: string
       example:
