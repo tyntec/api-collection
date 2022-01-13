@@ -673,7 +673,7 @@ paths:
         - "Profile management"
       requestBody:
         required: true
-        description: Image that should be used as the profile logo
+        description: The image that should be used as the profile logo
         content:
           image/png:
             schema:
