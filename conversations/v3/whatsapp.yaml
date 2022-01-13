@@ -66,7 +66,7 @@ tags:
       It also provides *read* access to the templates usable with the phone number.
   - name: "Profile management"
     description: |
-      Profile management allows you to read and update profile settings of your WhatsApp phone numbers.
+      Profile management allows you to read and update the profile settings of your WhatsApp phone numbers.
   - name: "Phone Number Configurations"
     description: |
       List all phone numbers configured as Inbound (aka 2-way) Phone Numbers.
