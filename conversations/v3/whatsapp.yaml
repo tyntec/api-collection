@@ -1522,16 +1522,16 @@ components:
     BaseMedia:
       type: object
       description: |
-        Base object handling media definitions for sending.
+        A base object handling media definitions for sending.
 
         One of both properties _url_ or _mediaId_ **must** be set
       properties:
         url:
           type: string
-          description: the url of the location where the media is stored
+          description: The URL of the location where the media is stored
         mediaId:
           type: string
-          description: Media id of a previously uploaded media
+          description: The media id of previously uploaded media
           format: uuid
     WhatsAppImage:
       type: object
