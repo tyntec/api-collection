@@ -23,20 +23,20 @@ info:
     The Conversations API can provide you with a message signature that encrypts the actual event
     content with a keyed-hash message authentication code [HMAC](https://en.wikipedia.org/wiki/HMAC).
 
-    The signature is transfered in the header `x-signature` as a Base64 URL encoded value.
+    The signature is transferred in the header `x-signature` as a Base64 URL encoded value.
 
-    As a preparation both parties need to align on
+    As a preparation, both parties need to align on
 
     - the algorithm used
     - the shared secret
 
-    With these information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`)
-    and the actual event we calculate the signature.
+    With this information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`),
+    and the actual event, we calculate the signature.
 
-    If you want to check if the message has been tampered on transmission you need to calculate the
+    If you want to check if the message has been tampered on the transmission, you need to calculate the
     signature yourself and compare it with the signature provided in the header `x-signature`.
 
-    The following pseudo code examples show you how to calculate the signature
+    The following pseudo-code examples show you how to calculate the signature
 
     **Signature version: V1.0**
 
@@ -59,7 +59,7 @@ info:
       fi
     </pre>
 
-    We advise as well to verify if the request timestamp is not too old (couple of minutes at most) and discard
+    We advise as well to verify if the request timestamp is not too old (a couple of minutes at most) and discard
     the message otherwise.
 
     ## Callback Overiding Rules
