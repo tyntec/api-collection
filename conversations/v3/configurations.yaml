@@ -171,7 +171,7 @@ paths:
       description: Returns the configuration of the API account
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -190,7 +190,7 @@ paths:
               $ref: '#/components/schemas/Callback'
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -209,7 +209,7 @@ paths:
               $ref: '#/components/schemas/MediaCredentials'
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -222,7 +222,7 @@ paths:
       description: Remove the media credentials of the account.
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -357,7 +357,7 @@ components:
   schemas:
     AccountConfiguration:
       type: object
-      description: Configuration of an API account
+      description: A configuration of an API account
       properties:
         scopes:
           type: array
