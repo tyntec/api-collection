@@ -6,13 +6,13 @@ info:
     url: http://www.tyntec.com/support
     email: support@tyntec.com
   description: |
-    The Configurations allows you to setup certain parts of settings on account or channel level.
+    The Configurations allows you to set up certain parts of settings on account or channel level.
 
-    Included are callback settings, credentials (where appropriate) and a signature for incoming events.
+    Included are callback settings, credentials (where appropriate), and a signature for incoming events.
 
     ## Credentials
 
-    Some channels require you to provide tyntec with credentials, for example telegram bots or WeChat applications.
+    Some channels require you to provide tyntec with credentials, for example, telegram bots or WeChat applications.
     The Conversations API allows you to configure these credentials via the API directly
 
     ## Signature
