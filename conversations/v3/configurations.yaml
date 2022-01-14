@@ -155,7 +155,7 @@ security:
 tags:
   - name: "API Account Configurations"
     description: |
-      API Account configurations allows you to configure settings global to your API account.
+      API Account configurations allow you to configure settings global to your API account.
   - name: "Channel Configurations"
     description: |
         Channel Account configurations allows you to configure settings local to a specific channel.
