@@ -158,9 +158,9 @@ tags:
       API Account configurations allow you to configure settings global to your API account.
   - name: "Channel Configurations"
     description: |
-        Channel Account configurations allows you to configure settings local to a specific channel.
+        Channel Account configurations allow you to configure settings local to a specific channel.
 
-        A channel here is refered as a the identity you use to send messages to your clients.
+        A channel here is referred to as the identity you use to send messages to your clients.
 paths:
   /configurations:
     get:
