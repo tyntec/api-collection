@@ -480,7 +480,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the credentials. Always _oauth2_.
+          description: Determines the type of credentials. Always _oauth2_.
           enum:
             - oauth2
         oauth2:
@@ -501,7 +501,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the credentials. Always _basic_.
+          description: Determines the type of credentials. Always _basic_.
           enum:
             - basic
         basic:
