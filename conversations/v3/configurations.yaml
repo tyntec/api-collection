@@ -727,25 +727,25 @@ components:
     #
     PhoneNumberId:
       type: object
-      description: Definition of the Phone Number Id
+      description: The definition of the Phone Number Id
       properties:
         phoneNumber:
           type: string
     ServiceId:
       type: object
-      description: Definition of the Viber Service id
+      description: The definition of the Viber Service id
       properties:
         serviceId:
           type: string
     WeChatId:
       type: object
-      description: Definition of the WeChat id
+      description: The definition of the WeChat id
       properties:
         weChatId:
           type: string
     TelegramId:
       type: object
-      description: Definition of the Telegram id
+      description: The definition of the Telegram id
       properties:
         botId:
           type: string
