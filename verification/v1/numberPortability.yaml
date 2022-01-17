@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Number Portability API
   description: |
-    tyntec's Number Portability is a service that resolves weither a phone number is ported to a different operator than the one originally issued this phone number. Information is obtained through data provided directly from local number portability databases and live network information from across the globe.
+    tyntec's Number Portability is a service that resolves whether a phone number is ported to a different operator than the one originally issued this phone number. Information is obtained through data provided directly from local number portability databases and live network information from across the globe.
   version: '1.0'
   contact:
     name: tyntec API Support
@@ -26,8 +26,8 @@ paths:
         - "Number Portability"
       summary: Number Portability check
       description: |
-        Many mobile subscribers are moving their phone numbers to a different mobile operators. This is called Portabilty in the telecom terminology.
-        Number Portability check provides information weither a phone number is ported to a different mobile operator and who is the new operator.
+        Many mobile subscribers are moving their phone numbers to different mobile operators. This is called Portability in the telecom terminology.
+        Number Portability check provides information on whether a phone number is ported to a different mobile operator and who is the new operator.
       operationId: gnpRequestGET
       parameters:
         - in: query

@@ -1,8 +1,6 @@
 openapi: 3.0.3
 info:
   title: "Phone Verification API - beta"
-  description: |
-    This is openAPI file for the prototype
   version: '0.1'
   contact:
     name: tyntec API Support
@@ -16,13 +14,13 @@ servers:
 tags:
   - name: "Phone Verification"
     description: |
-      Phone Verification service aims to provide information regarding the validity and the trustworthyness of a phone number.
+      Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
       This information comes in the form of a Risk Index about the phone number. The following risk classifications are applied
 
-      - **High:** The phone number considered as high risk number and customers should avoid contacting this number
-      - **Medium:** The phone number is generally considered legitimate number, but be countious when contacting this phone number
-      - **Low:** The phone number considered as legitimate number and customers should feel confident to contact this number
-  - name: metadata
+      - **High:** The phone number is considered a high-risk number and customers should avoid contacting this number
+      - **Medium:** The phone number is generally considered a legitimate number, but be cautious when contacting this phone number
+      - **Low:** The phone number is considered a legitimate number and customers should feel confident to contact this number
+  - name: Metadata
     description: REST health and version endpoints
 paths:
   /number/{number}:
@@ -31,7 +29,7 @@ paths:
         - "Phone Verification"
       summary: Verify Number
       description: |
-        Phone Verification service aims to provide information regarding the validity and the trustworthyness of a phone number.
+        Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
       operationId: phoneVerificationGET
       parameters:
         - name: number
@@ -46,7 +44,7 @@ paths:
         - apiKey: []
       responses:
         200:
-          description: Valid request
+          description: A valid request
           content:
             application/json:
               schema:
@@ -66,8 +64,8 @@ paths:
   /health:
     get:
       tags:
-        - metadata
-      summary: Phone Verification API Health
+        - Metadata
+      summary: Phone Verification API health
       operationId: getPhoneVerificationHealth
       parameters:
         - name: apiKey
@@ -94,14 +92,14 @@ paths:
   /version:
     get:
       tags:
-        - metadata
+        - Metadata
       summary: Phone Verification API version
       operationId: getVersion
       security:
         - apiKey: []
       responses:
         200:
-          description: Current API version
+          description: The current API version
           content:
             application/json:
               schema:
@@ -175,14 +173,14 @@ components:
         error:
           type: string
           example: "No API key found in request"
-          description: Error message of unsuccessful request
+          description: An error message of an unsuccessful request
     errorResponse403:
       type: object
       properties:
         error:
           type: string
           example: "Invalid authentication credentials"
-          description: Error message of unsuccessful request
+          description: An error message of an unsuccessful request
   securitySchemes:
     apiKey:
       type: apiKey
