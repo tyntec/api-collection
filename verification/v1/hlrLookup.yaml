@@ -46,11 +46,11 @@ paths:
           description: |
             The asynchronous response can be triggered by this request parameter.
 
-            In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for the maximum of 48 hours.
+            In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for a maximum of 48 hours.
           example: https://my.callback.io/gnv-response
       responses:
         '200':
-          description: Successful GNV response
+          description: A successful GNV response
           content:
             application/json:
               schema:
@@ -69,7 +69,7 @@ paths:
 components:
   responses:
     BadRequest:
-      description: Error in MSISDN or in callback URL
+      description: An error in MSISDN or in the callback URL
       content:
         application/json:
           schema:
@@ -156,22 +156,22 @@ components:
         nrhMCC:
           type: string
           description: |
-            Representative MCC (Mobile Country Code) of the NRH's network (Number Range Holder)
+            A representative MCC (Mobile Country Code) of the NRH's network (Number Range Holder)
           example: "262"
         nrhMNC:
           type: string
           description: |
-            Representative MNCs (Mobile Network Codes) of the NRH's network
+            A representative MNCs (Mobile Network Codes) of the NRH's network
           example: "02"
         nrhTtId:
           type: string
           description: |
-            Respective tyntec ID of the NRH
+            The respective tyntec ID of the NRH
           example: "15"
         nrhOperator:
           type: string
           description: |
-            Human-readable name of the NRH
+            A human-readable name of the NRH
           example: "Vodafone"
         nrhCountry:
           type: string
@@ -191,12 +191,12 @@ components:
         imsiMCC:
           type: string
           description: |
-            MCC of the subscriber's IMSI (International Mobile Subscriber Identity)
+            The MCC of the subscriber's IMSI (International Mobile Subscriber Identity)
           example: "262"
         imsiMNC:
           type: string
           description: |
-            MNC of the subscriber's IMSI
+            The MNC of the subscriber's IMSI
           example: "02"
         imsi:
           type: string
@@ -205,12 +205,12 @@ components:
         imsiTtId:
           type: string
           description: |
-            Respective tyntec ID of the subscription network operator
+            The respective tyntec ID of the subscription network operator
           example: "15"
         imsiOperator:
           type: string
           description: |
-            Human-readable name of the subscription network operator
+            A human-readable name of the subscription network operator
           example: "Vodafone"
         imsiCountry:
           type: string
@@ -220,7 +220,7 @@ components:
         imsiTimeZone:
           type: string
           description: |
-            Local time zone of the subscription network, relative to UTC
+            The local time zone of the subscription network, relative to UTC
           example: "+0100"
         imsiTechnology:
           type: string
@@ -240,26 +240,26 @@ components:
         hlrMCC:
           type: string
           description: |
-            Representative MCC of the HLR's operator
+            A representative MCC of the HLR's operator
           example: "262"
         hlrMNC:
           type: string
           description: |
-            Representative MNC of the HLR's operator
+            A representative MNC of the HLR's operator
           example: "02"
         hlr:
           type: string
           description: |
-            Representative Home Location Register
+            The representative Home Location Register
         hlrTtId:
           type: string
           description: |
-            Respective tyntec ID of the operator's HLR
+            The respective tyntec ID of the operator's HLR
           example: "15"
         hlrOperator:
           type: string
           description: |
-            Human-readable name of operator's HLR
+            A human-readable name of the operator's HLR
           example: "Vodafone"
         hlrCountry:
           type: string
@@ -269,7 +269,7 @@ components:
         hlrTimeZone:
           type: string
           description: |
-            Local time zone of the HLR, relative to UTC; +HH:mm (according to ISO 8601)
+            The local time zone of the HLR, relative to UTC; +HH:mm (according to ISO 8601)
           example: "+0100"
         hlrTechnology:
           type: string
@@ -289,26 +289,26 @@ components:
         mscMCC:
           type: string
           description: |
-            Representative MCC of the operator's MSC
+            A representative MCC of the operator's MSC
           example: "262"
         mscMNC:
           type: string
           description: |
-            Representative MNC of the operator's MSC
+            A representative MNC of the operator's MSC
           example: "02"
         msc:
           type: string
           description: |
-            Representative Mobile Switching Center
+            The representative Mobile Switching Center
         mscTtId:
           type: string
           description: |
-            Respective tyntec ID of the operator's MSC
+            The respective tyntec ID of the operator's MSC
           example: "15"
         mscOperator:
           type: string
           description: |
-            Human-readable name of operator's MSC
+            A human-readable name of the operator's MSC
           example: "Vodafone"
         mscCountry:
           type: string
@@ -318,7 +318,7 @@ components:
         mscTimeZone:
           type: string
           description: |
-            Local time zone of the MSC, relative to UTC; +HH:mm (according to ISO 8601)
+            The local time zone of the MSC, relative to UTC; +HH:mm (according to ISO 8601)
           example: "+0100"
         mscTechnology:
           type: string
