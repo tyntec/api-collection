@@ -1174,7 +1174,7 @@ components:
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
-          description: Short, human-readable summary of the problem type
+          description: A short, human-readable summary of the problem type
           type: string
           example: The given data were not parsable.
         status:
