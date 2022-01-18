@@ -2121,7 +2121,7 @@ paths:
                     type: string
                     example: "message"
                 url:
-                  description: URL of the webhook
+                  description: The webhook's URL
                   type: string
                   format: uri
                   example: 'https://your.company.com/webhook'
