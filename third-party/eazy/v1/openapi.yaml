@@ -396,7 +396,7 @@ paths:
       tags:
         - 'Company Management'
       operationId: allAgents
-      description: A list of all agents can be retrieved using the GET method. The objects field specifies to which objects the key has access to. IP whitelisting can be used to restrict originating IP addresses.
+      description: A list of all agents can be retrieved using the GET method. The objects field specifies to which objects the key has access. IP whitelisting can be used to restrict originating IP addresses.
       parameters:
         - in: path
           name: companyId
@@ -2254,23 +2254,23 @@ components:
       type: object
       properties:
         email:
-          description: email address
+          description: The agent's email address
           type: string
           example: jane@mycompany.com
         name:
-          description: Name
+          description: The agent's name
           type: object
           properties:
             firstName:
-              description: First Name of the Agent
+              description: The agent's first name
               type: string
               example: Jane
             fullName:
-              description: Full Name of the Agent
+              description: The agent's full name
               type: string
               example: Jane Mayers
             lastName:
-              description: Last Name of the Agent
+              description: The agent's last name
               type: string
               example: Mayers
         roles:
@@ -2282,7 +2282,7 @@ components:
             - admin
             - user
         status:
-          description: Status of the agent
+          description: The agent's availability status
           type: string
           enum:
             - OFFLINE
