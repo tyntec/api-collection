@@ -935,7 +935,7 @@ paths:
         - in: path
           name: type
           required: true
-          description: Type of automated message
+          description: The type of automated message
           schema:
             type: string
             enum:
@@ -951,7 +951,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text of the automated message
+                  description: The text of the automated message
                   type: string
                   example: 'Sorry, we are currently closed. Your question will be answered as soon as possible.'
                 enabled:
