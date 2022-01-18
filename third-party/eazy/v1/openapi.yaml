@@ -1829,11 +1829,11 @@ paths:
                   type: object
                   properties:
                     description:
-                      description: Description of the profile
+                      description: The description of the profile
                       type: string
                       example: "YourCompany Ltd."
                     email:
-                      description: email address associated with the WhatsApp for business profile
+                      description: The email address associated with the WhatsApp for business profile
                       type: string
                       format: email
                       example: "info@your-company.com"
