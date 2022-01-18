@@ -847,10 +847,10 @@ paths:
               type: object
               properties:
                 name:
-                  description: Name of the channel
+                  description: The channel's name
                   type: integer
                 priority:
-                  description: Priority of the channel
+                  description: The channel's priority
                   type: integer
       responses:
         200:
