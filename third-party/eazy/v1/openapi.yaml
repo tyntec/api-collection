@@ -2674,18 +2674,18 @@ components:
           type: string
           example: "Support"
     webhookResponse:
-      description: Webhook response
+      description: A webhook response
       type: object
       properties:
         assistant:
-          description: Assistant to the agents
+          description: An assistant to the agents
           type: string
           example: 'john@mycompany.com'
         cipherKey:
-          description: Cipher key to be used in the webhook
+          description: A cipher key to be used in the webhook
           type: string
         createdAt:
-          description: Date and time the Webhook is created
+          description: The date and time that the webhook is created
           type: string
           format: date-time
           example: '2019-04-04T15:29:47.000000Z'
@@ -2694,7 +2694,7 @@ components:
           type: boolean
           example: true
         events:
-          description: Array of event on the webhooks
+          description: An array of events on the webhooks
           type: array
           items:
             $ref: '#/components/schemas/events'
@@ -2704,16 +2704,16 @@ components:
           items:
             example: "'Authorization': 'Bearer SomeApiKey'"
         id:
-          description: ID of the event
+          description: The ID of the event
           type: string
           example: '8520d8d6-7b28-4d6f-8631-ecd528a0246d'
         updatedAt:
-          description: Date and time that the last message is sent
+          description: The date and time that the last message is sent
           type: string
           format: date-time
           example: '2019-04-07T17:12:00.000000Z'
         url:
-          description: URL of the webhook
+          description: The URL of the webhook
           type: string
           example: "https://your.company.com/webhook"
     businessProfile:
