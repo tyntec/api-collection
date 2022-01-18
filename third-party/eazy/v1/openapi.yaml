@@ -1204,7 +1204,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text for the comment
+                  description: The text of the comment
                   type: string
                   example: 'Order #12345 has been delivered'
       responses:
