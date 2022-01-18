@@ -230,10 +230,10 @@ tags:
       Operations regarding custom lists of contacts that can be created in the GUI. You may use contact lists to send
       the same message to several contacts at once while keeping them as individual recipients.
 
-      **Black list**
+      **Blacklist**
 
-      Contacts can be black listed so that any messages received from those contacts are ignored.
-      Also agents will not be able to send messages to blacklisted contacts.
+      Contacts can be blacklisted so that any messages received from those contacts are ignored.
+      Also, agents will not be able to send messages to blacklisted contacts.
   - name: 'Conversation Management'
     description: |
       Operations regarding conversations.
