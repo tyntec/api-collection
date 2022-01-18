@@ -2539,7 +2539,7 @@ components:
           description: Priority of the channel
           type: integer
     listResponse:
-      description: Single list response
+      description: A single list response
       type: object
       properties:
         jid:
@@ -2548,11 +2548,11 @@ components:
           format: email
           example: '31611111111@company.com'
         name:
-          description: Name of the list
+          description: The name of the list
           type: string
           example: 'Mailing list'
         remarks:
-          description: Comment for the list
+          description: A comment on the list
           type: string
           example: 'Support'
     noteResponse:
