@@ -2388,7 +2388,7 @@ components:
           format: date-time
           example: '2020-04-11T19:00:02.000000Z'
     channelResponse:
-      description: Channel Response
+      description: A channel response
       type: object
       properties:
         dataRetentionInDays:
@@ -2401,11 +2401,11 @@ components:
           format: email
           example: 31611111111@company.com
         name:
-          description: Name of the channel
+          description: The channel's name
           type: string
           example: 'WhatApp'
         priority:
-          description: Priority of the channel
+          description: The channel's priority
           type: integer
     commentResponse:
       description: Comment response
@@ -2649,16 +2649,16 @@ components:
           format: uri
           example: "https://wa.me/message/VEKO8Y3SYCSFH1"
     teamResponse:
-      description: Single team response
+      description: A single team response
       type: object
       properties:
         channels:
-          description: Array of channels
+          description: An array of channels
           type: array
           items:
             $ref: '#/components/schemas/channelResponse'
         color:
-          description: Color
+          description: The team's avatar color
           type: integer
           example: 8
         jid:
@@ -2670,7 +2670,7 @@ components:
           description: Metadata information
           type: string
         name:
-          description: Name of the team
+          description: The team's name
           type: string
           example: "Support"
     webhookResponse:
