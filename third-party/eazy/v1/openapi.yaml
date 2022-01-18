@@ -2556,15 +2556,15 @@ components:
           type: string
           example: 'Support'
     noteResponse:
-      description: Single Note Response
+      description: A single note response
       type: object
       properties:
         body:
-          description: Text/Body of the note
+          description: The text/body of the note
           type: string
           example: 'Return order received'
         createdAt:
-          description: Date and time the note is created
+          description: The date and time the note is created
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
@@ -2574,7 +2574,7 @@ components:
           format: email
           example: 'john@mycompany.com'
         id:
-          description: ID of the note
+          description: The note's ID
           type: string
           example: '280cbbe0-c08a-4606-bf8d-a30242c4eaa4'
         isPinned:
@@ -2582,16 +2582,16 @@ components:
           type: boolean
           example: false
         isReadOnly:
-          description: Is this note read only or not?
+          description: Is this note read-only?
           type: boolean
           example: false
         updatedAt:
-          description: Date and time the note is last updated
+          description: The date and time the note is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:53:02.000000Z'
         referenceId:
-          description: Reference ID of the note
+          description: The note's reference ID
           type: string
           example: "CUSTOMER_NUMBER"
     profileResponse:
