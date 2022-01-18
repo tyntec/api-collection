@@ -432,7 +432,7 @@ paths:
         - in: path
           name: email
           required: true
-          description: email of the agent
+          description: The email of the agent
           schema:
             type: string
             format: email
