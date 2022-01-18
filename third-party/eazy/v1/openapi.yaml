@@ -1075,15 +1075,15 @@ paths:
               type: object
               properties:
                 name:
-                  description: Name of the contact
+                  description: The contact's name
                   type: string
                   example: 'John Doe'
                 reference:
-                  description: Reference of the contact
+                  description: The contact's reference
                   type: string
                   example: 'Customer #545'
                 remarks:
-                  description: Comment for the contact
+                  description: A comment about the contact
                   type: string
                   example: 'VIP'
       responses:
