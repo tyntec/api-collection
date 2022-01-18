@@ -2617,34 +2617,34 @@ components:
           type: string
           example: "https://pps.whatsapp.net/v/t61.24694-24/s96x96/71527172_751740171986704_2078049712831220364_n.jpg?oe=5E2168E9&oh=174efd2076218dff633a1e748beac190"
     qrCodeResponse:
-      description: Single QR code response
+      description: A single QR code response
       type: object
       properties:
         code:
-          description: QR code
+          description: A QR code
           type: string
           example: "VETO8Y3SYCSFH1"
         createdAt:
-          description: Date and time the note is created
+          description: The date and time the QR code is created
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
         image:
-          description: QR image URL
+          description: A QR image URL
           type: string
           format: uri
           example: "https://scontent.xx.fbcdn.net/..."
         message:
-          description: QR message to be displayed
+          description: A QR message to be displayed
           type: string
           example: "I have a question about product ABC"
         updatedAt:
-          description: Date and time the note is last updated
+          description: The date and time the QR code is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:53:02.000000Z'
         url:
-          description: QR URL
+          description: A QR URL
           type: string
           format: uri
           example: "https://wa.me/message/VEKO8Y3SYCSFH1"
