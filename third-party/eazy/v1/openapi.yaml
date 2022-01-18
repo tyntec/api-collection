@@ -2360,15 +2360,15 @@ components:
           type: string
           example: 'Jane Mayer'
     autoMessageResponse:
-      description: Automated message response
+      description: An automated message response
       type: object
       properties:
         body:
-          description: Body/text of the message
+          description: The body/text of the message
           type: string
           example: 'Sorry, we are currently closed. Your question will be answered as soon as possible.'
         createdAt:
-          description: When message is created
+          description: When the message is created
           type: string
           format: date-time
           example: '2020-03-11T19:00:02.000000Z'
@@ -2376,14 +2376,14 @@ components:
           description: Is the message enabled?
           type: boolean
         type:
-          description: Name of the assistant
+          description: The type of the auto message
           type: string
           enum:
             - 'AWAY'
             - 'GREETING'
           example: 'AWAY'
         updatedAt:
-          description: When message is last updated
+          description: When the message is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:00:02.000000Z'
