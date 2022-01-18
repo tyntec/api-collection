@@ -1922,7 +1922,7 @@ paths:
         - in: path
           name: code
           required: true
-          description: QR code
+          description: A QR code
           schema:
             type: string
             example: 'VETO8Y3SYCSFH1'
@@ -1937,7 +1937,7 @@ paths:
                 - message
               properties:
                 message:
-                  description: Text/Body of the message.
+                  description: The text/body of the message
                   type: string
                   example: 'I have a question about product ABC'
       responses:
