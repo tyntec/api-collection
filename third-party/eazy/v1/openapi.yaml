@@ -295,18 +295,18 @@ tags:
 
       The following events are defined:
 
-      | **Name**        | **Description**                                                                 |
-      | ---             | ---                                                                             |
-      | custom          |	Custom event for specific customer purposes                                     |
-      | echo            |	Outgoing messages sent by agents or assistants                                  |
-      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
-      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
-      | message         |	Incoming messages from customers                                                |
-      | note            |	Note creation or deletion event                                                 |
-      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
-      | receipt         |	Message receipt event                                                           |
-      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
-      | typing          |	Typing indications when customers are typing a message                          |
+      | **Name**        | **Description**                                                                     |
+      | ---             | ---                                                                                 |
+      | custom          |	A custom event for specific customer purposes                                     |
+      | echo            |	An outgoing message sent by an agent or assistant                                 |
+      | handover        |	A handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	A label event whenever a conversation is labelled or unlabelled                   |
+      | message         |	An incoming message from a customer                                               |
+      | note            |	A note creation or deletion event                                                 |
+      | postback        |	A postback event for WhatsApp button templates, Apple list pickers, etc           |
+      | receipt         |	A message receipt event                                                           |
+      | template_pack   |	A template update whenever a template is approved, rejected, etc.                 |
+      | typing          |	A typing indication when a customer is typing a message                           |
 paths:
   /keys:
     get:
