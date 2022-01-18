@@ -1609,11 +1609,11 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text/Body of the note.
+                  description: The note's text/body
                   type: string
                   example: 'Customer number #63553'
                 referenceId:
-                  description: Friendly reference name as an ID.
+                  description: A friendly reference name as an ID.
                   type: string
                   example: 'CUSTOMER_NUMBER'
       responses:
