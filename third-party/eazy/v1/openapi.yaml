@@ -750,15 +750,15 @@ paths:
               type: object
               properties:
                 color:
-                  description: Color of the label
+                  description: The label color representation
                   type: integer
                   example: 8
                 name:
-                  description: Friendly name of the label
+                  description: The label's friendly name
                   type: string
                   example: 'Customer support'
                 priority:
-                  description: Priority of the label
+                  description: The label's priority
                   type: integer
       responses:
         200:
