@@ -344,7 +344,7 @@ paths:
       tags:
         - 'Company Management'
       operationId: listAllCompanies
-      description: List of all companies can be requested
+      description: A list of all companies can be requested
       responses:
         200:
           description: OK
@@ -2416,15 +2416,15 @@ components:
           type: string
           example: 'ee487689cac84f972ff1d8d10ed7b64f4148'
     companyResponse:
-      description: Company response
+      description: A company response
       type: object
       properties:
         id:
-          description: ID of the company
+          description: The ID of the company
           type: string
           example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
         name:
-          description: Name of the company
+          description: The name of the company
           type: string
           format: string
           example: 'tyntec'
