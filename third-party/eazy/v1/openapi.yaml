@@ -2339,24 +2339,24 @@ components:
             - '95.95.95.95'
             - '12.12.12.12'
     assistantResponse:
-      description: Single assistant response
+      description: A single assistant response
       type: object
       properties:
         color:
-          description: Color
+          description: The assistant's avatar color
           type: integer
           example: 8
         description:
-          description: Role of the Assistant
+          description: The assistant's role
           type: string
           example: 'Sales assistant'
         jid:
-          description: Id of the key
+          description: The assistant's ID
           type: string
           format: email
           example: 'jane@mycompany.com'
         name:
-          description: Name of the assistant
+          description: The assistant's name
           type: string
           example: 'Jane Mayer'
     autoMessageResponse:
