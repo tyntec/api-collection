@@ -379,7 +379,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -401,7 +401,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -425,7 +425,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -594,7 +594,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -618,7 +618,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
