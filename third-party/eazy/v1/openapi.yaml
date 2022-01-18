@@ -1893,7 +1893,7 @@ paths:
               type: object
               properties:
                 message:
-                  description: Text/Body of the message.
+                  description: The text/body of the message.
                   type: string
                   example: 'I have a question about product ABC'
       responses:
