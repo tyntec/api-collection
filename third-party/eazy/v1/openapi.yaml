@@ -1652,7 +1652,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The note's ID
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -1665,7 +1665,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text/Body of the note.
+                  description: The note's text/body.
                   type: string
                   example: 'Customer number #63553'
                 isPinned:
@@ -1673,11 +1673,11 @@ paths:
                   type: boolean
                   example: true
                 isReadOnly:
-                  description: Is this note read only or not?
+                  description: Is this note read-only?
                   type: boolean
                   example: false
                 referenceId:
-                  description: Friendly reference name as an ID.
+                  description: A friendly reference name as an ID.
                   type: string
                   example: 'CUSTOMER_NUMBER'
       responses:
