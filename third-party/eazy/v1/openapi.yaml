@@ -2151,7 +2151,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The ID of the node
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -2166,7 +2166,7 @@ paths:
                 - name
               properties:
                 name:
-                  description: Name of the webhook to be created
+                  description: The name of the webhook to be created
                   type: string
                   example: 'Support'
       responses:
