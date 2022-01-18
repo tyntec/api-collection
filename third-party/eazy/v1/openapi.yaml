@@ -639,16 +639,16 @@ paths:
               type: object
               properties:
                 color:
-                  description: Color
+                  description: The assistant's avatar color
                   type: integer
                 description:
-                  description: Description of the assistant
+                  description: A description of the assistant
                   type: string
                 name:
-                  description: Name of the assistant
+                  description: The name of the assistant
                   type: string
                 enabled:
-                  description: is the assistant enabled
+                  description: Is the assistant enabled
                   type: boolean
       responses:
         200:
