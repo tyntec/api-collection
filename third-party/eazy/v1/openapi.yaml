@@ -263,7 +263,7 @@ tags:
     description: ""
   - name: 'Webhook Configuration'
     description: |
-      Webhooks are used to receive real-time events like messages and receipts. Multiple webhooks can be defined per channel, each with their own events.
+      Webhooks are used to receive real-time events like messages and receipts. You can define multiple webhooks per channel, each with its events.
 
       Webhooks must always return a *200 OK* response.
 
