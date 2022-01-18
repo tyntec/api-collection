@@ -2210,7 +2210,7 @@ paths:
         - in: query
           name: agent
           required: true
-          description: Agents mail
+          description: The agent's email address
           schema:
             type: string
             format: email
