@@ -681,11 +681,11 @@ paths:
               type: object
               properties:
                 description:
-                  description: Description of the label
+                  description: The label's description
                   type: string
                   example: 'Support related questions'
                 name:
-                  description: Name of the label
+                  description: The label's name
                   type: string
                   example: 'Support'
       responses:
