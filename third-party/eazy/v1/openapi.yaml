@@ -1713,7 +1713,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The note's ID
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
