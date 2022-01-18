@@ -2523,7 +2523,7 @@ components:
       type: object
       properties:
         color:
-          description: Color
+          description: The label's color
           type: integer
           example: 8
         jid:
@@ -2532,11 +2532,11 @@ components:
           format: email
           example: '31611111111@company.com'
         name:
-          description: Name of the label
+          description: The label's name
           type: string
           example: 'Support'
         priority:
-          description: Priority of the channel
+          description: The label's priority
           type: integer
     listResponse:
       description: A single list response
