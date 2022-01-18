@@ -1990,13 +1990,13 @@ paths:
             example: 'channelJid@company.com'
       responses:
         200:
-          description: OK - Check response in example above
+          description: OK - Check the response in the example above
     post:
       summary: Create a template
       tags:
         - 'WhatsApp Management'
       operationId: createTemplate
-      description: Create a new WhatsApp Business template. Templates can include a header, body, footer and buttons.
+      description: Create a new WhatsApp Business template. Templates can include a header, body, footer, and buttons.
       parameters:
         - in: path
           name: channelJid
@@ -2030,12 +2030,12 @@ paths:
                   type: string
                   example: 'en'
                 name:
-                  description: Name of the template
+                  description: The name of the template
                   type: string
                   example: 'support_after_24hours'
       responses:
         201:
-          description: Created - Check response in example above
+          description: Created - Check the response in the example above
   /channels/{channelJid}/templates/{name}:
     delete:
       summary: Delete a template
@@ -2804,7 +2804,7 @@ components:
     components:
       name: components
       in: body
-      description: Array of components to be used in the template
+      description: An array of components to be used in the template
       schema:
         type: string
     text:
