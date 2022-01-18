@@ -2055,7 +2055,7 @@ paths:
         - in: path
           name: name
           required: true
-          description: Name of the template to be deleted
+          description: The name of the template to be deleted
           schema:
             type: string
           example: 'delivery_notification'
