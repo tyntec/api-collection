@@ -1767,7 +1767,7 @@ paths:
               type: object
               properties:
                 about:
-                  description: Description of what is this profile about.
+                  description: A description of what is this profile about
                   type: string
                   example: 'Welcome! We are here to help you 24/7'
                 businessProfile:
@@ -1775,15 +1775,15 @@ paths:
                   type: object
                   properties:
                     address:
-                      description: Address associated with the profile
+                      description: An address associated with the profile
                       type: string
                       example: "High Street 15, New York"
                     description:
-                      description: Description of the profile
+                      description: A description of the profile
                       type: string
                       example: "YourCompany Ltd."
                     email:
-                      description: email address associated with the WhatsApp for business profile
+                      description: The email address associated with the WhatsApp for business profile
                       type: string
                       format: email
                       example: "info@your-company.com"
@@ -2746,7 +2746,7 @@ components:
             - 'www.company1.com'
             - 'www.company2.com'
     website:
-      description: Website URL
+      description: A website URL
       type: string
       example: "https://your-company.com"
     quickRepliesResponse:
