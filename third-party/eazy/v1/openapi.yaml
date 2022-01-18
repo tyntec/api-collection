@@ -1285,14 +1285,14 @@ paths:
                   type: string
                   example: 'Label123'
                 status:
-                  description: Status of the conversation
+                  description: The status of the conversation
                   type: string
                   enum:
                     - CLOSED
                     - OPEN
                   example: 'CLOSED'
                 unreadCount:
-                  description: Number of unread messages
+                  description: The number of unread messages
                   type: integer
                   example: 5
       responses:
