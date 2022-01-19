@@ -2459,25 +2459,25 @@ components:
           type: string
           example: 'INDIVIDUAL'
     conversationResponse:
-      description: Conversation response
+      description: A conversation response
       type: object
       properties:
         assignee:
-          description: Assistant to the agents
+          description: The assigned responder (either an assistant or agent)
           type: string
           example: 'john@mycompany.com'
         channel:
-          description: Channel to be used
+          description: The channel to be used
           type: string
           items:
             $ref: '#/components/schemas/channelResponse'
         contact:
-          description: Contact of the conversation
+          description: The contact of the conversation
           type: string
           items:
             $ref: '#/components/schemas/contact'
         createdAt:
-          description: Date and time the conversation is created
+          description: The date and time the conversation is created
           type: string
           format: date-time
           example: '2019-04-04T15:29:47.000000Z'
@@ -2487,29 +2487,29 @@ components:
           items:
             $ref: '#/components/schemas/allLabelsResponse'
         lastMessageReceivedAt:
-          description: Date and time the last message is received
+          description: The date and time the last message is received
           type: string
           format: date-time
           example: '2019-04-08T23:55:39.000000Z'
         lastMessageSentAt:
-          description: Date and time that the last message is sent
+          description: The date and time that the last message is sent
           type: string
           format: date-time
           example: '2019-04-07T17:12:00.000000Z'
         messagesReceived:
-          description: Number of messages received
+          description: The number of messages received
           type: integer
           example: 12
         messagesSent:
-          description: Number of messages sent
+          description: The number of messages sent
           type: integer
           example: 8
         status:
-          description: Status of the conversation
+          description: The status of the conversation
           type: string
           example: "CLOSED"
         unreadCount:
-          description: Number of unread messages
+          description: The number of unread messages
           type: integer
           example: 5
     emailsResponse:
