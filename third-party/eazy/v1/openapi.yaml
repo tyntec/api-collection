@@ -2751,7 +2751,7 @@ components:
       example: "https://your-company.com"
     quickRepliesResponse:
       type: array
-      description: List of quick replies
+      description: A list of quick replies
       items:
         $ref: '#/components/schemas/quickReply'
     quickReply:
@@ -2763,31 +2763,31 @@ components:
       properties:
         category:
           type: string
-          description: Custom category
+          description: A custom category
           example: Welcome Message
         createdAt:
           type: string
-          description: Creation date of the quick reply
+          description: The creation date of the quick reply
           format: date-time
           example: 2021-07-05T06:20:33.000000Z
         jids:
           type: array
-          description: List of channels the quick reply is assigned to
+          description: The list of channels the quick reply is assigned to
           items:
             - type: string
               example: 123152345245@whatsapp.eazy.im
         message:
           type: string
-          description: Message of the quick reply
+          description: The message of the quick reply
           example: Hi {{1}}, how can we help you?
         name:
           type: string
-          description: Name of the quick reply
+          description: The name of the quick reply
           example: welcome
         updatedAt:
           type: string
           format: date-time
-          description: Last update of the quick reply
+          description: The last update of the quick reply
           example: 2021-07-05T06:28:33.000000Z
     unreadMessagesResponse:
       type: object
