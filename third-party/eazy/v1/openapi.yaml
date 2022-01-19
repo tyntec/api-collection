@@ -2429,7 +2429,7 @@ components:
           format: string
           example: 'tyntec'
     contactResponse:
-      description: Contact response
+      description: A contact response
       type: object
       properties:
         names:
@@ -2443,19 +2443,19 @@ components:
           items:
             $ref: '#/components/schemas/note'
         phoneNumber:
-          description: Phone number of the contact
+          description: The phone number of the contact
           type: integer
           example: 31611111111
         reference:
-          description: Reference of the contact
+          description: A reference to the contact
           type: string
           example: 'Customer #545'
         remarks:
-          description: Comment for the contact
+          description: A comment about the contact
           type: string
           example: 'VIP'
         type:
-          description: Type of the contact
+          description: A type of contact
           type: string
           example: 'INDIVIDUAL'
     conversationResponse:
