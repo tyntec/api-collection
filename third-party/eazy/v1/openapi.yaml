@@ -2595,25 +2595,25 @@ components:
           type: string
           example: "CUSTOMER_NUMBER"
     profileResponse:
-      description: WhatsApp for Business profile response
+      description: A WhatsApp for Business profile response
       type: object
       properties:
         about:
-          description: Description of what is this profile about.
+          description: A description of what is this profile about.
           type: string
           example: "Welcome! We are here to help you 24/7"
         businessProfile:
           $ref: '#/components/schemas/businessProfile'
         name:
-          description: Name of the profile
+          description: The name of the profile
           type: string
           example: "YourCompany"
         phoneNumber:
-          description: Phone number associated with the WhatsApp for Business profile
+          description: The phone number associated with the WhatsApp for Business profile
           type: integer
           example: 31612345678
         pictureUrl:
-          description: URL of the picture used in the profile
+          description: The URL of the picture used in the profile
           type: string
           example: "https://pps.whatsapp.net/v/t61.24694-24/s96x96/71527172_751740171986704_2078049712831220364_n.jpg?oe=5E2168E9&oh=174efd2076218dff633a1e748beac190"
     qrCodeResponse:
