@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: 'Support Inbox API'
+  title: 'Conversations Inbox API'
   description: |
-    The Support Inbox API is a JSON REST API to connect to social messaging platforms like WhatsApp Business,
+    The Conversations Inbox API is a JSON REST API to connect to social messaging platforms like WhatsApp Business,
     Apple Business Chat, Facebook Messenger, Twitter DM, Viber, LINE and more.
 
     **HTTP requests**
@@ -35,7 +35,7 @@ info:
     | SMS                 | 31633333333@sms.eazy.im |
 
     **Note:** Custom channels can be added on your demand. For instance, an existing chat in your custom mobile app
-    or live chat on your website can be added as a channel in the Support Inbox.
+    or live chat on your website can be added as a channel in the Conversations Inbox.
 
     ## Error codes
 
@@ -97,7 +97,7 @@ tags:
 
       **Agents and teams**
 
-      Agents are accounts of users in your company who respond to your customers via the Support Inbox.
+      Agents are accounts of users in your company who respond to your customers via the Conversations Inbox.
 
       You may organize agents into teams (e.g. support team, sales team).
 
@@ -2231,7 +2231,7 @@ components:
       bearerFormat: The API key is transmitted using the Authentication header with the Bearer scheme.
       name: Authorization
       description: |
-        The Support Inbox API uses API keys for authentication. The API key is transmitted using the Authorization
+        The Conversations Inbox API uses API keys for authentication. The API key is transmitted using the Authorization
         header with the Bearer scheme:
 
         `Authorization: Bearer Tnhip5Hiq10gGiKhNS850ShCAjIQZAgKDAN0JAIL`
