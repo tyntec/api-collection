@@ -284,8 +284,18 @@ components:
         hlrTechnology:
           type: string
           description: |
-            The technology used by the HLR operator network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
+            The technology used by the HLR operator network.
           example: "GSM"
+          enum:
+            - GSM
+            - MVNO GSM
+            - GSM/CDMA
+            - Satellite
+            - CDMA
+            - iDen
+            - iDen/GSM
+            - Pager
+            - Fixed
         mscCC:
           type: string
           description: |
