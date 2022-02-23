@@ -120,12 +120,12 @@ components:
       type: object
       properties:
         validNumberFormat:
-          type: string
-          example: "true"
+          type: boolean
+          example: true
           description: Is the number formatted correctly according to the numbering plan?
         activeNumber:
-          type: string
-          example: "true"
+          type: boolean
+          example: true
           description: Is the number currently assigned to a subscriber?
         numberType:
           type: string
