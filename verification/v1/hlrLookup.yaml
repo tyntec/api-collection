@@ -284,7 +284,7 @@ components:
         mscNDC:
           type: string
           description: |
-            The MSC of the NDC
+            The NDC of the MSC
           example: "162"
         mscMCC:
           type: string
