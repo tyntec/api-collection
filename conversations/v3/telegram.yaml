@@ -2,9 +2,9 @@ openapi: '3.0.0'
 info:
   title: Telegram (Beta)
   description: |
-    Conversations allows you to easily reach out and communicate with  your clients via Telegram Bots.
+    The Conversations API allows you to easily reach out and communicate with your clients via Telegram Bots.
 
-    For beta access please reach out to [onboarding@tyntec.com](mailto:onboarding@tyntec.com)
+    For beta access, please reach out to [onboarding@tyntec.com](mailto:onboarding@tyntec.com)
 
   contact:
     name: tyntec API Support
@@ -142,19 +142,19 @@ components:
       example: 398vsnbkj3
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
@@ -214,7 +214,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "12314123"
         from:
@@ -224,7 +224,7 @@ components:
           example: "34534532134"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: telegram
           items:
             type: string
@@ -234,7 +234,7 @@ components:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           oneOf:
@@ -259,7 +259,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -269,7 +269,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: telegram
           items:
             type: string

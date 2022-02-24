@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: SMS
   description: |
-    Conversations allows you to easily reach out and communicate with your clients via 2-way SMS.
+    The Conversations API allows you to easily reach out and communicate with your clients via 2-way SMS.
 
     **Channel specific pre-conditions**
 
@@ -149,19 +149,19 @@ components:
       example: 4923147790717
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
@@ -221,7 +221,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -231,7 +231,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: sms
           items:
             type: string
@@ -241,7 +241,7 @@ components:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           $ref: '#/components/schemas/SMSContent'
@@ -264,7 +264,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -274,7 +274,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: sms
           items:
             type: string

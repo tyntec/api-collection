@@ -2,11 +2,11 @@ openapi: '3.0.0'
 info:
   title: WeChat (Beta)
   description: |
-    Conversations allows you to easily send messages to your customers via WeChat.
+    The Conversations API allows you to easily send messages to your customers via WeChat.
 
     **Channel specific pre-conditions**
 
-    - *WeChat* : You need to create an offical account with WeChat. Please contact us for details [onboarding@tyntec.com](mailto:onboarding@tyntec.com).
+    - *WeChat* : You need to create an official account with WeChat. Please, contact us for details [onboarding@tyntec.com](mailto:onboarding@tyntec.com).
 
   contact:
     name: tyntec API Support
@@ -186,19 +186,19 @@ components:
       example: 23cklsdhf2
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
@@ -258,7 +258,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -268,7 +268,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: WeChat
           items:
             type: string
@@ -278,7 +278,7 @@ components:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           oneOf:
@@ -304,7 +304,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -314,7 +314,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: wechat
           items:
             type: string

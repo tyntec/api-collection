@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: WhatsApp
   description: |
-    Conversations allows you to easily send messages to your customers via  WhatsApp
+    The Conversations API allows you to easily send messages to your customers via  WhatsApp
 
     **Channel specific pre-conditions**
 
@@ -673,7 +673,7 @@ paths:
         - "Profile management"
       requestBody:
         required: true
-        description: Image that should be used as the profile logo
+        description: The image that should be used as the profile logo
         content:
           image/png:
             schema:
@@ -745,7 +745,7 @@ components:
       name: phone-number
       in: path
       required: true
-      description: Phone number used for WhatsApp messaging.
+      description: The phone number used for WhatsApp messaging
       schema:
         type: integer
         minLength: 4
@@ -754,7 +754,7 @@ components:
     PhoneNumberQuery:
       name: phone-number
       in: query
-      description: Phone number used for WhatsApp messaging.
+      description: The phone number used for WhatsApp messaging
       schema:
         type: integer
         minLength: 4
@@ -788,13 +788,13 @@ components:
       example: welcome_message
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
@@ -807,13 +807,13 @@ components:
             type: string
           description: Location URI of the newly created resource
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
     MoMessageNotFound:
-      description: No MoMessage found for the given Message ID.
+      description: No MoMessage was found for the given Message ID.
       content:
         application/problem+json:
           schema:
@@ -887,7 +887,7 @@ components:
           schema:
             $ref: '#/components/schemas/WhatsAppChannelResponses'
     WhatsAppChannelResponse:
-      description: WhatsApp phone number configuration
+      description: The WhatsApp phone number configuration
       content:
         application/json:
           schema:
@@ -1249,7 +1249,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -1259,7 +1259,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: WhatsApp
           items:
             type: string
@@ -1267,7 +1267,7 @@ components:
               - whatsapp
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           oneOf:
@@ -1300,7 +1300,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -1310,7 +1310,7 @@ components:
           example: "+1233423454"
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: WhatsApp
           items:
             type: string
@@ -1336,7 +1336,7 @@ components:
     #
     WhatsAppTextContent:
       type: object
-      description: Plain text message
+      description: A plain text message
       required:
         - contentType
         - text
@@ -1352,7 +1352,7 @@ components:
           maxLength: 4096
         renderUrlPreview:
           type: boolean
-          description: In case a URL is present on the text should a preview tried to be rendered
+          description: In case a URL is present on the text should a preview be tried to be rendered
           default: false
     WhatsAppImageContent:
       type: object
@@ -1370,7 +1370,7 @@ components:
           $ref: '#/components/schemas/WhatsAppImage'
     WhatsAppDocumentContent:
       type: object
-      description: Document message
+      description: A document message
       required:
         - contentType
         - document
@@ -1384,7 +1384,7 @@ components:
           $ref: '#/components/schemas/WhatsAppDocument'
     WhatsAppVideoContent:
       type: object
-      description: Video message
+      description: A video message
       required:
         - contentType
         - video
@@ -1398,7 +1398,7 @@ components:
           $ref: '#/components/schemas/WhatsAppVideo'
     WhatsAppAudioContent:
       type: object
-      description: Audio message
+      description: An audio message
       required:
         - contentType
         - audio
@@ -1412,7 +1412,7 @@ components:
           $ref: '#/components/schemas/WhatsAppAudio'
     WhatsAppStickerContent:
       type: object
-      description: Sticker message
+      description: A sticker message
       required:
         - contentType
         - sticker
@@ -1426,7 +1426,7 @@ components:
           $ref: '#/components/schemas/WhatsAppSticker'
     WhatsAppLocationContent:
       type: object
-      description: Location message
+      description: A location message
       required:
         - contentType
         - location
@@ -1440,7 +1440,7 @@ components:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppContactsContent:
       type: object
-      description: Message with contacts
+      description: A message with contacts
       required:
         - contentType
         - contacts
@@ -1500,11 +1500,11 @@ components:
             - text
         text:
           type: string
-          description: Footer to be displayed on the message
+          description: A footer to be displayed on the message
           maxLength: 60
     WhatsAppInteractiveTextContent:
       type: object
-      description: Message body of an interactive message
+      description: The message body of an interactive message
       required:
         - contentType
         - text
@@ -1516,7 +1516,7 @@ components:
             - text
         text:
           type: string
-          description: Text body of the message
+          description: The text body of the message
           maxLength: 1024
     #
     # Media
@@ -1537,7 +1537,7 @@ components:
           format: uuid
     WhatsAppImage:
       type: object
-      description: Image media specification
+      description: An image media specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
       properties:
@@ -1546,7 +1546,7 @@ components:
           maxLength: 4096
     WhatsAppDocument:
       type: object
-      description: Document media specification
+      description: A document media specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
       properties:
@@ -1557,7 +1557,7 @@ components:
           type: string
     WhatsAppVideo:
       type: object
-      description: Video media specification
+      description: A video media specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
       properties:
@@ -1566,12 +1566,12 @@ components:
           maxLength: 4096
     WhatsAppAudio:
       type: object
-      description: Audio media specification
+      description: An audio media specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
     WhatsAppSticker:
       type: object
-      description: Sticker media specification
+      description: A sticker media specification
       allOf:
         - $ref: '#/components/schemas/BaseMedia'
     #
@@ -1587,25 +1587,25 @@ components:
         longitude:
           type: number
           format: double
-          description: Longitude part of the coordinate
+          description: The longitude part of the coordinate
           example:
             7.4954884
         latitude:
           type: integer
           format: double
-          description: Latitude part of the coordinate
+          description: The latitude part of the coordinate
           example:
             51.5005765
         name:
           type: string
           maxLength: 256
-          description: Optional name
+          description: An optional name
           example:
             tyntec GmbH
         address:
           type: string
           maxLength: 256
-          description: Optional address, will only be rendered if name is set
+          description: An optional address, will only be rendered if name is set
           example:
             tyntec GmbH, Semerteichstraße, Dortmund
 
@@ -1990,7 +1990,7 @@ components:
     WhatsAppInteractiveButtonMessage:
       type: object
       description: |
-        Interactive message type
+        An interactive message type
       required:
         - type
         - components
@@ -2029,7 +2029,7 @@ components:
     WhatsAppInteractiveListMessage:
       type: object
       description: |
-        Interactive message type
+        An interactive message type
       required:
         - type
         - components

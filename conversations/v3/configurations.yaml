@@ -13,14 +13,14 @@ info:
     ## Credentials
 
     Some channels require you to provide tyntec with credentials, for example telegram bots or WeChat applications.
-    Conversations allows you to configure these credentials via the API directly
+    The Conversations API allows you to configure these credentials via the API directly
 
     ## Signature
 
     Validating that the message content hasn't been tampered is a crucial part of a secure
     message exchange.
 
-    Conversations can provide you with a message signature that encrypts the actual event
+    The Conversations API can provide you with a message signature that encrypts the actual event
     content with a keyed-hash message authentication code [HMAC](https://en.wikipedia.org/wiki/HMAC).
 
     The signature is transfered in the header `x-signature` as a Base64 URL encoded value.
@@ -298,7 +298,7 @@ components:
         (either on sending messages or interacting with other phone number based features) assigned.
   responses:
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:

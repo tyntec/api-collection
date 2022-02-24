@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   title: Viber
   description: |
-    Conversations allows you to easily send messages to your customers via Viber.
+    The Conversations API allows you to easily send messages to your customers via Viber.
 
     **Channel specific pre-conditions**
 
@@ -156,19 +156,19 @@ components:
       example: 4923147790717
   responses:
     MessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
-      description: Response after the server has accepted the request
+      description: The response after the server has accepted the request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkMessageResponse'
     Default:
-      description: Default response in case of any other error. Please check the error object for details
+      description: The default response in case of any other error. Please check the error object for details
       content:
         application/problem+json:
           schema:
@@ -228,7 +228,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -239,7 +239,7 @@ components:
         messagePurpose:
           type: string
           description: |
-            Alias for the rate type of the message
+            The alias for the message's rate type
           enum:
             - promotion
             - transaction
@@ -248,14 +248,14 @@ components:
           type: string
           description: |
             The rate type of the message. **Note** Since Viber has lifted the service types, this
-            affects the rate for each message. Also the potential content that can be sent (see table above)
+            affects the rate for each message. Also, the potential content that can be sent (see table above)
           enum:
             - promotion
             - transaction
             - session
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: viber
           items:
             type: string
@@ -265,7 +265,7 @@ components:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
           type: string
-          description: Context for this particular message
+          description: The context for this particular message
           maxLength: 125
         content:
           oneOf:
@@ -294,7 +294,7 @@ components:
         to:
           type: string
           description: |
-            The receipient of the messages
+            The message's recipient
             The format depends on the specific channel
           example: "+1233423454"
         from:
@@ -305,7 +305,7 @@ components:
         messagePurpose:
           type: string
           description: |
-           Alias for the rate type of the message
+           The alias for the message's rate type
           enum:
             - promotion
             - transaction
@@ -321,7 +321,7 @@ components:
             - session
         channel:
           type: string
-          description: Channel selected for delivery.
+          description: The channel selected for delivery.
           example: viber
           items:
             type: string
@@ -376,7 +376,7 @@ components:
           $ref: '#/components/schemas/ViberImage'
     ViberFileContent:
       type: object
-      description: File content wrapper for viber
+      description: A file content wrapper for Viber
       properties:
         contentType:
           type: string
@@ -387,7 +387,7 @@ components:
           $ref: '#/components/schemas/ViberFile'
     ViberFileBody:
       type: object
-      description: File content wrapper for viber
+      description: A file content wrapper for Viber
       properties:
         contentType:
           type: string

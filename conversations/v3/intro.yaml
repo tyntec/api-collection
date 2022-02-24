@@ -39,7 +39,7 @@ info:
 
     ## Scope based access control
 
-    Conversations uses the concept of scopes to control access to different aspects of your Conversations account and
+    The Conversations API uses the concept of scopes to control access to different aspects of your Conversations account and
     channels available to you.
 
     Scopes are devided into two distinct classes `read` and  `write`.
