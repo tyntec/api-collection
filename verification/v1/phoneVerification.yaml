@@ -123,7 +123,7 @@ components:
         numberType:
           type: string
           example: "mobile"
-          description: Is it a mobile number or fixed line?
+          description: Is it a mobile number or a fixed line?
         operatorName:
           type: string
           example: "T-Mobile Czech Republic a.s."
