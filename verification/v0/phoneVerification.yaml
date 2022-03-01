@@ -18,7 +18,7 @@ tags:
       This information comes in the form of a Risk Index about the phone number. The following risk classifications are applied
 
       - **High:** The phone number is considered a high-risk number and customers should avoid contacting this number
-      - **Medium:** The phone number is generally considered a legitimate number, but be cautious when contacting this phone number
+      - **Medium:** The phone number is generally considered a legitimate number, but customers should exercise caution when contacting this number for sensitive data or high-value transactions
       - **Low:** The phone number is considered a legitimate number and customers should feel confident to contact this number
   - name: Metadata
     description: REST health and version endpoints
