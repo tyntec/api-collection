@@ -25,7 +25,7 @@ tags:
       Metadata information regarding the API itself. The information exposed is:
 
       - **API Health:** Information regarding the status of the API.
-      - **Version:** Version of the API and API specification
+      - **Version:** The version of the API and API specification.
 paths:
   /number/{number}:
     get:
