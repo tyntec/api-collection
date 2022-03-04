@@ -21,7 +21,11 @@ tags:
       - **Medium:** The phone number is generally considered a legitimate number, but customers should exercise caution when contacting this number for sensitive data or high-value transactions
       - **Low:** The phone number is considered a legitimate number and customers should feel confident to contact this number
   - name: Metadata
-    description: REST health and version endpoints
+    description: |
+      Metadata information regarding the API itself. The information exposed is:
+
+      - **API Health:** Information regarding the status of the API.
+      - **Version:** Version of the API and API specification
 paths:
   /number/{number}:
     get:
