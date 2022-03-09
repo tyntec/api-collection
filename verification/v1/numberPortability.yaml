@@ -121,13 +121,13 @@ components:
         ported:
           type: string
           description: |
-            An indication of the porting status (yes/no)
+            An indication of the porting status
           example: "false"
         price:
           type: number
           description: |
             The price for the query
-          example: "0.001"
+          example: 0.001
         currency:
           type: string
           description: |

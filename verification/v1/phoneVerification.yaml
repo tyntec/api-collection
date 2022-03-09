@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: "Phone Verification API"
+  version: '1.0'
+  contact:
+    name: tyntec API Support
+    url: https://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/verification
+  x-specification-file: phoneVerification.yaml
+  x-major-version: v0
+servers:
+  - url: https://api.tyntec.com/verification/v1
+tags:
+  - name: "Phone Verification"
+    description: |
+      Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
+      This information comes in the form of a Risk Index about the phone number. The following risk classifications are applied
+
+      - **High:** The phone number is considered a high-risk number and customers should avoid contacting this number
+      - **Medium:** The phone number is generally considered a legitimate number, but customers should exercise caution when contacting this number for sensitive data or high-value transactions
+      - **Low:** The phone number is considered a legitimate number and customers should feel confident to contact this number
+  - name: Metadata
+    description: |
+      Metadata information regarding the API itself. The information exposed is:
+
+      - **API Health:** Information regarding the status of the API.
+      - **Version:** The version of the API and API specification.
+paths:
+  /phone/{phone-number}:
+    get:
+      tags:
+        - "Phone Verification"
+      summary: Verify Number
+      description: |
+        Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
+      operationId: phoneVerificationGET
+      parameters:
+        - name: number
+          in: path
+          required: true
+          description: |
+            The phone number to be verified, given in the international format
+          schema:
+            type: string
+            example: +491621234567
+      security:
+        - apiKey: []
+      responses:
+        200:
+          description: A valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/numberResponse'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse403'
+  /health:
+    get:
+      tags:
+        - Metadata
+      summary: Phone Verification API health
+      operationId: getPhoneVerificationHealth
+      parameters:
+        - name: apiKey
+          in: header
+          description: 'API authentication key for the customer account'
+          required: true
+          schema:
+            type: string
+      security:
+        - apiKey: []
+      responses:
+        200:
+          description: API is up and running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/healthResponse'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse403'
+  /version:
+    get:
+      tags:
+        - Metadata
+      summary: Phone Verification API version
+      operationId: getVersion
+      security:
+        - apiKey: []
+      responses:
+        200:
+          description: The current API version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/versionResponse'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse403'
+components:
+  schemas:
+    numberResponse:
+      type: object
+      properties:
+        validNumberFormat:
+          type: string
+          example: "true"
+          description: Is it valid phone number?
+        numberAssigned:
+          type: string
+          example: "true"
+          description: Is this number assigned to a subscriber?
+        numberType:
+          type: string
+          example: "mobile"
+          description: Type of the phone number (mobile, fix line, voip etc)
+        roaming:
+          type: string
+          example: "false"
+          description: Is the phone number currently roaming?
+        operatorName:
+          type: string
+          example: "T-Mobile Czech Republic a.s."
+          description: Operator name
+        operatorCountry:
+          type: string
+          example: "CZE"
+          description: The phone number's country of origin ISO3 code
+        blacklisted:
+          type: string
+          example: "true"
+          description: Is the phone number associated with fraud registry?
+        risk:
+          type: string
+          example: "low"
+          description: What is the predicted likelihood of the number being bad actor?
+    healthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "up"
+        updatedAt:
+          type: integer
+          example: 12321546464
+          description: Timestamp
+    versionResponse:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "v0"
+        updatedAt:
+          type: integer
+          example: 12321546464
+          description: Timestamp
+    errorResponse401:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No API key found in request"
+          description: An error message of an unsuccessful request
+    errorResponse403:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid authentication credentials"
+          description: An error message of an unsuccessful request
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: apiKey
+      in: header
