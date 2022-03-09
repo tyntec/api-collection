@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Number Portability API
   description: |
-    tyntec's Number Portability is a service that resolves weither a phone number is ported to a different operator than the one originally issued this phone number. Information is obtained through data provided directly from local number portability databases and live network information from across the globe.
+    tyntec's Number Portability is a service that resolves whether a phone number is ported to a different operator than the one originally issued this phone number. Information is obtained through data provided directly from local number portability databases and live network information from across the globe.
   version: '1.0'
   contact:
     name: tyntec API Support
@@ -26,8 +26,8 @@ paths:
         - "Number Portability"
       summary: Number Portability check
       description: |
-        Many mobile subscribers are moving their phone numbers to a different mobile operators. This is called Portabilty in the telecom terminology.
-        Number Portability check provides information weither a phone number is ported to a different mobile operator and who is the new operator.
+        Many mobile subscribers are moving their phone numbers to different mobile operators. This is called Portability in the telecom terminology.
+        Number Portability check provides information on whether a phone number is ported to a different mobile operator and who is the new operator.
       operationId: gnpRequestGET
       parameters:
         - in: query
@@ -47,11 +47,11 @@ paths:
           description: |
             The asynchronous response can be triggered by this request parameter.
 
-            In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for the maximum of 48 hours.
+            In this case, tyntec's application will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's application will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for a maximum of 48 hours.
           example: https://my.callback.io/gnp-response
       responses:
         '200':
-          description: Successful GNP response; in the case a valid callbackUrl is provided, the response will be the requestId.
+          description: A successful GNP response; in the case a valid callbackUrl is provided, the response will be the requestId.
           content:
             application/json:
               schema:
@@ -69,7 +69,7 @@ paths:
 components:
   responses:
     BadRequest:
-      description: Error in MSISDN or in callback URL
+      description: An error in MSISDN or in the callback URL
       content:
         application/json:
           schema:
@@ -121,7 +121,7 @@ components:
         ported:
           type: string
           description: |
-            Indication of the porting status (yes/no)
+            An indication of the porting status (yes/no)
           example: "false"
         price:
           type: number
@@ -146,22 +146,22 @@ components:
         mcc:
           type: string
           description: |
-            Representative MCC (Mobile Country Code) of the operator
+            A representative MCC (Mobile Country Code) of the operator
           example: "262"
         mnc:
           type: string
           description: |
-            Representative MNC (Mobile Network Code) of the operator
+            A representative MNC (Mobile Network Code) of the operator
           example: "02"
         ttid:
           type: string
           description: |
-            Respective tyntec ID of the network
+            The respective tyntec ID of the network
           example: "15"
         operator:
           type: string
           description: |
-            Human-readable name of the operator
+            A human-readable name of the operator
           example: "Vodafone"
         country:
           type: string
@@ -176,7 +176,7 @@ components:
         technology:
           type: string
           description: |
-            Technology used by the operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
+            The technology used by the operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
           example: "GSM"
         synchronous:
           type: boolean
