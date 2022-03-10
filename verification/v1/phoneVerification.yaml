@@ -27,7 +27,7 @@ tags:
       - **API Health:** Information regarding the status of the API.
       - **Version:** The version of the API and API specification.
 paths:
-  /phone/{phone-number}:
+  /phone/{number}:
     get:
       tags:
         - "Phone Verification"
