@@ -8,7 +8,7 @@ info:
     email: support@tyntec.com
   x-repository: https://github.com/tyntec/api-collection/blob/master/verification
   x-specification-file: phoneVerification.yaml
-  x-major-version: v0
+  x-major-version: v1
 servers:
   - url: https://api.tyntec.com/verification/v1
 tags:
