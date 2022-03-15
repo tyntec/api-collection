@@ -144,7 +144,7 @@ info:
     | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
-  version: '3.3'
+  version: '3.4'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
   x-major-version: v3
@@ -389,6 +389,8 @@ components:
           description: Event version to be used.
           enum:
             - 2.11
+            - 2.12
+          default: 2.12
         signature:
           $ref: '#/components/schemas/Signature'
         header:
