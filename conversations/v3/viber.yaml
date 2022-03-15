@@ -12,11 +12,11 @@ info:
 
     The following content / rate type combinations are valid
 
-    | Rate Type | Text | Image | File | Text & Button | Text & Button & Image |
-    | ---: | :---: | :---: | :---: | :---: | :---: |
-    | Transaction | ✔ | ❌ | ❌ | ❌ | ❌ |
-    | Promotion | ✔ | ✔ | ✔ | ✔ | ✔ |
-    | Session | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | Rate Type | Text | Image | File | Video | Video & Text | Video & Text & Button | Text & Button | Text & Button & Image |
+    | ---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+    | Transaction | ✔ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌
+    | Promotion | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+    | Session | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 
     The rate types have as well consequences on the charging applied by viber per message.
 
@@ -24,7 +24,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.1'
+  version: '3.2'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: viber.yaml
   x-major-version: v3
@@ -335,6 +335,7 @@ components:
             - $ref: '#/components/schemas/ViberTextContent'
             - $ref: '#/components/schemas/ViberImageContent'
             - $ref: '#/components/schemas/ViberFileContent'
+            - $ref: '#/components/schemas/ViberVideoContent'
             - $ref: '#/components/schemas/ViberComponentsContent'
     ViberTextContent:
       type: object
@@ -365,6 +366,24 @@ components:
             - image
         image:
           $ref: '#/components/schemas/ViberImage'
+    ViberVideoContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - video
+        image:
+          $ref: '#/components/schemas/ViberVideo'
+    ViberVideoBody:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - video
+        image:
+          $ref: '#/components/schemas/ViberVideo'
     ViberImageBody:
       type: object
       properties:
@@ -422,6 +441,7 @@ components:
                   - $ref: '#/components/schemas/ViberTextBody'
                   - $ref: '#/components/schemas/ViberImageBody'
                   - $ref: '#/components/schemas/ViberFileBody'
+                  - $ref: '#/components/schemas/ViberVideoBody'
                   - $ref: '#/components/schemas/ViberButtonBody'
     ViberImage:
       type: object
@@ -473,6 +493,46 @@ components:
             - csv
             - xlsm
             - xltx
+    ViberVideo:
+      type: object
+      description: Viber video specification
+      required:
+        - url
+        - thumbnailUrl
+        - filesize
+        - duration
+      properties:
+        url:
+          type: string
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            Public available URL of the video. The video URL will be used on the app to provide the user with the video.
+        thumbnailUrl:
+          type: string
+          pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          description: |
+            Public available URL of a thumbnail picture of the video.
+        type:
+          type: string
+          description: |
+            This parameter can be set to specify the video type.
+            If not present, the video type is deducted from the URL given.
+          enum:
+            - 3gp
+            - m4v
+            - mov
+            - mp4
+        filesize:
+          type: integer
+          minimum: 0
+          maximum: 200
+          description: |
+            Filesize in MB
+        duration:
+          type: integer
+          minimum: 0
+          description: |
+            Duration of the video in seconds
     ViberButton:
       type: object
       properties:
