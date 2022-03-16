@@ -329,7 +329,7 @@ components:
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
-          description: Short, human-readable summary of the problem type
+          description: A short, human-readable summary of the problem type
           type: string
           example: The given data were not parsable.
         status:
@@ -337,7 +337,7 @@ components:
           type: string
           example: 400
         detail:
-          description: Human-readable explanation specific to this problem occurrence
+          description: A human-readable explanation specific to this problem occurrence
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]

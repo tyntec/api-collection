@@ -3,7 +3,7 @@ info:
   version: "1.0"
   title: Account IP Restriction API
   description: |
-    The IP restriction API helps you managing your account and whitelisting your IPs and subnets for higher security when using your tyntec API key.
+    The IP restriction API helps you with managing your account and whitelisting your IPs and subnets for higher security when using your tyntec API key.
 
   contact:
     name: tyntec API Support
@@ -38,7 +38,7 @@ paths:
         - ApiKeyHeader: []
       operationId: ipRestrictionPOST
       description: |
-        Modifies the IP whitelisting or this account. The operation is idempotent and will override the list of IPs and ranges that already exist. 
+        Modifies the IP whitelisting for this account. The operation is idempotent and will override the list of IPs and ranges that already exist.
       responses:
         "200":
           description: The IP whitelist as modified by this request.
@@ -47,7 +47,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/IpRestrictionEntity"
         "400":
-          description: Invalid request
+          description: An invalid request
           content:
             application/json:
               schema:
@@ -71,7 +71,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Problem"
       requestBody:
-        description: IP restriction whitelist
+        description: An IP restriction whitelist
         required: true
         content:
           application/json:
@@ -94,7 +94,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/IpRestrictionEntity"
         "400":
-          description: Invalid request
+          description: An invalid request
           content:
             application/json:
               schema:
@@ -160,7 +160,7 @@ components:
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
-          description: Short, human-readable summary of the problem type
+          description: A short, human-readable summary of the problem type
           type: string
           example: The given data were not parsable.
         status:
@@ -168,7 +168,7 @@ components:
           type: string
           example: 400
         detail:
-          description: Human-readable explanation specific to this problem occurrence
+          description: A human-readable explanation specific to this problem occurrence
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]

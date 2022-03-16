@@ -34,10 +34,10 @@ tags:
       | :--- | :--- |
       | ACCEPTED | The message was accepted for delivery by Tyntec's platform and will be scheduled for delivery. |
       | DELIVERED | Message is delivered to destination. The message has been delivered to the destination. No further deliveries will occur. |
-      | BUFFERED | The message is in buffered state. This is a general state used to describe a message as being active within the tyntec's platform. The message may be in retry or dispatched to a mobile network for delivery to the mobile. |
-      | EXPIRED | Message validity period has expired. The message has failed to be delivered within its validity period and/or retry period. No further delivery attempts will be made. |
-      | REJECTED | Message was rejected by the tyntec platform or destination network. Reasons for rejections can be insufficient funds, illegal content/senderId. More specific reasons are given on the `errorCode`. |
-      | UNDELIVERABLE | Message is undeliverable. The message has encountered a delivery error and is deemed permanently undeliverable. No further delivery attempts will be made. Certain network or platform internal errors result in the permanent non-delivery of a message. Examples of such errors would be an unknown subscriber or network error that indicated that the given destination mobile was denied SMS service or could not support SMS. More specific reasons are given on the `errorCode`.|
+      | BUFFERED | The message is in a buffered state. This is a general state used to describe a message as being active within the tyntec's platform. The message may be in retry or dispatched to a mobile network for delivery to the mobile. |
+      | EXPIRED | The message validity period has expired. The message has failed to be delivered within its validity period and/or retry period. No further delivery attempts will be made. |
+      | REJECTED | The message was rejected by the tyntec platform or destination network. Reasons for rejections can be insufficient funds, illegal content/senderId. More specific reasons are given on the `errorCode`. |
+      | UNDELIVERABLE | The message is undeliverable. The message has encountered a delivery error and is deemed permanently undeliverable. No further delivery attempts will be made. Certain network or platform internal errors result in the permanent non-delivery of a message. Examples of such errors would be an unknown subscriber or network error that indicated that the given destination mobile was denied SMS service or could not support SMS. More specific reasons are given on the `errorCode`.|
   - name: BYON Contact Service
     description: Bring Your Own Number (BYON) Contacts Service gives the users the possibility to manage their contacts.
   - name: BYON Phone Book Service
@@ -48,8 +48,8 @@ tags:
     description: API for sending notifications to the partners
   - name: SMS Conversion
     description: |
-      SMS Conversion is a term used in the SMS world to describe the messages that actually received from the end user.
-      tyntec is providing an endpoint for real time conversion events reporting where customers can report if a message
+      SMS Conversion is a term used in the SMS world to describe the messages that actually were received from the end user.
+      tyntec is providing an endpoint for real-time conversion events reporting where customers can report if a message was
       received or not received by the end user.
 paths:
   /messaging/v1/sms:
@@ -64,7 +64,7 @@ paths:
         Sends an SMS via the POST HTTP method with parameters defined in the request body.
       responses:
         "200":
-          description: The messageIds of your request
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
@@ -102,7 +102,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Problem"
       requestBody:
-        description: Message you would like to send
+        description: The message you would like to send
         required: true
         content:
           application/json:
@@ -139,9 +139,9 @@ paths:
           description: |
             The message will be sent with characters encoded either in the GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per single message and 152 characters
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). The maximum length is 160 characters per single message and 152 characters
             per concatenated message.
-            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per single message and 66 characters
+            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). The maximum length is 70 characters per single message and 66 characters
             per concatenated message.
 
             tyntec automatically splits the sent message into concatenated messages if the message
@@ -201,7 +201,7 @@ paths:
             type: string
         - name: callbackMethod
           in: query
-          description: Your prefered HTTP method for the Delivery Report callback; possible values POST/GET
+          description: Your preferred HTTP method for the Delivery Report callback; possible values POST/GET
           schema:
             type: string
         - name: partLimit
@@ -244,7 +244,7 @@ paths:
           in: query
           description: >-
             Instructs the transcoder to keep emojis or to replace them with text.
-            By default the transcoder will keep emojis; thus text will result to UNICODE.
+            By default the transcoder will keep emojis; thus the text will result in UNICODE.
           schema:
             type: boolean
             default: true
@@ -256,7 +256,7 @@ paths:
             default: false
       responses:
         "200":
-          description: The messageIds of your request
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
@@ -319,7 +319,7 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: The status of the sent SMS message
           content:
             application/json:
               schema:
@@ -363,7 +363,7 @@ paths:
         **Note:** The aforementioned path is only an example. You can choose the callback URL freely.
 
         The SMS API allows you to automatically receive messages from your
-        customers sent to your phone numbers that you have registered with tyntec.
+        customers sent to the phone numbers that you have registered with tyntec.
 
         For this service, you will need to provide tyntec with an URL
         (`callbackUrl`) at your webserver, e.g. `https://rest.customer.com/inboundmessages/`.
@@ -386,10 +386,10 @@ paths:
               $ref: "#/components/schemas/InboundMessage"
       responses:
         "2XX":
-          description: Message was accepted by your system.
+          description: The message was accepted by your system.
         "default":
           description: |
-            Message was not accepted by your system.
+            The message was not accepted by your system.
 
             The tyntec's inbound system will retry the delivery.
 
@@ -424,7 +424,7 @@ paths:
             format: int32
         - name: size
           in: query
-          description: List filter based on the size field
+          description: Size of the page
           required: false
           schema:
             type: integer
@@ -655,7 +655,7 @@ paths:
       parameters:
         - name: contactId
           in: path
-          description: ID of the contact that is to be edited
+          description: The ID of the contact that is to be edited
           required: true
           schema:
             type: string
@@ -918,7 +918,7 @@ paths:
         - APIKeyHeader: []
       operationId: conversionReportPOST
       description: |
-        Report either successful or un-successful conversion event for a message.
+        Report either a successful or unsuccessful conversion event for a message.
       requestBody:
         description: Conversion
         required: true
@@ -990,11 +990,11 @@ components:
           description: Requestor's title
           type: string
         friendlyName:
-          description: List filter based on the friendlyName field
+          description: Contact's friendly name
           type: string
     ConversionEvent:
       type: object
-      description: This is the event were delivery information regarding the message can be reported back to tyntec
+      description: This is the event where delivery information regarding the message can be reported back to tyntec
       required:
         - requestId
       properties:
@@ -1004,11 +1004,11 @@ components:
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         delivered:
           type: boolean
-          description: Has the message been delivered to the end user or not. By default would be considered as true
+          description: Has the message been delivered to the end user? By default would be considered true
           default: true
         timestamp:
           type: string
-          description: The timestamp when the message converted. If empty conversion timestamp will be set tp the timestamp of the event received in the API
+          description: The timestamp when the message was converted. If empty, the conversion timestamp is set to the timestamp of the event received in the API
           format: date-time
           example: '2018-06-01T00:00:00+0200'
     ErrorResponse:
@@ -1046,7 +1046,7 @@ components:
           example: "+1987654321"
         message:
           type: string
-          description: "The received message as a UTF-8 encoded string. Note: Missing parts of a concat message will be marked with <...> in the message."
+          description: "The received message as a UTF-8 encoded string. Note: Missing parts of a concatenated message will be marked with <...> in the message."
           example: "This is an example, the data is garbage."
         originMCC:
           type: string
@@ -1075,7 +1075,7 @@ components:
           example: 1
         missingParts:
           type: boolean
-          description: This flag marks whether tyntec received all parts of a concat message within a time limit of 10 minutes.
+          description: This flag marks whether tyntec received all parts of a concatenated message within a time limit of 10 minutes.
           example: false
         contentList:
           type: array
@@ -1174,7 +1174,7 @@ components:
           example: https://docs.tyntec.com/problems/DataNotParseable
           type: string
         title:
-          description: Short, human-readable summary of the problem type
+          description: A short, human-readable summary of the problem type
           type: string
           example: The given data were not parsable.
         status:
@@ -1182,7 +1182,7 @@ components:
           type: string
           example: 400
         detail:
-          description: Human-readable explanation specific to this problem occurrence
+          description: A human-readable explanation specific to this problem occurrence
           type: string
           example: |
             Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
@@ -1207,10 +1207,10 @@ components:
           description: |
             The message will be sent with characters encoded either in the GSM standard alphabet (GSM-7) or GSM Unicode alphabet (UCS-2).
 
-            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 160 characters per a single message and 152 characters
-            per a concatenated message.
-            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). Maximum length is 70 characters per a single message and 66 characters
-            per a concatenated message.
+            - GSM standard alphabet [GSM-7](http://en.wikipedia.org/wiki/GSM_03.38). The maximum length is 160 characters per single message and 152 characters
+            per concatenated message.
+            - GSM Unicode alphabet [UCS-2](http://en.wikipedia.org/wiki/GSM_03.38). The maximum length is 70 characters per single message and 66 characters
+            per concatenated message.
 
             tyntec automatically splits a sent message into concatenated messages if the message
             exceeds the given limits. These concatenated messages are unified by the handset once again and
@@ -1251,14 +1251,14 @@ components:
           description: Your URL for delivering the Delivery Reports; leave empty for no Delivery Report.
           type: string
         callbackMethod:
-          description: Your prefered HTTP method for the Delivery Report callback; possible values are POST/GET.
+          description: Your preferred HTTP method for the Delivery Report callback; possible values are POST/GET.
           type: string
           enum:
             - POST
             - GET
           default: POST
         partLimit:
-          description: Up to how many parts you allow this message can concatenated
+          description: Up to how many parts you allow this message can be concatenated
           type: integer
           format: int32
           default: 4
@@ -1297,85 +1297,6 @@ components:
         to: "+123456789"
         from: "tyntec"
         message: "Hello world!"
-    ResponseEntity:
-      type: object
-      description: Response schema
-      properties:
-        body:
-          description: Short, human-readable summary of the response
-          type: object
-        statusCode:
-          description: Response ID
-          type: string
-          enum:
-            - "100"
-            - "101"
-            - "102"
-            - "103"
-            - "200"
-            - "201"
-            - "202"
-            - "203"
-            - "204"
-            - "205"
-            - "206"
-            - "207"
-            - "208"
-            - "226"
-            - "300"
-            - "301"
-            - "302"
-            - "303"
-            - "304"
-            - "305"
-            - "307"
-            - "308"
-            - "400"
-            - "401"
-            - "402"
-            - "403"
-            - "404"
-            - "405"
-            - "406"
-            - "407"
-            - "408"
-            - "409"
-            - "410"
-            - "411"
-            - "412"
-            - "413"
-            - "414"
-            - "415"
-            - "416"
-            - "417"
-            - "418"
-            - "419"
-            - "420"
-            - "421"
-            - "422"
-            - "423"
-            - "424"
-            - "426"
-            - "428"
-            - "429"
-            - "431"
-            - "451"
-            - "500"
-            - "501"
-            - "502"
-            - "503"
-            - "504"
-            - "505"
-            - "506"
-            - "507"
-            - "508"
-            - "509"
-            - "510"
-            - "511"
-        statusCodeValue:
-          description: Response code value
-          type: integer
-          format: int32
     RestMessagePart:
       type: object
       description: The part of the message request that the message is split to
@@ -1389,7 +1310,7 @@ components:
           description: The delivery status of this specific part; possible values can be found [here] (#delivery-states)
         doneDate:
           type: string
-          description: The time stamp when the message was successfully delivered
+          description: The timestamp when the message was successfully delivered
         errorCode:
           type: string
           description: The reason for an unsuccessful delivery attempt. [GSM error codes](https://www.tyntec.com/docs/docs-center-sms-api-gsm-error-codes)
@@ -1407,7 +1328,7 @@ components:
           example: "2018-06-01T00:00:00+0200"
         sentDate:
           type: string
-          description: The time stamp when the message was sent out by tyntec for delivery.
+          description: The timestamp when the message was sent out by tyntec for delivery.
           example: "2019-07-02T16:47:39+0200"
         statusText:
           type: string
@@ -1417,7 +1338,7 @@ components:
       properties:
         doneDate:
           type: string
-          description: The time stamp when the message was successfully delivered
+          description: The timestamp when the message was successfully delivered
         errorCode:
           type: string
           description: The error code. [GSM error codes](https://www.tyntec.com/docs/docs-center-sms-api-gsm-error-codes)
@@ -1449,14 +1370,14 @@ components:
           format: date-time
         reference:
           type: string
-          description: Custom reference that will mark the Delivery Report
+          description: The custom reference that will mark the Delivery Report
         requestId:
           type: string
           description: The unique identifier provided for each messaging request
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
         sentDate:
           type: string
-          description: The time stamp when the message was sent out by tyntec for delivery
+          description: The timestamp when the message was sent out by tyntec for delivery
           example: "2019-07-02T16:47:39+0200"
         size:
           type: integer
@@ -1464,7 +1385,7 @@ components:
           format: int32
           example: 1
         status:
-          description: The message status; the values can be found can be found [here] (#delivery-states)
+          description: The message status; the values can be found [here] (#delivery-states)
           type: string
           example: "DELIVERED"
         submitDate:
