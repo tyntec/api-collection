@@ -90,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/MessageResponse'
+                $ref: '#/components/schemas/MessageResponse'
 
         400:
           $ref: '#/components/responses/BadRequest'
@@ -127,7 +127,7 @@ paths:
         - "WeChat IDs"
       summary: List WeChat IDs
       operationId: listAllWeChatChannels
-      description: List all WeCht channels available to your API account
+      description: List all WeChat ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllWeChatChannelsResponse'
@@ -175,6 +175,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     WeChatId:
       name: wechat-id
@@ -185,12 +190,6 @@ components:
         type: string
       example: 23cklsdhf2
   responses:
-    MessageResponse:
-      description: The response after the server has accepted the request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MessageResponse'
     BulkMessageResponse:
       description: The response after the server has accepted the request
       content:
@@ -270,10 +269,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: WeChat
-          items:
-            type: string
-            enum:
-              - wechat
+          enum:
+            - wechat
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -316,18 +313,17 @@ components:
           type: string
           description: The channel selected for delivery.
           example: wechat
-          items:
-            type: string
-            enum:
-              - wechat
+          enum:
+            - wechat
         messages:
           type: array
           maxItems: 20
           minItems: 2
           items:
-            - $ref: '#/components/schemas/WeChatTextContent'
-            - $ref: '#/components/schemas/WeChatImageContent'
-            - $ref: '#/components/schemas/WeChatTemplateContent'
+            oneOf:
+              - $ref: '#/components/schemas/WeChatTextContent'
+              - $ref: '#/components/schemas/WeChatImageContent'
+              - $ref: '#/components/schemas/WeChatTemplateContent'
     WeChatTextContent:
       type: object
       properties:

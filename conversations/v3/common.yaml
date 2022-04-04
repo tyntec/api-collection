@@ -41,8 +41,8 @@ info:
     e.g. `https://rest.customer.com/messagestatus/`. This URL must serve a webhook able to process POST HTTP requests,
     which the tyntec system will fire upon events in the system, in this case upon message status updates.
 
-    You may also configure an opt-in filter on one or more `MessageStatus::*` event types in the tyntec
-    application, see [Webhook Configuration](#configurations) and [Webhook Events](#webhook-events).
+    You may also configure an opt-in filter on one or more `MessageStatus::*` event types in the Configuration, see
+    [Webhook Configuration](#configurations) and [Webhook Events V2](#webhook-events-v2).
     The set of available event types slightly varies on each channel:
 
     | Channel | Accepted | Dispatched | Delivered | Seen | Channel failed | Deleted |
@@ -56,7 +56,7 @@ info:
 
     **Retries**
 
-    The tyntec application will retry to post the request 2 more times in the case your
+    The tyntec system will retry to post the request 2 more times in the case your
     webhook does not accept the request (final response codes other than 2xx).
 
     ### Receiving inbound messages
@@ -68,13 +68,13 @@ info:
 
     For this service, you will need to provide a URL (`inboundMessageUrl`) at your webserver,
     e.g. `https://rest.customer.com/inboundmessages/`. This URL must serve a webhook able to process POST HTTP requests,
-    which the tyntec [application](current.html#configurations) will fire upon the events of inbound messages.
+    which the tyntec system will fire upon the events of inbound messages.
 
     The events fired upon are of type `MoMessage`.
 
     **Retries**
 
-    The tyntec application will retry to post the request in the case your webhook does not accept the request
+    The tyntec system will retry to post the request in the case your webhook does not accept the request
     (final response codes other than 2xx), depending on the channel as follows:
 
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
@@ -83,7 +83,7 @@ info:
     - *WeChat:* TODO
     - *Telegram:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
-      delivery attempts. tyntec's application will keep trying for a maximum of 48 hours.
+      delivery attempts. tyntec's system will keep trying for a maximum of 48 hours.
 
   contact:
     name: tyntec API Support
@@ -171,7 +171,7 @@ paths:
     post:
       parameters:
         - name: validity
-          description: How long is the media stored in minutes.
+          description: For how long is the media stored in minutes.
           required: false
           in: query
           schema:
@@ -274,7 +274,7 @@ components:
         format: uuid
     MediaId:
       required: true
-      description: Media provided by tyntec
+      description: Media ID provided by tyntec
       name: mediaId
       in: path
       schema:
@@ -373,13 +373,11 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
-              - whatsapp
-              - wechat
-              - viber
+          enum:
+            - sms
+            - whatsapp
+            - wechat
+            - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
@@ -393,7 +391,7 @@ components:
         to: "+123234234"
         from: "545345345"
         channel: "whatsapp"
-        whatsapp:
+        content:
           contentType: text
           text: A simple text message
     MessageRequestOverrides:
@@ -439,6 +437,55 @@ components:
           description: Point in time when status has been entered
     MessageDeliveryEvents:
       type: object
+      required:
+        - messageId
+        - events
+      properties:
+        messageId:
+          type: string
+          format: uuid
+          description: Global unique Message Id reference
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDeliveryEvent'
+    MessageDeliveryEvent:
+      type: object
+      required:
+        - timestamp
+        - event
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Point in time when the event has happened.
+          example: 2021-11-19T06:39:28.081Z
+        event:
+          type: string
+          description: Determines which kind of event has happened.
+          example: MessageStatus::channelFailed
+        channel:
+          type: string
+          description: Channel selected for delivery.
+          enum:
+            - sms
+            - whatsapp
+            - wechat
+            - viber
+          example: whatsapp
+        details:
+          type: object
+          description: Channel specific details.
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: whatsapp::error::470
+            message:
+              type: string
+              example: Message failed to send because more than 24 hours have passed since the customer last replied to this number
     BulkMessageRequest:
       type: object
     BulkMessageResponse:
@@ -473,24 +520,24 @@ components:
         mediaId:
           type: string
           format: uuid
+          description: The media ID provided by tyntec
         contentType:
           type: string
+          description: The media type
         validity:
           type: string
           format: date-time
+          description: For how long is the media stored in minutes
         fileName:
           type: string
+          description: The name of the file
         fileSize:
           type: integer
+          description: The size of the file in bytes
     Problem:
       type: object
       additionalProperties: true
       description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
-      required:
-        - type
-        - title
-        - status
-        - detail
       properties:
         type:
           description: A URI reference [RFC3986] that identifies the problem type
@@ -502,7 +549,7 @@ components:
           description: A short, human-readable summary of the problem type.
         status:
           description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
-          type: string
+          type: number
           example: 400
         detail:
           description: A human-readable explanation specific to this occurrence of the problem.

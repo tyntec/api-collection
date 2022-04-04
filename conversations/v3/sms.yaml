@@ -88,7 +88,7 @@ paths:
         - "Inbound Phone Numbers"
       summary: List Phone Numbers
       operationId: listAllSMSChannels
-      description: List all Inbound SMS channels available to your API account
+      description: List all Inbound Phone Number configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllSMSChannelsResponse'
@@ -120,7 +120,7 @@ paths:
         - "Callback configuration"
       summary: Update the callback
       operationId: updateSMSChannelCallback
-      description: Update the callback settings of a specific inbound sms. **Note** The complete object must be provided
+      description: Update the callback settings for a specific inbound phone number. **Note** The complete object must be provided
       requestBody:
         content:
           application/json:
@@ -136,12 +136,17 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     PhoneNumber:
       name: phone-number
       in: path
       required: true
-      description: Phone number used for WhatsApp messaging.
+      description: Phone number used for SMS.
       schema:
         type: integer
         minLength: 4
@@ -233,10 +238,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
+          enum:
+            - sms
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -276,10 +279,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: sms
-          items:
-            type: string
-            enum:
-              - sms
+          enum:
+            - sms
         messages:
           type: array
           maxItems: 20

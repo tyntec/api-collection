@@ -95,7 +95,7 @@ paths:
         - "Service IDs"
       summary: List Service IDs
       operationId: listAllViberChannels
-      description: List all Viber channels available to your API account
+      description: List all Service ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllViberChannelsResponse'
@@ -143,6 +143,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     ServiceId:
       name: service-id
@@ -257,10 +262,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: viber
-          items:
-            type: string
-            enum:
-              - viber
+          enum:
+            - viber
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -323,20 +326,19 @@ components:
           type: string
           description: The channel selected for delivery.
           example: viber
-          items:
-            type: string
-            enum:
-              - viber
+          enum:
+            - viber
         messages:
           type: array
           maxItems: 20
           minItems: 2
           items:
-            - $ref: '#/components/schemas/ViberTextContent'
-            - $ref: '#/components/schemas/ViberImageContent'
-            - $ref: '#/components/schemas/ViberFileContent'
-            - $ref: '#/components/schemas/ViberVideoContent'
-            - $ref: '#/components/schemas/ViberComponentsContent'
+            oneOf:
+              - $ref: '#/components/schemas/ViberTextContent'
+              - $ref: '#/components/schemas/ViberImageContent'
+              - $ref: '#/components/schemas/ViberFileContent'
+              - $ref: '#/components/schemas/ViberVideoContent'
+              - $ref: '#/components/schemas/ViberComponentsContent'
     ViberTextContent:
       type: object
       properties:

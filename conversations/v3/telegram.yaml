@@ -81,7 +81,7 @@ paths:
         - "Telegram IDs"
       summary: List Telegram IDs
       operationId: listAllTelegramChannels
-      description: List all Telegram channels available to your API account
+      description: List all Telegram ID configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllTelegramChannelsResponse'
@@ -129,6 +129,11 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
   parameters:
     TelegramId:
       name: telegram-id
@@ -226,10 +231,8 @@ components:
           type: string
           description: The channel selected for delivery.
           example: telegram
-          items:
-            type: string
-            enum:
-              - telegram
+          enum:
+            - telegram
         overrides:
           $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
         context:
@@ -244,7 +247,7 @@ components:
         to: "+123234234"
         from: "545345345"
         channel:  "telegram"
-        telegram:
+        content:
           contentType: text
           text: A simple text message
     BulkMessageRequest:
@@ -271,17 +274,16 @@ components:
           type: string
           description: The channel selected for delivery.
           example: telegram
-          items:
-            type: string
-            enum:
-              - telegram
+          enum:
+            - telegram
         messages:
           type: array
           maxItems: 20
           minItems: 2
           items:
-            - $ref: '#/components/schemas/TelegramTextContent'
-            - $ref: '#/components/schemas/TelegramImageContent'
+            oneOf:
+              - $ref: '#/components/schemas/TelegramTextContent'
+              - $ref: '#/components/schemas/TelegramImageContent'
     TelegramTextContent:
       type: object
       properties:

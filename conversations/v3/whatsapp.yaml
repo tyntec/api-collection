@@ -94,7 +94,7 @@ paths:
                 value:
                   from: a cool business
                   to: some number
-                  channel: WhatsApp
+                  channel: whatsapp
                   content:
                     contentType: text
                     text: hi there
@@ -103,7 +103,7 @@ paths:
                 value:
                   from: a cool business
                   to: some number
-                  channel: WhatsApp
+                  channel: whatsapp
                   content:
                     contentType: image
                     image:
@@ -554,7 +554,7 @@ paths:
         - "Phone Number Configurations"
       summary: List Configurations
       operationId: listAllWhatsAppChannels
-      description: List all WhatsApp channels available to your API account
+      description: List all WhatsApp phone number configurations available to your API account
       responses:
         200:
           $ref: '#/components/responses/ListAllWhatsAppChannelsResponse'
@@ -612,7 +612,7 @@ paths:
       tags:
         - "Profile management"
       requestBody:
-        description: Information in order to create the group
+        description: Updated profile settings
         required: true
         content:
           application/json:
@@ -632,8 +632,9 @@ paths:
   /channels/whatsapp/phone-numbers/{phone-number}/settings/logo:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
-      - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
     get:
+      parameters:
+        - $ref: '#/components/parameters/WhatsAppProfileLogoFormat'
       operationId: getCurrentWALogo
       summary: Read the logo
       description: Returns the current logo assigned to a WhatsApp phone number profile.
@@ -763,12 +764,13 @@ components:
     WhatsAppProfileLogoFormat:
       name: format
       in: query
-      description: The format in which the icon should be returned
+      description: The format in which the icon should be returned. The default is binary.
       schema:
         type: string
         enum:
           - link
           - binary
+        default: binary
     WhatsAppAccountId:
       name: whatsapp-account-id
       in: path
@@ -805,7 +807,7 @@ components:
         Location:
           schema:
             type: string
-          description: Location URI of the newly created resource
+          description: The URI of the newly created resource
     Default:
       description: The default response in case of any other error. Please check the error object for details
       content:
@@ -1260,11 +1262,9 @@ components:
         channel:
           type: string
           description: The channel selected for delivery.
-          example: WhatsApp
-          items:
-            type: string
-            enum:
-              - whatsapp
+          example: whatsapp
+          enum:
+            - whatsapp
         context:
           type: string
           description: The context for this particular message
@@ -1285,7 +1285,7 @@ components:
         to: "+123234234"
         from: "545345345"
         channel: "whatsapp"
-        whatsapp:
+        content:
           contentType: text
           text: A simple text message
     BulkMessageRequest:
@@ -1311,11 +1311,9 @@ components:
         channel:
           type: string
           description: The channel selected for delivery.
-          example: WhatsApp
-          items:
-            type: string
-            enum:
-              - whatsapp
+          example: whatsapp
+          enum:
+            - whatsapp
         messages:
           type: array
           maxItems: 20
@@ -1490,10 +1488,10 @@ components:
       type: object
       description: Footer of an interactive message
       required:
-        - contentType
+        - type
         - text
       properties:
-        contentType:
+        type:
           type: string
           description: Determines the type of the message. Always _text_.
           enum:
@@ -1506,10 +1504,10 @@ components:
       type: object
       description: The message body of an interactive message
       required:
-        - contentType
+        - type
         - text
       properties:
-        contentType:
+        type:
           type: string
           description: Determines the type of the message. Always _text_.
           enum:
@@ -1591,7 +1589,7 @@ components:
           example:
             7.4954884
         latitude:
-          type: integer
+          type: number
           format: double
           description: The latitude part of the coordinate
           example:
@@ -1677,7 +1675,7 @@ components:
         zip:
           type: string
           description: ZIP or postal code
-          example: 44231
+          example: "44231"
     Email:
       type: object
       description: Email of the contact
@@ -1696,12 +1694,12 @@ components:
       properties:
         service:
           type: string
-          description: Type of the email
+          description: Type of the service
           example: WhatsApp
         userId:
           type: string
           description: IMS user id
-          example: 123123123
+          example: "123123123"
     Name:
       type: object
       description: |
@@ -1881,7 +1879,7 @@ components:
         type:
           type: string
           enum:
-            - document
+            - location
         location:
           $ref: '#/components/schemas/WhatsAppLocation'
     WhatsAppTemplateMediaHeader:
@@ -2031,7 +2029,7 @@ components:
       description: |
         An interactive message type
       required:
-        - type
+        - subType
         - components
       properties:
         subType:
@@ -2487,7 +2485,7 @@ components:
             c9468969-a3a3-4c17-95f7-1e8b2902ed74
         facebookBusinessManagerId:
           description: The Facebook Business Manager ID provided by Facebook
-          type: string
+          type: number
           example: 1791147717848878
         whatsAppBusinessAccountId:
           description: The WhatsApp Business Account ID provided by WhatsApp
@@ -2522,7 +2520,7 @@ components:
           type: string
           description: The phone number
           example:
-            49123456789
+            "49123456789"
         displayPhoneNumber:
           type: string
           description: The phone number as it is displayed in the app
@@ -2584,8 +2582,8 @@ components:
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
       example:
-        phoneNumber: 4912345678
-        displayPhonenumber: +49 123 45678
+        phoneNumber: "49123456789"
+        displayPhoneNumber: +49 123 45678
         verifiedName: Swagger Sample
         qualityRating: YELLOW
         status: FLAGGED
@@ -2602,7 +2600,7 @@ components:
           type: string
           description: Name of the CPaaSAccount
       example:
-        name: someaccount
+        accountName: someaccount
     WhatsAppTemplateRequest:
       type: object
       description: Request for an additional WhatsApp template
@@ -3001,7 +2999,7 @@ components:
                 text: Your specification team!
       example:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name: swagger_test
+        templateName: swagger_test
         category: TICKET_UPDATE
         localizations:
           - status: REJECTED
@@ -3025,7 +3023,7 @@ components:
         status:
           type: string
           description: |
-            Status the localization.
+            Status of the localization.
           enum:
             - REQUESTED
             - SUBMIT_FAILED
@@ -3098,7 +3096,7 @@ components:
             IMAGE
         text:
           type: string
-          description: Text based part of format "TEXT
+          description: The textual part in the case the format is TEXT
           example: Hi {{1}}!
     WhatsAppTemplateBodyComponentResponse:
       type: object
