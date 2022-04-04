@@ -6,13 +6,13 @@ info:
     url: http://www.tyntec.com/support
     email: support@tyntec.com
   description: |
-    The Configurations allows you to setup certain parts of settings on account or channel level.
+    The Configurations allows you to set up certain parts of settings on account or channel level.
 
-    Included are callback settings, credentials (where appropriate) and a signature for incoming events.
+    Included are callback settings, credentials (where appropriate), and a signature for incoming events.
 
     ## Credentials
 
-    Some channels require you to provide tyntec with credentials, for example telegram bots or WeChat applications.
+    Some channels require you to provide tyntec with credentials, for example, telegram bots or WeChat applications.
     The Conversations API allows you to configure these credentials via the API directly
 
     ## Signature
@@ -23,20 +23,20 @@ info:
     The Conversations API can provide you with a message signature that encrypts the actual event
     content with a keyed-hash message authentication code [HMAC](https://en.wikipedia.org/wiki/HMAC).
 
-    The signature is transfered in the header `x-signature` as a Base64 URL encoded value.
+    The signature is transferred in the header `x-signature` as a Base64 URL encoded value.
 
-    As a preparation both parties need to align on
+    As a preparation, both parties need to align on
 
     - the algorithm used
     - the shared secret
 
-    With these information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`)
-    and the actual event we calculate the signature.
+    With this information, the request timestamp (header `x-request-timestamp`), the signature version (header `x-signature-version`),
+    and the actual event, we calculate the signature.
 
-    If you want to check if the message has been tampered on transmission you need to calculate the
+    If you want to check if the message has been tampered on the transmission, you need to calculate the
     signature yourself and compare it with the signature provided in the header `x-signature`.
 
-    The following pseudo code examples show you how to calculate the signature
+    The following pseudo-code examples show you how to calculate the signature
 
     **Signature version: V1.0**
 
@@ -59,7 +59,7 @@ info:
       fi
     </pre>
 
-    We advise as well to verify if the request timestamp is not too old (couple of minutes at most) and discard
+    We advise as well to verify if the request timestamp is not too old (a couple of minutes at most) and discard
     the message otherwise.
 
     ## Callback Overiding Rules
@@ -117,15 +117,15 @@ info:
 
     | Scope | Description |
     | :--- | :--- |
-    | `callbacks:read` | Grants read access on the account level callbacks |
-    | `callbacks:write` | Grants write access on the account level callbacks |
-    | `credentials:read` | Grants read access on the account level credentials, eg media credentials |
-    | `credentials:write` | Grants write access on the account level credentials, eg media credentials |
-    | `channels:read` | Grants read access on assigned channels |
-    | `channels.wechat:write` | Grants write access on WeChat channels |
-    | `channels.telegram:write` | Grants write access on Telegram channels |
-    | `media:read` | Grants read access on media files (inbound/outbound) |
-    | `media:write` | Grants write access on outbound media files |
+    | `callbacks:read` | Grants read access to the account level callbacks |
+    | `callbacks:write` | Grants write access to the account level callbacks |
+    | `credentials:read` | Grants read access to the account level credentials, eg media credentials |
+    | `credentials:write` | Grants write access to the account level credentials, eg media credentials |
+    | `channels:read` | Grants read access to assigned channels |
+    | `channels.wechat:write` | Grants write access to WeChat channels |
+    | `channels.telegram:write` | Grants write access to Telegram channels |
+    | `media:read` | Grants read access to media files (inbound/outbound) |
+    | `media:write` | Grants write access to outbound media files |
 
     ### Channel scopes
 
@@ -133,16 +133,16 @@ info:
 
     | Scope | Description | Available on |
     | :--- | :--- | :--- |
-    | `callbacks:read` | Grants read access on channel level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `callbacks:write` | Grants write access on channel level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `credentials:read` | Grants read access on the channels credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
-    | `credentials:write` | Grants write access on the channels credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
-    | `messages:read` | Grants read access on messages of a channel | - |
+    | `callbacks:read` | Grants read access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `callbacks:write` | Grants write access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `credentials:read` | Grants read access to the channel's credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
+    | `credentials:write` | Grants write access to the channel's credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
+    | `messages:read` | Grants read access to messages of a channel | - |
     | `messages:write` | Grants access to send messages via a channel | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `profile:read` | Grants read access on a channels profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `profile:write` | Grants write access on a channels profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `templates:read` | Grants read access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `templates:write` | Grants write access on a channels templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `profile:read` | Grants read access to a channel's profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `profile:write` | Grants write access to a channel's profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `templates:read` | Grants read access to a channel's templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `templates:write` | Grants write access to a channel's templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
   version: '3.4'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
@@ -155,12 +155,12 @@ security:
 tags:
   - name: "API Account Configurations"
     description: |
-      API Account configurations allows you to configure settings global to your API account.
+      API Account configurations allow you to configure settings global to your API account.
   - name: "Channel Configurations"
     description: |
-        Channel Account configurations allows you to configure settings local to a specific channel.
+        Channel Account configurations allow you to configure settings local to a specific channel.
 
-        A channel here is refered as a the identity you use to send messages to your clients.
+        A channel here is referred to as the identity you use to send messages to your clients.
 paths:
   /configurations:
     get:
@@ -171,7 +171,7 @@ paths:
       description: Returns the configuration of the API account
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -190,7 +190,7 @@ paths:
               $ref: '#/components/schemas/Callback'
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -209,7 +209,7 @@ paths:
               $ref: '#/components/schemas/MediaCredentials'
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -222,7 +222,7 @@ paths:
       description: Remove the media credentials of the account.
       responses:
         200:
-          description: Configuration of the account
+          description: The configuration of the account
           content:
             application/json:
               schema:
@@ -357,7 +357,7 @@ components:
   schemas:
     AccountConfiguration:
       type: object
-      description: Configuration of an API account
+      description: A configuration of an API account
       properties:
         scopes:
           type: array
@@ -382,11 +382,11 @@ components:
         - media:write
     Callback:
       type: object
-      description: Configuration of callbacks to your system
+      description: A configuration of callbacks to your system
       properties:
         callbackVersion:
           type: string
-          description: Event version to be used.
+          description: The event version to be used.
           enum:
             - "2.11"
             - "2.12"
@@ -397,18 +397,18 @@ components:
           $ref: '#/components/schemas/Header'
         inboundMessageUrl:
           type: string
-          description: Webhook for events related to inbound messages
+          description: A webhook for events related to inbound messages
           pattern: "^https://.*"
           maxLength: 2000
         messageStatusUrl:
           type: string
-          description: Webhook for events related to message status changes
+          description: A webhook for events related to message status changes
           pattern: "^https://.*"
           maxLength: 2000
         eventFilter:
           type: array
           description: |
-            List of status events to listen on. If empty all events are submitted.
+            A list of status events to listen to. If empty, all events are submitted.
           items:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
@@ -427,7 +427,7 @@ components:
     Signature:
       type: object
       description: |
-        Signature configuration for incoming events. Can be disabled by setting the
+        A signature configuration for incoming events. Can be disabled by setting the
         signature property to empty.
       required:
         - secret
@@ -435,32 +435,32 @@ components:
       properties:
         secret:
           type: string
-          description: Shared secret key
+          description: A shared secret key
           minLength: 8
           maxLength: 125
         method:
           type: string
-          description: cryptographic algorithm used for the signature calculation
+          description: A cryptographic algorithm used for signature calculation
           enum:
             - HS256
             - HS512
     Header:
       type: object
       description: |
-        Additional custom header to be send with the event transmission. Can be used for setting
+        An additional custom header to be sent with the event transmission. Can be used for setting
         authentication tokens, or similar.
       required:
         - key
         - value
       properties:
         key:
-          description: name of the http header
+          description: The name of the HTTP header
           type: string
           minLength: 4
           maxLength: 125
         value:
           type: string
-          description: value of the http header
+          description: The value of the HTTP header
           minLength: 8
           maxLength: 1024
     DetailedAccountConfig:
@@ -480,7 +480,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the credentials. Always _oauth2_.
+          description: Determines the type of credentials. Always _oauth2_.
           enum:
             - oauth2
         oauth2:
@@ -501,7 +501,7 @@ components:
       properties:
         type:
           type: string
-          description: Determines the type of the credentials. Always _basic_.
+          description: Determines the type of credentials. Always _basic_.
           enum:
             - basic
         basic:
@@ -552,27 +552,27 @@ components:
         - media:write
     ChannelCallback:
       type: object
-      description: Configuration of callbacks to your system
+      description: A configuration of callbacks to your system
       properties:
         callbackVersion:
           type: string
-          description: Event version to be used.
+          description: The event version to be used.
           enum:
             - "2.11"
         inboundMessageUrl:
           type: string
-          description: Webhook for events related to inbound messages
+          description: A webhook for events related to inbound messages
           pattern: "^https://.*"
           maxLength: 2000
         messageStatusUrl:
           type: string
-          description: Webhook for events related to message status changes
+          description: A webhook for events related to message status changes
           pattern: "^https://.*"
           maxLength: 2000
         eventFilter:
           type: array
           description: |
-            List of status events to listen on. If empty all events are submitted.
+            A list of status events to listen to. If empty, all events are submitted.
           items:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
@@ -727,25 +727,25 @@ components:
     #
     PhoneNumberId:
       type: object
-      description: Definition of the Phone Number Id
+      description: The definition of the Phone Number Id
       properties:
         phoneNumber:
           type: string
     ServiceId:
       type: object
-      description: Definition of the Viber Service id
+      description: The definition of the Viber Service id
       properties:
         serviceId:
           type: string
     WeChatId:
       type: object
-      description: Definition of the WeChat id
+      description: The definition of the WeChat id
       properties:
         weChatId:
           type: string
     TelegramId:
       type: object
-      description: Definition of the Telegram id
+      description: The definition of the Telegram id
       properties:
         botId:
           type: string

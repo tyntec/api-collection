@@ -34,12 +34,12 @@ tags:
 servers:
   production:
     url: 78.110.226.11
-    description: Server address of tyntec, the events origin from
+    description: The server address of tyntec, the events originate from
     protocol: https
 channels:
   "MoMessage (Basic)":
     description: |
-      Message received by us and delivered to your system via a webhook provided by your system.
+      A message received by us and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
@@ -51,7 +51,7 @@ channels:
           method: POST
   "MoMessage (SMS)":
     description: |
-      Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
+      A message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
@@ -63,7 +63,7 @@ channels:
           method: POST
   "MoMessage (WhatsApp)":
     description: |
-      Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+      A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
@@ -75,7 +75,7 @@ channels:
           method: POST
   "MoMessage (Viber)":
     description: |
-      Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
+      A message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
     publish:
       tags:
         - name: "Received messages"
@@ -177,7 +177,7 @@ channels:
           method: POST
   "Message Status: Seen":
     description: |
-      This event is triggered when the channel informed that the message was seen by the recipient.
+      This event is triggered when the channel informs that the message was seen by the recipient.
 
       Depending on the channel, this is a subject of privacy settings by the recipient, eg. WhatsApp.
 
@@ -296,7 +296,7 @@ components:
           $ref: '#/components/schemas/EventTypes'
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source
+          description: The channel that triggered the event. Can be empty in the case of an internal source
           example: sms
           enum:
             - sms
@@ -306,7 +306,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:00
         from:
@@ -335,7 +335,7 @@ components:
     MoMessage:
       type: object
       description: |
-        Message received by us and delivered to your system via a webhook provided by your system.
+        A message received by us and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -350,7 +350,7 @@ components:
             - MoMessage
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -361,18 +361,18 @@ components:
           deprecated: true
           type: string
           format: 'date-time'
-          description: Point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
+          description: The point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
           example:
             2019-06-26T11:41:00
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the message was received
+          description: The point in time when the message was received
           example:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message ID reference
+          description: A message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
@@ -380,11 +380,11 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiver. The format is channel specific
+          description: The receiver. The format is channel-specific
           example: "49123512315"
         groupId:
           type: string
-          description: Group ID from which the event originates. Only present if the message was sent into a group.
+          description: The group ID from which the event originates. Only present if the message was sent into a group.
           example:
             4923147790717-1564134658
         content:
@@ -403,7 +403,7 @@ components:
           text: A simple text message
     MoContent:
       type: object
-      description: Content of the mobile-originated message
+      description: The content of the mobile-originated message
       required:
         - contentType
       properties:
@@ -434,29 +434,29 @@ components:
       properties:
         messageId:
           type: string
-          description: The message ID the MoMessage refers to. Usualy set when the sender replies to a specific message
+          description: The message ID the MoMessage refers to. Usually set when the sender replies to a specific message
           example: 77185196-664a-43ec-b14a-fe97036c697a
         isForwarded:
           type: boolean
-          description: Is the message forwarded by the user
+          description: Is the message forwarded by the user?
           example: true
         isFrequentlyForwarded:
           type: boolean
-          description: Is the message frequently forwarded. The definition of frequently depends on the channel
+          description: Is the message frequently forwarded? The definition of frequently depends on the channel
           example: true
         product:
           $ref: '#/components/schemas/Product'
     Product:
       type: object
-      description: Product that got a question
+      description: A product that got a question
       properties:
         catalogId:
           type: string
-          description: Id of the catalog
+          description: The Id of the catalog
           example: "23343-12342"
         productId:
           type: string
-          description: ID or SKU of the product
+          description: The ID or SKU of the product
           example: 123-SKU-12432
     MoMedia:
       type: object
@@ -478,16 +478,16 @@ components:
           example: https://api.tyntec.com/messaging/v1/chat/media/77185196-664a-43ec-b14a-fe97036c697f
         mediaId:
           type: string
-          description: Plain ID of the media to download
+          description: A plain ID of the media to download
           example: 77185196-664a-43ec-b14a-fe97036c697f
         caption:
           type: string
-          description: Caption specified by the user or the file name of the document
-          example: This is an picture of my cat!
+          description: A caption specified by the user or the file name of the document
+          example: This is a picture of my cat!
     SMSMoMessage:
       type: object
       description: |
-        Message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
+        A message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -500,7 +500,7 @@ components:
 
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -592,7 +592,7 @@ components:
           example: "25"
     SMSContent:
       type: object
-      description: SMS channel specific information
+      description: SMS channel-specific information
       properties:
         messageId:
           type: string
@@ -612,7 +612,7 @@ components:
           description: |
             The price per message from the respective network.
 
-            Negative prices represent payout in favor of tyntec’s customer.
+            Negative prices represent payout in favor of tyntec’s customers.
           example: 0.1
         currency:
           type: string
@@ -625,7 +625,7 @@ components:
         sequenceNumber:
           type: number
           description: |
-            In the case an over-length message is received tyntec recomposes the full message text before forwarding.
+            In the case an over-length message is received, tyntec recomposes the full message text before forwarding.
             The “sequenceNumber” indicates the order of the message part.
           minimum: 1
           maximum: 255
@@ -633,7 +633,7 @@ components:
     WhatsAppMoMessage:
       type: object
       description: |
-        Message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+        A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -645,7 +645,7 @@ components:
       properties:
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: whatsapp
           enum:
             - whatsapp
@@ -673,7 +673,7 @@ components:
       properties:
         senderName:
           type: string
-          description: Name of the sender, set in his or her profile
+          description: The name of the sender, set in his or her profile
           example: Peter
       example:
         senderName: Peter
@@ -692,7 +692,7 @@ components:
     ViberMoMessage:
       type: object
       description: |
-        Message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
+        A message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -704,7 +704,7 @@ components:
       properties:
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: viber
           enum:
             - viber
@@ -743,7 +743,7 @@ components:
             - MoMessage::Postback
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: sms
           enum:
             - sms
@@ -753,12 +753,12 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the message was received
+          description: The point in time when the message was received
           example:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message ID reference
+          description: A message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
@@ -766,11 +766,11 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiver. The format is channel specific
+          description: The receiver. The format is channel-specific
           example: "49123512315"
         groupId:
           type: string
-          description: Group ID from which the event originates. Only present if the message was sent into a group
+          description: The group ID from which the event originates. Only present if the message was sent into a group
           example:
             4923147790717-1564134658
         postback:
@@ -813,19 +813,19 @@ components:
             - MoMessage::Order
         channel:
           type: string
-          description: Channel that triggered the event.
+          description: The channel that triggered the event.
           example: whatsapp
           enum:
             - whatsapp
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the message was received
+          description: The point in time when the message was received
           example:
             2019-06-26T11:41:00
         messageId:
           type: string
-          description: Message ID reference
+          description: A message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         from:
           type: string
@@ -833,7 +833,7 @@ components:
           example: "49123512314"
         to:
           type: string
-          description: Receiver. The format is channel specific
+          description: The receiver. The format is channel-specific
           example: "49123512315"
         order:
           $ref: '#/components/schemas/Order'
@@ -867,7 +867,7 @@ components:
       properties:
         data:
           type: string
-          description: Payload or data that was specified when requesting the button based message
+          description: The payload or data that was specified when requesting the button-based message
           example: EventVisited::2020-04-04::WhatsAppFair
     WhatsAppPostBack:
       type: object
@@ -877,15 +877,15 @@ components:
       properties:
         text:
           type: string
-          description: Caption of the button that was clicked
+          description: The caption of the button that was clicked
           example: Yes
         title:
           type: string
-          description: Title of the interactive item clicked
+          description: The title of the interactive item clicked
           example: This is the button you clicked
         description:
           type: string
-          description: Description of the interactive item clicked
+          description: The description of the interactive item clicked
           example: This is the description of a list item
     Order:
       type: object
@@ -895,11 +895,11 @@ components:
       properties:
         catalogId:
           type: string
-          description: ID of the catalog the items origin from
+          description: The ID of the catalog the items originate from
           example: 123980-12313123
         text:
           type: string
-          description: Optional message from the customer
+          description: An optional message from the customer
           example: Hi, please make sure you deliver it in the afternoon
         items:
           type: array
@@ -915,7 +915,7 @@ components:
       properties:
         productId:
           type: string
-          description: ID or SKU of the product selected
+          description: The ID or SKU of the product selected
           example: test-sku-1234
         quantity:
           type: string
@@ -923,11 +923,11 @@ components:
           example: 1
         itemPrice:
           type: string
-          description: Price presented to the customer, when chosing the product
+          description: The price presented to the customer when choosing the product
           example: 0.11
         currency:
           type: string
-          description: Currency of the products price
+          description: The currency of the product's price
           example: EUR
     MessageStatusDeletedEvent:
       type: object
@@ -951,11 +951,11 @@ components:
             - MessageStatus::deleted
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -974,7 +974,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -989,7 +989,7 @@ components:
             "491672634678"
         to:
           type: string
-          description: Which channel specific account ID is the recipient of this event.
+          description: Which channel-specific account ID is the recipient of this event.
           example:
             "4923147790813"
       example:
@@ -1020,11 +1020,11 @@ components:
             - MessageStatus::accepted
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1033,7 +1033,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1066,11 +1066,11 @@ components:
             - MessageStatus::delivered
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1079,7 +1079,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1130,11 +1130,11 @@ components:
             - MessageStatus::seen
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1143,7 +1143,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1176,11 +1176,11 @@ components:
             - MessageStatus::channelFailed
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1189,7 +1189,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1222,11 +1222,11 @@ components:
             - MessageStatus::failed
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1235,7 +1235,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:
@@ -1268,11 +1268,11 @@ components:
             - MessageStatus::unknown
         messageId:
           type: string
-          description: Global Message ID reference
+          description: A global message ID reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
         channel:
           type: string
-          description: Channel that triggered the event. Can be empty in case of an internal source.
+          description: The channel that triggered the event. Can be empty in the case of an internal source.
           example: sms
           enum:
             - sms
@@ -1281,7 +1281,7 @@ components:
         timestamp:
           type: string
           format: 'date-time'
-          description: Point in time when the event happened
+          description: The point in time when the event happened
           example:
             2019-06-26T11:41:28Z
         userContext:

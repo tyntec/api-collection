@@ -30,7 +30,7 @@ tags:
       List all WeChat IDs configured for your API account.
   - name: "Callback configuration"
     description: |
-      In this section, we guide you on how to configure the callbacks on a per channel bases.
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
 paths:
   /messages:
     post:

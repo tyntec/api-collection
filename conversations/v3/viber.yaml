@@ -41,7 +41,7 @@ tags:
       List all Service IDs configured for your API account.
   - name: "Callback configuration"
     description: |
-      In this section, we guide you on how to configure the callbacks on a per channel bases.
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
 paths:
   /messages:
     post:
@@ -127,7 +127,7 @@ paths:
         - "Callback configuration"
       summary: Update the callback
       operationId: updateViberChannelCallback
-      description: Update the callback settings of a specific viber channel.
+      description: Update the callback settings of a specific Service ID.
       requestBody:
         content:
           application/json:
@@ -153,7 +153,7 @@ components:
       name: service-id
       in: path
       required: true
-      description: Service ID used of a Viber Channel.
+      description: The Service ID used for a Viber Channel.
       schema:
         type: integer
         minLength: 4
@@ -452,10 +452,10 @@ components:
           type: string
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
           description: |
-            Public available URL of the image. The image URL will be used on the app to provide the user with the file.
+            A publicly available URL of the image. The image URL will be used on the app to provide the user with the file.
     ViberFile:
       type: object
-      description: Viber file specification
+      description: A Viber file specification
       required:
         - url
         - filename
@@ -464,10 +464,10 @@ components:
           type: string
           pattern: ^https?:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
           description: |
-            Public available URL of the file. The file URL will be used on the app to provide the user with the file.
+            A publicly available URL of the file. The file URL will be used on the app to provide the user with the file.
         filename:
           type: string
-          description: Name of the file presented on the app
+          description: The name of the file presented on the app
         type:
           type: string
           description: |
