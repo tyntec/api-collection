@@ -1,0 +1,150 @@
+asyncapi: '2.0.0'
+info:
+  title: Partner API Events
+  version: '1'
+  description: |
+    These section covers the events triggered throught the embedded sign up process, after the customer has completed
+    the part of the flow with Meta.
+servers:
+  production:
+    url: 78.110.226.11
+    description: Server address of tyntec, the events origin from
+    protocol: https
+tags:
+  - name: "WABA Only"
+    description: |
+      Events sent out if our system detects only a WABA to register with us. This is useful, when a customer want's to migrate 
+      a phone number from the old process to a WABA managed by himself.
+  - name: "Phone number"
+    description: |
+      Events sent out if our system detects a request containing a registerable phone number
+channels:
+  "Success (WABA Only)":
+    description: |
+      Successfull completion after an empty WABA was detected
+    publish:
+      tags:
+        - name: "WABA Only"
+      message:
+        $ref: '#/components/messages/SuccessWABAOnly'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Success (Phone number)":
+    description: |
+      Successfull completion of a phone number activation
+    publish:
+      tags:
+        - name: "Phone number"
+      message:
+        $ref: '#/components/messages/SuccessPhoneNumber'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Failure (WABA Only)":
+    description: |
+      Failed completion after an empty WABA was detected
+    publish:
+      tags:
+        - name: "WABA Only"
+      message:
+        $ref: '#/components/messages/FailureWABAOnly'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Failure (Phone number)":
+    description: |
+      Failed completion of a phone number activation
+    publish:
+      tags:
+        - name: "Phone number"
+      message:
+        $ref: '#/components/messages/FailurePhoneNumber'
+      bindings:
+        http:
+          type: request
+          method: POST
+components:
+  messages:
+    SuccessWABAOnly:
+      payload:
+        $ref: '#/components/schemas/SuccessWABAOnly'
+    FailureWABAOnly:
+      payload:
+        $ref: '#/components/schemas/FailureWABAOnly'
+    SuccessPhoneNumber:
+      payload:
+        $ref: '#/components/schemas/SuccessPhoneNumber'
+    FailurePhoneNumber:
+      payload:
+        $ref: '#/components/schemas/FailurePhoneNumber'
+  schemas:
+    EmbeddedSignupEvent:
+      type: object
+      properties:
+        event:
+          type: string
+          enum:
+            - EmbeddedSignup::WABA::Success
+            - EmbeddedSignup::WABA::Failure
+            - EmbeddedSignup::PhoneNumber::Success
+            - EmbeddedSignup::PhoneNumber::Failure
+        requestId:
+          type: string
+        metaData:
+          type: string
+        apiAccountName:
+          type: string
+    SuccessWABAOnly:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          enum:
+            - EmbeddedSignup::WABA::Success
+        whatsAppAccountId:
+          type: string
+    FailureWABAOnly:
+      type: object
+      properties:
+        event:
+          type: string
+          enum:
+            - EmbeddedSignup::WABA::Failure
+        requestId:
+          type: string
+        failureReason:
+          type: string
+    SuccessPhoneNumber:
+      type: object
+      properties:
+        event:
+          type: string
+          enum:
+            - EmbeddedSignup::PhoneNumber::Success
+        requestId:
+          type: string
+        whatsAppAccountId:
+          type: string
+        phoneNumber:
+          type: string
+    FailurePhoneNumber:
+      type: object
+      properties:
+        event:
+          type: string
+          enum:
+            - EmbeddedSignup::PhoneNumber::Failure
+        requestId:
+          type: string
+        whatsAppAccountId:
+          type: string
+        phoneNumber:
+          type: string
+        failureReason:
+          type: string
