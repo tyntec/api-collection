@@ -123,7 +123,7 @@ components:
           type: string
           example: "true"
           description: Is it valid phone number?
-        numberAssigned:
+        activeNumber:
           type: string
           example: "true"
           description: Is this number assigned to a subscriber?
@@ -131,10 +131,6 @@ components:
           type: string
           example: "mobile"
           description: Type of the phone number (mobile, fix line, voip etc)
-        roaming:
-          type: string
-          example: "false"
-          description: Is the phone number currently roaming?
         operatorName:
           type: string
           example: "T-Mobile Czech Republic a.s."
@@ -143,14 +139,14 @@ components:
           type: string
           example: "CZE"
           description: The phone number's country of origin ISO3 code
-        blacklisted:
-          type: string
-          example: "true"
-          description: Is the phone number associated with fraud registry?
-        risk:
+        fraudRisk:
           type: string
           example: "low"
           description: What is the predicted likelihood of the number being bad actor?
+        outreachReady:
+          type: string
+          example: "true"
+          description: Can the number be used for a marketing campaign?
     healthResponse:
       type: object
       properties:
