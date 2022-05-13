@@ -1,2 +1,2 @@
 # api-collection
-Collection of tyntecs available API specifications in OpenAPI Spec 3.0
+Collection of tyntec's available API specifications in OpenAPI Spec 3.0
