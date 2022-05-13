@@ -26,6 +26,8 @@ tags:
 
       - **API Health:** Information regarding the status of the API.
       - **Version:** The version of the API and API specification.
+security:
+  - APIKeyHeader: []
 paths:
   /phone/{number}:
     get:
@@ -44,8 +46,6 @@ paths:
           schema:
             type: string
             example: +491621234567
-      security:
-        - apiKey: []
       responses:
         200:
           description: A valid request
@@ -71,15 +71,6 @@ paths:
         - Metadata
       summary: Phone Verification API health
       operationId: getPhoneVerificationHealth
-      parameters:
-        - name: apiKey
-          in: header
-          description: 'API authentication key for the customer account'
-          required: true
-          schema:
-            type: string
-      security:
-        - apiKey: []
       responses:
         200:
           description: API is up and running
@@ -99,8 +90,6 @@ paths:
         - Metadata
       summary: Phone Verification API version
       operationId: getVersion
-      security:
-        - apiKey: []
       responses:
         200:
           description: The current API version
@@ -122,11 +111,11 @@ components:
         validNumberFormat:
           type: string
           example: "true"
-          description: Is it valid phone number?
+          description: Is the number formatted correctly according to the numbering plan?
         activeNumber:
           type: string
           example: "true"
-          description: Is this number assigned to a subscriber?
+          description: Is the number currently assigned to a subscriber?
         numberType:
           type: string
           example: "mobile"
@@ -134,15 +123,15 @@ components:
         operatorName:
           type: string
           example: "T-Mobile Czech Republic a.s."
-          description: Operator name
+          description: Which operator is servicing the number?
         operatorCountry:
           type: string
           example: "CZE"
-          description: The phone number's country of origin ISO3 code
+          description: In which country is the number registered? The country if formated in ISO3 code
         fraudRisk:
           type: string
           example: "low"
-          description: What is the predicted likelihood of the number being bad actor?
+          description: What is the likelihood of the number being associated with fraud?
         outreachReady:
           type: string
           example: "true"
@@ -182,7 +171,7 @@ components:
           example: "Invalid authentication credentials"
           description: An error message of an unsuccessful request
   securitySchemes:
-    apiKey:
+    APIKeyHeader:
       type: apiKey
       name: apiKey
       in: header
