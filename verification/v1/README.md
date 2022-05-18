@@ -6,8 +6,9 @@
 
 #### Phone Verification
 
-Phone Verification service aims to provide information regarding the validity and the trustworthyness of a phone number.
-This information comes in the form of a Risk Index about the phone number.
+Phone Verification service aims to determine validity, reachability and fraud risk of phone numbers entered into
+forms by users or auto dialers so that brands can ensure their customer records are accurate,
+improve conversion rates for customer outreach, and guard against bad actors.
 
 ## Version 1.0
 

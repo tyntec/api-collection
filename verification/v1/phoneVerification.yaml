@@ -14,12 +14,18 @@ servers:
 tags:
   - name: "Phone Verification"
     description: |
-      Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
-      This information comes in the form of a Risk Index about the phone number. The following risk classifications are applied
+      Phone Verification service aims to determine validity, reachability and fraud risk of phone numbers entered into
+      forms by users or auto dialers so that brands can ensure their customer records are accurate,
+      improve conversion rates for customer outreach, and guard against bad actors.
 
-      - **High:** The phone number is considered a high-risk number and customers should avoid contacting this number
-      - **Medium:** The phone number is generally considered a legitimate number, but customers should exercise caution when contacting this number for sensitive data or high-value transactions
-      - **Low:** The phone number is considered a legitimate number and customers should feel confident to contact this number
+      The API determines the reachability and trustworthiness of phone numbers through:
+
+      - **Validity Check:** check if the phone number is valid according to the numbering plan for that country.
+      - **Active Status:** check if the phone number has been assigned to a subscriber by an operator.
+      - **Number Type:** determine the phone number type to decide which technology to use to communicate.
+      - **Mobile Operator:** identify the name and the country of the home network operator for the subscriber.
+      - **Outreach Status:** check if an SMS can be delivered to the subscriber behind the phone number.
+      - **Fraud Risk:** determine the likelihood of the phone number being used by a bad actor.
   - name: Metadata
     description: |
       Metadata information regarding the API itself. The information exposed is:
@@ -35,7 +41,7 @@ paths:
         - "Phone Verification"
       summary: Verify Number
       description: |
-        Phone Verification service aims to provide information regarding the validity and trustworthiness of a phone number.
+        Phone Verification is a web service that responds with information regarding the validity, reachability and trustworthiness of a phone number.
       operationId: phoneVerificationGET
       parameters:
         - name: number
@@ -70,6 +76,7 @@ paths:
       tags:
         - Metadata
       summary: Phone Verification API health
+      description: Phone Verification health endpoint provides information about the status of the API
       operationId: getPhoneVerificationHealth
       responses:
         200:
@@ -89,6 +96,7 @@ paths:
       tags:
         - Metadata
       summary: Phone Verification API version
+      description: Phone Verification version endpoint provides information about the current version of the Phone Verification API
       operationId: getVersion
       responses:
         200:
@@ -111,19 +119,19 @@ components:
         validNumberFormat:
           type: string
           example: "true"
-          description: Is the number formatted correctly according to the numbering plan?
+          description: Is the number formatted correctly according to the numbering plan? Possible values (true, false)
         activeNumber:
           type: string
           example: "true"
-          description: Is the number currently assigned to a subscriber?
+          description: Is the number currently assigned to a subscriber? Possible values (true, false, unknown)
         numberType:
           type: string
           example: "mobile"
-          description: Type of the phone number (mobile, fix line, voip etc)
+          description: Type of the phone number. Possible values (fixed, mobile, fixed_or_mobile, mvno gsm, iden, cdma, gsm cdma, toll_free, premium_rate, shared_cost, voip, personal, pager, uan, voicemail, unknown)
         operatorName:
           type: string
           example: "T-Mobile Czech Republic a.s."
-          description: Which operator is servicing the number?
+          description: Who is the home network operator of the subscriber?
         operatorCountry:
           type: string
           example: "CZE"
@@ -131,11 +139,11 @@ components:
         fraudRisk:
           type: string
           example: "low"
-          description: What is the likelihood of the number being associated with fraud?
+          description: What is the likelihood of the number being associated with fraud? Possible values (low, medium, high, unknown)
         outreachReady:
           type: string
           example: "true"
-          description: Can the number be used for a marketing campaign?
+          description: Should a message be sent to this number? Possible values (true, false)
     healthResponse:
       type: object
       properties:
