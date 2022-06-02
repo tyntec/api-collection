@@ -127,7 +127,7 @@ components:
         numberType:
           type: string
           example: "mobile"
-          description: Type of the phone number. Possible values (fixed, mobile, fixed_or_mobile, mvno gsm, iden, cdma, gsm cdma, toll_free, premium_rate, shared_cost, voip, personal, pager, uan, voicemail, unknown)
+          description: Type of the phone number. Possible values (fixed, mobile, fixed_or_mobile, mvno_gsm, iden, cdma, gsm_cdma, toll_free, premium_rate, shared_cost, voip, personal, pager, uan, voicemail, unknown)
         operatorName:
           type: string
           example: "T-Mobile Czech Republic a.s."
