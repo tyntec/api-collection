@@ -48,10 +48,26 @@ paths:
           in: path
           required: true
           description: |
-            The phone number to be verified, given in the international format
+            The phone number to be verified, given in the international format.
           schema:
             type: string
-            example: +491621234567
+            example: "+491621234567"
+        - name: countryIsoType
+          in: query
+          required: false
+          description: |
+            The type of country code that should be returned. Default is "iso3", other option is "iso2".
+          schema:
+            type: string
+            example: "iso3"
+        - name: addMccMnc
+          in: query
+          required: false
+          description: |
+            Should be set to "true" if MCC and MNC information of numbers' operator must be present in response.
+          schema:
+            type: string
+            example: "false"
       responses:
         200:
           description: A valid request
