@@ -1,0 +1,1023 @@
+openapi: '3.0.0'
+info:
+  title: Conversations Select API
+  description: |
+    The conversations select API allows you to set channel flow selections to reach your end users 
+    by applying smart rule based flows that will try multiple channels until a successful dispatch.
+
+    ### Usage over underlying channels.
+
+    For each channel used on channel selection you may refer to the corresponding channel API documentation.
+
+    ### Examples on usage
+
+    Send a message first by trying `whatsapp` channel but only if the destination country is in Germany.
+
+    <pre class="inline-code">
+    curl --location --request POST 'https://api.tyntec.com/conversations/select/v1/run' \
+    --header 'apiKey: my api key' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "input": {
+            "to": "49123123123",
+            "text": "hello world"
+        },
+        "flow": {
+            "name": "boom",
+            "steps": [
+                {
+                    "name": "send via WA",
+                    "channel": "conversations",
+                    "request": {
+                        "from": "49123123123",
+                        "to": "{{to}}",
+                        "channel": "whatsapp",
+                        "content": {
+                            "contentType": "template",
+                            "template": {
+                                "templateId": "test_limit_template",
+                                "templateLanguage": "en",
+                                "components": {
+                                    "body": [
+                                        {
+                                            "type": "text",
+                                            "text": "{{text}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "match": {
+                        "countries": [
+                            "DE"
+                        ]
+                    }
+                },
+                {
+                    "name": "send via SMS",
+                    "channel": "sms",
+                    "request": {
+                        "from": "tyntec",
+                        "to": "{{to}}",
+                        "message": "{{text}}"
+                    }
+                }
+            ]
+        },
+        "callback": {
+            "url": "https://webhook.site/ce0b0f49-4797-4bd1-8a94-7400bb31d240"
+        }
+    }'
+    </pre>
+
+    As the initial request is too verbose, the flow can be first saved.
+
+    <pre class="inline-code">
+    curl --location --request POST 'https://api.tyntec.com/conversations/select/v1/flows' \
+    --header 'apiKey: my api key' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "name": "boom",
+        "steps": [
+            {
+                "name": "send via WA",
+                "order": 1,
+                "channel": "conversations",
+                "request": {
+                    "from": "49123123123",
+                    "to": "{{to}}",
+                    "channel": "whatsapp",
+                    "content": {
+                        "contentType": "template",
+                        "template": {
+                            "templateId": "test_limit_template",
+                            "templateLanguage": "en",
+                            "components": {
+                                "body": [
+                                    {
+                                        "type": "text",
+                                        "text": "{{text}}"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "match": {
+                  "countries": [
+                  "DE"
+                  ]
+                    }
+            },
+            {
+                "name": "send via SMS",
+                "order": 2,
+                "channel": "sms",
+                "request": {
+                    "from": "tyntec",
+                    "to": "{{to}}}",
+                    "message": "{{text}}"
+                }
+            }
+        ]
+    }' 
+    </pre> 
+
+    In the response there will be a new flow with an ID created and now to initiate a flow the `run` request can change to this:
+
+    <pre class="inline-code">
+    curl --location --request POST 'https://api.tyntec.com/conversations/select/v1/run' \
+    --header 'apiKey: my api key' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+      {
+        "input":{
+            "to":"49123123123",
+            "text": "hello world"
+        },
+        "flowId": "a0157a44-0912-4659-92c6-7e22edc88619",
+        "callback":{
+            "url":"https://webhook.site/b3b14edc-ffa7-4e7d-bcb3-26360200073a"
+        }
+      }
+    </pre>
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-major-version: v3
+  x-postman-collection: postman.zip
+servers:
+  - url: https://api.tyntec.com/conversations/select/v1
+security:
+  - ApiKeyAuth: [ ]
+tags:
+  - name: FlowManagement
+    description: |
+      In this section operations that have to do with stored flows
+  - name: FlowControl
+    description: |
+      In this section operations that have to do with flow execution are described
+paths:
+  /flows:
+    get:
+      operationId: getFlows
+      summary: Get stored flows
+      tags:
+        - "FlowManagement"
+      description: Get all stored flows created under your account
+      responses:
+        200:
+          description: All stored flows on the account
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Flow"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: createFlow
+      summary: Create a new flow
+      tags:
+        - "FlowManagement"
+      description: Creates a new flow and stores it
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flow'
+      responses:
+        200:
+          description: All stored flows on the account
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Flow"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+  /flows/{flowId}:
+    parameters:
+      - name: flowId
+        in: path
+        description: The flowId of the flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/{flowId}.
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getFlow
+      summary: Get a flow
+      tags:
+        - "FlowManagement"
+      description: Get an existing flow
+      responses:
+        200:
+          description: The stored flow for this ID
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Flow"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'           
+    patch:
+      operationId: patchFlow
+      summary: Patch a flow
+      tags:
+        - "FlowManagement"
+      description: Patch an existing flow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchFlowRequest'
+      responses:
+        200:
+          description: Get patched flow
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Flow"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: deleteFlow
+      summary: Delete a flow
+      tags:
+        - "FlowManagement"
+      description: Delete an existing flow
+      responses:
+        204:
+          description: Flow deleted.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default' 
+  /flows/{flowId}/steps:
+    parameters:
+      - name: flowId
+        in: path
+        description: The flowId of the flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/{flowId}.
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getFlowSteps
+      summary: Get all steps of a flow
+      tags:
+        - "FlowManagement"
+      description: Get all steps existing in this flow
+      responses:
+        200:
+          description: The stored steps flow for this ID
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FlowStep"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: addFlowStep
+      summary: Adds a new step on the flow
+      tags:
+        - "FlowManagement"
+      description: Adds a new step on the flow. *CAUTION* this will have immediate impact to all new requests using this flow.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlowStep'
+      responses:
+        200:
+          description: The newly created step.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowStep"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+  /flows/{flowId}/steps/{stepId}:
+    parameters:
+      - name: flowId
+        in: path
+        description: The flowId of the flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/{flowId}.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: stepId
+        in: path
+        description: The stepId of the step flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/{flowId}/steps/{stepId}.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getFlowStep
+      summary: Get step of a flow
+      tags:
+        - "FlowManagement"
+      description: Get step of the flow.
+      responses:
+        200:
+          description: Get step with ID from this flow.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowStep"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: deleteFlowStep
+      summary: Delete flow step
+      tags:
+        - "FlowManagement"
+      description: Deletes a flow step.
+      responses:
+        204:
+          description: Flow step deleted.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    patch:
+      operationId: patchFlowStep
+      summary: Patch a flow step
+      tags:
+        - "FlowManagement"
+      description: Patches a flow step.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlowStep'
+      responses:
+        200:
+          description: Returns the changed step.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowStep"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+  /run:
+    post:
+      operationId: runAflow
+      summary: Initiate a flow
+      tags:
+        - "FlowControl"
+      description: Starts a flow. Either an existing flowId needs to be provided or a flow definition must be present.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/FlowRequestWithFlowId'
+                - $ref: '#/components/schemas/FlowRequestWithFlowDefition'
+      responses:
+        202:
+          description: Returns the changed step.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowInstance"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+  /running/{flowInstanceId}:
+    parameters:
+      - name: flowInstanceId
+        in: path
+        description: The flowInstanceId of the running flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/running/{flowInstanceId}.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: gettingARunningFlow
+      summary: Get a running flow status
+      tags:
+        - "FlowControl"
+      description: Returns a running flow.
+      responses:
+        200:
+          description: Returns ruinning flow instance.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowInstance"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: stopARunningFlow
+      summary: Stops a running flow
+      tags:
+        - "FlowControl"
+      description: Returns the stopped flow.
+      responses:
+        200:
+          description: Returns ruinning flow instance.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowInstance"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+  /running/{flowInstanceId}/events:
+    parameters:
+      - name: flowInstanceId
+        in: path
+        description: The flowInstanceId of the running flow you would like to edit. This
+          parameter is part of the URI following the pattern
+          ${baseURL}/flows/running/{flowInstanceId}.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: gettingARunningFlow
+      summary: Get running flow recorded events.
+      tags:
+        - "FlowControl"
+      description: Returns all events recorded for this executed flow.
+      responses:
+        200:
+          description: Returns ruinning flow instance.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FlowEvent"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Default'
+        404:
+          $ref: '#/components/responses/Default'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  responses:
+    Default:
+      description: The default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.flow.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+  schemas:
+    FlowRequestWithFlowId:
+      type: object
+      description: The flow request with flow ID structure.
+      required:
+        - "flowId"
+      properties:
+        flowId:
+          type: string
+          format: uuid
+          description: |
+            The flow unique ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        callback:
+          type: object
+          required: false
+          description: Callback specific settings for this flow.
+          $ref: '#/components/schemas/FlowCallbackSetting'
+        disableNotMatchingSteps:
+          type: boolean
+          description: |
+            Should non matching step be disabled. Default value is *true*.
+          example: true
+        returnCompiledFlow:
+          type: boolean
+          description: |
+            Should return in the response the compiled flow. Default value is *true*.
+          example: true
+        reference:
+          type: string
+          description: |
+            Reference value to be used on callback events.
+        input:
+          type: object
+          description: |
+            The key value of template parameters to be replaces in the flow definition.
+          required:
+            - key
+            - value
+          properties:
+            key:
+              description: The name of the template variable.
+              type: string
+              minLength: 4
+              maxLength: 125
+            value:
+              type: string
+              description: The value of the template variable.
+              minLength: 8
+              maxLength: 1024
+    FlowRequestWithFlowDefition:
+      type: object
+      description: The flow request with flow ID structure.
+      required:
+        - "flow"
+      properties:
+        flow:
+          type: object
+          $ref: '#/components/schemas/Flow'
+          description: |
+            The flow definition.
+        callback:
+          type: object
+          required: false
+          description: Callback specific settings for this flow.
+          $ref: '#/components/schemas/FlowCallbackSetting'
+        disableNotMatchingSteps:
+          type: boolean
+          description: |
+            Should non matching step be disabled. Default value is *true*.
+          example: true
+        returnCompiledFlow:
+          type: boolean
+          description: |
+            Should return in the response the compiled flow. Default value is *true*.
+          example: true
+        reference:
+          type: string
+          description: |
+            Reference value to be used on callback events.
+        input:
+          type: object
+          description: |
+            The key value of template parameters to be replaces in the flow definition.
+          required:
+            - key
+            - value
+          properties:
+            key:
+              description: The name of the template variable.
+              type: string
+              minLength: 4
+              maxLength: 125
+            value:
+              type: string
+              description: The value of the template variable.
+              minLength: 8
+              maxLength: 1024
+    FlowInstance:
+      type: object
+      description: The flow structure.
+      properties:
+        flowInstanceId:
+          type: string
+          format: uuid
+          description: |
+            The flow unique ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        FlowStatus:
+          type: string
+          enum:
+            - accepted
+            - inprogress
+            - completed
+            - failed
+            - stopped  
+        timestamp:
+          type: string
+          format: date-time
+          description: Point in time when the flow instance was created.
+        currentStepId:
+          type: string
+          format: uuid
+          description: |
+            Step id that is executed currently.
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe"
+        compiledFlow:
+          type: object
+          $ref: '#/components/schemas/Flow'
+          description: |
+            The compiled flow definition.
+        stepStates:
+          type: object
+          description: |
+            The map with the step id UUID as key and the step state as value.
+          required:
+            - key
+            - value
+          properties:
+            key:
+              description: The uuid of the step.
+              type: string
+              format: uuid
+            value:
+              description: The flow step statuses.
+              type: string
+              enum:
+                - skipped
+                - inprogress
+                - next
+                - waiting
+                - comleted
+                - failed
+    PatchFlowRequest:
+      type: object
+      description: The flow structure.
+      properties:
+        name:
+          type: string
+          description: |
+            The flow name to change
+        callback:
+          type: object
+          required: false
+          description: Callback specific settings for this flow.
+          $ref: '#/components/schemas/FlowCallbackSetting'
+    FlowEvent:
+      type: object
+      description: The flow event structure.
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: |
+            The event id.
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        customerId:
+          type: string
+          description: |
+            The unique customer Id.
+        flowInstanceId:
+          type: string
+          format: uuid
+          description: |
+            The flow unique ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        stepInstanceId:
+          type: string
+          format: uuid
+          description: |
+            The flow step instance unique ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        accountId:
+          type: string
+          format: uuid
+          description: |
+            The unique account ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe" 
+        reference:
+          type: string
+          description: |
+            Reference value to be used on callback events.
+        status:
+          description: The flow step statuses.
+          type: string
+          enum:
+            - skipped
+            - inprogress
+            - next
+            - waiting
+            - comleted
+            - failed
+        channel:
+          type: string
+          enum:
+            - sms
+            - conversations
+            - tts
+        type:
+          description: The event types.
+          type: string
+          enum:
+            - flow
+            - channel
+            - channel_response
+        timestamp:
+          type: string
+          format: date-time
+          description: Point in time when the event was created.
+        event:
+          oneOf:
+            - $ref: '#/components/schemas/FlowStepResponse'
+            - SMSResponse:
+              type: object
+              $ref: '../../../sms/v1/openapi.yaml#/components/schemas/RestMessageResponse'
+            - ConversationsEvent:
+              type: object
+              $ref: '../../v3/webhook-events-v3.yaml#/components/schemas/APIEvent'
+            - TextToSpeechEvent:
+              type: object
+              $ref: '../../../voice/tts/v1/openapi.yaml#/components/schemas/TextToSpeechEvent'
+    FlowStepResponse:
+      type: object
+      description: The response of the underlying channel when step executed.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: |
+            The unique ID.
+        flowInstanceId:
+          type: string
+          format: uuid
+          description: |
+            The flow unique ID
+        status:
+          description: The flow step statuses.
+          type: string
+          enum:
+            - skipped
+            - inprogress
+            - next
+            - waiting
+            - comleted
+            - failed
+        channel:
+          type: string
+          enum:
+            - sms
+            - conversations
+            - tts
+        requestResponseCode:
+          type: integer
+          description: The response code of the underlying channel.
+          example: 200
+        requestResponse:
+          type: object
+          description: The response of the channel API as described in their own API Reference.
+          oneOf:
+            - SMSResponse:
+              type: object
+              $ref: '../../../sms/v1/openapi.yaml#/components/schemas/RestMessageResponse'
+            - ConversationsResponse:
+              type: object
+              $ref: '../../v3/openapi.yaml#/components/schemas/MessageResponse'
+            - TextToSpeechResponse:
+              type: object
+              $ref: '../../../voice/tts/v1/openapi.yaml#/components/schemas/TextToSpeechResponse'
+    Flow:
+      type: object
+      description: The flow structure.
+      properties:
+        flowId:
+          type: string
+          format: uuid
+          description: |
+            The flow unique ID
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe"
+        name:
+          type: string
+          description: |
+            A friendly name for this flow.
+          example: "Flow for my product"
+        callback:
+          type: object
+          required: false
+          description: Callback specific settings for this flow.
+          $ref: '#/components/schemas/FlowCallbackSetting'
+        steps:
+          type: array
+          minItems: 1
+          description: Steps of this flow to execute.
+          items: 
+            $ref: '#/components/schemas/FlowStep'
+    FlowCallbackSetting:
+      type: object
+      description: The flow structure.
+      properties:
+        url:
+          type: string
+          format: url
+          description: |
+            The callback URL to receive the events of this Flow execution.
+          example: "https://webhook.site/53bd902b-fe75-40fc-b1c6-47485a3fcebe"
+        headers:
+          type: object
+          description: |
+            An additional custom header to be sent with the event transmission. Can be used for setting
+            authentication tokens, or similar.
+          required:
+            - key
+            - value
+          properties:
+            key:
+              description: The name of the HTTP header
+              type: string
+              minLength: 4
+              maxLength: 125
+            value:
+              type: string
+              description: The value of the HTTP header
+              minLength: 8
+              maxLength: 1024
+    FlowStep:
+      type: object
+      description: A flow step definition.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: |
+            The flow step unique ID. Will be Autogenerated.
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe"
+        name:
+          type: string
+          description: |
+            A friendly name for this flow step.
+          example: "Flow for my product"
+        order:
+          type: integer
+          nullable: true
+          description: |
+            The order of step execution. If not set will get the list index order number.
+          example: 1
+        channel:
+            type: string
+            enum:
+              - sms
+              - conversations
+              - tts
+        request:
+          oneOf:
+            - SMSRequest:
+              type: object
+              $ref: '../../../sms/v1/openapi.yaml#/components/schemas/SmsMessage'
+            - ConversationsAPIRequest:
+              type: object
+              $ref: '../../v3/openapi.yaml#/components/schemas/MessageRequest'
+            - TextToSpeechRequest:
+              type: object
+              $ref: '../../../voice/tts/v1/openapi.yaml#/components/schemas/TextToSpeechRequest'
+        match:
+          type: object
+          description: Matching rule for this step.
+          $ref: '#/components/schemas/MatchRule'  
+        next:
+          type: object
+          description: Rule to move to the next step.
+          $ref: '#/components/schemas/NexRule'
+    MatchRule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: |
+            The match rule unique ID. Will be Autogenerated.
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe"
+        enabled:
+          type: boolean
+          description: Is this rule enabled or not. By default is to true.
+        countries:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            description: Country code [ISO639-1](https://en.wikipedia.org/wiki/ISO_639-1) codes
+        prefixes:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            description: Destination country prefix.       
+    NexRule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: |
+            The next rule unique ID. Will be Autogenerated.
+          example: "6499570c-58db-487d-9afa-a1d9f98959fe"
+        enabled:
+          type: boolean
+          description: Is this rule enabled or not. By default is to true.
+        onFailedSubmit:
+          type: boolean
+          description: If the channel didnt accept the request should it move to the next step or fail.
+        statuses:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            description: Status on which once evaluated it should move to the next.    
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807)
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: Data given was not parseable
+          description: A short, human-readable summary of the problem type.
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem.
+          type: number
+          example: 400
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
