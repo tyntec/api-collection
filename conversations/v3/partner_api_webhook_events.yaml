@@ -133,6 +133,8 @@ components:
           type: string
         phoneNumber:
           type: string
+        displayName:
+          type: string
     FailurePhoneNumber:
       type: object
       properties:
