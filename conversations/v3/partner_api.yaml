@@ -1,0 +1,366 @@
+openapi: 3.0.0
+info:
+  title: 'Partner API'
+  version: "1 (beta)"
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-specification-file: partner_api.yaml
+  x-major-version: v3
+  description: |
+    The embedded sign up API allows you to manage requests for embedded sign ups with WhatsApp.
+        
+    Note: The embedded sign up request API  for WhatsApp is **only** available to registered partners.
+    Refer to our [documentation](https://www.tyntec.com/docs/docs-center-whatsapp-business-api-faqs-isvs-technical-integrators#47512) for further details.
+tags:
+  - name: "Manage new requests"
+    description: |
+      This section covers the basic interactions for submitting a new embedded sign up request and
+      getting information about it
+  - name: "Listing"
+    description: |
+      List the requests you made in the past
+servers:
+  - url: https://api.tyntec.com/conversations/v3
+security:
+  - ApiKeyAuth: []
+paths:
+  /channels/whatsapp/isv-sign-ups:
+    post:
+      tags:
+        - "Manage new requests"
+      operationId: createASignupRequest
+      summary: Create a new signup request
+      description: Create a new signup request
+      requestBody:
+        description: The data required to submit a new request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ISVEmbeddedSignupRequest'
+      responses:
+        202:
+          $ref: '#/components/responses/ISVEmbeddedSignupRequestResponse'
+  /channels/whatsapp/sign-ups/{requestId}:
+    parameters:
+      - $ref: '#/components/parameters/RequestId'
+    get:
+      tags:
+        - "Manage new requests"
+      operationId: getASignupRequest
+      summary: Returns a signup request
+      description: Returns a signup request
+      responses:
+        200:
+          $ref: '#/components/responses/EmbeddedSignupResponse'
+  /channels/whatsapp/sign-ups/:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/AllOfMine'
+      tags:
+        - "List all requests"
+      operationId: getAllSignupRequest
+      summary: List sign up requests
+      description: Lists sign up requests
+      responses:
+        200:
+          $ref: '#/components/responses/EmbeddedSignupListing'
+components:
+  responses:
+    ISVEmbeddedSignupRequestResponse:
+      description: Response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ISVEmbeddedSignupRequestResponse'
+    EmbeddedSignupResponse:
+      description: Previously created request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EmbeddedSignupResponse'
+    EmbeddedSignupListing:
+      description: List of previously created requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EmbeddedSignupListing'
+  parameters:
+    RequestId:
+      name: request-id
+      in: path
+      required: true
+      description: The request id returned by our platform
+      schema:
+        type: string
+        format: uuid
+      example: c28412e9-047b-42a1-9b83-61a3f225207a
+    AllOfMine:
+      name: allOfMine
+      in: query
+      description: If present, returns all sign up requests made by the enterprise account
+      required: false
+  schemas:
+    EmbeddedSignupListing:
+      description: List of previously created requests
+      type: array
+      items:
+        $ref: '#/components/schemas/EmbeddedSignupResponse'
+    ISVEmbeddedSignupRequestResponse:
+      type: object
+      description: Response after a request was made
+      properties:
+        requestId:
+          description: Internal request id
+          type: string
+        redirectUrl:
+          description: Redirect URL mandatory to be used to forward a customer to the starting page on tyntec's premise for the embedded sign up process.
+          type: string
+    EmbeddedSignupResponse:
+      type: object
+      required:
+        - requestId
+        - profile
+        - pricing
+        - status
+        - createdAt
+        - lastUpdated
+      properties:
+        requestId:
+          description: Internal request id
+          type: string
+        countryCode:
+          description: Country code of the phone number in activation
+          type: integer
+        phoneNumber:
+          description: Phone number in activation
+          type: string
+        profile:
+          $ref: "#/components/schemas/Profile"
+        companyDetails:
+          $ref: "#/components/schemas/companyDetails"
+        pricing:
+          $ref: "#/components/schemas/pricing"
+        status:
+          type: string
+          description: Status of the request
+          enum:
+            - pending
+            - facebook_connection_started
+            - facebook_connection_cancelled
+            - in_progress
+            - success
+            - failed
+        failureReason:
+          description: Why has the request failed
+          type: string
+        whatsAppAccountId:
+          description: WhatsApp Account ID of the linked WhatsApp account
+          type: string
+        apiAccountName:
+          description: Name of the API used to attach the WhatsApp Account and Phone number to
+          type: string
+        successRedirectUrl:
+          type: string
+          description: To which URL should the customer be redirected after successful completion of the Embedded Sign Up process
+        failureRedirectUrl:
+          type: string
+          description: To which URL should the customer be redirected after failed completion of the Embedded Sign Up process
+        statusCallbackMetaData:
+          type: string
+          maxLength: 512
+          description: Custom meta data transferred on the asynchronous status updates on the Embedded Sign Up process
+        statusCallbackUrl:
+          type: string
+          description: Callback URL used to deliver asynchronous status updates on the Embedded Sign Up process
+        createdAt:
+          type: string
+          description: At which point in time the request was created
+          format: date-time
+          example: 2020-02-15T23:28:34.442Z
+        lastUpdated:
+          type: string
+          description: At which point in time the request was updated
+          format: date-time
+          example: 2020-02-15T23:28:34.442Z
+    ISVEmbeddedSignupRequest:
+      description: Embedded Sign Up Preparation Request
+      type: object
+      required:
+        - profile
+        - pricing
+        - successRedirectUrl
+        - failureRedirectUrl
+        - statusCallbackUrl
+      properties:
+        profile:
+          $ref: '#/components/schemas/Profile'
+        pricing:
+          $ref: '#/components/schemas/pricing'
+        companyDetails:
+          $ref: '#/components/schemas/companyDetails'
+        webhookSpecification:
+          $ref: '#/components/schemas/webhookSpecification'
+        successRedirectUrl:
+          type: string
+          description: To which URL should the customer be redirected after successful completion of the Embedded Sign Up process
+        failureRedirectUrl:
+          type: string
+          description: To which URL should the customer be redirected after failed completion of the Embedded Sign Up process
+        statusCallbackMetaData:
+          type: string
+          maxLength: 512
+          description: Custom meta data transferred on the asynchronous status updates on the Embedded Sign Up process
+        statusCallbackUrl:
+          type: string
+          description: Callback URL used to deliver asynchronous status updates on the Embedded Sign Up process
+    Profile:
+      type: object
+      description: Profile details of the phone number. Setup after completion
+      required:
+        - displayName
+      properties:
+        displayName:
+          description: Display name for the phone number. Used also for internal purposes
+          maxLength: 512
+          type: string
+        address:
+          type: string
+          maxLength: 256
+          description: Address of the business
+          example: Hofmannstrasse 25 - 27, 81379 Munich, Germany
+        description:
+          type: string
+          maxLength: 256
+          description: Brief introduction of the business
+          example: tyntec WhatsApp Business API Demo
+        email:
+          type: string
+          maxLength: 128
+          description: Contact mail address
+          example: support@tyntec.com
+        websites:
+          type: array
+          maxLength: 2
+          items:
+            type: string
+            pattern: ^https:\/\/?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+            maxLength: 256
+          description: Websites of the business
+          example:
+            - https://www.tyntec.com
+            - https://api.tyntec.com/reference
+        vertical:
+          type: string
+          enum:
+            - Automotive
+            - Beauty, Spa and Salon
+            - Clothing and Apparel
+            - Education
+            - Entertainment
+            - Event Planning and Service
+            - Finance and Banking
+            - Food and Grocery
+            - Public Service
+            - Hotel and Lodging
+            - Medical and Health
+            - Non-profit
+            - Professional Services
+            - Shopping and Retail
+            - Travel and Transportation
+            - Restaurant
+            - Other
+          description: Industry of the business
+          example: Professional Services
+        about:
+          type: string
+          maxLength: 139
+          description: Text to display in the _About_ section of your profile
+          example: Hey there! I am using WhatsApp.
+        logoUrl:
+          type: string
+          description: URL from which we can download the profile logo. Must be publicly accessible
+    pricing:
+      type: object
+      description: Price plan chosen for this request. You need to use the price plan IDs available to.
+      required:
+        - selectedPlanId
+      properties:
+        selectedPlanId:
+          description: ID of the price plan.
+          type: integer
+    companyDetails:
+      type: object
+      description: Company details used on the FB BM creation throughout the process
+      properties:
+        companyName:
+          description: Name of the company
+          type: string
+        companyAddress:
+          description: Address
+          type: string
+        postalCode:
+          description: Postal code
+          type: string
+        city:
+          description: City
+          type: string
+        country:
+          description: Country
+          type: string
+    webhookSpecification:
+      type: object
+      description: Configuration of callbacks to your system
+      properties:
+        inboundMessageUrl:
+          type: string
+          description: Webhook for events related to inbound messages
+          pattern: "^https://.*"
+          maxLength: 2000
+        messageStatusUrl:
+          type: string
+          description: Webhook for events related to message status changes
+          pattern: "^https://.*"
+          maxLength: 2000
+        header:
+          $ref: '#/components/schemas/Header'
+        signature:
+          $ref: '#/components/schemas/Signature'
+    Header:
+      type: object
+      description: |
+        Additional custom header to be send with the event transmission. Can be used for setting
+        authentication tokens, or similar.
+      required:
+        - key
+        - value
+      properties:
+        key:
+          description: name of the http header
+          type: string
+          minLength: 4
+          maxLength: 125
+        value:
+          type: string
+          description: value of the http header
+          minLength: 8
+          maxLength: 1024
+    Signature:
+      type: object
+      description: |
+        Signature configuration for incoming events. Can be disabled by setting the
+        signature property to empty.
+      required:
+        - secret
+        - method
+      properties:
+        secret:
+          type: string
+          description: Shared secret key
+          minLength: 8
+          maxLength: 125
+        method:
+          type: string
+          description: cryptographic algorithm used for the signature calculation
+          enum:
+            - HS256
+            - HS512
