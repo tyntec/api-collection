@@ -19,7 +19,7 @@ tags:
     description: |
       Events sent out if our system detects a request containing a registerable phone number
 channels:
-  "Success (WABA Only)":
+  successWabaOnly:
     description: |
       Successfull completion after an empty WABA was detected
     publish:
@@ -31,7 +31,7 @@ channels:
         http:
           type: request
           method: POST
-  "Success (Phone number)":
+  successPhoneNumber:
     description: |
       Successfull completion of a phone number activation
     publish:
@@ -43,7 +43,7 @@ channels:
         http:
           type: request
           method: POST
-  "Failure (WABA Only)":
+  failureWabaOnly:
     description: |
       Failed completion after an empty WABA was detected
     publish:
@@ -55,7 +55,7 @@ channels:
         http:
           type: request
           method: POST
-  "Failure (Phone number)":
+  failurePhoneNumber:
     description: |
       Failed completion of a phone number activation
     publish:
@@ -101,7 +101,7 @@ components:
     SuccessWABAOnly:
       type: object
       allOf:
-        - $ref: '#/components/schemas/APIEvent'
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
@@ -122,13 +122,13 @@ components:
           type: string
     SuccessPhoneNumber:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
           enum:
             - EmbeddedSignup::PhoneNumber::Success
-        requestId:
-          type: string
         whatsAppAccountId:
           type: string
         phoneNumber:
@@ -137,15 +137,13 @@ components:
           type: string
     FailurePhoneNumber:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
           enum:
             - EmbeddedSignup::PhoneNumber::Failure
-        requestId:
-          type: string
-        whatsAppAccountId:
-          type: string
         phoneNumber:
           type: string
         failureReason:
