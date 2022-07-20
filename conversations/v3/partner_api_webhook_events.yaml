@@ -101,7 +101,7 @@ components:
     SuccessWABAOnly:
       type: object
       allOf:
-        - $ref: '#/components/schemas/APIEvent'
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
@@ -122,13 +122,13 @@ components:
           type: string
     SuccessPhoneNumber:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
           enum:
             - EmbeddedSignup::PhoneNumber::Success
-        requestId:
-          type: string
         whatsAppAccountId:
           type: string
         phoneNumber:
@@ -137,15 +137,13 @@ components:
           type: string
     FailurePhoneNumber:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
           enum:
             - EmbeddedSignup::PhoneNumber::Failure
-        requestId:
-          type: string
-        whatsAppAccountId:
-          type: string
         phoneNumber:
           type: string
         failureReason:
