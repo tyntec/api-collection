@@ -19,7 +19,7 @@ tags:
     description: |
       Events sent out if our system detects a request containing a registerable phone number
 channels:
-  successWabaOnly:
+  "Success (WABA Only)":
     description: |
       Successfull completion after an empty WABA was detected
     publish:
@@ -31,7 +31,7 @@ channels:
         http:
           type: request
           method: POST
-  successPhoneNumber:
+  "Success (Phone number)":
     description: |
       Successfull completion of a phone number activation
     publish:
@@ -43,7 +43,7 @@ channels:
         http:
           type: request
           method: POST
-  failureWabaOnly:
+  "Failure (WABA Only)":
     description: |
       Failed completion after an empty WABA was detected
     publish:
@@ -55,7 +55,7 @@ channels:
         http:
           type: request
           method: POST
-  failurePhoneNumber:
+  "Failure (Phone number)":
     description: |
       Failed completion of a phone number activation
     publish:
