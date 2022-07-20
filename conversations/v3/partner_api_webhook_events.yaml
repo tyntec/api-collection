@@ -111,13 +111,13 @@ components:
           type: string
     FailureWABAOnly:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/EmbeddedSignupEvent'
       properties:
         event:
           type: string
           enum:
             - EmbeddedSignup::WABA::Failure
-        requestId:
-          type: string
         failureReason:
           type: string
     SuccessPhoneNumber:
