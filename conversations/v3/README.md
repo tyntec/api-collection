@@ -1,5 +1,15 @@
 # Release notes
 
+## 3.8
+
+### Changes
+
+#### Support for new Whatsapp template categories
+
+Whatsapp reworked their template categories to only three choices: MARKETING, PROMOTION and OTP.
+
+The old categories are deprecated and will be translated to one of the new ones on submission.
+
 ## 3.7
 
 ### Features
