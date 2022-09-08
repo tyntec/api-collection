@@ -1,0 +1,247 @@
+openapi: '3.0.0'
+info:
+  title: MMS
+  description: |
+    The Conversations API allows you to easily reach out and communicate with your clients via MMS.
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-specification-file: mms.yaml
+  x-major-version: v3
+servers:
+  - url: https://api.tyntec.com/conversations/v3
+security:
+  - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening during the delivery.
+  - name: "MMS Phone Numbers"
+    description: |
+      List all MMS Phone Numbers configured for your API account.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          $ref: '#/components/responses/MessageResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/mms:
+    get:
+      tags:
+        - "MMS Phone Numbers"
+      summary: List MMS Phone Numbers
+      operationId: listAllMmsChannels
+      description: List all MMS Phone Number configurations available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllMmsChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/mms/phone-numbers/{mms-phone-number}:
+    parameters:
+      - $ref: '#/components/parameters/MmsPhoneNumber'
+    get:
+      tags:
+        - "MMS Phone Number"
+      summary: Read a configuration
+      operationId: getMmsChannelConfig
+      description: Returns the specific channel configuration
+      responses:
+        200:
+          $ref: '#/components/responses/MmsChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/mms/phone-numbers/{mms-phone-number}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/MmsPhoneNumber'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateMmsChannelCallback
+      description: Update the callback settings of a specific Mms Phone Number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/MmsChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+  parameters:
+    MmsPhoneNumber:
+      name: mms-phone-number
+      in: path
+      required: true
+      description: MMS Phone number used for MMS messaging.
+      schema:
+        type: string
+        minLength: 11
+        maxLength: 11
+      example: 15551234567
+  responses:
+    MessageResponse:
+      description: The response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+    Default:
+      description: The default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.content.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    ListAllMmsChannelsResponse:
+      description: A list of Mms channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MmsChannelResponses'
+    MmsChannelResponse:
+      description: A MMS Phone Number configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MmsChannelResponse'
+  schemas:
+    Problem:
+      $ref: './common.yaml#/components/schemas/Problem'
+    MessageResponse:
+      $ref: './common.yaml#/components/schemas/MessageResponse'
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channel
+        - from
+      properties:
+        to:
+          type: string
+          description: |
+            The message's recipient
+            The format depends on the specific channel
+          example: "12314123"
+        from:
+          type: string
+          description: |
+            The sender of the messages. The format depends on the specific channel.
+          example: "34534532134"
+        channel:
+          type: string
+          description: The channel selected for delivery.
+          example: mms
+          enum:
+            - mms
+        overrides:
+          $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
+        context:
+          type: string
+          description: The context for this particular message
+          maxLength: 125
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/MmsImageContent'
+      example:
+        to: "155598765432"
+        from: "15551234567"
+        channel:  "mms"
+        content:
+          contentType: image
+          image:
+            url: https://test.com/image.jpg
+            caption: Look at this!
+    MmsImageContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - image
+        image:
+          $ref: '#/components/schemas/MmsImage'
+    #
+    # Media
+    #
+    MmsImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: the url of the location where the media is stored
+        caption:
+          type: string
+          maxLength: 1024
+    MmsChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/MmsChannelResponse'
+    MmsChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/MmsChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'

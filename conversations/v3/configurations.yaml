@@ -257,6 +257,16 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllTelegramChannelsResponse'
+  /configurations/channels/mms:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all Mms channels
+      operationId: listAllMmsChannels
+      description: List all Mms channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllMmsChannelsResponse'
   /configurations/channels/viber:
     get:
       tags:
@@ -336,6 +346,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/TelegramChannelResponses'
+    ListAllMmsChannelsResponse:
+      description: A list of Mms channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MmsChannelResponses'
     ListAllViberChannelsResponse:
       description: A list of Viber channel configurations
       content:
@@ -521,6 +537,7 @@ components:
         anyOf:
           - $ref: '#/components/schemas/SMSChannelResponse'
           - $ref: '#/components/schemas/TelegramChannelResponse'
+          - $ref: '#/components/schemas/MmsChannelResponse'
           - $ref: '#/components/schemas/ViberChannelResponse'
           - $ref: '#/components/schemas/WeChatChannelResponse'
           - $ref: '#/components/schemas/WhatsAppChannelResponse'
@@ -640,6 +657,33 @@ components:
           eventFilter:
             - MessageStatus::accepted
             - MessageStatus::dispatched
+    MmsChannelResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/MmsChannelResponse'
+    MmsChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/PhoneNumberId'
+      example:
+        channel: mms
+        scopes:
+          - messages:read
+          - callbacks:write
+          - callbacks:read
+        id:
+          phoneNumber: "15559876543"
+        name: your name
+        callback:
+          callbackVersion: "2.11"
+          inboundMessageUrl: https://your.server.com/inbound
+          messageStatusUrl: https://your.server.com/status
+          eventFilter:
+            - MessageStatus::accepted
+            - MessageStatus::dispatched
     SMSChannelResponses:
       type: array
       items:
@@ -743,15 +787,9 @@ components:
       properties:
         weChatId:
           type: string
-    TelegramId:
-      type: object
-      description: The definition of the Telegram id
-      properties:
-        botId:
-          type: string
 
     #
-    # Channel Secret Spec
+    # Channel Credential Spec
     #
     WeChatCredentials:
       type: object
