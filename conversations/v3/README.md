@@ -1,5 +1,11 @@
 # Release notes
 
+## 3.9
+
+### Changes
+
+#### MMS Channel was added
+
 ## 3.8
 
 ### Changes
