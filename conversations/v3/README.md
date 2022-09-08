@@ -1,5 +1,21 @@
 # Release notes
 
+## 3.9
+
+### Changes
+
+#### MMS Channel was added
+
+## 3.8
+
+### Changes
+
+#### Support for new Whatsapp template categories
+
+Whatsapp reworked their template categories to only three choices: MARKETING, PROMOTION and OTP.
+
+The old categories are deprecated and will be removed in one of the next releases.
+
 ## 3.7
 
 ### Features

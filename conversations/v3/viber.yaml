@@ -375,7 +375,7 @@ components:
           type: string
           enum:
             - video
-        image:
+        video:
           $ref: '#/components/schemas/ViberVideo'
     ViberVideoBody:
       type: object
@@ -384,7 +384,7 @@ components:
           type: string
           enum:
             - video
-        image:
+        video:
           $ref: '#/components/schemas/ViberVideo'
     ViberImageBody:
       type: object
