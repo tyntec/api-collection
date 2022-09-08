@@ -8,7 +8,7 @@
 
 Whatsapp reworked their template categories to only three choices: MARKETING, PROMOTION and OTP.
 
-The old categories are deprecated and will be translated to one of the new ones on submission.
+The old categories are deprecated and will be removed in one of the next releases.
 
 ## 3.7
 
