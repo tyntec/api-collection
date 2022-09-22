@@ -230,10 +230,10 @@ tags:
       Operations regarding custom lists of contacts that can be created in the GUI. You may use contact lists to send
       the same message to several contacts at once while keeping them as individual recipients.
 
-      **Black list**
+      **Blacklist**
 
-      Contacts can be black listed so that any messages received from those contacts are ignored.
-      Also agents will not be able to send messages to blacklisted contacts.
+      Contacts can be blacklisted so that any messages received from those contacts are ignored.
+      Also, agents will not be able to send messages to blacklisted contacts.
   - name: 'Conversation Management'
     description: |
       Operations regarding conversations.
@@ -263,7 +263,7 @@ tags:
     description: ""
   - name: 'Webhook Configuration'
     description: |
-      Webhooks are used to receive real-time events like messages and receipts. Multiple webhooks can be defined per channel, each with their own events.
+      Webhooks are used to receive real-time events like messages and receipts. You can define multiple webhooks per channel, each with its events.
 
       Webhooks must always return a *200 OK* response.
 
@@ -295,18 +295,18 @@ tags:
 
       The following events are defined:
 
-      | **Name**        | **Description**                                                                 |
-      | ---             | ---                                                                             |
-      | custom          |	Custom event for specific customer purposes                                     |
-      | echo            |	Outgoing messages sent by agents or assistants                                  |
-      | handover        |	Handover event whenever a conversation is transferred to an assistant or agent  |
-      | label           |	Label event whenever a conversation is labelled or unlabelledv                  |
-      | message         |	Incoming messages from customers                                                |
-      | note            |	Note creation or deletion event                                                 |
-      | postback        |	Postback event for WhatsApp button templates, Apple list pickers etc            |
-      | receipt         |	Message receipt event                                                           |
-      | template_pack   |	Template updates whenever templates are approved, rejected etc.                 |
-      | typing          |	Typing indications when customers are typing a message                          |
+      | **Name**        | **Description**                                                                     |
+      | ---             | ---                                                                                 |
+      | custom          |	A custom event for specific customer purposes                                     |
+      | echo            |	An outgoing message sent by an agent or assistant                                 |
+      | handover        |	A handover event whenever a conversation is transferred to an assistant or agent  |
+      | label           |	A label event whenever a conversation is labelled or unlabelled                   |
+      | message         |	An incoming message from a customer                                               |
+      | note            |	A note creation or deletion event                                                 |
+      | postback        |	A postback event for WhatsApp button templates, Apple list pickers, etc           |
+      | receipt         |	A message receipt event                                                           |
+      | template_pack   |	A template update whenever a template is approved, rejected, etc.                 |
+      | typing          |	A typing indication when a customer is typing a message                           |
 paths:
   /keys:
     get:
@@ -344,7 +344,7 @@ paths:
       tags:
         - 'Company Management'
       operationId: listAllCompanies
-      description: List of all companies can be requested
+      description: A list of all companies can be requested
       responses:
         200:
           description: OK
@@ -379,7 +379,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -396,12 +396,12 @@ paths:
       tags:
         - 'Company Management'
       operationId: allAgents
-      description: A list of all agents can be retrieved using the GET method. The objects field specifies to which objects the key has access to. IP whitelisting can be used to restrict originating IP addresses.
+      description: A list of all agents can be retrieved using the GET method. The objects field specifies to which objects the key has access. IP whitelisting can be used to restrict originating IP addresses.
       parameters:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -425,14 +425,14 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
         - in: path
           name: email
           required: true
-          description: email of the agent
+          description: The email of the agent
           schema:
             type: string
             format: email
@@ -470,7 +470,7 @@ paths:
                 - name
               properties:
                 name:
-                  description: Name of the team to be created
+                  description: The name of the team to be created
                   type: string
                   example: Support
       responses:
@@ -594,7 +594,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -618,7 +618,7 @@ paths:
         - in: path
           name: companyId
           required: true
-          description: ID of the company
+          description: The ID of the company
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -639,16 +639,16 @@ paths:
               type: object
               properties:
                 color:
-                  description: Color
+                  description: The assistant's avatar color
                   type: integer
                 description:
-                  description: Description of the assistant
+                  description: A description of the assistant
                   type: string
                 name:
-                  description: Name of the assistant
+                  description: The name of the assistant
                   type: string
                 enabled:
-                  description: is the assistant enabled
+                  description: Is the assistant enabled
                   type: boolean
       responses:
         200:
@@ -681,11 +681,11 @@ paths:
               type: object
               properties:
                 description:
-                  description: Description of the label
+                  description: The label's description
                   type: string
                   example: 'Support related questions'
                 name:
-                  description: Name of the label
+                  description: The label's name
                   type: string
                   example: 'Support'
       responses:
@@ -750,15 +750,15 @@ paths:
               type: object
               properties:
                 color:
-                  description: Color of the label
+                  description: The label color representation
                   type: integer
                   example: 8
                 name:
-                  description: Friendly name of the label
+                  description: The label's friendly name
                   type: string
                   example: 'Customer support'
                 priority:
-                  description: Priority of the label
+                  description: The label's priority
                   type: integer
       responses:
         200:
@@ -847,10 +847,10 @@ paths:
               type: object
               properties:
                 name:
-                  description: Name of the channel
+                  description: The channel's name
                   type: integer
                 priority:
-                  description: Priority of the channel
+                  description: The channel's priority
                   type: integer
       responses:
         200:
@@ -935,7 +935,7 @@ paths:
         - in: path
           name: type
           required: true
-          description: Type of automated message
+          description: The type of automated message
           schema:
             type: string
             enum:
@@ -951,7 +951,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text of the automated message
+                  description: The text of the automated message
                   type: string
                   example: 'Sorry, we are currently closed. Your question will be answered as soon as possible.'
                 enabled:
@@ -990,19 +990,19 @@ paths:
               type: object
               properties:
                 jid:
-                  description: Contact ID
+                  description: A contact ID
                   type: string
                   example: '31611111111@company.com'
                 name:
-                  description: Name of the contact
+                  description: The contact's name
                   type: string
                   example: 'John Doe'
                 reference:
-                  description: Reference of the contact
+                  description: The contact's reference
                   type: string
                   example: 'Customer #545'
                 remarks:
-                  description: Comment for the contact
+                  description: A comment about the contact
                   type: string
                   example: 'VIP'
       responses:
@@ -1075,15 +1075,15 @@ paths:
               type: object
               properties:
                 name:
-                  description: Name of the contact
+                  description: The contact's name
                   type: string
                   example: 'John Doe'
                 reference:
-                  description: Reference of the contact
+                  description: The contact's reference
                   type: string
                   example: 'Customer #545'
                 remarks:
-                  description: Comment for the contact
+                  description: A comment about the contact
                   type: string
                   example: 'VIP'
       responses:
@@ -1204,7 +1204,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text for the comment
+                  description: The text of the comment
                   type: string
                   example: 'Order #12345 has been delivered'
       responses:
@@ -1285,14 +1285,14 @@ paths:
                   type: string
                   example: 'Label123'
                 status:
-                  description: Status of the conversation
+                  description: The status of the conversation
                   type: string
                   enum:
                     - CLOSED
                     - OPEN
                   example: 'CLOSED'
                 unreadCount:
-                  description: Number of unread messages
+                  description: The number of unread messages
                   type: integer
                   example: 5
       responses:
@@ -1517,7 +1517,7 @@ paths:
               type: object
               properties:
                 message:
-                  description: Outgoing message
+                  description: The outgoing message
                   type: object
                   example:
                     body: Hello world
@@ -1609,11 +1609,11 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text/Body of the note.
+                  description: The note's text/body
                   type: string
                   example: 'Customer number #63553'
                 referenceId:
-                  description: Friendly reference name as an ID.
+                  description: A friendly reference name as an ID.
                   type: string
                   example: 'CUSTOMER_NUMBER'
       responses:
@@ -1652,7 +1652,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The note's ID
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -1665,7 +1665,7 @@ paths:
               type: object
               properties:
                 body:
-                  description: Text/Body of the note.
+                  description: The note's text/body.
                   type: string
                   example: 'Customer number #63553'
                 isPinned:
@@ -1673,11 +1673,11 @@ paths:
                   type: boolean
                   example: true
                 isReadOnly:
-                  description: Is this note read only or not?
+                  description: Is this note read-only?
                   type: boolean
                   example: false
                 referenceId:
-                  description: Friendly reference name as an ID.
+                  description: A friendly reference name as an ID.
                   type: string
                   example: 'CUSTOMER_NUMBER'
       responses:
@@ -1713,7 +1713,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The note's ID
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -1767,7 +1767,7 @@ paths:
               type: object
               properties:
                 about:
-                  description: Description of what is this profile about.
+                  description: A description of what is this profile about
                   type: string
                   example: 'Welcome! We are here to help you 24/7'
                 businessProfile:
@@ -1775,15 +1775,15 @@ paths:
                   type: object
                   properties:
                     address:
-                      description: Address associated with the profile
+                      description: An address associated with the profile
                       type: string
                       example: "High Street 15, New York"
                     description:
-                      description: Description of the profile
+                      description: A description of the profile
                       type: string
                       example: "YourCompany Ltd."
                     email:
-                      description: email address associated with the WhatsApp for business profile
+                      description: The email address associated with the WhatsApp for business profile
                       type: string
                       format: email
                       example: "info@your-company.com"
@@ -1829,11 +1829,11 @@ paths:
                   type: object
                   properties:
                     description:
-                      description: Description of the profile
+                      description: The description of the profile
                       type: string
                       example: "YourCompany Ltd."
                     email:
-                      description: email address associated with the WhatsApp for business profile
+                      description: The email address associated with the WhatsApp for business profile
                       type: string
                       format: email
                       example: "info@your-company.com"
@@ -1893,7 +1893,7 @@ paths:
               type: object
               properties:
                 message:
-                  description: Text/Body of the message.
+                  description: The text/body of the message.
                   type: string
                   example: 'I have a question about product ABC'
       responses:
@@ -1922,7 +1922,7 @@ paths:
         - in: path
           name: code
           required: true
-          description: QR code
+          description: A QR code
           schema:
             type: string
             example: 'VETO8Y3SYCSFH1'
@@ -1937,7 +1937,7 @@ paths:
                 - message
               properties:
                 message:
-                  description: Text/Body of the message.
+                  description: The text/body of the message
                   type: string
                   example: 'I have a question about product ABC'
       responses:
@@ -1990,13 +1990,13 @@ paths:
             example: 'channelJid@company.com'
       responses:
         200:
-          description: OK - Check response in example above
+          description: OK - Check the response in the example above
     post:
       summary: Create a template
       tags:
         - 'WhatsApp Management'
       operationId: createTemplate
-      description: Create a new WhatsApp Business template. Templates can include a header, body, footer and buttons.
+      description: Create a new WhatsApp Business template. Templates can include a header, body, footer, and buttons.
       parameters:
         - in: path
           name: channelJid
@@ -2030,12 +2030,12 @@ paths:
                   type: string
                   example: 'en'
                 name:
-                  description: Name of the template
+                  description: The name of the template
                   type: string
                   example: 'support_after_24hours'
       responses:
         201:
-          description: Created - Check response in example above
+          description: Created - Check the response in the example above
   /channels/{channelJid}/templates/{name}:
     delete:
       summary: Delete a template
@@ -2055,7 +2055,7 @@ paths:
         - in: path
           name: name
           required: true
-          description: Name of the template to be deleted
+          description: The name of the template to be deleted
           schema:
             type: string
           example: 'delivery_notification'
@@ -2121,7 +2121,7 @@ paths:
                     type: string
                     example: "message"
                 url:
-                  description: URL of the webhook
+                  description: The webhook's URL
                   type: string
                   format: uri
                   example: 'https://your.company.com/webhook'
@@ -2151,7 +2151,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The ID of the node
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -2166,7 +2166,7 @@ paths:
                 - name
               properties:
                 name:
-                  description: Name of the webhook to be created
+                  description: The name of the webhook to be created
                   type: string
                   example: 'Support'
       responses:
@@ -2194,7 +2194,7 @@ paths:
         - in: path
           name: id
           required: true
-          description: ID of the node
+          description: The ID of the node
           schema:
             type: string
             example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
@@ -2210,7 +2210,7 @@ paths:
         - in: query
           name: agent
           required: true
-          description: Agents mail
+          description: The agent's email address
           schema:
             type: string
             format: email
@@ -2254,23 +2254,23 @@ components:
       type: object
       properties:
         email:
-          description: email address
+          description: The agent's email address
           type: string
           example: jane@mycompany.com
         name:
-          description: Name
+          description: The agent's name
           type: object
           properties:
             firstName:
-              description: First Name of the Agent
+              description: The agent's first name
               type: string
               example: Jane
             fullName:
-              description: Full Name of the Agent
+              description: The agent's full name
               type: string
               example: Jane Mayers
             lastName:
-              description: Last Name of the Agent
+              description: The agent's last name
               type: string
               example: Mayers
         roles:
@@ -2282,7 +2282,7 @@ components:
             - admin
             - user
         status:
-          description: Status of the agent
+          description: The agent's availability status
           type: string
           enum:
             - OFFLINE
@@ -2296,27 +2296,27 @@ components:
             format: email
             example: company@domail.com
     apiKeyResponse:
-      description: Current API key response
+      description: The current API key response
       type: object
       properties:
         cipherKey:
           description: Cipher Key
           type: string
         description:
-          description: Description for the key or usage of the key
+          description: A description of the key or usage of the key
           type: string
           example: 'Test environment'
         id:
-          description: Id of the key
+          description: The ID of the key
           type: string
           example: '509000e9-05c9-43a9-b6f1-70f1c6a5448a'
         lastUsed:
-          description: When the key last used
+          description: When the key was last used
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
         objects:
-          description: Array of objects. Check example on the right
+          description: An array of objects. Check the example on the right
           type: array
           items:
             type: array
@@ -2330,7 +2330,7 @@ components:
           type: string
           example: 'CHANNEL'
         whitelist:
-          description: Array of whitelisted IPs. Check example on the right
+          description: An array of whitelisted IPs. Check the example on the right
           type: array
           items:
             type: string
@@ -2339,36 +2339,36 @@ components:
             - '95.95.95.95'
             - '12.12.12.12'
     assistantResponse:
-      description: Single assistant response
+      description: A single assistant response
       type: object
       properties:
         color:
-          description: Color
+          description: The assistant's avatar color
           type: integer
           example: 8
         description:
-          description: Role of the Assistant
+          description: The assistant's role
           type: string
           example: 'Sales assistant'
         jid:
-          description: Id of the key
+          description: The assistant's ID
           type: string
           format: email
           example: 'jane@mycompany.com'
         name:
-          description: Name of the assistant
+          description: The assistant's name
           type: string
           example: 'Jane Mayer'
     autoMessageResponse:
-      description: Automated message response
+      description: An automated message response
       type: object
       properties:
         body:
-          description: Body/text of the message
+          description: The body/text of the message
           type: string
           example: 'Sorry, we are currently closed. Your question will be answered as soon as possible.'
         createdAt:
-          description: When message is created
+          description: When the message is created
           type: string
           format: date-time
           example: '2020-03-11T19:00:02.000000Z'
@@ -2376,19 +2376,19 @@ components:
           description: Is the message enabled?
           type: boolean
         type:
-          description: Name of the assistant
+          description: The type of the auto message
           type: string
           enum:
             - 'AWAY'
             - 'GREETING'
           example: 'AWAY'
         updatedAt:
-          description: When message is last updated
+          description: When the message is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:00:02.000000Z'
     channelResponse:
-      description: Channel Response
+      description: A channel response
       type: object
       properties:
         dataRetentionInDays:
@@ -2401,11 +2401,11 @@ components:
           format: email
           example: 31611111111@company.com
         name:
-          description: Name of the channel
+          description: The channel's name
           type: string
           example: 'WhatApp'
         priority:
-          description: Priority of the channel
+          description: The channel's priority
           type: integer
     commentResponse:
       description: Comment response
@@ -2416,20 +2416,20 @@ components:
           type: string
           example: 'ee487689cac84f972ff1d8d10ed7b64f4148'
     companyResponse:
-      description: Company response
+      description: A company response
       type: object
       properties:
         id:
-          description: ID of the company
+          description: The ID of the company
           type: string
           example: '458e633a-ab50-445f-9d1f-52afbf720ec3'
         name:
-          description: Name of the company
+          description: The name of the company
           type: string
           format: string
           example: 'tyntec'
     contactResponse:
-      description: Contact response
+      description: A contact response
       type: object
       properties:
         names:
@@ -2443,41 +2443,41 @@ components:
           items:
             $ref: '#/components/schemas/note'
         phoneNumber:
-          description: Phone number of the contact
+          description: The phone number of the contact
           type: integer
           example: 31611111111
         reference:
-          description: Reference of the contact
+          description: A reference to the contact
           type: string
           example: 'Customer #545'
         remarks:
-          description: Comment for the contact
+          description: A comment about the contact
           type: string
           example: 'VIP'
         type:
-          description: Type of the contact
+          description: A type of contact
           type: string
           example: 'INDIVIDUAL'
     conversationResponse:
-      description: Conversation response
+      description: A conversation response
       type: object
       properties:
         assignee:
-          description: Assistant to the agents
+          description: The assigned responder (either an assistant or agent)
           type: string
           example: 'john@mycompany.com'
         channel:
-          description: Channel to be used
+          description: The channel to be used
           type: string
           items:
             $ref: '#/components/schemas/channelResponse'
         contact:
-          description: Contact of the conversation
+          description: The contact of the conversation
           type: string
           items:
             $ref: '#/components/schemas/contact'
         createdAt:
-          description: Date and time the conversation is created
+          description: The date and time the conversation is created
           type: string
           format: date-time
           example: '2019-04-04T15:29:47.000000Z'
@@ -2487,29 +2487,29 @@ components:
           items:
             $ref: '#/components/schemas/allLabelsResponse'
         lastMessageReceivedAt:
-          description: Date and time the last message is received
+          description: The date and time the last message is received
           type: string
           format: date-time
           example: '2019-04-08T23:55:39.000000Z'
         lastMessageSentAt:
-          description: Date and time that the last message is sent
+          description: The date and time that the last message is sent
           type: string
           format: date-time
           example: '2019-04-07T17:12:00.000000Z'
         messagesReceived:
-          description: Number of messages received
+          description: The number of messages received
           type: integer
           example: 12
         messagesSent:
-          description: Number of messages sent
+          description: The number of messages sent
           type: integer
           example: 8
         status:
-          description: Status of the conversation
+          description: The status of the conversation
           type: string
           example: "CLOSED"
         unreadCount:
-          description: Number of unread messages
+          description: The number of unread messages
           type: integer
           example: 5
     emailsResponse:
@@ -2523,7 +2523,7 @@ components:
       type: object
       properties:
         color:
-          description: Color
+          description: The label's color
           type: integer
           example: 8
         jid:
@@ -2532,14 +2532,14 @@ components:
           format: email
           example: '31611111111@company.com'
         name:
-          description: Name of the label
+          description: The label's name
           type: string
           example: 'Support'
         priority:
-          description: Priority of the channel
+          description: The label's priority
           type: integer
     listResponse:
-      description: Single list response
+      description: A single list response
       type: object
       properties:
         jid:
@@ -2548,23 +2548,23 @@ components:
           format: email
           example: '31611111111@company.com'
         name:
-          description: Name of the list
+          description: The name of the list
           type: string
           example: 'Mailing list'
         remarks:
-          description: Comment for the list
+          description: A comment on the list
           type: string
           example: 'Support'
     noteResponse:
-      description: Single Note Response
+      description: A single note response
       type: object
       properties:
         body:
-          description: Text/Body of the note
+          description: The text/body of the note
           type: string
           example: 'Return order received'
         createdAt:
-          description: Date and time the note is created
+          description: The date and time the note is created
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
@@ -2574,7 +2574,7 @@ components:
           format: email
           example: 'john@mycompany.com'
         id:
-          description: ID of the note
+          description: The note's ID
           type: string
           example: '280cbbe0-c08a-4606-bf8d-a30242c4eaa4'
         isPinned:
@@ -2582,83 +2582,83 @@ components:
           type: boolean
           example: false
         isReadOnly:
-          description: Is this note read only or not?
+          description: Is this note read-only?
           type: boolean
           example: false
         updatedAt:
-          description: Date and time the note is last updated
+          description: The date and time the note is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:53:02.000000Z'
         referenceId:
-          description: Reference ID of the note
+          description: The note's reference ID
           type: string
           example: "CUSTOMER_NUMBER"
     profileResponse:
-      description: WhatsApp for Business profile response
+      description: A WhatsApp for Business profile response
       type: object
       properties:
         about:
-          description: Description of what is this profile about.
+          description: A description of what is this profile about.
           type: string
           example: "Welcome! We are here to help you 24/7"
         businessProfile:
           $ref: '#/components/schemas/businessProfile'
         name:
-          description: Name of the profile
+          description: The name of the profile
           type: string
           example: "YourCompany"
         phoneNumber:
-          description: Phone number associated with the WhatsApp for Business profile
+          description: The phone number associated with the WhatsApp for Business profile
           type: integer
           example: 31612345678
         pictureUrl:
-          description: URL of the picture used in the profile
+          description: The URL of the picture used in the profile
           type: string
           example: "https://pps.whatsapp.net/v/t61.24694-24/s96x96/71527172_751740171986704_2078049712831220364_n.jpg?oe=5E2168E9&oh=174efd2076218dff633a1e748beac190"
     qrCodeResponse:
-      description: Single QR code response
+      description: A single QR code response
       type: object
       properties:
         code:
-          description: QR code
+          description: A QR code
           type: string
           example: "VETO8Y3SYCSFH1"
         createdAt:
-          description: Date and time the note is created
+          description: The date and time the QR code is created
           type: string
           format: date-time
           example: '2020-03-11T19:53:02.000000Z'
         image:
-          description: QR image URL
+          description: A QR image URL
           type: string
           format: uri
           example: "https://scontent.xx.fbcdn.net/..."
         message:
-          description: QR message to be displayed
+          description: A QR message to be displayed
           type: string
           example: "I have a question about product ABC"
         updatedAt:
-          description: Date and time the note is last updated
+          description: The date and time the QR code is last updated
           type: string
           format: date-time
           example: '2020-04-11T19:53:02.000000Z'
         url:
-          description: QR URL
+          description: A QR URL
           type: string
           format: uri
           example: "https://wa.me/message/VEKO8Y3SYCSFH1"
     teamResponse:
-      description: Single team response
+      description: A single team response
       type: object
       properties:
         channels:
-          description: Array of channels
+          description: An array of channels
           type: array
           items:
             $ref: '#/components/schemas/channelResponse'
         color:
-          description: Color
+          description: The team's avatar color
           type: integer
           example: 8
         jid:
@@ -2670,22 +2670,22 @@ components:
           description: Metadata information
           type: string
         name:
-          description: Name of the team
+          description: The team's name
           type: string
           example: "Support"
     webhookResponse:
-      description: Webhook response
+      description: A webhook response
       type: object
       properties:
         assistant:
-          description: Assistant to the agents
+          description: An assistant to the agents
           type: string
           example: 'john@mycompany.com'
         cipherKey:
-          description: Cipher key to be used in the webhook
+          description: A cipher key to be used in the webhook
           type: string
         createdAt:
-          description: Date and time the Webhook is created
+          description: The date and time that the webhook is created
           type: string
           format: date-time
           example: '2019-04-04T15:29:47.000000Z'
@@ -2694,7 +2694,7 @@ components:
           type: boolean
           example: true
         events:
-          description: Array of event on the webhooks
+          description: An array of events on the webhooks
           type: array
           items:
             $ref: '#/components/schemas/events'
@@ -2704,32 +2704,32 @@ components:
           items:
             example: "'Authorization': 'Bearer SomeApiKey'"
         id:
-          description: ID of the event
+          description: The ID of the event
           type: string
           example: '8520d8d6-7b28-4d6f-8631-ecd528a0246d'
         updatedAt:
-          description: Date and time that the last message is sent
+          description: The date and time that the last message is sent
           type: string
           format: date-time
           example: '2019-04-07T17:12:00.000000Z'
         url:
-          description: URL of the webhook
+          description: The URL of the webhook
           type: string
           example: "https://your.company.com/webhook"
     businessProfile:
-      description: WhatsApp for Business profile response
+      description: A WhatsApp for Business profile response
       type: object
       properties:
         address:
-          description: Address associated with the profile
+          description: An address associated with the profile
           type: string
           example: "High Street 15, New York"
         description:
-          description: Description of the profile
+          description: A description of the profile
           type: string
           example: "YourCompany Ltd."
         email:
-          description: email address associated with the WhatsApp for business profile
+          description: The email address associated with the WhatsApp for business profile
           type: string
           format: email
           example: "info@your-company.com"
@@ -2738,7 +2738,7 @@ components:
           type: string
           example: "Vertical"
         websites:
-          description: Website list of URLs
+          description: A list of website URLs
           type: array
           items:
             $ref: '#/components/schemas/website'
@@ -2746,12 +2746,12 @@ components:
             - 'www.company1.com'
             - 'www.company2.com'
     website:
-      description: Website URL
+      description: A website URL
       type: string
       example: "https://your-company.com"
     quickRepliesResponse:
       type: array
-      description: List of quick replies
+      description: A list of quick replies
       items:
         $ref: '#/components/schemas/quickReply'
     quickReply:
@@ -2763,31 +2763,31 @@ components:
       properties:
         category:
           type: string
-          description: Custom category
+          description: A custom category
           example: Welcome Message
         createdAt:
           type: string
-          description: Creation date of the quick reply
+          description: The creation date of the quick reply
           format: date-time
           example: 2021-07-05T06:20:33.000000Z
         jids:
           type: array
-          description: List of channels the quick reply is assigned to
+          description: The list of channels the quick reply is assigned to
           items:
             - type: string
               example: 123152345245@whatsapp.eazy.im
         message:
           type: string
-          description: Message of the quick reply
+          description: The message of the quick reply
           example: Hi {{1}}, how can we help you?
         name:
           type: string
-          description: Name of the quick reply
+          description: The name of the quick reply
           example: welcome
         updatedAt:
           type: string
           format: date-time
-          description: Last update of the quick reply
+          description: The last update of the quick reply
           example: 2021-07-05T06:28:33.000000Z
     unreadMessagesResponse:
       type: object
@@ -2804,7 +2804,7 @@ components:
     components:
       name: components
       in: body
-      description: Array of components to be used in the template
+      description: An array of components to be used in the template
       schema:
         type: string
     text:
