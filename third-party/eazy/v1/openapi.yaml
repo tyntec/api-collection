@@ -83,7 +83,7 @@ info:
   x-repository: https://github.com/tyntec/api-collection/blob/master/third-party/eazy
   x-major-version: v1
 servers:
-  - url: https://api.cmd.tyntec.com/
+  - url: https://api.cmd.tyntec.com/v3
 security:
   - bearerAuth: []
 tags:
@@ -323,21 +323,21 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/apiKeyResponse'
-  /keys/currrent:
+                  $ref: '#/components/schemas/apiKeyResponse'
+  /keys/current:
     get:
       summary: Current API key
       tags:
         - 'API Keys'
       operationId: currentApiKey
-      description: A specific agent can be requested
+      description: The current key can be retrieved using the GET method.
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/apiKeyResponse'
+                $ref: '#/components/schemas/apiKeyResponse'
   /companies:
     get:
       summary: List all companies
@@ -443,7 +443,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/agentsResponse'
+                $ref: '#/components/schemas/agentResponse'
   /companies/{companyId}/teams:
     post:
       summary: Create a team
@@ -479,7 +479,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/teamResponse'
+                $ref: '#/components/schemas/teamResponse'
     get:
       summary: List all teams
       tags:
@@ -527,7 +527,7 @@ paths:
             format: email
             example: 'jid@company.com'
       requestBody:
-        description: The team you would like to create
+        description: The team you would like to update
         required: true
         content:
           application/json:
@@ -535,7 +535,7 @@ paths:
               type: object
               properties:
                 name:
-                  description: Name of the team to be created
+                  description: The name of the team to be updated
                   type: string
                   example: Support
                 color:
@@ -656,7 +656,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/assistantResponse'
+                $ref: '#/components/schemas/assistantResponse'
   /companies/{companyId}/labels:
     post:
       summary: Create a label
@@ -694,7 +694,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/labelResponse'
+                $ref: '#/components/schemas/labelResponse'
     get:
       summary: List all labels
       tags:
@@ -717,7 +717,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/labelResponse'
+                  $ref: '#/components/schemas/labelResponse'
   /companies/{companyId}/labels/{jid}:
     patch:
       summary: Update a label
@@ -766,7 +766,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/labelResponse'
+                $ref: '#/components/schemas/labelResponse'
     delete:
       summary: Delete a label
       tags:
@@ -964,7 +964,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/autoMessageResponse'
+                $ref: '#/components/schemas/autoMessageResponse'
   /channels/{channelJid}/contacts:
     post:
       summary: Create a contact
@@ -1213,7 +1213,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/commentResponse'
+                $ref: '#/components/schemas/commentResponse'
   /channels/{channelJid}/conversations/{contactJid}:
     get:
       summary: Read a conversation
@@ -1326,7 +1326,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/listResponse'
+                  $ref: '#/components/schemas/listResponse'
   /channels/{channelJid}/lists/{listJid}/{contactJid}:
     post:
       summary: Add a contact to a list
@@ -1450,8 +1450,8 @@ paths:
 
         | **Element** | **Value**	 | **Mandatory**	| **Description**         |
         | ---         | ---        | ---              | ---                     |
-        | latitude	| float	Y	 | Latitude         | coordinate              |
-        | longitude	| float	Y	 | Longitude        | coordinate              |
+        | latitude	| float		 | Y                | Latitude coordinate     |
+        | longitude	| float		 | Y                | Longitude coordinate    |
         | name	    | string	 | N                | Name of the location    |
         | type	    | "location" | Y                | Message type            |
         | url	        | string	 | N                | Website URL             |
@@ -1541,7 +1541,7 @@ paths:
         - 'Messaging'
       description: |
         To receive messages, create an endpoint on your webserver that will be able to process POST requests
-        and subscribe its URL via [Webhook Configuration](#webhook-configuration) to the "message" events.
+        and subscribe its URL via [Webhook Configuration](#support-inbox-api-webhook-configuration) to the "message" events.
 
         **Note:** The path above is only an example, you may choose your URL freely.
   /channels/{channelJid}/contacts/{contactJid}/notes:
@@ -1868,7 +1868,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/qrCodesResponse'
+                  $ref: '#/components/schemas/qrCodeResponse'
     post:
       summary: Create a QR code
       tags:
@@ -2087,7 +2087,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/webhooksResponse'
+                  $ref: '#/components/schemas/webhookResponse'
     post:
       summary: Create a webhook
       tags:
@@ -2319,12 +2319,10 @@ components:
           description: Array of objects. Check example on the right
           type: array
           items:
-            type: array
-            items:
-              type: string
+            type: object
             example:
-              - "'jid': '31612345678@tyntec.com'"
-              - "'type': 'CHANNEL'"
+              jid: '31612345678@tyntec.com'
+              type: 'CHANNEL'
         scope:
           description: The scope of this key
           type: string
@@ -2392,7 +2390,7 @@ components:
       type: object
       properties:
         dataRetentionInDays:
-          description: Body/text of the message
+          description: Data retention time in days
           type: integer
           example: 90
         jid:
@@ -2458,6 +2456,22 @@ components:
           description: Type of the contact
           type: string
           example: 'INDIVIDUAL'
+    name:
+      description: "The contact's name"
+      type: object
+      properties:
+        firstName: 
+          description: "The contact's first name"
+          type: string
+          example: 'John'
+        fullName:
+          description: "The contact's full name"
+          type: string
+          example: 'John Doe'
+        lastName:
+          description: "The contact's last name"
+          type: string
+          example: 'Doe'
     conversationResponse:
       description: Conversation response
       type: object
@@ -2485,7 +2499,7 @@ components:
           description: Labels of the conversation
           type: array
           items:
-            $ref: '#/components/schemas/allLabelsResponse'
+            $ref: '#/components/schemas/labelResponse'
         lastMessageReceivedAt:
           description: Date and time the last message is received
           type: string
@@ -2512,12 +2526,10 @@ components:
           description: Number of unread messages
           type: integer
           example: 5
-    emailsResponse:
-      description: List all email addresses
-      type: array
-      items:
-        $ref: '#/components/schemas/email'
-      example: [jane@mycompany1.com, jo@mycompany1.com, john@company2.com]
+    email:
+      description: An email address
+      type: string
+      example: jane@mycompany1.com
     labelResponse:
       description: Single Label Response
       type: object
@@ -2697,12 +2709,12 @@ components:
           description: Array of event on the webhooks
           type: array
           items:
-            $ref: '#/components/schemas/events'
+            $ref: '#/components/schemas/event'
         headers:
           description: Header parameters
           type: object
-          items:
-            example: "'Authorization': 'Bearer SomeApiKey'"
+          example:
+            Authorization: 'Bearer SomeApiKey'
         id:
           description: ID of the event
           type: string
@@ -2716,6 +2728,10 @@ components:
           description: URL of the webhook
           type: string
           example: "https://your.company.com/webhook"
+    event:
+      description: An event
+      type: string
+      example: "message"
     businessProfile:
       description: WhatsApp for Business profile response
       type: object
@@ -2774,8 +2790,8 @@ components:
           type: array
           description: List of channels the quick reply is assigned to
           items:
-            - type: string
-              example: 123152345245@whatsapp.eazy.im
+            type: string
+            example: 123152345245@whatsapp.eazy.im
         message:
           type: string
           description: Message of the quick reply
