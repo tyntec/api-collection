@@ -410,14 +410,14 @@ components:
       type: object
       required:
         - messageId
-        - acceptedAt
+        - timestamp
       properties:
         messageId:
           type: string
           format: uuid
           description: A global unique Message Id reference
           example: 77185196-664a-43ec-b14a-fe97036c697f
-        acceptedAt:
+        timestamp:
           type: string
           format: date-time
           description: A point in time when the API confirms that the message request was accepted
