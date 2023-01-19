@@ -208,6 +208,7 @@ components:
           maxLength: 125
         content:
           oneOf:
+            - $ref: '#/components/schemas/MmsTextContent'
             - $ref: '#/components/schemas/MmsImageContent'
       example:
         to: "155598765432"
@@ -218,6 +219,22 @@ components:
           image:
             url: https://test.com/image.jpg
             caption: Look at this!
+    MmsTextContent:
+      type: object
+      description: A plain text message
+      required:
+        - contentType
+        - text
+      properties:
+        contentType:
+          type: string
+          description: Determines the type of the message. Always _text_.
+          enum:
+            - text
+        text:
+          type: string
+          description: Text to be sent
+          maxLength: 800
     MmsImageContent:
       type: object
       properties:
