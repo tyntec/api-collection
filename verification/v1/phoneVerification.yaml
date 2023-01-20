@@ -56,7 +56,7 @@ paths:
           in: path
           required: false
           description: |
-            Option for country ISO code format. Defaults to iso3.
+            Option for country ISO code format. Defaults to iso3
           schema:
             type: string
             example: iso2
@@ -143,7 +143,7 @@ components:
         operatorCountry:
           type: string
           example: "CZE"
-          description: In which country is the number registered? The country code formatted in ISO3 or ISO2 code
+          description: In which country is the number registered? The country code in ISO3 or ISO2 format 
         fraudRisk:
           type: string
           example: "low"
