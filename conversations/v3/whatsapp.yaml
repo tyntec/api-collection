@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.5'
+  version: '3.10'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -1053,7 +1053,7 @@ components:
     WhatsAppTextTemplate:
       value:
         name: welcome
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1068,7 +1068,7 @@ components:
     WhatsAppTextWithFooterTemplate:
       value:
         name: welcome_v2
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1083,7 +1083,7 @@ components:
     WhatsAppRichTemplateWithImage:
       value:
         name: appointment_confirmation
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1101,7 +1101,7 @@ components:
     WhatsAppRichTemplateWithDocument:
       value:
         name: invoice
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1117,7 +1117,7 @@ components:
     WhatsAppRichTemplateWithVideo:
       value:
         name: surveilance_alert
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1133,7 +1133,7 @@ components:
     WhatsAppRichTemplateWithLocation:
       value:
         name: pickup_point
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1151,7 +1151,7 @@ components:
     WhatsAppRichTemplateWithText:
       value:
         name: account_upgrade
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1170,7 +1170,7 @@ components:
     WhatsAppInteractiveTemplateWithQuickReply:
       value:
         name: ticket_closed
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1190,7 +1190,7 @@ components:
     WhatsAppInteractiveTemplateWithCallToAction:
       value:
         name: invoice_issues
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -1210,7 +1210,7 @@ components:
     WhatsAppAllComponentsUsedTemplate:
       value:
         name: surveilance_v2
-        category: TRANSACTIONAL
+        category: UTILITY
         localizations:
           - language: en
             components:
@@ -2982,7 +2982,7 @@ components:
           example:
             swagger_test
         category:
-          $ref: '#/components/schemas/TemplateCategoryWithDeprecated'
+          $ref: '#/components/schemas/TemplateCategory'
         localízations:
           type: array
           description: The list of localizations of this template
@@ -3000,7 +3000,7 @@ components:
       example:
         whatsAppAccountId: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
         templateName: swagger_test
-        category: TRANSACTIONAL
+        category: MARKETING
         localizations:
           - status: REJECTED
             rejectionReason: For this example
@@ -3137,26 +3137,8 @@ components:
       description: The category of the template
       enum:
         - MARKETING
-        - TRANSACTIONAL
-        - OTP
-    TemplateCategoryWithDeprecated:
-      type: string
-      description: The category of the template
-      enum:
-        - MARKETING
-        - TRANSACTIONAL
-        - OTP
-        - ACCOUNT_UPDATE
-        - ALERT_UPDATE
-        - APPOINTMENT_UPDATE
-        - AUTO_REPLY
-        - ISSUE_RESOLUTION
-        - PAYMENT_UPDATE
-        - PERSONAL_FINANCE_UPDATE
-        - RESERVATION_UPDATE
-        - SHIPPING_UPDATE
-        - TICKET_UPDATE
-        - TRANSPORTATION_UPDATE
+        - UTILITY
+        - AUTHENTICATION
     LanguageCode:
       type: string
       description: The supported language codes, according to [Supported Languages](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
