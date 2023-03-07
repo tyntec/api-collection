@@ -2620,6 +2620,10 @@ components:
           items:
             $ref: '#/components/schemas/LocalizationRequest'
           minItems: 1
+        allowCategoryChange:
+          type: boolean
+          description: If true, let Meta allow to change category
+          default: false
     LocalizationRequest:
       type: object
       description: A request for a new localization of a template
