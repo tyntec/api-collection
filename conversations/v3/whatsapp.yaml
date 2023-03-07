@@ -1815,6 +1815,7 @@ components:
       required:
         - type
         - text
+        - example
       properties:
         type:
           type: string
@@ -1903,6 +1904,7 @@ components:
       required:
         - type
         - text
+        - example
       properties:
         type:
           type: string
@@ -2687,6 +2689,7 @@ components:
         - type
         - format
         - text
+        - example
       properties:
         type:
           type: string
@@ -2749,6 +2752,7 @@ components:
       required:
         - type
         - format
+        - example
       properties:
         type:
           type: string
@@ -2787,6 +2791,7 @@ components:
       required:
         - type
         - text
+        - example
       properties:
         type:
           type: string
@@ -2901,6 +2906,7 @@ components:
       required:
         - type
         - text
+        - example
       properties:
         type:
           type: string
