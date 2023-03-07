@@ -1,5 +1,24 @@
 # Release notes
 
+## 3.10
+
+### Changes
+
+#### Aligned Whatsapp Template Categories to new Meta category based billing
+
+The new options for Whatsapp template categories are: MARKETING, UTILITY, AUTHENTICATION
+
+#### Added new property "allowCategoryChange" in Template Submission
+
+Whatsapp can now reject template submissions because of wrong categorization. To avoid this and let whatsapp
+change the category instead, the "allowCategoryChange" property can be set to true.  
+If obmitted, the default value is false.
+
+#### Examples are now mandatory for all placeholders in whatsapp template submissions
+
+Previously only media placeholders needed example files when submitting templates, now this is also 
+mandatory for text 
+
 ## 3.9
 
 ### Changes
