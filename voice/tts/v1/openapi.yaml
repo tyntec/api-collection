@@ -29,7 +29,7 @@ tags:
 
       tyntec stores status details for up to 3 months after the final delivery state is known.
 paths:
-  /tss/v1/calls:
+  /tts/v1/calls:
     post:
       tags:
         - Text to speech
