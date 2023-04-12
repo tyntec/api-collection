@@ -1400,10 +1400,6 @@ components:
           description: The date when the “price” became effective
           format: date-time
           example: "2018-06-01T00:00:00+0200"
-        sentDate:
-          type: string
-          description: The time stamp when the message was sent out by tyntec for delivery.
-          example: "2019-07-02T16:47:39+0200"
         statusText:
           type: string
           description: The first 20 characters of the sent message
@@ -1449,10 +1445,6 @@ components:
           type: string
           description: The unique identifier provided for each messaging request
           example: "e74db8d4-77ad-4671-8feb-9bc76b0df188"
-        sentDate:
-          type: string
-          description: The time stamp when the message was sent out by tyntec for delivery
-          example: "2019-07-02T16:47:39+0200"
         size:
           type: integer
           description: The amount of respective concatenated SMS parts
