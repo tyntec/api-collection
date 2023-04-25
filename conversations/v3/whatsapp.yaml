@@ -2578,11 +2578,20 @@ components:
           description: Which [messaging tier](https://developers.facebook.com/docs/whatsapp/api/rate-limits#messaging) the number is currently on
           enum:
             - TIER_NOT_SET
+            - TIER_50
+            - TIER_250
             - TIER_1K
             - TIER_10K
             - TIER_100K
+            - UNLIMITED
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
+        nameStatus:
+          type: string
+          description: Status of Display Name approval by Meta
+        isOfficialBusinessAccount:
+          type: boolean
+          description: True if this phone number is recognized as official business account by Meta (green checkmark badge)
       example:
         phoneNumber: "49123456789"
         displayPhoneNumber: +49 123 45678
@@ -2594,6 +2603,8 @@ components:
           accountName: tyntecscpaas
         messagingVia:
           accountName: messagingcpaas
+        nameStatus: APPROVED
+        isOfficialBusinessAccount: false
     CPaaSAccount:
       type: object
       description: The CPaaS account behind the API key
