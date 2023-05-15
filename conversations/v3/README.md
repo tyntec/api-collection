@@ -1,5 +1,12 @@
 # Release notes
 
+## 3.11
+
+### Changes
+
+#### Added support for new whatsapp authentication templates
+
+
 ## 3.10
 
 ### Changes

@@ -2802,8 +2802,6 @@ components:
       description: A body component of a template
       required:
         - type
-        - text
-        - example
       properties:
         type:
           type: string
@@ -2812,11 +2810,14 @@ components:
             - BODY
         text:
           type: string
-          description: The specification of the body text (1--1024 chars)
+          description: The specification of the body text (1--1024 chars). Mandatory for all non-authentication templates
           maxLength: 1024
           minLength: 1
           example:
             Hi {{1}}! Enjoy the spec!
+        addSecurityRecommendation:
+          type: boolean
+          description: Only used for AUTHENTICATION templates. Adds security recommendation to the default OTP text.
         example:
           $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequestExample'
       example:
@@ -2847,7 +2848,6 @@ components:
       description: A footer component of a template
       required:
         - type
-        - text
       properties:
         type:
           type: string
@@ -2856,11 +2856,15 @@ components:
             - FOOTER
         text:
           type: string
-          description: The specification of the footer text (1--60 chars)
+          description: The specification of the footer text (1--60 chars). Mandatory for all non-authentication templates
           maxLength: 60
           minLength: 1
           example:
             The specification team
+        codeExpirationMinutes:
+          type: integer
+          description: Only used in AUTHENTICATION templates. Adds an expiration note to the default OTP text.
+          maximum: 90
     WhatsAppTemplateButtonComponentRequest:
       type: object
       description: A button component of a template
@@ -2877,6 +2881,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtonsRequest'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtonsRequest'
+            - $ref: '#/components/schemas/WhatsAppOtpButtonsRequest'
     WhatsAppQuickReplyButtonsRequest:
       type: array
       description: Quick Reply buttons
@@ -2903,6 +2908,80 @@ components:
           maxLength: 20
           minLength: 1
           example: I liked it!
+    WhatsAppOtpButtonsRequest:
+      type: array
+      description: OTP buttons
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppCopyCodeOtpButton'
+          - $ref: '#/components/schemas/WhatsAppOneTapOtpButton'
+      minItems: 1
+      maxItems: 1
+    WhatsAppCopyCodeOtpButton:
+      type: object
+      description: A copy code button. When clicked, the code is copied to handsets clipboard.
+      required:
+        - type
+        - otpType
+        - text
+      properties:
+        type:
+          type: string
+          description: The type of this button, 'OTP'
+          enum:
+            - OTP
+          example: OTP
+        otpType:
+          type: string
+          description: The subtype of this button, 'COPY_CODE'
+          enum:
+            - COPY_CODE
+        text:
+          type: string
+          description: The caption of the copy code button.
+          maxLength: 25
+          minLength: 1
+          example: Copy code.
+    WhatsAppOneTapOtpButton:
+      type: object
+      description: A one-tap otp button. Only works for android at the moment, see https://developers.facebook.com/docs/whatsapp/business-management-api/authentication-templates#handshake
+      required:
+        - type
+        - otpType
+        - text
+        - autofillText
+        - packageName
+        - signatureHash
+      properties:
+        type:
+          type: string
+          description: The type of this button, 'OTP'
+          enum:
+            - OTP
+          example: OTP
+        otpType:
+          type: string
+          description: The subtype of this button, 'ONE_TAP'
+          enum:
+            - ONE_TAP
+        text:
+          type: string
+          description: The caption of the fallback copy code button, if one-tap is not available.
+          maxLength: 25
+          minLength: 1
+          example: Copy code.
+        autofillText:
+          type: string
+          description: The caption of the autofill button.
+          maxLength: 25
+          minLength: 1
+          example: Autofill
+        packageName:
+          type: string
+          description: Your android app's package name.
+        signatureHash:
+          type: string
+          description: Your app signing key hash.
     WhatsAppCallToActionButtonsRequest:
       type: array
       description: Call to action buttons. At most one of each button type can be used.
@@ -3142,7 +3221,6 @@ components:
       description: A footer component of a template
       required:
         - type
-        - text
       properties:
         type:
           type: string
