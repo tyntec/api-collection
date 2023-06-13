@@ -3275,9 +3275,11 @@ components:
         - ID
         - it
         - ja
+        - ka
         - kk
         - kn
         - ko
+        - ky_KG
         - lo
         - lt
         - lv
@@ -3293,6 +3295,7 @@ components:
         - pt_PT
         - ro
         - ru
+        - rw_RW
         - sk
         - sl
         - sq
