@@ -1,5 +1,16 @@
 # Release notes
 
+## 3.12
+
+### Changes
+
+#### Added whatsapp reaction message type
+
+With this message type, businesses can send back emoji reactions to inbound messages received by endusers.
+
+Please note that due to Whatsapp API restrictions, this feature is currently only available for phone numbers connected
+via Whatsapps Cloud API. On-Premise installations don't have access to this at the moment.
+
 ## 3.11
 
 ### Changes
