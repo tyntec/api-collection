@@ -11,6 +11,8 @@ With this message type, businesses can send back emoji reactions to inbound mess
 Please note that due to Whatsapp API restrictions, this feature is currently only available for phone numbers connected
 via Whatsapps Cloud API. On-Premise installations don't have access to this at the moment.
 
+Also note that to be able to receive inbound reactions from endusers, the callback version needs to be set >= 2.13
+
 ## 3.11
 
 ### Changes
