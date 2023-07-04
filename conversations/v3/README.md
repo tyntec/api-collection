@@ -6,10 +6,10 @@
 
 #### Added whatsapp reaction message type
 
-With this message type, businesses can send back emoji reactions to inbound messages received by endusers.
+With this message type, businesses can send and receive emoji reactions to formely sent messages.
 
 Please note that due to Whatsapp API restrictions, this feature is currently only available for phone numbers connected
-via Whatsapps Cloud API. On-Premise installations don't have access to this at the moment.
+via Whatsapps Cloud API. On-Premise installations don't have access to this feature at the moment.
 
 Also note that to be able to receive inbound reactions from endusers, the callback version needs to be set >= 2.13
 
