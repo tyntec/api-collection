@@ -13,6 +13,11 @@ via Whatsapps Cloud API. On-Premise installations don't have access to this feat
 
 Also note that to be able to receive inbound reactions from endusers, the callback version needs to be set >= 2.13
 
+#### Added whatsapp commerce icons settings to profile management
+
+Whatsapp commerce icons (cart and catalog) in the consumer app can now be enabled via an added 
+phone number profile management endpoint.
+
 ## 3.11
 
 ### Changes
