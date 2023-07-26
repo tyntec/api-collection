@@ -1,0 +1,89 @@
+asyncapi: '2.0.0'
+info:
+  title: Business Notification API Events
+  version: '1'
+  description: |
+    The API allows you to automatically receive business notifications and updates about your account that you are using
+    to send messages via channels.
+    For this service, you will need to provide a URL (businessNotificationUrl) at your webserver, 
+    e.g. https://rest.customer.com/businessnotification/. This URL must serve a webhook able to process POST HTTP requests, 
+    which the tyntec system will fire upon events in the system, in this case upon account status updates and entity
+    regarding accounts (like templates, phone numbers, ...)
+    
+    **Example**
+    
+      ***Whatsapp Template status changed***
+    
+        - Submit your whatsapp template
+        - Template is sent to Meta
+        - Meta has changed status of your template (APPROVED, REJECTED, ...)
+        - Receive info about change, together with reason and template info, on your webhook
+    
+    **Retries**
+
+    The tyntec application will retry to post the request 2 more times in the case your
+    webhook does not accept the request (final response codes other than 2xx).
+servers:
+  production:
+    url: 78.110.226.11
+    description: Server address of tyntec, the events origin from
+    protocol: https
+channels:
+  "business/notifications":
+    description: |
+      Successfully sent notification of an account's entity updates
+    publish:
+      message:
+        $ref: '#/components/messages/BusinessNotificationEvent'
+      bindings:
+        http:
+          type: request
+          method: POST
+components:
+  messages:
+    BusinessNotificationEvent:
+      summary: Inform about a change on user's channel account
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/businessNotificationEvent'
+
+  schemas:
+    businessNotificationEvent:
+      type: object
+      properties:
+        eventId:
+          type: string
+          description: "Event identifier"
+        channel:
+          type: string
+          description: "Currently only whatsapp is supported"
+        entity:
+          type: object
+          properties:
+            type:
+              type: string
+              description: "Type of entity: template, phoneNumber, whatsapp business account"
+            name:
+              type: string
+              description: "Name of entity, for example template name"
+            waba:
+              type: string
+              description: "If channel is whatsapp, whatsapp business account is provided"
+            language:
+              type: string
+              description: "Language of entity, for example template language"
+        changedValue:
+          type: object
+          properties:
+            property:
+              type: string
+              description: "Property of entity that is changed, e.g. status, category,..."
+            newValue:
+              type: string
+              description: "New value of property"
+            oldValue:
+              type: string
+              description: "Old value of property if exists"
+            reason:
+              type: string
+              description: "Reason for update"
