@@ -7,7 +7,7 @@ info:
     to send messages via channels.
     For this service, you will need to provide a URL (businessNotificationUrl) at your webserver, 
     e.g. https://rest.customer.com/businessnotification/. This URL must serve a webhook able to process POST HTTP requests, 
-    which the tyntec system will fire upon events in the system, in this case upon account status updates and entity
+    which the tyntec system will fire upon events in the system, in this case upon updates of account status and entity
     regarding accounts (like templates, phone numbers, ...)
     
     **Example**
@@ -62,13 +62,13 @@ components:
           properties:
             type:
               type: string
-              description: "Type of entity: template, phoneNumber, whatsapp business account"
+              description: "Type of entity: template, phoneNumber, whatsapp business account, ..."
             name:
               type: string
               description: "Name of entity, for example template name"
             waba:
               type: string
-              description: "If channel is whatsapp, whatsapp business account is provided"
+              description: "If channel is whatsapp, whatsapp business account id is provided"
             language:
               type: string
               description: "Language of entity, for example template language"
@@ -77,7 +77,7 @@ components:
           properties:
             property:
               type: string
-              description: "Property of entity that is changed, e.g. status, category,..."
+              description: "Property of entity that is changed, for example status, category,..."
             newValue:
               type: string
               description: "New value of property"
