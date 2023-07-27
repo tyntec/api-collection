@@ -4,12 +4,14 @@ info:
   version: '1'
   description: |
     The API allows you to automatically receive business notifications and updates about your account that you are using
-    to send messages via channels. Business Notifications are sent to your system as soon as we receive them from the channel.
+    to send messages via channels.
     
     Business Notifications are sent to your system when:
 
     - a channel's account is updated
     - a entity of an account is changed. Entity can be template, phone number, ...
+    
+    We send notifications to your system as soon as we receive them from the channel.
     
     For this service, you will need to provide a URL (businessNotificationUrl) at your webserver, 
     e.g. https://rest.customer.com/businessnotification/. This URL must serve a webhook able to process POST HTTP requests, 
