@@ -1,14 +1,24 @@
-asyncapi: '2.0.0'
+asyncapi: '2.6.0'
 info:
   title: Business Notification API Events
   version: '1'
   description: |
     The API allows you to automatically receive business notifications and updates about your account that you are using
-    to send messages via channels.
+    to send messages via channels. Business Notifications are sent to your system as soon as we receive them from the channel.
+    
+    Business Notifications are sent to your system when:
+
+    - a channel's account is updated
+    - a entity of an account is changed. Entity can be template, phone number, ...
+    
     For this service, you will need to provide a URL (businessNotificationUrl) at your webserver, 
     e.g. https://rest.customer.com/businessnotification/. This URL must serve a webhook able to process POST HTTP requests, 
-    which the tyntec system will fire upon events in the system, in this case upon updates of account status and entity
-    regarding accounts (like templates, phone numbers, ...)
+    which the tyntec system will fire upon events in the system, in this case upon updates of account status or entity
+    regarding accounts.
+    
+    **Supporting channels**
+
+      - Currently only **whatsapp** is supported
     
     **Example**
     
