@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.10'
+  version: '3.12'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -945,6 +945,16 @@ components:
             longitude: 7.4954884
             name: tyntec GmbH
             address: tyntec GmbH, Semerteichstraße, Dortmund
+    WhatsAppReactionMessage:
+      value:
+        to: "12331132"
+        from: "1233423454"
+        channel: whatsapp
+        content:
+          contentType: reaction
+          reaction:
+            messageId: wamid.987654321
+            emoji: 😀
     WhatsAppDocumentMessage:
       value:
         to: "12331132"
@@ -1278,6 +1288,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppAudioContent'
             - $ref: '#/components/schemas/WhatsAppStickerContent'
             - $ref: '#/components/schemas/WhatsAppLocationContent'
+            - $ref: '#/components/schemas/WhatsAppReactionContent'
             - $ref: '#/components/schemas/WhatsAppContactsContent'
             - $ref: '#/components/schemas/WhatsAppTemplateContent'
             - $ref: '#/components/schemas/WhatsAppInteractiveContent'
@@ -1436,6 +1447,20 @@ components:
             - location
         location:
           $ref: '#/components/schemas/WhatsAppLocation'
+    WhatsAppReactionContent:
+      type: object
+      description: A reaction message
+      required:
+        - contentType
+        - reaction
+      properties:
+        contentType:
+          type: string
+          description: Determines the type of the message. Always _reaction_.
+          enum:
+            - reaction
+        reaction:
+          $ref: '#/components/schemas/WhatsAppReaction'
     WhatsAppContactsContent:
       type: object
       description: A message with contacts
@@ -1606,6 +1631,25 @@ components:
           description: An optional address, will only be rendered if name is set
           example:
             tyntec GmbH, Semerteichstraße, Dortmund
+    WhatsAppReaction:
+      type: object
+      description: An emoji reaction to a formerly sent or received message
+      required:
+        - messageId
+        - emoji
+      properties:
+        messageId:
+          type: string
+          description: The message id of the message you want to react to.
+          example:
+            wamid.j0nmfofmneofn30fnekn2929
+        emoji:
+          type: string
+          minLength: 0
+          maxLength: 1
+          description: The actual reaction emoji. Must be a string consisting of exactly one emoji or an empty string to delete a former reaction.
+          example:
+            😀
 
     Contact:
       type: object

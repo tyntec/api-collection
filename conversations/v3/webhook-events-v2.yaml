@@ -1,7 +1,7 @@
 asyncapi: '2.0.0'
 info:
   title: Webhook Events V2
-  version: '2.12'
+  version: '2.13'
   description: |
     Delivery updates and inbound messages are sent out to you in a manner of events.
 
@@ -414,6 +414,8 @@ components:
             - media
             - location
             - contacts
+            - reaction
+            - unknown
           description: What kind of payload is used
           example: media
         text:
@@ -422,6 +424,8 @@ components:
           example: Hi, thanks for your support message
         media:
           $ref: '#/components/schemas/MoMedia'
+        reaction:
+          $ref: '#/components/schemas/MoReaction'
       example:
         contentType: media
         media:
@@ -458,6 +462,18 @@ components:
           type: string
           description: The ID or SKU of the product
           example: 123-SKU-12432
+    MoReaction:
+      type: object
+      description: An emoji reaction to a formely sent message
+      properties:
+        messageId:
+          type: String
+          description: The messageId of the message this reaction is belonging to.
+          example: wamid.HBgMNDkxNzk3ODEwNTM1FQIAEhgUM0E5Mjg5NUVGMEJBMzcwMENERDEB
+        emoji:
+          type: String
+          description: The actual reaction consisting of exactly on emoji, or an empty string indicating deletion of a reaction.
+          example: 😀
     MoMedia:
       type: object
       description: Media information
