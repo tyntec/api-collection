@@ -277,13 +277,13 @@ components:
     SMSInboundMessage:
       payload:
         $ref: '#/components/schemas/SMSInboundMessage'
-    TelegramAppInboundMessage:
+    TelegramInboundMessage:
       payload:
         $ref: '#/components/schemas/TelegramInboundMessage'
     ViberInboundMessage:
       payload:
         $ref: '#/components/schemas/ViberInboundMessage'
-    WeChatAppInboundMessage:
+    WeChatInboundMessage:
       payload:
         $ref: '#/components/schemas/WeChatInboundMessage'
     WhatsAppInboundMessage:
@@ -294,10 +294,13 @@ components:
         $ref: '#/components/schemas/InboundMessagePostBack'
     MessageStatusDeleted:
       payload:
-        $ref: '#/components/schemas/MessageStatusDeletedEvent'
+        $ref: '#/components/schemas/MessageStatusDeleted'
     MessageStatusAccepted:
       payload:
         $ref: '#/components/schemas/MessageStatusAccepted'
+    MessageStatusDispatched:
+      payload:
+        $ref: '#/components/schemas/MessageStatusDispatched'
     MessageStatusDelivered:
       payload:
         $ref: '#/components/schemas/MessageStatusDelivered'
@@ -935,7 +938,7 @@ components:
         content:
           contentType: text
           text: 'Hi, thanks for your support message'
-    MessageStatusDeletedEvent:
+    MessageStatusDeleted:
       type: object
       description: |
         Indicates that a previously sent inbound InboundMessage was deleted by the user.
