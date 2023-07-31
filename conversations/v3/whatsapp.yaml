@@ -695,6 +695,47 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/commerce:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWACommerceSetting
+      summary: Get commerce icons setting
+      tags:
+        - "Profile management"
+      responses:
+        200:
+          description: Returned the current commerce setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppCommerceSettings'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: setWACommerceSetting
+      summary: Set commerce icons setting
+      tags:
+        - "Profile management"
+      parameters:
+        - in: query
+          name: enable
+          required: true
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: commerce setting successfully set
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
   /configurations/channels/whatsapp/phone-numbers/{phone-number}/callbacks:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -2494,6 +2535,11 @@ components:
           type: string
           description: The link to the profile logo
           example: https://pps.whatsapp.net/v/123123
+    WhatsAppCommerceSettings:
+      type: object
+      properties:
+        enabled:
+          type: boolean
     WhatsAppAccounts:
       type: array
       description: A list of WhatsApp Business Accounts. Might be empty
