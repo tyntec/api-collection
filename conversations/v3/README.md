@@ -1,5 +1,23 @@
 # Release notes
 
+## 3.12
+
+### Changes
+
+#### Added whatsapp reaction message type
+
+With this message type, businesses can send and receive emoji reactions to formely sent messages.
+
+Please note that due to Whatsapp API restrictions, this feature is currently only available for phone numbers connected
+via Whatsapps Cloud API. On-Premise installations don't have access to this feature at the moment.
+
+Also note that to be able to receive inbound reactions from endusers, the callback version needs to be set >= 2.13
+
+#### Added whatsapp commerce icons settings to profile management
+
+Whatsapp commerce icons (cart and catalog) in the consumer app can now be enabled via an added 
+phone number profile management endpoint.
+
 ## 3.11
 
 ### Changes

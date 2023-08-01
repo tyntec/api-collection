@@ -260,9 +260,12 @@ components:
     MoMessagePostback:
       payload:
         $ref: '#/components/schemas/MoMessagePostBack'
+    MoMessageOrder:
+      payload:
+        $ref: '#/components/schemas/MoMessageOrder'
     MessageStatusDeleted:
       payload:
-        $ref: '#/components/schemas/MessageStatusDeletedEvent'
+        $ref: '#/components/schemas/MessageStatusDeleted'
     MessageStatusAccepted:
       payload:
         $ref: '#/components/schemas/MessageStatusAccepted'
@@ -914,7 +917,7 @@ components:
           type: string
           description: Currency of the products price
           example: EUR
-    MessageStatusDeletedEvent:
+    MessageStatusDeleted:
       type: object
       description: |
         Indicates that a previously sent inbound MoMessage was deleted by the user.
