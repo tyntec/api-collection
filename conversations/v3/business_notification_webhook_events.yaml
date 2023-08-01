@@ -84,6 +84,9 @@ components:
             language:
               type: string
               description: "Language of entity, for example template language"
+            phoneNumber:
+              type: string
+              description: "This field exists if type is phoneNumber and represent phoneNumber of entity"
         changedValue:
           type: object
           properties:
