@@ -1,5 +1,14 @@
 # Release notes
 
+## 3.13
+
+### Changes
+
+#### Added Business Notification Webhook events
+
+The Business Notification Webhook allows automatically to receive business notifications and updates 
+about account that is used to send messages via channels.
+
 ## 3.12
 
 ### Changes
