@@ -1550,6 +1550,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveListMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveProductMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
     WhatsAppInteractiveFooterContent:
       type: object
       description: The footer of an interactive message
@@ -2077,7 +2078,7 @@ components:
       description: |
         An interactive message type
       required:
-        - type
+        - subType
         - components
       properties:
         subType:
@@ -2161,7 +2162,7 @@ components:
       description: |
         Interactive Product Message
       required:
-        - type
+        - subType
         - components
       properties:
         subType:
@@ -2191,7 +2192,7 @@ components:
       description: |
         Interactive Product List Message
       required:
-        - type
+        - subType
         - components
       properties:
         subType:
@@ -2224,6 +2225,27 @@ components:
                 items:
                   - productId: sku-3
                   - productId: sku-4
+    WhatsAppInteractiveLocationMessage:
+      type: object
+      description: |
+        Interactive Location Message
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `locationRequest`
+          enum:
+            - locationRequest
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveLocationComponents'
+      example:
+        subType: locationRequest
+        components:
+          body:
+            type: text
+            text: Hi, please share your location with us by clicking the button below
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -2444,6 +2466,15 @@ components:
           description: The Own Product ID or SKU for the product. Must be configured on the Facebook catalog
           type: string
           example: Test SKU
+    WhatsAppInteractiveLocationComponents:
+      type: object
+      description: |
+        A Location message component. It contains only body text. Send location button that users can tap is automatically added.
+      required:
+        - body
+      properties:
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
     #
     # Profile
     #
