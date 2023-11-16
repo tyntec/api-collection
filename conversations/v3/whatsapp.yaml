@@ -3100,6 +3100,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtonsRequest'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtonsRequest'
             - $ref: '#/components/schemas/WhatsAppOtpButtonsRequest'
+            - $ref: '#/components/schemas/WhatsAppFlowButtonsRequest'
     WhatsAppQuickReplyButtonsRequest:
       type: array
       description: Quick Reply buttons
@@ -3276,6 +3277,47 @@ components:
           description: The phone number that will be called when clicking on the button.
           pattern: ^\+\d{4,23}$
           example: "+4923147790813"
+    WhatsAppFlowButtonsRequest:
+      type: array
+      description: Flows buttons
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/WhatsAppFlowButton'
+      minItems: 1
+      maxItems: 1
+    WhatsAppFlowButton:
+      type: object
+      description: A flow button that opens the specified flow defined under flowId in Meta's business manager
+      required:
+        - type
+        - text
+        - flowId
+        - flowAction
+      properties:
+        type:
+          type: string
+          description: The type of this button. Always `FLOW`
+          enum:
+            - FLOW
+          example: FLOW
+        text:
+          type: string
+          description: The caption of the button
+          maxLength: 25
+          minLength: 1
+          example: Click for the flow
+        flowId:
+          type: string
+          description: The unique ID of a Flow from Meta's Business manager
+          example: 2666380233528985
+        flowAction:
+          type: string
+          description: Possible values are `navigate` and `data_exchange`. Default value is `navigate`. Use navigate to predefine the first screen as part of the message. Use data_exchange for advanced use-cases where the first screen is provided by your endpoint.
+          example: navigate
+        navigateScreen:
+          type: string
+          description: Required if `flowAction is navigate`. The unique ID of the Screen in the Flow.
+          example: details
     WhatsAppTemplates:
       type: array
       description: A list of WhatsApp templates
