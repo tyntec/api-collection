@@ -1897,6 +1897,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
+            - $ref: '#/components/schemas/WhatsAppFlowButtons'
     WhatsAppTemplateTextHeaderComponent:
       type: object
       required:
@@ -2025,6 +2026,12 @@ components:
       maxItems: 1
       items:
         $ref: '#/components/schemas/UrlButtonComponent'
+    WhatsAppFlowButtons:
+      type: array
+      minItems: 0
+      maxItems: 1
+      items:
+        $ref: '#/components/schemas/FlowButtonComponent'
     QuickReplyButtonComponent:
       type: object
       description: This type can be used up to three times
@@ -2069,6 +2076,23 @@ components:
           type: string
           maxLength: 2000
           description: Which text should be appended to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+    FlowButtonComponent:
+      type: object
+      description: This type can be used up to one time
+      required:
+        - type
+        - index
+      properties:
+        type:
+          type: string
+          description: Determines the type of the button. Always _flow_.
+          enum:
+            - flow
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 1
 
     #
     # Interactive messages
