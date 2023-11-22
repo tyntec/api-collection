@@ -1,0 +1,1748 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  title: Template Management API
+  version: 4
+servers:
+- description: Tyntec Server
+  url: https://api.tyntec.com
+security:
+- apiKey: []
+tags:
+- description: |
+    SMS Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+  name: SMS Template Management
+- description: |
+    WhatsApp Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+  name: WhatsApp Template Management
+- description: |
+    Viber Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+  name: Viber Template Management
+- description: |
+    Voice Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+  name: Voice Template Management
+- description: Provides common template management for all channels of communication.
+  name: Template Management
+paths:
+  /2fa/v4/templates:
+    get:
+      description: Lists all Templates.
+      operationId: findAllByAccount_3
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  oneOf:
+                  - $ref: '#/components/schemas/SMSTemplateDTO'
+                  - $ref: '#/components/schemas/VoiceTemplateDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Templates
+      tags:
+      - Template Management
+  /2fa/v4/templates/sms:
+    get:
+      description: Lists all SMS Templates.
+      operationId: findAllByAccount_2
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Template to be searched for
+        in: query
+        name: name
+        schema:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Language of the Template to be searched for
+        in: query
+        name: language
+        schema:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SMSTemplateDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List SMS Templates
+      tags:
+      - SMS Template Management
+    post:
+      description: Creates a new SMS Template.
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSMSTemplateDTO'
+        description: SMS Template Object that needs to be created
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedSMSTemplateDTO'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create SMS Template
+      tags:
+      - SMS Template Management
+  /2fa/v4/templates/sms/{id}:
+    delete:
+      description: Deletes the SMS Template by specified ID
+      operationId: delete_2
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete SMS Template
+      tags:
+      - SMS Template Management
+    get:
+      description: Returns details of a template by specified ID.
+      operationId: findByAccountIdAndId_2
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSTemplateDTO'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read SMS Template
+      tags:
+      - SMS Template Management
+    patch:
+      description: Patches the SMS Template
+      operationId: patch_2
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSMSTemplateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Patch SMS Template
+      tags:
+      - SMS Template Management
+  /2fa/v4/templates/viber:
+    get:
+      description: Lists all Viber Templates.
+      operationId: findAllByAccount_1
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Template to be searched for
+        in: query
+        name: name
+        schema:
+          type: string
+          description: Name of the Template
+          example: tyntec_viber_en_US
+          title: Template Name
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Language of the Template to be searched for
+        in: query
+        name: language
+        schema:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViberTemplateDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Viber Templates
+      tags:
+      - Viber Template Management
+    post:
+      description: Creates a new Viber Template.
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewViberTemplateDTO'
+        description: Viber Template Object that needs to be created
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedViberTemplateDTO'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create Viber Template
+      tags:
+      - Viber Template Management
+  /2fa/v4/templates/viber/{id}:
+    delete:
+      description: Deletes the Viber Template by specified ID
+      operationId: delete_1
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete Viber Template
+      tags:
+      - Viber Template Management
+    get:
+      description: Returns details of a template by specified ID.
+      operationId: findByAccountIdAndId_1
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViberTemplateDTO'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read Viber Template
+      tags:
+      - Viber Template Management
+    patch:
+      description: Patches the Viber Template
+      operationId: patch_1
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchViberTemplateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Patch Viber Template
+      tags:
+      - Viber Template Management
+  /2fa/v4/templates/voice:
+    get:
+      description: Lists all Voice Templates.
+      operationId: findAllByAccount
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Template to be searched for
+        in: query
+        name: name
+        schema:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Language of the Template to be searched for
+        in: query
+        name: language
+        schema:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VoiceTemplateDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Voice Templates
+      tags:
+      - Voice Template Management
+    post:
+      description: Creates a new Voice Template.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVoiceTemplateDTO'
+        description: Voice Template Object that needs to be created
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedVoiceTemplateDTO'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create Voice Template
+      tags:
+      - Voice Template Management
+  /2fa/v4/templates/voice/{id}:
+    delete:
+      description: Deletes the Voice Template by specified ID
+      operationId: delete
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete Voice Template
+      tags:
+      - Voice Template Management
+    get:
+      description: Returns details of a template by specified ID.
+      operationId: findByAccountIdAndId
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceTemplateDTO'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read Voice Template
+      tags:
+      - Voice Template Management
+    patch:
+      description: Patches the Voice Template
+      operationId: patch
+      parameters:
+      - description: ID of the Template in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchVoiceTemplateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Patch Voice Template
+      tags:
+      - Voice Template Management
+  /2fa/v4/templates/whatsapp:
+    get:
+      description: |
+        Returns details of a template by specified Name and/or language. Search rules: 
+        
+          1. Find all templates by not providing any values
+          2. Find by template name
+          3. Find by template name & language
+          4. Find by language
+      operationId: findByAccountIdOrByTemplateNameAndLanguage
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Template
+        in: query
+        name: name
+        schema:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Language of the Template
+        in: query
+        name: language
+        schema:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseWhatsAppTemplate'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Retrieve WhatsApp Template by Name and/or Language
+      tags:
+      - WhatsApp Template Management
+    post:
+      description: Creates a new WhatsApp Template into Meta account
+      operationId: submitForReview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputWhatsAppTemplate'
+        description: WhatsApp Template Object that needs to be created
+        required: true
+      responses:
+        "200":
+          content:
+            application/json: {}
+          description: OK
+        "201":
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Submit For Review WhatsApp Template
+      tags:
+      - WhatsApp Template Management
+  /2fa/v4/templates/whatsapp/{template-id}:
+    delete:
+      description: "Deletes the template from your WhatsApp account. After deleting\
+        \ the template, a 30-days grace period is starting. This is indicated by the\
+        \ expiresAt property of the localizations."
+      operationId: deleteByTemplateName
+      parameters:
+      - in: path
+        description: ID of the Template
+        name: template-id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content:
+            application/json: {}
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+          description: Not Found
+      summary: Delete a WhatsApp Template
+      tags:
+      - WhatsApp Template Management
+components:
+  schemas:
+    BadRequestResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: 400 BAD_REQUEST Required query parameter 'templateId' is not present
+          title: Explanation message
+        status:
+          type: integer
+          format: int64
+          description: Bad request Http Status code
+          example: 400
+          title: Bad Request Status Code
+        title:
+          type: string
+          description: The server cannot or will not process the request due to something
+            that is perceived to be a client error
+          example: Bad Request
+          title: Title of the error
+      title: Bad Request
+    ConstraintViolationResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    CreatedSMSTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      title: Created SMS Template
+    CreatedViberTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      title: Created Viber Template
+    CreatedVoiceTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+      title: Created Voice Template
+    ErrorResponseSchema:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: "Customers WhatsApp account id, if applicable"
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp account Id
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        templateName:
+          type: string
+          description: "The template Name, if applicable"
+          example: otp_template_test
+          title: Template Name
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    ForbiddenResponse:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Customers WhatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp account Id
+        detail:
+          type: string
+          description: Explanation message
+          example: Invalid authentication credentials
+          title: Explanation message
+        status:
+          type: integer
+          format: int64
+          description: Forbidden Http Status code
+          example: 403
+          title: Forbidden Status Code
+        templateName:
+          type: string
+          description: The template Name
+          example: otp_template_test
+          title: Template Name
+        title:
+          type: string
+          description: The server understands the request but refuses to authorize
+            it
+          example: Forbidden
+          title: Title of the error
+      title: Forbidden
+    InputWhatsAppTemplate:
+      type: object
+      properties:
+        addSecurityRecommendation:
+          type: boolean
+          default: true
+          description: "Set to \"true\" to display the security text (\"For your security,\
+            \ do not share this code.\"), otherwise set to \"false\" to exclude it"
+          example: true
+          title: Security Recommendation Text
+        autofillButtonText:
+          type: string
+          description: Replace the default autofill button text of "Autofill" with
+            your own text
+          example: Click to Autofill
+          title: Text displayed in autofill button
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid (default
+            set to 3)
+          example: 3
+          title: Code Expiration Time
+        copyButtonText:
+          type: string
+          description: Replace the default copy code button text of "Copy code" with
+            your own text
+          example: copy now
+          title: Text displayed in copy button
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+        otpType:
+          type: string
+          description: Indicates the button type
+          example: COPY_CODE or ONE_TAP
+          title: Button type
+        packageName:
+          type: string
+          description: Android app's package name
+          example: com.example.myapplication
+          title: Package name (Only for Autofill button)
+        signatureHash:
+          type: string
+          description: Your app's signing key hash
+          example: K8a%2FAINcGX7
+          title: Signature Hash (Only for Autofill button)
+        type:
+          type: string
+          default: OTP
+          description: The template type is always "OTP"
+          example: OTP
+          title: Template type
+      required:
+      - language
+      - name
+      title: Submit WhatsApp Template for Review
+    NewSMSTemplateDTO:
+      type: object
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: New SMS Template
+    NewViberTemplateDTO:
+      type: object
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_viber_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: New Viber Template
+    NewVoiceTemplateDTO:
+      type: object
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          default: 3
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_voice_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: New Voice Template
+    NotFoundResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: Template with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+          title: Explanation message
+        status:
+          type: integer
+          format: int64
+          description: Not Found Http Status code
+          example: 404
+          title: Not Found Status Code
+        templateId:
+          type: string
+          description: ID of the Template
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+          title: Template ID
+        title:
+          type: string
+          description: Resource not found on the server
+          example: No Template Found
+          title: Title of the error
+      title: Not Found
+    PatchSMSTemplateDTO:
+      type: object
+      description: Request body for patching an SMS Template
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: Patch SMS Template
+    PatchViberTemplateDTO:
+      type: object
+      description: Request body for patching a Viber Template
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_viber_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: Patch Viber Template
+    PatchVoiceTemplateDTO:
+      type: object
+      description: Request body for patching Voice Template
+      properties:
+        codeExpirationTime:
+          type: integer
+          format: int32
+          default: 3
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_voice_en_US
+          maxLength: 256
+          minLength: 0
+          title: Template Name
+      title: Patch Voice Template
+    ResponseWhatsAppTemplate:
+      type: object
+      description: WhatsApp Template Response
+      properties:
+        accountId:
+          type: string
+          description: The whatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp Account ID
+        autofillButtonText:
+          type: string
+          description: Replace the default autofill button text of "Autofill" with
+            your own text
+          example: Click to Autofill
+          title: Text displayed in autofill button
+        buttonUrl:
+          type: string
+          description: URL provided for the button
+          example: "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}"
+          title: URL provided for the button
+        codeExpirationText:
+          type: string
+          description: Indicates the number of minutes OTP code is valid
+          example: This code expires in 3 minutes.
+          title: Code Expiration Text
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        copyButtonText:
+          type: string
+          description: Replace the default copy code button text of "Copy code" with
+            your own text
+          example: copy now
+          title: Text displayed in copy button
+        createdAt:
+          type: string
+          description: "The date template was created [ISO-8601] without timezone"
+          example: 2023‐06‐27T09:51:14
+          title: Template's creation date
+        isAddSecurityRecommendation:
+          type: boolean
+          default: true
+          description: "Set to \"true\" to display the security text (\"For your security,\
+            \ do not share this code.\"), otherwise set to \"false\" to exclude it"
+          example: true
+          title: Security Recommendation Text
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language."Placeholder *{{1}}* is your verification code, addRecommendation field appends the following text into message { For your security, do not share this code.}"
+          example: "*{{1}}* is your verification code. For your security, do not share\
+            \ this code."
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+        otpType:
+          type: string
+          description: Indicates the button type
+          example: COPY_CODE or ONE_TAP
+          title: Button type
+        packageName:
+          type: string
+          description: Android app's package name
+          example: com.example.myapplication
+          title: Package name (Only for Autofill button)
+        signatureHash:
+          type: string
+          description: Your app's signing key hash
+          example: K8a%2FAINcGX7
+          title: Signature Hash (Only for Autofill button)
+        status:
+          type: string
+          description: The real time template status in the WhatsApp account
+          example: APPROVED
+          title: Template status
+        templateId:
+          type: string
+          description: ID of the Template
+          example: auth_template_en
+          title: Template ID
+        type:
+          type: string
+          default: OTP
+          description: The template type is always "OTP"
+          example: OTP
+          title: Template type
+        updatedAt:
+          type: string
+          description: "The date template was last updated [ISO-8601] without timezone"
+          example: 2023‐06‐27T09:51:14
+          title: Template's last update date
+      title: Response WhatsApp Template
+    SMSTemplateDTO:
+      type: object
+      description: SMS Template object
+      properties:
+        channel:
+          type: string
+          description: Channel for template
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          - VIBER
+          example: SMS
+          title: Channel
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      title: SMS Template
+    TemplateConflictResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of conflict
+          example: Template with name tyntec_sms_en_US already exists in SMS channel.
+            Template name must be unique.
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 409
+          title: Status Code
+        templateName:
+          type: string
+          description: The Name of Template
+          example: tyntec_sms_en_US
+          title: Template Name
+        title:
+          type: string
+          description: Http Status text
+          example: Conflict
+          title: Title of the error
+      title: Conflict
+    UnauthorizedResponse:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Customers WhatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp account Id
+        detail:
+          type: string
+          description: Explanation message
+          example: No API key found in request
+          title: Explanation message
+        status:
+          type: integer
+          format: int64
+          description: Unauthorized Http Status code
+          example: 401
+          title: Unauthorized Status Code
+        templateName:
+          type: string
+          description: The template Name
+          example: otp_template_test
+          title: Template Name
+        title:
+          type: string
+          description: The server understands the request but refuses to authorize
+            it
+          example: Unauthorized
+          title: Title of the error
+      title: Unauthorized
+    ViberTemplateDTO:
+      type: object
+      description: Viber Template object
+      properties:
+        channel:
+          type: string
+          description: Channel for template
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          - VIBER
+          example: SMS
+          title: Channel
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      title: Viber Template
+    ViolationResponseSchema:
+      type: object
+      description: List of violations
+      properties:
+        field:
+          type: string
+          description: The field which is violated
+          example: field_name
+          title: Field violated
+        message:
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+          title: Violation message
+      title: Violations
+    VoiceTemplateDTO:
+      type: object
+      description: Voice Template object
+      properties:
+        channel:
+          type: string
+          description: Channel for template
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          - VIBER
+          example: SMS
+          title: Channel
+        codeExpirationTime:
+          type: integer
+          format: int32
+          description: Indicates the number of minutes OTP code is valid
+          example: 3
+          title: Code Expiration Time
+        id:
+          type: string
+          format: uuid
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Template ID
+        language:
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          title: Template Language
+        message:
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+          title: Message
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+      title: Voice Template
+  securitySchemes:
+    apiKey:
+      in: header
+      name: apiKey
+      type: apiKey

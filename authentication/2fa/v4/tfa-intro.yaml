@@ -1,0 +1,20 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  description: |
+    Introducing our OTP Management Endpoint, a dynamic gateway for users to seamlessly dispatch OTP (One-Time Password) messages to end users.
+    This intuitive interface allows users to select a specific profile and priority, ensuring optimal delivery of time-sensitive codes.
+    By leveraging this endpoint, users can efficiently trigger OTP messages, harmonizing profile personalization and priority-based distribution for an enhanced and secure user experience.
+  title: Introduction
+  version: 4
+  x-repository: https://github.com/tyntec/api-collection/blob/master/authentication/2fa
+  x-major-version: v4
+  x-master-file: true
+servers:
+  - description: Tyntec Server
+    url: https://api.tyntec.com
+security:
+  - apiKey: []

@@ -1,0 +1,412 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  title: Configuration Management API
+  version: 4
+servers:
+- description: Tyntec Server
+  url: https://api.tyntec.com
+security:
+- apiKey: []
+tags:
+- description: |
+    The Callback Configuration API allows users to register callback configurations for receiving message delivery status updates.
+    Users can specify a callback URL where delivery status notifications will be sent.
+    Additionally, users can include custom headers in the callback request for authentication or other purposes.
+  name: Callback Configuration Management
+- description: |
+    The WhatsApp Configuration Endpoint provides a centralized method to set up and manage your WhatsApp integration by defining the WhatsApp Account ID.
+    This endpoint enables users to configure the essential WhatsApp Account ID, which will be used for all subsequent requests towards the WhatsApp.
+  name: WhatsApp Configuration Management
+paths:
+  /2fa/v4/configurations/callbacks:
+    get:
+      description: Lists all Callback Configurations.
+      operationId: get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CallbackConfigurationDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Callback Configurations
+      tags:
+      - Callback Configuration Management
+    post:
+      description: |
+         Creates a new Callback Configuration.
+        
+         Sends OTP events to the callback URL registered.
+        
+         - DISPATCHED
+         - DELIVERED
+         - UNDELIVERABLE
+         - TIMED_OUT
+
+         For details on error handling, you can refer to the following documentation pages:
+         
+         - **WhatsApp**
+         
+           - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
+           - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallbackConfigurationRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallbackConfigurationResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallbackConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create Callback Configuration
+      tags:
+      - Callback Configuration Management
+  /2fa/v4/configurations/callbacks/{id}:
+    delete:
+      description: Deletes the Callback Configuration by specified ID
+      operationId: delete
+      parameters:
+      - in: path
+        description: Id of callback configuration in UUID format
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete Callback Configuration
+      tags:
+      - Callback Configuration Management
+  /2fa/v4/configurations/channels/whatsapp:
+    get:
+      description: Returns details of a WhatsApp Configuration.
+      operationId: findAllBy
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppConfigResponse'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read WhatsApp Configuration
+      tags:
+      - WhatsApp Configuration Management
+    post:
+      description: Creates a new WhatsApp Configuration.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewWhatsAppConfigRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json: {}
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create WhatsApp Configuration
+      tags:
+      - WhatsApp Configuration Management
+components:
+  schemas:
+    CallbackConfigurationDTO:
+      type: object
+      description: Callback configuration object
+      properties:
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+            description: Callback Request Headers
+            title: Headers
+          description: Callback Request Headers
+          title: Headers
+        id:
+          type: string
+          format: uuid
+          description: ID of the Callback
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: Callback ID
+        type:
+          type: string
+          description: Type of the Callback
+          enum:
+          - DELIVERY_STATUS
+          example: DELIVERY_STATUS
+          title: Callback Type
+        url:
+          type: string
+          description: Callback URL
+          example: https://example.com/callback
+          title: URL
+    CallbackConfigurationRequest:
+      type: object
+      description: Callback configuration Request body
+      properties:
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+            description: Callback Request Headers
+            title: Headers
+          description: Callback Request Headers
+          title: Headers
+        type:
+          type: string
+          description: Type of the Callback
+          enum:
+          - DELIVERY_STATUS
+          example: DELIVERY_STATUS
+          title: Callback Type
+        url:
+          type: string
+          description: Callback URL
+          example: https://example.com/callback
+          title: URL
+      required:
+      - url
+      title: New Callback Configuration
+    CallbackConfigurationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Callback
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: Callback ID
+    CallbackConflictResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of conflict
+          example: Callback configuration already exists.
+          title: Conflict
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 409
+          title: Status Code
+        title:
+          type: string
+          description: Http Status text
+          example: Conflict
+          title: Title of the error
+      title: Conflict
+    ConflictResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of conflict
+          example: WhatsApp configuration already exist.
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 409
+          title: Status Code
+        title:
+          type: string
+          description: Http Status text
+          example: Conflict
+          title: Title of the error
+      title: Conflict
+    ConstraintViolationResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: tyntec::internal::500
+          title: Error Code
+        message:
+          type: string
+          description: Error message
+          example: Internal Server Error
+          title: Error Message
+      title: Error
+    ErrorResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    NewWhatsAppConfigRequest:
+      type: object
+      description: WhatsApp configuration Request body
+      properties:
+        whatsAppAccountId:
+          type: string
+          description: Id of WhatsApp Account
+          example: 289a1c20-06c5-4964-b32d-24d214a78ae5
+          title: WhatsApp Account Id
+      required:
+      - whatsAppAccountId
+      title: New WhatsApp Configuration
+    NotFoundSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: Resource with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+          title: Explanation message
+        resourceId:
+          type: string
+          description: ID of the Resource
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+          title: Resource ID
+        status:
+          type: integer
+          format: int64
+          description: Not Found Http Status code
+          example: 404
+          title: Not Found Status Code
+        title:
+          type: string
+          description: Resource not found on the server
+          example: No Resource Found
+          title: Title of the error
+      title: Not Found
+    ViolationResponseSchema:
+      type: object
+      description: List of violations
+      properties:
+        field:
+          type: string
+          description: The field which is violated
+          example: name
+          title: Field violated
+        message:
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+          title: Violation message
+      title: Violations
+    WhatsAppConfigResponse:
+      type: object
+      properties:
+        whatsAppAccountId:
+          type: string
+          format: uuid
+          description: Id of WhatsApp Account
+          example: 289a1c20-06c5-4964-b32d-24d214a78ae5
+          title: WhatsApp Account Id
+      title: WhatsApp Configuration
+  securitySchemes:
+    apiKey:
+      in: header
+      name: apiKey
+      type: apiKey

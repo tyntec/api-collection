@@ -1,0 +1,510 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  title: OTP Management API
+  version: 4
+servers:
+- description: Tyntec Server
+  url: https://api.tyntec.com
+security:
+- apiKey: []
+tags:
+- description: |
+    The OTP Management Endpoint provides versatile functionality to efficiently manage the message dispatch, verification,
+    and generation of One-Time Password (OTP) for end users.
+    This endpoint enables users to send OTP messages with specific profiles and priorities, enhancing the user experience while maintaining flexibility.
+    It ensures efficient and secure delivery of time-sensitive codes, verify provided OTP codes, and generate new OTP codes if not provided.
+  name: OTP Management
+paths:
+  /2fa/v4/otp:
+    get:
+      description: Lists All OTP Codes
+      operationId: getAllBy
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Number of the OTP receiver to be searched for
+        in: query
+        name: to
+        schema:
+          type: string
+          description: Phone Number
+          example: "+0000000000000"
+          title: to
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Status of the OTP to be searched for
+        in: query
+        name: otpStatus
+        schema:
+          type: string
+          description: OTP Status
+          enum:
+          - VERIFIED
+          - TOO_MANY_ATTEMPTS
+          example: VERIFIED
+          title: OTP Status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OTPGetResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List OTP Codes
+      tags:
+      - OTP Management
+    post:
+      description: Sends OTP to Number
+      operationId: send
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOTPRequest'
+        description: OTP Request to be sent
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedOTPResponse'
+          description: Accepted
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+          description: Internal Server Error
+      summary: Send OTP
+      tags:
+      - OTP Management
+  /2fa/v4/otp/{otp-id}:
+    delete:
+      description: Deletes the OTP Status by specified ID
+      operationId: deleteOTPStatus
+      parameters:
+      - description: Id of OTP in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: otp-id
+        required: true
+        schema:
+          type: string
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: OTP Id
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+          description: Internal Server Error
+      summary: Delete OTP Status
+      tags:
+      - OTP Management
+    get:
+      description: Returns details of a OTP Status by specified ID.
+      operationId: getOTPStatusBy
+      parameters:
+      - description: Id of OTP in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: otp-id
+        required: true
+        schema:
+          type: string
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: OTP Id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPGetResponse'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+          description: Internal Server Error
+      summary: Read OTP Status
+      tags:
+      - OTP Management
+  /2fa/v4/otp/{otp-id}/validate:
+    post:
+      description: Validates OTP Code.
+      operationId: validateOTP
+      parameters:
+      - description: Id of OTP in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: otp-id
+        required: true
+        schema:
+          type: string
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: OTP Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateOTPRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateOTPResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+          description: Internal Server Error
+      summary: Validate OTP Code
+      tags:
+      - OTP Management
+components:
+  schemas:
+    ConstraintViolationResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    ConstraintViolationSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    CreatedOTPResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id of OTP
+          example: c3dec0cd-6305-4d74-8d0d-629f9a43de85
+          title: OTP Id
+      title: OTP Response
+    ErrorResponseSchema:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: "Customers WhatsApp account id, if applicable"
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp account Id
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        templateName:
+          type: string
+          description: "The template Name, if applicable"
+          example: otp_template_test
+          title: Template Name
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    InternalServerErrorSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    NewOTPRequest:
+      type: object
+      properties:
+        caller:
+          type: string
+          description: VOICE caller of this request.
+          example: Tyntec GmbH
+          title: Originator of the request
+        languageCode:
+          type: string
+          description: The Language Code to be used in this request
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+          example: en_US
+          title: Language Code
+        otpCode:
+          type: string
+          description: "The OTP code to be used in this request, it accepts only lowercase\
+            \ letters"
+          example: 1abc3r
+          maxLength: 11
+          minLength: 4
+          pattern: "^[^A-Z]*$"
+          title: OTP Code
+        priorityName:
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_sms-viber
+          title: Priority Name
+        profileName:
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_register
+          title: Profile Name
+        sender:
+          type: string
+          description: SMS sender of this request.
+          example: Tyntec GmbH
+          title: Originator of the request
+        senderViber:
+          type: string
+          description: Viber service ID from which the request will be sent.
+          example: "12345"
+          pattern: "\\d{4,8}"
+          title: Originator of the request
+        senderWA:
+          type: string
+          description: Whatsapp phone number from which the request will be sent.
+          example: "000000000000"
+          title: Originator of the request
+        to:
+          type: string
+          description: Number of the message receiver
+          example: "+0000000000000"
+          title: Number of the message receiver
+      title: New OTP Request
+    NotFoundSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: Resource with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+          title: Explanation message
+        resourceId:
+          type: string
+          description: ID of the Resource
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+          title: Resource ID
+        status:
+          type: integer
+          format: int64
+          description: Not Found Http Status code
+          example: 404
+          title: Not Found Status Code
+        title:
+          type: string
+          description: Resource not found on the server
+          example: No Resource Found
+          title: Title of the error
+      title: Not Found
+    OTPGetResponse:
+      type: object
+      properties:
+        allowedAttempts:
+          type: integer
+          format: int32
+        attemptCount:
+          type: integer
+          format: int32
+        otpCreated:
+          type: string
+          format: date-time
+        otpExpire:
+          type: string
+          format: date-time
+        otpId:
+          type: string
+          format: uuid
+        otpStatus:
+          type: string
+          enum:
+          - ACTIVE
+          - VERIFIED
+          - EXPIRED
+          - WRONG_CODE
+          - TOO_MANY_ATTEMPTS
+        to:
+          type: string
+    ValidateOTPRequest:
+      type: object
+      description: OTP Request for validating an OTP code
+      properties:
+        otpCode:
+          type: string
+          description: OTP Code to be validated
+          example: 1frtq45
+          maxLength: 11
+          minLength: 4
+          title: OTP Code
+      title: Validate OTP
+    ValidateOTPResponse:
+      type: object
+      properties:
+        otpStatus:
+          type: string
+          description: OTP Status of the validation
+          enum:
+          - VERIFIED
+          - EXPIRED
+          - TOO_MANY_ATTEMPTS
+          - ALREADY_REPORTED
+          - WRONG_CODE
+          example: VERIFIED
+          title: OTP Status
+    ViolationResponseSchema:
+      type: object
+      description: List of violations
+      properties:
+        field:
+          type: string
+          description: The field which is violated
+          example: field_name
+          title: Field violated
+        message:
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+          title: Violation message
+      title: Violations
+  securitySchemes:
+    apiKey:
+      in: header
+      name: apiKey
+      type: apiKey
