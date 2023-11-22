@@ -1,0 +1,712 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  title: Profile Management API
+  version: 4
+servers:
+- description: Tyntec Server
+  url: https://api.tyntec.com
+security:
+- apiKey: []
+tags:
+- description: |
+    Profiles empowers users to assemble a collection of diverse templates,
+    tailored for various languages and channels, all orchestrated for a specific use case.
+  name: Profile Management
+paths:
+  /2fa/v4/profiles:
+    get:
+      description: Lists all Profiles.
+      operationId: findAllBy
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Profile to be searched for
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_register
+          title: Profile Name
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Profiles
+      tags:
+      - Profile Management
+    post:
+      description: Creates a new Profile.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProfileDTO'
+        description: Profile Object that needs to be created
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedProfileDTO'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationNotFound'
+          description: Missing Configuration
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create Profile
+      tags:
+      - Profile Management
+  /2fa/v4/profiles/{id}:
+    delete:
+      description: Deletes the Profile by specified ID
+      operationId: delete
+      parameters:
+      - description: ID of the Profile in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete Profile
+      tags:
+      - Profile Management
+    get:
+      description: Returns details of a Profile by specified ID.
+      operationId: findBy
+      parameters:
+      - description: ID of the Profile in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDTO'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read Profile
+      tags:
+      - Profile Management
+    patch:
+      description: Patches the Profile
+      operationId: patch
+      parameters:
+      - description: ID of the Profile in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchProfileDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Patch Profile
+      tags:
+      - Profile Management
+  /2fa/v4/profiles/{profile-id}/templates:
+    post:
+      description: Adds Template to Profile.
+      operationId: addTemplate
+      parameters:
+      - description: ID of the Profile in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: profile-id
+        required: true
+        schema:
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTemplateBodyDTO'
+        description: Channels List Object
+        required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Add Template to Profile
+      tags:
+      - Profile Management
+  /2fa/v4/profiles/{profile-id}/templates/{template-name}:
+    delete:
+      description: Removes Template from Profile.
+      operationId: removeTemplate
+      parameters:
+      - description: ID of the Profile in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: profile-id
+        required: true
+        schema:
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      - description: Name of the Template
+        example: tyntec_register_es
+        in: path
+        name: template-name
+        required: true
+        schema:
+          type: string
+          description: Name of the Template
+          example: tyntec_register_es
+          title: Template Name
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Remove Template from Profile
+      tags:
+      - Profile Management
+components:
+  schemas:
+    AddTemplateBodyDTO:
+      type: object
+      description: Add OTP Template to a channel
+      properties:
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddTemplateChannelEntryDTO'
+      required:
+      - channels
+      title: Add Template Body
+    AddTemplateChannelDTO:
+      type: object
+      properties:
+        languageCode:
+          type: string
+          description: Language Code of the Template to be added
+          example: en_US
+          title: Language Code
+        name:
+          type: string
+          description: Name of the Template to be added
+          example: tyntec_sms_en_US
+          title: Template Name
+      title: List of Templates
+    AddTemplateChannelEntryDTO:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddTemplateChannelDTO'
+          title: List of Templates
+        type:
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          enum:
+          - SMS
+          - VOICE
+          - VIBER
+          - WHATSAPP
+          example: SMS
+          title: Channel type
+      required:
+      - templates
+      title: Template Channel Entry
+    ChannelEntryDTO:
+      type: object
+      description: Channel configuration for OTP Profile
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateChannel'
+        type:
+          type: string
+          description: Channel to be used in the Template
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          - VIBER
+      title: Channel Entry
+    ConfigurationNotFound:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description
+          example: Account is not allowed to use WhatsApp functionality
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 403
+          title: Status Code
+        title:
+          type: string
+          example: Missing WhatsApp Configuration
+          title: Title of the error
+      title: Forbidden
+    ConstraintViolationResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    CreatedProfileDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Profile Case ID
+      title: Created Profile
+    ErrorResponseSchema:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: "Customers WhatsApp account id, if applicable"
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+          title: WhatsApp account Id
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        templateName:
+          type: string
+          description: "The template Name, if applicable"
+          example: otp_template_test
+          title: Template Name
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    NewChannelEntryDTO:
+      type: object
+      description: List of Channels to be linked with profile
+      example:
+      - type: SMS
+        templates:
+        - name: tyntec_register_sms_en_us
+          languageCode: en_US
+        - name: tyntec_register_sms_es
+          languageCode: es
+      - type: VIBER
+        templates:
+        - name: tyntec_register_viber_en_us
+          languageCode: en_US
+      properties:
+        templates:
+          type: array
+          description: Templates to be linked with this profile
+          items:
+            $ref: '#/components/schemas/NewTemplateChannel'
+          title: List of Templates
+        type:
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          enum:
+          - SMS
+          - VOICE
+          - VIBER
+          - WHATSAPP
+          example: SMS
+          title: Channel type
+      required:
+      - templates
+      title: Channel Entry
+    NewProfileDTO:
+      type: object
+      properties:
+        alphanumeric:
+          type: string
+          description: Type of autogenerated OTP Code
+          example: "true"
+          title: Alphanumeric
+        attempts:
+          type: integer
+          format: int32
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          example: 3
+          title: Attempts
+        channels:
+          type: array
+          description: List of Channels to be linked with profile
+          example:
+          - templates:
+            - languageCode: en_US
+              name: tyntec_register_sms_en_us
+            - languageCode: es
+              name: tyntec_register_sms_es
+            type: SMS
+          - templates:
+            - languageCode: en_US
+              name: tyntec_register_viber_en_us
+            type: VIBER
+          items:
+            $ref: '#/components/schemas/NewChannelEntryDTO'
+          title: List of Channels
+        name:
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_register
+          maxLength: 256
+          minLength: 0
+          title: Profile Name
+        otpCodeLength:
+          type: integer
+          format: int32
+          description: Number of OTP code characters.
+          example: 8
+          title: OTP Code Length
+      required:
+      - channels
+      title: New Profile
+    NewTemplateChannel:
+      type: object
+      description: Templates to be linked with this profile
+      properties:
+        languageCode:
+          type: string
+          example: en_US
+        name:
+          type: string
+          example: tyntec_register_es
+      title: Template
+    NotFoundSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: Resource with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+          title: Explanation message
+        resourceId:
+          type: string
+          description: ID of the Resource
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+          title: Resource ID
+        status:
+          type: integer
+          format: int64
+          description: Not Found Http Status code
+          example: 404
+          title: Not Found Status Code
+        title:
+          type: string
+          description: Resource not found on the server
+          example: No Resource Found
+          title: Title of the error
+      title: Not Found
+    PatchChannelEntryDTO:
+      type: object
+      properties:
+        templates:
+          type: array
+          description: Templates to be linked with this profile
+          items:
+            $ref: '#/components/schemas/NewTemplateChannel'
+          title: List of Templates
+        type:
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          example: SMS
+          title: Channel type
+      required:
+      - templates
+      title: Patch Channel Entry
+    PatchProfileDTO:
+      type: object
+      description: Request body for patching the OTP Profile
+      properties:
+        alphanumeric:
+          type: string
+          description: Type of autogenerated OTP Code
+          example: "true"
+          title: Alphanumeric
+        attempts:
+          type: integer
+          format: int32
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          example: 3
+          title: Attempts
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatchChannelEntryDTO'
+        name:
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_register
+          maxLength: 256
+          minLength: 0
+          title: Profile Name
+        otpCodeLength:
+          type: integer
+          format: int32
+          description: Number of OTP code characters.
+          example: 8
+          title: OTP Code Length
+      title: Patch Profile
+    ProfileConflictResponseSchema:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: The Channel which Template belongs to
+          example: VOICE
+          title: Channel
+        detail:
+          type: string
+          description: Description of conflict
+          example: Template with language en_US for VOICE channel already exists.
+            Only one language per channel is allowed.
+          title: detail
+        language:
+          type: string
+          description: The template Language
+          example: en_US
+          title: Language
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 409
+          title: Status Code
+        title:
+          type: string
+          example: Conflict
+          title: Title of the error
+      title: Conflict
+    ProfileDTO:
+      type: object
+      description: OTP Profile configuration
+      properties:
+        alphanumeric:
+          type: boolean
+          description: Type of autogenerated OTP Code
+          example: true
+          title: Alphanumeric
+        attempts:
+          type: integer
+          format: int32
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          example: 3
+          title: Attempts
+        channels:
+          type: array
+          description: Channel configuration for OTP Profile
+          items:
+            $ref: '#/components/schemas/ChannelEntryDTO'
+        id:
+          type: string
+          description: OTP Profile ID in UUID format
+          format: uuid
+        name:
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_register
+          title: Profile Name
+        otpCodeLength:
+          type: integer
+          format: int32
+          description: Number of OTP code characters.
+          example: 8
+          title: OTP Code Length
+      title: Profile
+    TemplateChannel:
+      type: object
+      description: Template to be used for a channel
+      properties:
+        languageCode:
+          type: string
+          description: Language Code of the Template
+          example: en_US
+          title: Language Code
+        name:
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+          title: Template Name
+    ViolationResponseSchema:
+      type: object
+      description: List of violations
+      properties:
+        field:
+          type: string
+          description: The field which is violated
+          example: field_name
+          title: Field violated
+        message:
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+          title: Violation message
+      title: Violations
+  securitySchemes:
+    apiKey:
+      in: header
+      name: apiKey
+      type: apiKey

@@ -1,0 +1,436 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@tyntec.com
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+  title: Priority Management API
+  version: 4
+servers:
+- description: Tyntec Server
+  url: https://api.tyntec.com
+security:
+- apiKey: []
+tags:
+- description: |
+    Priority grants the authority to strategically optimize communication methods,
+    ensuring messages reach recipients through their preferred channels in a manner that resonates most effectively.
+  name: Priority Management
+paths:
+  /2fa/v4/priorities:
+    get:
+      description: Lists all Priorities.
+      operationId: findAllBy
+      parameters:
+      - allowEmptyValue: true
+        allowReserved: true
+        description: Name of the Priority to be searched for
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_sms-viber
+          title: Priority Name
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriorityDTO'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: List Priorities
+      tags:
+      - Priority Management
+    post:
+      description: Creates a new Priority.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPriorityDTO'
+        description: Priority Object that needs to be created
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedPriorityDTO'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Create Priority
+      tags:
+      - Priority Management
+  /2fa/v4/priorities/{id}:
+    delete:
+      description: Deletes the Priority by specified ID
+      operationId: delete
+      parameters:
+      - description: ID of the Priority in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Priority ID
+      responses:
+        "200":
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Delete Priority
+      tags:
+      - Priority Management
+    get:
+      description: Returns details of a Priority by specified ID.
+      operationId: findBy
+      parameters:
+      - description: ID of the Priority in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Priority ID
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityDTO'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Read Priority
+      tags:
+      - Priority Management
+    patch:
+      description: Patches the Priority
+      operationId: patch
+      parameters:
+      - description: ID of the Priority in UUID format
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Priority ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPriorityDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+          description: Constraint violation
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+          description: Constraint violation
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+          description: Internal Server Error
+      summary: Patch Priority
+      tags:
+      - Priority Management
+components:
+  schemas:
+    ChannelPriorityDTO:
+      type: object
+      description: Channel priority configuration
+      example:
+      - channel: SMS
+        priority: 1
+      - channel: VIBER
+        priority: 2
+      properties:
+        channel:
+          type: string
+          description: Name of the Channel
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+          - VIBER
+          example: SMS
+          title: Channel
+        priority:
+          type: integer
+          format: int32
+          description: Priority given integer
+          example: 1
+          title: Priority
+      title: Channel Priority
+    ConflictResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of conflict
+          example: Priority with name tyntec_priority_sms-viber already exists. Priority
+            name must be unique.
+          title: detail
+        priorityName:
+          type: string
+          description: The Priority Name
+          example: tyntec_priority_sms-viber
+          title: priorityName
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 409
+          title: Status Code
+        title:
+          type: string
+          description: Http Status text
+          example: Conflict
+          title: Title of the error
+      title: Conflict
+    ConstraintViolationResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 400
+          title: Status Code
+        title:
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+          title: Title of the error
+        violations:
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+          title: Violations
+      title: Constraint Violation
+    CreatedPriorityDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Priority ID
+      title: Created Priority
+    ErrorResponseSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+          title: detail
+        status:
+          type: integer
+          format: int64
+          description: Http Status code
+          example: 500
+          title: Status Code
+        title:
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+          title: Title of the error
+      title: Internal Server Error
+    NewChannelPriorityDTO:
+      type: object
+      description: List of Channels
+      example:
+      - channel: SMS
+        priority: 1
+      - channel: VIBER
+        priority: 2
+      properties:
+        channel:
+          type: string
+          description: Name of the Channel
+          enum:
+          - SMS
+          - VOICE
+          - VIBER
+          - WHATSAPP
+          example: SMS
+          title: Channel
+        priority:
+          type: integer
+          format: int32
+          description: Priority given integer
+          example: 1
+          minimum: 1
+          title: Priority
+      title: New Channel Entry
+    NewPriorityDTO:
+      type: object
+      properties:
+        channelPriority:
+          type: array
+          description: List of Channels
+          items:
+            $ref: '#/components/schemas/NewChannelPriorityDTO'
+          maxItems: 2
+          minItems: 1
+          title: Channel list
+        name:
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_sms-viber
+          title: Priority Name
+      required:
+      - channelPriority
+      title: New Priority
+    NotFoundSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Explanation message
+          example: Resource with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+          title: Explanation message
+        resourceId:
+          type: string
+          description: ID of the Resource
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+          title: Resource ID
+        status:
+          type: integer
+          format: int64
+          description: Not Found Http Status code
+          example: 404
+          title: Not Found Status Code
+        title:
+          type: string
+          description: Resource not found on the server
+          example: No Resource Found
+          title: Title of the error
+      title: Not Found
+    PatchPriorityDTO:
+      type: object
+      description: Request body for patching the OTP Priority
+      properties:
+        channelPriority:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewChannelPriorityDTO'
+          maxItems: 2
+          minItems: 0
+        name:
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_sms-viber
+          title: Priority Name
+      title: Patch Priority
+    PriorityDTO:
+      type: object
+      description: OTP priority configuration
+      properties:
+        channelPriority:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelPriorityDTO'
+        id:
+          type: string
+          format: uuid
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          title: Priority ID
+        name:
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_sms-viber
+          title: Priority Name
+      title: Priority
+    ViolationResponseSchema:
+      type: object
+      description: List of violations
+      properties:
+        field:
+          type: string
+          description: The field which is violated
+          example: name
+          title: Field violated
+        message:
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+          title: Violation message
+      title: Violations
+  securitySchemes:
+    apiKey:
+      in: header
+      name: apiKey
+      type: apiKey
