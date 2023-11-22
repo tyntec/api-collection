@@ -1,0 +1,2732 @@
+openapi: 3.0.1
+info:
+  title: 2fa API
+  description: |
+    Introducing our OTP Management Endpoint, a dynamic gateway for users to seamlessly dispatch OTP (One-Time Password) messages to end users.
+    This intuitive interface allows users to select a specific profile and priority, ensuring optimal delivery of time-sensitive codes.
+    By leveraging this endpoint, users can efficiently trigger OTP messages, harmonizing profile personalization and priority-based distribution for an enhanced and secure user experience.
+  contact:
+    name: tyntec Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  license:
+    name: Apache 2.0
+    url: http://springdoc.org
+  version: 4.1
+  x-repository: https://github.com/tyntec/api-collection/blob/master/authentication/2fa
+  x-specification-file: tfa-v4.1_open-api-docs.yaml
+  x-major-version: v4
+servers:
+- url: https://api.tyntec.com
+  description: Tyntec Server
+security:
+- apiKey: []
+tags:
+- name: SMS Template Management
+  description: |
+    SMS Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+- name: WhatsApp Template Management
+  description: |
+    WhatsApp Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+- name: WhatsApp Configuration Management
+  description: |
+    The WhatsApp Configuration Endpoint provides a centralized method to set up and manage your WhatsApp integration by defining the WhatsApp Account ID.
+    This endpoint enables users to configure the essential WhatsApp Account ID, which will be used for all subsequent requests towards the WhatsApp.
+- name: Voice Template Management
+  description: |
+    Voice Template Management provides users with the ability to create and customize message templates designed for One-Time Passwords (OTP)
+    in specific languages. This feature facilitates efficient and consistent delivery of OTP messages while accommodating diverse language preferences.
+- name: Profile Management
+  description: |
+    Profiles empowers users to assemble a collection of diverse templates,
+    tailored for various languages and channels, all orchestrated for a specific use case.
+- name: OTP Management
+  description: |
+    The OTP Management Endpoint provides versatile functionality to efficiently manage the message dispatch, verification,
+    and generation of One-Time Password (OTP) for end users.
+    This endpoint enables users to send OTP messages with specific profiles and priorities, enhancing the user experience while maintaining flexibility.
+    It ensures efficient and secure delivery of time-sensitive codes, verify provided OTP codes, and generate new OTP codes if not provided.
+- name: Template Management
+  description: Provides common template management for all channels of communication.
+- name: Priority Management
+  description: |
+    Priority grants the authority to strategically optimize communication methods,
+    ensuring messages reach recipients through their preferred channels in a manner that resonates most effectively.
+paths:
+  /2fa/v4/templates/whatsapp:
+    get:
+      tags:
+      - WhatsApp Template Management
+      summary: Retrieve WhatsApp Template by Name and/or Language
+      description: |
+        Returns details of a template by specified Name and/or language.\
+        Search rules:\
+            1. Find all templates by not providing any values\
+            2. Find by template name\
+            3. Find by template name & language\
+            4. Find by language
+      operationId: findByAccountIdOrByTemplateNameAndLanguage
+      parameters:
+      - name: name
+        in: query
+        description: Name of the Template
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+      - name: language
+        in: query
+        description: Language of the Template
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+      responses:
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseWhatsAppTemplate'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+    post:
+      tags:
+      - WhatsApp Template Management
+      summary: Submit For Review WhatsApp Template
+      description: Creates a new WhatsApp Template into Meta account
+      operationId: submitForReview
+      requestBody:
+        description: WhatsApp Template Object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputWhatsAppTemplate'
+        required: true
+      responses:
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        "200":
+          description: OK
+          content:
+            application/json: {}
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "201":
+          description: Created
+  /2fa/v4/templates/voice:
+    get:
+      tags:
+      - Voice Template Management
+      summary: List Voice Templates
+      description: Lists all Voice Templates.
+      operationId: findAllByAccount
+      parameters:
+      - name: name
+        in: query
+        description: Name of the Template to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+      - name: language
+        in: query
+        description: Language of the Template to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VoiceTemplateDTO'
+    post:
+      tags:
+      - Voice Template Management
+      summary: Create Voice Template
+      description: Creates a new Voice Template.
+      operationId: create
+      requestBody:
+        description: Voice Template Object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVoiceTemplateDTO'
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedVoiceTemplateDTO'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+  /2fa/v4/templates/sms:
+    get:
+      tags:
+      - SMS Template Management
+      summary: List SMS Templates
+      description: Lists all SMS Templates.
+      operationId: findAllByAccount_1
+      parameters:
+      - name: name
+        in: query
+        description: Name of the Template to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+      - name: language
+        in: query
+        description: Language of the Template to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SMSTemplateDTO'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    post:
+      tags:
+      - SMS Template Management
+      summary: Create SMS Template
+      description: Creates a new SMS Template.
+      operationId: create_1
+      requestBody:
+        description: SMS Template Object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSMSTemplateDTO'
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedSMSTemplateDTO'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+  /2fa/v4/profiles/{profileId}/templates:
+    post:
+      tags:
+      - Profile Management
+      summary: Add Template to Profile
+      description: Adds Template to Profile.
+      operationId: addTemplate
+      parameters:
+      - name: profileId
+        in: path
+        description: ID of the Profile in UUID format
+        required: true
+        schema:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        description: Channels List Object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTemplateBodyDTO'
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileConflictResponseSchema'
+        "201":
+          description: Created
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+  /2fa/v4/profiles:
+    get:
+      tags:
+      - Profile Management
+      summary: List Profiles
+      description: Lists all Profiles.
+      operationId: findAllBy
+      parameters:
+      - name: name
+        in: query
+        description: Name of the Profile to be searched for
+        required: false
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Profile Name
+          type: string
+          description: Name of the Profile
+          example: tyntec_site_register
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileDTO'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    post:
+      tags:
+      - Profile Management
+      summary: Create Profile
+      description: Creates a new Profile.
+      operationId: create_2
+      requestBody:
+        description: Profile Object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProfileDTO'
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "403":
+          description: Missing Configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationNotFound'
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedProfileDTO'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+  /2fa/v4/priorities:
+    get:
+      tags:
+      - Priority Management
+      summary: List Priorities
+      description: Lists all Priorities.
+      operationId: findAllBy_1
+      parameters:
+      - name: name
+        in: query
+        description: Name of the Priority to be searched for
+        required: false
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: Priority Name
+          type: string
+          description: Name of the Priority
+          example: tyntec_germany
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriorityDTO'
+    post:
+      tags:
+      - Priority Management
+      summary: Create Priority
+      description: Creates a new Priority.
+      operationId: create_3
+      requestBody:
+        description: Priority Object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPriorityDTO'
+        required: true
+      responses:
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedPriorityDTO'
+        "409":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+  /2fa/v4/otp/{otp-id}/validate:
+    post:
+      tags:
+      - OTP Management
+      summary: Validate OTP Code
+      description: Validates OTP Code.
+      operationId: validateOTP
+      parameters:
+      - name: otp-id
+        in: path
+        description: Id of OTP in UUID format
+        required: true
+        schema:
+          title: OTP Id
+          type: UUID
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateOTPRequest'
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateOTPResponse'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationSchema'
+  /2fa/v4/otp:
+    get:
+      tags:
+      - OTP Management
+      summary: List OTP Codes
+      description: Lists All OTP Codes
+      operationId: getAllBy
+      parameters:
+      - name: to
+        in: query
+        description: Number of the OTP receiver to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: to
+          type: string
+          description: Phone Number
+          example: "+0000000000000"
+      - name: otpStatus
+        in: query
+        description: Status of the OTP to be searched for
+        allowEmptyValue: true
+        allowReserved: true
+        schema:
+          title: OTP Status
+          type: string
+          description: OTP Status
+          example: VERIFIED
+          enum:
+          - VERIFIED
+          - TOO_MANY_ATTEMPTS
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OTPGetResponse'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+    post:
+      tags:
+      - OTP Management
+      summary: Send OTP
+      description: Sends OTP to Number
+      operationId: send
+      requestBody:
+        description: OTP Request to be sent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOTPRequest'
+        required: true
+      responses:
+        "202":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedOTPResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationSchema'
+  /2fa/v4/configuration/channel/whatsapp:
+    get:
+      tags:
+      - WhatsApp Configuration Management
+      summary: Read WhatsApp Configuration
+      description: Returns details of a WhatsApp Configuration.
+      operationId: findAllBy_2
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppConfigResponse'
+    post:
+      tags:
+      - WhatsApp Configuration Management
+      summary: Create WhatsApp Configuration
+      description: Creates a new WhatsApp Configuration.
+      operationId: create_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewWhatsAppConfigRequest'
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "201":
+          description: Created
+          content:
+            application/json: {}
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+        "409":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+  /2fa/v4/templates/voice/{id}:
+    get:
+      tags:
+      - Voice Template Management
+      summary: Read Voice Template
+      description: Returns details of a template by specified ID.
+      operationId: findByAccountIdAndId
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceTemplateDTO'
+    delete:
+      tags:
+      - Voice Template Management
+      summary: Delete Voice Template
+      description: Deletes the Voice Template by specified ID
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    patch:
+      tags:
+      - Voice Template Management
+      summary: Patch Voice Template
+      description: Patches the Voice Template
+      operationId: patch
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchVoiceTemplateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+  /2fa/v4/templates/sms/{id}:
+    get:
+      tags:
+      - SMS Template Management
+      summary: Read SMS Template
+      description: Returns details of a template by specified ID.
+      operationId: findByAccountIdAndId_1
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSTemplateDTO'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+    delete:
+      tags:
+      - SMS Template Management
+      summary: Delete SMS Template
+      description: Deletes the SMS Template by specified ID
+      operationId: delete_1
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    patch:
+      tags:
+      - SMS Template Management
+      summary: Patch SMS Template
+      description: Patches the SMS Template
+      operationId: patch_1
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Template in UUID format
+        required: true
+        schema:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSMSTemplateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateConflictResponseSchema'
+  /2fa/v4/profiles/{id}:
+    get:
+      tags:
+      - Profile Management
+      summary: Read Profile
+      description: Returns details of a Profile by specified ID.
+      operationId: findBy
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Profile in UUID format
+        required: true
+        schema:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDTO'
+    delete:
+      tags:
+      - Profile Management
+      summary: Delete Profile
+      description: Deletes the Profile by specified ID
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Profile in UUID format
+        required: true
+        schema:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    patch:
+      tags:
+      - Profile Management
+      summary: Patch Profile
+      description: Patches the Profile
+      operationId: patch_2
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Profile in UUID format
+        required: true
+        schema:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchProfileDTO'
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+  /2fa/v4/priorities/{id}:
+    get:
+      tags:
+      - Priority Management
+      summary: Read Priority
+      description: Returns details of a Priority by specified ID.
+      operationId: findBy_1
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Priority in UUID format
+        required: true
+        schema:
+          title: Priority ID
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityDTO'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    delete:
+      tags:
+      - Priority Management
+      summary: Delete Priority
+      description: Deletes the Priority by specified ID
+      operationId: delete_3
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Priority in UUID format
+        required: true
+        schema:
+          title: Priority ID
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+    patch:
+      tags:
+      - Priority Management
+      summary: Patch Priority
+      description: Patches the Priority
+      operationId: patch_3
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Priority in UUID format
+        required: true
+        schema:
+          title: Priority ID
+          type: string
+          description: ID of the Priority in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPriorityDTO'
+        required: true
+      responses:
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "200":
+          description: OK
+        "409":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponseSchema'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+  /2fa/v4/templates:
+    get:
+      tags:
+      - Template Management
+      summary: List Templates
+      description: Lists all Templates.
+      operationId: findAllByAccount_2
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  oneOf:
+                  - $ref: '#/components/schemas/SMSTemplateDTO'
+                  - $ref: '#/components/schemas/VoiceTemplateDTO'
+  /2fa/v4/otp/{otp-id}:
+    get:
+      tags:
+      - OTP Management
+      summary: Read OTP Status
+      description: Returns details of a OTP Status by specified ID.
+      operationId: getOTPStatusBy
+      parameters:
+      - name: otp-id
+        in: path
+        description: Id of OTP in UUID format
+        required: true
+        schema:
+          title: OTP Id
+          type: UUID
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundSchema'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPGetResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+    delete:
+      tags:
+      - OTP Management
+      summary: Delete OTP Status
+      description: Deletes the OTP Status by specified ID
+      operationId: deleteOTPStatus
+      parameters:
+      - name: otp-id
+        in: path
+        description: Id of OTP in UUID format
+        required: true
+        schema:
+          title: OTP Id
+          type: UUID
+          description: Id of OTP in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorSchema'
+  /2fa/v4/templates/whatsapp/{template-id}:
+    delete:
+      tags:
+      - WhatsApp Template Management
+      summary: Delete a WhatsApp Template
+      description: "Deletes the template from your WhatsApp account. After deleting\
+        \ the template, a 30-days grace period is starting. This is indicated by the\
+        \ expiresAt property of the localizations."
+      operationId: deleteByTemplateName
+      parameters:
+      - name: template-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponseSchema'
+        "204":
+          description: No Content
+          content:
+            application/json: {}
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /2fa/v4/profiles/{profileId}/templates/{templateName}:
+    delete:
+      tags:
+      - Profile Management
+      summary: Remove Template from Profile
+      description: Removes Template from Profile.
+      operationId: removeTemplate
+      parameters:
+      - name: profileId
+        in: path
+        description: ID of the Profile in UUID format
+        required: true
+        schema:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: templateName
+        in: path
+        description: Name of the Template
+        required: true
+        schema:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_register_es
+        example: tyntec_register_es
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSchema'
+        "400":
+          description: Constraint violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolationResponseSchema'
+components:
+  schemas:
+    InputWhatsAppTemplate:
+      title: Submit WhatsApp Template for Review
+      required:
+      - language
+      - name
+      type: object
+      properties:
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid (default
+            set to 3)
+          format: int32
+          example: 3
+        addSecurityRecommendation:
+          title: Security Recommendation Text
+          type: boolean
+          description: "Set to \"true\" to display the security text (\"For your security,\
+            \ do not share this code.\"), otherwise set to \"false\" to exclude it"
+          example: true
+          default: true
+        type:
+          title: Template type
+          type: string
+          description: The template type is always "OTP"
+          example: OTP
+          default: OTP
+        otpType:
+          title: Button type
+          type: string
+          description: Indicates the button type
+          example: COPY_CODE or ONE_TAP
+        copyButtonText:
+          title: Text displayed in copy button
+          type: string
+          description: Replace the default copy code button text of "Copy code" with
+            your own text
+          example: copy now
+        autofillButtonText:
+          title: Text displayed in autofill button
+          type: string
+          description: Replace the default autofill button text of "Autofill" with
+            your own text
+          example: Click to Autofill
+        packageName:
+          title: Package name (Only for Autofill button)
+          type: string
+          description: Android app's package name
+          example: com.example.myapplication
+        signatureHash:
+          title: Signature Hash (Only for Autofill button)
+          type: string
+          description: Your app's signing key hash
+          example: K8a%2FAINcGX7
+    UnauthorizedResponse:
+      title: Unauthorized
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: The server understands the request but refuses to authorize
+            it
+          example: Unauthorized
+        status:
+          title: Unauthorized Status Code
+          type: integer
+          description: Unauthorized Http Status code
+          format: int64
+          example: 401
+        detail:
+          title: Explanation message
+          type: string
+          description: Explanation message
+          example: No API key found in request
+        accountId:
+          title: WhatsApp account Id
+          type: string
+          description: Customers WhatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+        templateName:
+          title: Template Name
+          type: string
+          description: The template Name
+          example: otp_template_test
+    ErrorResponseSchema:
+      title: Internal Server Error
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 500
+        detail:
+          title: detail
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+    NotFoundResponseSchema:
+      title: Not Found
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: Resource not found on the server
+          example: No Template Found
+        status:
+          title: Not Found Status Code
+          type: integer
+          description: Not Found Http Status code
+          format: int64
+          example: 404
+        detail:
+          title: Explanation message
+          type: string
+          description: Explanation message
+          example: Template with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+        templateId:
+          title: Template ID
+          type: string
+          description: ID of the Template
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+    BadRequestResponse:
+      title: Bad Request
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: The server cannot or will not process the request due to something
+            that is perceived to be a client error
+          example: Bad Request
+        status:
+          title: Bad Request Status Code
+          type: integer
+          description: Bad request Http Status code
+          format: int64
+          example: 400
+        detail:
+          title: Explanation message
+          type: string
+          description: Explanation message
+          example: 400 BAD_REQUEST Required query parameter 'templateId' is not present
+    NewVoiceTemplateDTO:
+      title: New Voice Template
+      type: object
+      properties:
+        name:
+          title: Template Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Template
+          example: tyntec_voice_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+          default: 3
+        message:
+          title: Message
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    CreatedVoiceTemplateDTO:
+      title: Created Voice Template
+      type: object
+      properties:
+        id:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+    TemplateConflictResponseSchema:
+      title: Conflict
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          example: Conflict
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 409
+        detail:
+          title: detail
+          type: string
+          description: Description of conflict
+          example: Template with name tyntec_sms_en_US already exists in SMS channel.
+            Template name must be unique.
+        templateName:
+          title: Template Name
+          type: string
+          description: The Name of Template
+          example: tyntec_sms_en_US
+    ConstraintViolationResponseSchema:
+      title: Constraint Violation
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 400
+        violations:
+          title: Violations
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+    ViolationResponseSchema:
+      title: Violations
+      type: object
+      properties:
+        field:
+          title: Field violated
+          type: string
+          description: The field which is violated
+          example: field_name
+        message:
+          title: Violation message
+          type: string
+          description: Indicates the constraint violation
+          example: must not be blank
+      description: List of violations
+    NewSMSTemplateDTO:
+      title: New SMS Template
+      type: object
+      properties:
+        name:
+          title: Template Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+        message:
+          title: Message
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    CreatedSMSTemplateDTO:
+      title: Created SMS Template
+      type: object
+      properties:
+        id:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+    AddTemplateBodyDTO:
+      title: Add Template Body
+      required:
+      - channels
+      type: object
+      properties:
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddTemplateChannelEntryDTO'
+    AddTemplateChannelDTO:
+      title: List of Templates
+      type: object
+      properties:
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template to be added
+          example: tyntec_sms_en_US
+        languageCode:
+          title: Language Code
+          type: string
+          description: Language Code of the Template to be added
+          example: en_US
+    AddTemplateChannelEntryDTO:
+      title: Template Channel Entry
+      required:
+      - templates
+      type: object
+      properties:
+        type:
+          title: Channel type
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        templates:
+          title: List of Templates
+          type: array
+          items:
+            $ref: '#/components/schemas/AddTemplateChannelDTO'
+    NotFoundSchema:
+      title: Not Found
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: Resource not found on the server
+          example: No Resource Found
+        status:
+          title: Not Found Status Code
+          type: integer
+          description: Not Found Http Status code
+          format: int64
+          example: 404
+        detail:
+          title: Explanation message
+          type: string
+          description: Explanation message
+          example: Resource with ID 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11 not found
+        resourceId:
+          title: Resource ID
+          type: string
+          description: ID of the Resource
+          example: 6f1f2438-f1bf-4ba0-892a-d6a3f5692a11
+    ProfileConflictResponseSchema:
+      title: Conflict
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          example: Conflict
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 409
+        detail:
+          title: detail
+          type: string
+          description: Description of conflict
+          example: Template with language en_US for VOICE channel already exists.
+            Only one language per channel is allowed.
+        language:
+          title: Language
+          type: string
+          description: The template Language
+          example: en_US
+        channel:
+          title: Channel
+          type: string
+          description: The Channel which Template belongs to
+          example: VOICE
+    NewChannelEntryDTO:
+      title: Channel Entry
+      required:
+      - templates
+      type: object
+      properties:
+        type:
+          title: Channel type
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        templates:
+          title: List of Templates
+          type: array
+          description: Templates to be linked with this profile
+          items:
+            $ref: '#/components/schemas/NewTemplateChannel'
+      description: List of Channels to be linked with profile
+    NewProfileDTO:
+      title: New Profile
+      required:
+      - channels
+      type: object
+      properties:
+        name:
+          title: Profile Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Profile
+          example: tyntec_site_register
+        alphanumeric:
+          title: Alphanumeric
+          type: string
+          description: Type of autogenerated OTP Code
+          example: "true"
+        attempts:
+          title: Attempts
+          type: integer
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          format: int32
+          example: 3
+        otpCodeLength:
+          title: OTP Code Length
+          type: integer
+          description: Number of OTP code characters.
+          format: int32
+          example: 8
+        channels:
+          title: List of Channels
+          type: array
+          description: List of Channels to be linked with profile
+          items:
+            $ref: '#/components/schemas/NewChannelEntryDTO'
+    NewTemplateChannel:
+      title: Template
+      type: object
+      properties:
+        name:
+          type: string
+          example: tyntec_register_es
+        languageCode:
+          type: string
+          example: en_US
+      description: Templates to be linked with this profile
+    ConfigurationNotFound:
+      title: Forbidden
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          example: Missing WhatsApp Configuration
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 403
+        detail:
+          title: detail
+          type: string
+          description: Description
+          example: Account is not allowed to use WhatsApp functionality
+    CreatedProfileDTO:
+      title: Created Profile
+      type: object
+      properties:
+        id:
+          title: Profile Case ID
+          type: string
+          description: ID of the Profile in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+    NewChannelPriorityDTO:
+      title: New Channel Entry
+      type: object
+      properties:
+        channel:
+          title: Channel
+          type: string
+          description: Name of the Channel
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        priority:
+          title: Priority
+          minimum: 1
+          type: integer
+          description: Priority given integer
+          format: int32
+          example: 1
+      description: List of Channels
+    NewPriorityDTO:
+      title: New Priority
+      required:
+      - channelPriority
+      type: object
+      properties:
+        name:
+          title: Priority Name
+          type: string
+          description: Name of the Priority
+          example: tyntec_germany
+        channelPriority:
+          title: Channel list
+          maxItems: 2
+          minItems: 1
+          type: array
+          description: List of Channels
+          items:
+            $ref: '#/components/schemas/NewChannelPriorityDTO'
+    CreatedPriorityDTO:
+      title: Created Priority
+      type: object
+      properties:
+        id:
+          title: Priority ID
+          type: string
+          description: ID of the Priority in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+    ConflictResponseSchema:
+      title: Conflict
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          example: Conflict
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 409
+        detail:
+          title: detail
+          type: string
+          description: Description of conflict
+          example: Priority with name tyntec_germany already exists. Priority name
+            must be unique.
+        priorityName:
+          title: priorityName
+          type: string
+          description: The Priority Name
+          example: tyntec_germany
+    ValidateOTPRequest:
+      title: Validate OTP
+      type: object
+      properties:
+        otpCode:
+          title: OTP Code
+          maxLength: 11
+          minLength: 4
+          type: string
+          description: OTP Code to be validated
+          example: 1frtq45
+    InternalServerErrorSchema:
+      title: Internal Server Error
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: The server encountered an unexpected condition
+          example: Internal Server Error
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 500
+        detail:
+          title: detail
+          type: string
+          description: Description of an error
+          example: Unexpected error occurred on server
+    ValidateOTPResponse:
+      type: object
+      properties:
+        otpStatus:
+          title: OTP Status
+          type: string
+          description: OTP Status of the validation
+          example: VERIFIED
+          enum:
+          - VERIFIED
+          - EXPIRED
+          - TOO_MANY_ATTEMPTS
+          - ALREADY_REPORTED
+          - WRONG_CODE
+    ConstraintViolationSchema:
+      title: Constraint Violation
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: Invalid request body parameters
+          example: Constraint Violation
+        status:
+          title: Status Code
+          type: integer
+          description: Http Status code
+          format: int64
+          example: 400
+        violations:
+          title: Violations
+          type: array
+          description: List of violations
+          items:
+            $ref: '#/components/schemas/ViolationResponseSchema'
+    NewOTPRequest:
+      title: New OTP Request
+      type: object
+      properties:
+        to:
+          title: Number of the message receiver
+          type: string
+          description: Number of the message receiver
+          example: "+0000000000000"
+        caller:
+          title: Originator of the request
+          type: string
+          description: VOICE caller of this request.
+          example: Tyntec GmbH
+        sender:
+          title: Originator of the request
+          type: string
+          description: SMS sender of this request.
+          example: Tyntec GmbH
+        senderWA:
+          title: Originator of the request
+          type: string
+          description: Whatsapp phone number from which the request will be sent.
+          example: "+0000000000000"
+        profileName:
+          title: Profile Name
+          type: string
+          description: Name of the Profile
+          example: tyntec_profile_de
+        priorityName:
+          title: Priority Name
+          type: string
+          description: Name of the Priority
+          example: tyntec_priority_de
+        otpCode:
+          title: OTP Code
+          maxLength: 11
+          minLength: 4
+          pattern: "^[^A-Z]*$"
+          type: string
+          description: "The OTP code to be used in this request, it accepts only lowercase\
+            \ letters"
+          example: 1abc3r
+        languageCode:
+          title: Language Code
+          type: string
+          description: The Language Code to be used in this request
+          example: de
+          enum:
+          - ar
+          - bg
+          - ca
+          - zh_CN
+          - zh_HK
+          - zh_TW
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - en_GB
+          - en_US
+          - fi
+          - fr
+          - de
+          - el
+          - he
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ms
+          - nb
+          - pl
+          - pt_BR
+          - pt_PT
+          - ro
+          - ru
+          - sk
+          - sl
+          - es
+          - es_ES
+          - es_MX
+          - sv
+          - ta
+          - te
+          - th
+          - tr
+          - vi
+    CreatedOTPResponse:
+      title: OTP Response
+      type: object
+      properties:
+        id:
+          title: OTP Id
+          type: string
+          description: Id of OTP
+          format: uuid
+          example: c3dec0cd-6305-4d74-8d0d-629f9a43de85
+    NewWhatsAppConfigRequest:
+      title: New WhatsApp Configuration
+      required:
+      - whatsAppAccountId
+      type: object
+      properties:
+        whatsAppAccountId:
+          title: WhatsApp Account Id
+          type: string
+          description: Id of WhatsApp Account
+          example: 289a1c20-06c5-4964-b32d-24d214a78ae5
+    PatchVoiceTemplateDTO:
+      title: Patch Voice Template
+      type: object
+      properties:
+        name:
+          title: Template Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Template
+          example: tyntec_voice_en_US
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+          default: 3
+        message:
+          title: Message
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    PatchSMSTemplateDTO:
+      title: Patch SMS Template
+      type: object
+      properties:
+        name:
+          title: Template Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+        message:
+          title: Message
+          maxLength: 512
+          minLength: 0
+          pattern: ".*\\{\\{otp_code\\}\\}.*"
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    PatchChannelEntryDTO:
+      title: Patch Channel Entry
+      required:
+      - templates
+      type: object
+      properties:
+        type:
+          title: Channel type
+          type: string
+          description: |
+            Channel object will link the type of the channel with the templates to be used in this channel.
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        templates:
+          title: List of Templates
+          type: array
+          description: Templates to be linked with this profile
+          items:
+            $ref: '#/components/schemas/NewTemplateChannel'
+    PatchProfileDTO:
+      title: Patch Profile
+      type: object
+      properties:
+        name:
+          title: Profile Name
+          maxLength: 256
+          minLength: 0
+          type: string
+          description: Name of the Profile
+          example: tyntec_site_register
+        alphanumeric:
+          title: Alphanumeric
+          type: string
+          description: Type of autogenerated OTP Code
+          example: "true"
+        attempts:
+          title: Attempts
+          type: integer
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          format: int32
+          example: 3
+        otpCodeLength:
+          title: OTP Code Length
+          type: integer
+          description: Number of OTP code characters.
+          format: int32
+          example: 8
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatchChannelEntryDTO'
+    PatchPriorityDTO:
+      title: Patch Priority
+      type: object
+      properties:
+        name:
+          title: Priority Name
+          type: string
+          description: Name of the Priority
+          example: tyntec_germany
+        channelPriority:
+          maxItems: 2
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/NewChannelPriorityDTO'
+    ResponseWhatsAppTemplate:
+      title: Response WhatsApp Template
+      type: object
+      properties:
+        templateId:
+          title: Template ID
+          type: string
+          description: ID of the Template
+          example: auth_template_en
+        accountId:
+          title: WhatsApp Account ID
+          type: string
+          description: The whatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+        status:
+          title: Template status
+          type: string
+          description: The real time template status in the WhatsApp account
+          example: APPROVED
+        type:
+          title: Template type
+          type: string
+          description: The template type is always "OTP"
+          example: OTP
+          default: OTP
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+        codeExpirationText:
+          title: Code Expiration Text
+          type: string
+          description: Indicates the number of minutes OTP code is valid
+          example: This code expires in 3 minutes.
+        message:
+          title: Message
+          type: string
+          description: |
+            The text template for the specific language."Placeholder *{{1}}* is your verification code, addRecommendation field appends the following text into message { For your security, do not share this code.}"
+          example: "*{{1}}* is your verification code. For your security, do not share\
+            \ this code."
+        isAddSecurityRecommendation:
+          title: Security Recommendation Text
+          type: boolean
+          description: "Set to \"true\" to display the security text (\"For your security,\
+            \ do not share this code.\"), otherwise set to \"false\" to exclude it"
+          example: true
+          default: true
+        otpType:
+          title: Button type
+          type: string
+          description: Indicates the button type
+          example: COPY_CODE or ONE_TAP
+        copyButtonText:
+          title: Text displayed in copy button
+          type: string
+          description: Replace the default copy code button text of "Copy code" with
+            your own text
+          example: copy now
+        buttonUrl:
+          title: URL provided for the button
+          type: string
+          description: URL provided for the button
+          example: "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}"
+        autofillButtonText:
+          title: Text displayed in autofill button
+          type: string
+          description: Replace the default autofill button text of "Autofill" with
+            your own text
+          example: Click to Autofill
+        packageName:
+          title: Package name (Only for Autofill button)
+          type: string
+          description: Android app's package name
+          example: com.example.myapplication
+        signatureHash:
+          title: Signature Hash (Only for Autofill button)
+          type: string
+          description: Your app's signing key hash
+          example: K8a%2FAINcGX7
+        createdAt:
+          title: Template's creation date
+          type: string
+          description: "The date template was created [ISO-8601] without timezone"
+          example: 2023‐06‐27T09:51:14
+        updatedAt:
+          title: Template's last update date
+          type: string
+          description: "The date template was last updated [ISO-8601] without timezone"
+          example: 2023‐06‐27T09:51:14
+    ForbiddenResponse:
+      title: Forbidden
+      type: object
+      properties:
+        title:
+          title: Title of the error
+          type: string
+          description: The server understands the request but refuses to authorize
+            it
+          example: Forbidden
+        status:
+          title: Forbidden Status Code
+          type: integer
+          description: Forbidden Http Status code
+          format: int64
+          example: 403
+        detail:
+          title: Explanation message
+          type: string
+          description: Explanation message
+          example: Invalid authentication credentials
+        accountId:
+          title: WhatsApp account Id
+          type: string
+          description: Customers WhatsApp account id
+          example: 8561cca6-682a-47e7-9b55-0c4be1d4033e
+        templateName:
+          title: Template Name
+          type: string
+          description: The template Name
+          example: otp_template_test
+    VoiceTemplateDTO:
+      title: Voice Template
+      type: object
+      properties:
+        id:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+        channel:
+          title: Channel
+          type: string
+          description: Channel for template
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+        message:
+          title: Message
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    SMSTemplateDTO:
+      title: SMS Template
+      type: object
+      properties:
+        id:
+          title: Template ID
+          type: string
+          description: ID of the Template in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        language:
+          title: Template Language
+          type: string
+          description: Language of the Template in the ISO 639-1 format
+          example: en_US
+        channel:
+          title: Channel
+          type: string
+          description: Channel for template
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        codeExpirationTime:
+          title: Code Expiration Time
+          type: integer
+          description: Indicates the number of minutes OTP code is valid
+          format: int32
+          example: 3
+        message:
+          title: Message
+          type: string
+          description: |
+            The text template for the specific language. Placeholder '{{otp_code}}' must exist at least once, otherwise template will not be created. '{{expiration_time}}' is an optional placeholder
+          example: "tyntec: {{otp_code}} is your security code. Your code will expire\
+            \ in {{expiration_time}} minutes. Don't share this code."
+    ChannelEntryDTO:
+      title: Channel Entry
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateChannel'
+    ProfileDTO:
+      title: Profile
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          title: Profile Name
+          type: string
+          description: Name of the Profile
+          example: tyntec_site_register
+        alphanumeric:
+          title: Alphanumeric
+          type: boolean
+          description: Type of autogenerated OTP Code
+          example: true
+        attempts:
+          title: Attempts
+          type: integer
+          description: "Customer can define how many times an OTP is allowed to be\
+            \ tried. If the number of the allowed attempts is reached, the OTP code\
+            \ will be invalidated"
+          format: int32
+          example: 3
+        otpCodeLength:
+          title: OTP Code Length
+          type: integer
+          description: Number of OTP code characters.
+          format: int32
+          example: 8
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelEntryDTO'
+    TemplateChannel:
+      type: object
+      properties:
+        name:
+          title: Template Name
+          type: string
+          description: Name of the Template
+          example: tyntec_sms_en_US
+        languageCode:
+          title: Language Code
+          type: string
+          description: Language Code of the Template
+          example: en_US
+    ChannelPriorityDTO:
+      title: Channel Priority
+      type: object
+      properties:
+        channel:
+          title: Channel
+          type: string
+          description: Name of the Channel
+          example: SMS
+          enum:
+          - SMS
+          - VOICE
+          - WHATSAPP
+        priority:
+          title: Priority
+          type: integer
+          description: Priority given integer
+          format: int32
+          example: 1
+    PriorityDTO:
+      title: Priority
+      type: object
+      properties:
+        id:
+          title: Priority ID
+          type: string
+          description: ID of the Priority in UUID format
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          title: Priority Name
+          type: string
+          description: Name of the Priority
+          example: tyntec_germany
+        channelPriority:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelPriorityDTO'
+    OTPGetResponse:
+      type: object
+      properties:
+        otpId:
+          type: string
+          format: uuid
+        to:
+          type: string
+        allowedAttempts:
+          type: integer
+          format: int32
+        attemptCount:
+          type: integer
+          format: int32
+        otpStatus:
+          type: string
+          enum:
+          - ACTIVE
+          - VERIFIED
+          - EXPIRED
+          - TOO_MANY_ATTEMPTS
+        otpCreated:
+          type: string
+          format: date-time
+        otpExpire:
+          type: string
+          format: date-time
+    WhatsAppConfigResponse:
+      title: WhatsApp Configuration
+      type: object
+      properties:
+        whatsAppAccountId:
+          title: WhatsApp Account Id
+          type: string
+          description: Id of WhatsApp Account
+          format: uuid
+          example: 289a1c20-06c5-4964-b32d-24d214a78ae5
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: apiKey
+      in: header

@@ -1,5 +1,4 @@
 # Release Notes
-
 ## v4.1.0
 
 Following features and changes are implemented in the 2FA service:
