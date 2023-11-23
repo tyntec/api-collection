@@ -1,5 +1,15 @@
 # Release notes
 
+## 3.14
+
+### Changes
+
+#### Added whatsapp flows feature
+
+Flows provide a way to develop and deliver interactive experiences to users, enabling a variety of interactions, engagements, 
+and monetization opportunities to the business. With this feature implemented, business can send flow message as template, 
+as well as interactive message.
+
 ## 3.13
 
 ### Changes
