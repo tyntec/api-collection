@@ -118,6 +118,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error404'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'
         500:
           description: Internal server error
           content:
@@ -315,6 +321,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error404'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'
         500:
           description: Internal server error
           content:
@@ -794,6 +806,13 @@ components:
           type: string
           example: "Request path '/...' does not exist"
           description: Not Found
+    error409:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Template with name <template_name> already exists"
+          description: Conflict
     error500:
       type: object
       properties:
