@@ -1,0 +1,212 @@
+openapi: 3.0.0
+info:
+  title: Number Portability API
+  description: |
+    tyntec's Number Portability is a service that resolves whether a phone number is ported to a different operator than the one originally issued this phone number. Information is obtained through data provided directly from local number portability databases and live network information from across the globe.
+  version: '1.0'
+  contact:
+    name: tyntec API Support
+    url: https://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/verification
+  x-specification-file: numberPortability.yaml
+  x-major-version: v1
+servers:
+  - url: https://api.tyntec.com/nis/v1/
+tags:
+  - name: "Number Portability"
+    description: |
+      tyntec's Global Number Portability (GNP) resolves number portability by obtaining data directly from local number portability databases and live network information from across the globe.
+security:
+  - APIKeyHeader: []
+paths:
+  /gnp:
+    get:
+      tags:
+        - "Number Portability"
+      summary: Number Portability check
+      description: |
+        Many mobile subscribers are moving their phone numbers to different mobile operators. This is called Portability in the telecom terminology.
+        Number Portability check provides information on whether a phone number is ported to a different mobile operator and who is the new operator.
+      operationId: gnpRequestGET
+      parameters:
+        - in: query
+          name: msisdn
+          required: true
+          schema:
+            type: string
+          style: form
+          description: |
+            The phone number of interest, given in the international format
+          example: +49569858597
+        - in: query
+          name: callbackUrl
+          schema:
+            type: string
+          required: false
+          description: |
+            The asynchronous response can be triggered by this request parameter.
+
+            In this case, tyntec's system will POST the requested number information to your webserver at the given URL, instead of the default synchronous response given in the body of the "HTTP 200 OK" response. If your server does not answer "HTTP 200 OK" within two seconds, tyntec's system will retry to POST the number information after 1, 5, 10, 20, 30, 60 minutes for a maximum of 48 hours.
+          example: https://my.callback.io/gnp-response
+      responses:
+        '200':
+          description: A successful GNP response; in the case a valid callbackUrl is provided, the response will be the requestId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GnpResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/PaymentRequired'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    BadRequest:
+      description: An error in MSISDN or in the callback URL
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Authorization information is missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Invalid account credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    PaymentRequired:
+      description: The current credit balance is not sufficient for this request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    InternalError:
+      description: Something went wrong. :-(
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: apiKey
+  schemas:
+    GnpResponse:
+      type: object
+      description: The number information response for GNP
+      properties:
+        requestId:
+          type: string
+          description: |
+            The unique identifier provided for each request
+          example: "12-86cfafba-8677-f42b-5050-ece6af6abf01"
+        msisdn:
+          type: string
+          description: |
+            The phone number of interest given in the international format
+          example: "+491622943176"
+        ported:
+          type: string
+          description: |
+            An indication of the porting status
+          example: "false"
+        price:
+          type: number
+          description: |
+            The price for the query
+          example: 0.001
+        currency:
+          type: string
+          description: |
+            The currency in which the pricing is given; it corresponds to the currency of the invoice.
+          example: "EUR"
+        priceEffective:
+          type: string
+          description: |
+            The date when "price" became effective
+          example: "2010-11-01T00:00:00+0000"
+        errorCode:
+          type: string
+          description: |
+            The reason for an unsuccessful attempt
+          example: "0"
+        mcc:
+          type: string
+          description: |
+            A representative MCC (Mobile Country Code) of the operator
+          example: "262"
+        mnc:
+          type: string
+          description: |
+            A representative MNC (Mobile Network Code) of the operator
+          example: "02"
+        ttid:
+          type: string
+          description: |
+            The respective tyntec ID of the network
+          example: "15"
+        operator:
+          type: string
+          description: |
+            A human-readable name of the operator
+          example: "Vodafone"
+        country:
+          type: string
+          description: |
+            The three-letter code (following ISO 3166-1 alpha-3) of the country where the operator is located
+          example: "DEU"
+        timezone:
+          type: string
+          description: |
+            The operator's local time zone relative to UTC
+          example: "+0100"
+        technology:
+          type: string
+          description: |
+            The technology used by the operator's network; possible values are: GSM, MVNO GSM, GSM/CDMA, Satellite, CDMA, iDen, iDen/GSM, Pager, Fixed.
+          example: "GSM"
+        synchronous:
+          type: boolean
+          description: |
+            Indicates whether the response body contains the number information (synchronous) or just the requestId of the asynchronous response.
+          example: "true"
+    Problem:
+      type: object
+      additionalProperties: true
+      description: The problem object follows the RFC-7807 (https://tools.ietf.org/html/rfc7807).
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          description: A URI reference [RFC3986] that identifies the problem type
+          example: https://docs.tyntec.com/problems/DataNotParseable
+          type: string
+        title:
+          type: string
+          example: The given data were not parsable.
+          description: Short, human-readable summary of the problem type
+        status:
+          description: The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem
+          type: string
+          example: 400
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem
+          type: string
+          example: |
+            Unexpected end-of-input: expected close marker for Object (start marker at [Source: UNKNOWN; line: -1, column: -1) at [Source: UNKNOWN; line: 1, column: 97]
