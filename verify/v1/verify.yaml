@@ -1,0 +1,827 @@
+openapi: 3.0.3
+info:
+  title: "Verify API"
+  description: |
+    This is openAPI file Verify product
+  version: '1.0.0'
+  contact:
+    name: tyntec API Support
+    url: https://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/verify
+  x-specification-file: verify.yaml
+  x-major-version: v1
+servers:
+  - url: https://api.tyntec.com/verify/v1
+tags:
+  - name: "Verify"
+    description: |
+      Verify service aims to provide information regarding the validity and trustworthyness 
+      of a phone number.
+      
+      The service gathers and consolidates information regarding a phone number
+      and based on the collected information and customer's input is able to evaluate and suggest to the customer
+      if a phone number is verified.
+      
+      Furthermore the validation process can be fully pre-defined by the customer with the use of customized
+      verify criteria and customized responses. By using the customized criteria, customers can fully control
+      the verify process based on their business needs.
+  - name: "Verify Criteria"
+    description: |
+      Customers can define their own logic for verifying a number.
+      This means that customer can define the verify criteria but also the response parameters that 
+      they would like to  to receive back.
+      
+      This configuration provides customers with full control over tyntec's verify process.
+  - name: Metadata
+    description: |
+      Metadata provides non functional information about the Verify service
+paths:
+  /templates:
+    post:
+      tags:
+        - "Verify Criteria"
+      summary: Create criteria
+      description: |
+        Create criteria with desired verify rules and responses.
+        
+        The following parameter can be configured:
+        
+        | Criterion           | Allowed Operations   | Allowed Values                                                                                                           |
+        | ---                 | ---                  | ---                                                                                                                    |
+        | activeNumber        | is                   | true/false                                                                                                               |
+        | numberType          | is, is_in            | fixed or mobile. In case of *is_in* operator multiple comma separated values can be provided                             |
+        | operatorCountry     | is, is_in            | country in ISO Alpha-3 format e.g. DEU, GBR. In case of *is_in* operator multiple comma separated values can be provided |
+        | disposableNumber    | is                   | true/false                                                                                                               |
+        | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
+        
+        The following parameters can be configured for the response:
+        
+        Response Parameter:
+        
+        - validNumberFormat
+        - numberType
+        - activeNumber
+        - operatorName
+        - OperatorCountry
+        - mcc
+        - mnc
+        - disposableNumber
+
+        In the Response message, parameters will respect the template configuration order.
+        
+        Moreover, following parameters will be always shown in the response
+        
+        - requestId
+        - verified
+        - reason (only in case of unverified response)
+        
+        However, customers can use those parameters in the response configuration just for manipulating 
+        the order of the Response parameters. 
+
+      security:
+        - apiKey: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCriteria'
+        required: true
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnCreatedCriteria'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+    get:
+      tags:
+        - "Verify Criteria"
+      summary: Retrieve all criteria
+      description: |
+        Retrieve all verify criteria. Customers can list all criteria configured by them.
+      security:
+        - apiKey: [ ]
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveAllCriteria'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+  /templates/{name}:
+    get:
+      tags:
+        - "Verify Criteria"
+      summary: Retrieve criteria by name
+      description: |
+        Retrieve criteria by criteria name. Customers can view a specific criteria by knowing the criteria name.
+      parameters:
+        - name: criteria-name
+          in: path
+          required: true
+          description: |
+            The name of the criteria to be Name
+          schema:
+            type: string
+            example: "verify-criteria"
+      security:
+        - apiKey: [ ]
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveAllCriteria'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+    put:
+      tags:
+        - "Verify Criteria"
+      summary: Update the criteria
+      description: |
+        Modify the existing criteria. Customers can update name, description, criteria and response by providing 
+        the whole json structure.
+        
+        Criteria can be configured similarly with the criteria create:
+        
+        | Criterion           | Allowed Operations   | Allowed Values                                                                                                           |
+        | ---                 | ---                  | ---                                                                                                                    |
+        | activeNumber        | is                   | true/false                                                                                                               |
+        | numberType          | is, is_in            | fixed or mobile. In case of *is_in* operator multiple comma separated values can be provided                             |
+        | operatorCountry     | is, is_in            | country in ISO Alpha-3 format e.g. DEU, GBR. In case of *is_in* operator multiple comma separated values can be provided |
+        | disposableNumber    | is                   | true/false                                                                                                               |
+        | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
+        
+        And similarly response are also following the criteria create configuration:
+
+        Response Parameter:
+        
+        - validNumberFormat
+        - numberType
+        - activeNumber
+        - operatorName
+        - OperatorCountry
+        - mcc
+        - mnc
+        - disposableNumber
+
+        In the Response message, parameters will respect the template configuration order.
+        
+        Moreover, following parameters will be always shown in the response:
+        
+        - requestId
+        - verified
+        - reason (only in case of unverified response)
+        
+        However, customers can use those parameters in the response configuration just for manipulating 
+        the order of the Response parameters. 
+
+
+      parameters:
+        - name: criteriaName
+          in: path
+          required: true
+          description: |
+            provide the criteria Name
+          schema:
+            type: string
+            example: "verify-criteria"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCriteria'
+        required: true
+      security:
+        - apiKey: [ ]
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCriteria'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+    delete:
+      tags:
+        - "Verify Criteria"
+      summary: Delete criteria by name
+      description: |
+        Delete criteria by criteria name.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: |
+            provide the criteria Name
+          schema:
+            type: string
+            example: "verify-criteria"
+      security:
+        - apiKey: [ ]
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCriteria'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+  /phone/{number}?criteria={criteriaName}:
+    get:
+      tags:
+        - "Verify Criteria"
+      summary: Verify criteria by name
+      description: |
+        Verify criteria by criteria name. Customers can view a specific response by setting up response parameter at the time of criteria creation.
+      parameters:
+        - name: number
+          in: path
+          required: true
+          description: |
+            The phone number to be verified, given in the international format
+          schema:
+            type: string
+            example: +491621234567
+        - name: criteriaName
+          in: path
+          required: true
+          description: |
+            The name of the criteria
+          schema:
+            type: string
+            example: "verify-criteria"
+      security:
+        - apiKey: [ ]
+      responses:
+        200:
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponse'
+        400:
+          description: Bad request / Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        401:
+          description: Missing or Invalid API credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+  /health:
+    get:
+      tags:
+        - Metadata
+      summary: Verify API Health
+      operationId: getVerifyHealth
+      parameters:
+        - name: apiKey
+          in: header
+          description: 'API authentication key for the customer account'
+          required: true
+          schema:
+            type: string
+      security:
+        - apiKey: []
+      responses:
+        200:
+          description: API is up and running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/healthResponse'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+  /version:
+    get:
+      tags:
+        - Metadata
+      summary: Verify API version
+      operationId: getVersion
+      security:
+        - apiKey: []
+      responses:
+        200:
+          description: Current API version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/versionResponse'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+components:
+  schemas:
+    VerifyResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request
+        validNumberFormat:
+          type: boolean
+          example: true
+          description: Is it valid phone number?
+        activeNumber:
+          type: boolean
+          example: true
+          description: Is this number assigned to a subscriber?
+        numberType:
+          type: string
+          example: "mobile"
+          description: Type of the phone number (mobile or fixed)
+        operatorName:
+          type: string
+          example: "T-Mobile Czech Republic a.s."
+          description: Operator name
+        operatorCountry:
+          type: string
+          example: "CZE"
+          description: The phone number's country of origin ISO3 code
+        mcc:
+          type: string
+          example: "202"
+          description: MCC for given phone number
+        mnc:
+          type: string
+          example: "01"
+          description: MNC for given phone number
+        disposableNumber:
+          type: boolean
+          example: false
+          description: number is not disposable.
+        verified:
+          type: boolean
+          example: true
+          description: The final status of the number verify.
+    CreateCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
+        description:
+          type: string
+          example: "provide criteria description"
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/CriteriaIsAndBefore'
+        response:
+          $ref: '#/components/schemas/CriteriaResponse'
+    ReturnCreatedCriteria:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique id for each criteria
+        name:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
+        description:
+          type: string
+          example: "provide criteria description"
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/CriteriaIsAndBefore'
+        response:
+          $ref: '#/components/schemas/CriteriaResponse'
+    UpdateCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
+        description:
+          type: string
+          example: "modified criteria description"
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/Criteria'
+        response:
+          $ref: '#/components/schemas/Responses'
+    RetrieveAllCriteria:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique id for each criteria
+        name:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
+        description:
+          type: string
+          example: "provide criteria description"
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/CriteriaIsInAndAfter'
+        response:
+          $ref: '#/components/schemas/CriteriaResponse'
+    DeleteCriteria:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Criteria has been deleted..."
+    Criteria:
+      type: object
+      properties:
+        activeNumber:
+          $ref: '#/components/schemas/IsCriteriaItem'
+        numberType:
+          $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
+        operatorCountry:
+          $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
+    CriteriaIsAndBefore:
+      type: object
+      properties:
+        activeNumber:
+          $ref: '#/components/schemas/IsCriteriaItem'
+        numberType:
+          $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
+        operatorCountry:
+          $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
+        mccMnc:
+          $ref: '#/components/schemas/MccMncIsCriteriaItem'
+        disposableNumber:
+          $ref: '#/components/schemas/IsCriteriaItem'
+    CriteriaIsInAndAfter:
+      type: object
+      properties:
+        activeNumber:
+          $ref: '#/components/schemas/IsCriteriaItem'
+        numberType:
+          $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
+        mccMnc:
+          $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+        operatorCountry:
+          $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
+        disposableNumber:
+          $ref: '#/components/schemas/IsCriteriaItem'
+    IsCriteriaItem:
+      type: object
+      properties:
+        is:
+          type: boolean
+          example: true
+          description: criteria IS true
+    NumberTypeIsCriteriaItem:
+      type: object
+      properties:
+        is:
+          type: string
+          example: "mobile"
+          description: phone number type IS mobile.
+    NumberTypeIsInCriteriaItem:
+      type: object
+      properties:
+        is_in:
+          type: string
+          example: "mobile, fixed"
+          description: phone number type IS IN mobile or fixed.
+    OperatorCountryIsCriteriaItem:
+      type: object
+      properties:
+        is:
+          type: string
+          example: "DEU"
+          description: number IS in DEU.
+    OperatorCountryIsInCriteriaItem:
+      type: object
+      properties:
+        is_in:
+          type: string
+          example: "NOR,SWE,FIN"
+          description: number IS IN these countries.
+    MccMncIsCriteriaItem:
+      type: object
+      properties:
+        is:
+          type: string
+          example: "23202"
+          description: MCC and MNC IS equal to this specific value.
+    MccMncIsInCriteriaItem:
+      type: object
+      properties:
+        is_in:
+          type: string
+          example: "32452, 34567, 56748, 45628"
+          description: MCC and MNC IS IN this list.
+    IsAfterCriteriaItem:
+      type: object
+      properties:
+        is_after:
+          type: string
+          example: "2022-01-21"
+          description: provide date
+    IsBeforeCriteriaItem:
+      type: object
+      properties:
+        is_before:
+          type: string
+          example: "2022-01-21"
+          description: provide date
+    CriteriaResponse:
+      type: "array"
+      items:
+        type: "string"
+      example:
+        - "validNumberFormat"
+        - "numberType"
+        - "activeNumber"
+        - "operatorName"
+        - "operatorCountry"
+        - "mcc"
+        - "mnc"
+        - "disposableNumber"
+    Responses:
+      type: "array"
+      items:
+        type: "string"
+      example:
+        - "operatorName"
+        - "operatorCountry"
+        - "mcc"
+        - "mnc"
+    healthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "up"
+        updatedAt:
+          type: integer
+          example: 12321546464
+          description: Timestamp
+    versionResponse:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "v1"
+    error400:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "400 Bad Request"
+          description: Error of bad request
+        status:
+          type: integer
+          example: 400
+          description: HTTP error code
+        detail:
+          type: string
+          example: "Invalid country(ies) code(s) provided"
+          description: Error message of bad request
+    error401:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "No API key found in request"
+          description: Unauthorized
+    error403:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "You cannot consume this service"
+          description: Forbidden
+    error404:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Request path '/...' does not exist"
+          description: Not Found
+    error409:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Template with name <template_name> already exists"
+          description: Conflict
+    error500:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal Server Error"
+          description: when something fails within the service.
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: apiKey
+      in: header

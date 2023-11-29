@@ -4,11 +4,11 @@
 
 ### Features
 
-#### Phone Verification
+#### Verify
 
-Phone Verification service aims to determine validity, reachability and fraud risk of phone numbers entered into
-forms by users or auto dialers so that brands can ensure their customer records are accurate,
-improve conversion rates for customer outreach, and guard against bad actors.
+Verify service aims to determine validity and trustworthyness of phone numbers entered into
+forms by users or auto dialers so that brands can ensure their customer records are accurate
+and guard against bad actors.
 
 ## Version 1.0
 
