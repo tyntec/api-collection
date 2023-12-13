@@ -2894,6 +2894,14 @@ components:
           oneOf:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
+        messageSendTimeToLiveSeconds:
+          type: integer
+          required: false
+          description: If WhatsApp is unable to deliver a message to a user, we will continue attempting to deliver the message for a period of time known as a time-to-live. 
+                      Newly created authentication templates have a default time-to-live of 10 minutes. 
+                      To override the default time-to-live when creating an authentication template set this field to value between 60 and 600 seconds.
+                      Additionally, set -1 to set time-to-live to message default value. This will set time-to-live to 24 hours (or 30 days for On-Premises API).
+          example: 60
     NotificationTemplateRequest:
       type: array
       description: A request for a standard template (notification) without rich media components
@@ -3377,6 +3385,7 @@ components:
             status: REJECTED
             rejectionReason: For this example
             language: en
+            messageSendTimeToLiveSeconds: 120
             components:
               - type: BODY
                 text: Hello {{1}}! How is going?
@@ -3457,6 +3466,13 @@ components:
           example: 2020-03-15T23:28:34.442Z
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
+        messageSendTimeToLiveSeconds:
+          type: integer
+          description: If WhatsApp is unable to deliver a message to a user, we will continue attempting to deliver the message for a period of time known as a time-to-live.
+                        Newly created authentication templates have a default time-to-live of 10 minutes.
+                        Possible values for an authentication template is value between 60 and 600 seconds.
+                        Additionally, -1 is set time-to-live for message default value (24 hours Cloud API or 30 days for On-Premises API).
+          example: 120
     WhatsAppTemplateHeaderComponentResponse:
       type: object
       description: A header component of a template
