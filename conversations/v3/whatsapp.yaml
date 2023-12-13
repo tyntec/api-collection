@@ -3166,6 +3166,7 @@ components:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppCopyCodeOtpButton'
           - $ref: '#/components/schemas/WhatsAppOneTapOtpButton'
+          - $ref: '#/components/schemas/WhatsAppZeroTapOtpButton'
       minItems: 1
       maxItems: 1
     WhatsAppCopyCodeOtpButton:
@@ -3233,6 +3234,49 @@ components:
         signatureHash:
           type: string
           description: Your app signing key hash.
+    WhatsAppZeroTapOtpButton:
+      type: object
+      description: A zero-tap otp button. Only works for android at the moment, see https://developers.facebook.com/docs/whatsapp/business-management-api/authentication-templates#handshake
+      required:
+        - type
+        - otpType
+        - packageName
+        - signatureHash
+        - zeroTapTermsAccepted
+      properties:
+        type:
+          type: string
+          description: The type of this button, 'OTP'
+          enum:
+            - OTP
+          example: OTP
+        otpType:
+          type: string
+          description: The subtype of this button, 'ZERO_TAP'
+          enum:
+            - ZERO_TAP
+        text:
+          type: string
+          description: The caption of the fallback copy code button, if zero-tap is not available.
+          maxLength: 25
+          minLength: 1
+          example: Copy code.
+        autofillText:
+          type: string
+          description: The caption of the autofill button.
+          maxLength: 25
+          minLength: 1
+          example: Autofill
+        packageName:
+          type: string
+          description: Your android app's package name.
+        signatureHash:
+          type: string
+          description: Your app signing key hash.
+        zeroTapTermsAccepted:
+          type: boolean
+          description: Set to true to indicate that you understand and accept zero-tap authentication policy. 
+                       If set to false, the template will not be created as you need to accept zero-tap terms before creating zero-tap enabled message templates.
     WhatsAppCallToActionButtonsRequest:
       type: array
       description: Call to action buttons. At most one of each button type can be used.
