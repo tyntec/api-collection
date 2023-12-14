@@ -1552,6 +1552,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
     WhatsAppInteractiveFooterContent:
       type: object
       description: The footer of an interactive message
@@ -2346,6 +2347,53 @@ components:
             flowActionPayload:
               screen: DETAILS
               data: { "product_name": "name", "product_description": "description", "product_price": 100 }
+    WhatsAppInteractiveAddressMessage:
+      type: object
+      description: |
+        Interactive Address Message. Only available in India and Singapore
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `address`
+          enum:
+            - address
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressComponents'
+      example:
+        subType: address
+        components:
+          header:
+            type: text
+            text: Address header component
+          body:
+            type: text
+            text: Address body component
+          footer:
+            type: text
+            text: Address footer component
+          address:
+            country: IN
+            values:
+              name: Test name
+              phoneNumber: +91012345678
+              inPinCode: 123456
+              houseNumber: 21
+              floorNumber: 3
+              address: Some address in India
+              city: Mumbai
+            savedAddresses:
+              id: 1234
+              value:
+                name: Customer name
+                phoneNumber: +91012345678
+                inPinCode: 123456
+                address: Some address in India
+                city: Mumbai
+            validationErrors:
+              inPinCode: We could not locate this pin code.
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -2636,6 +2684,113 @@ components:
               type: object
               description: Optional input data for the first Screen of the Flow.
               example:  { "product_name": "name", "product_price": 100 }
+    WhatsAppInteractiveAddressComponents:
+      type: object
+      description: |
+        A interactive address message components. It contains optional header and footer text component and mandatory body text and main address component.
+      required:
+        - body
+        - address
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        address:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressContent'
+    WhatsAppInteractiveAddressContent:
+      type: object
+      description: |
+        The definition of a WhatsApp Address content
+      required:
+        - country
+      properties:
+        country:
+          type: string
+          description: Only available in India (IN) and Singapore (SG)
+          example: IN
+        values:
+          $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValue'
+        savedAddresses:
+          type: object
+          required:
+            - id
+            - value
+          description: Saved addresses previously associated with the user.
+          properties:
+            id:
+              type: string
+              description: Id of saved address
+              example: 12345
+            value:
+              $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValue'
+        validationErrors:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressValidationErrors'
+    WhatsAppInteractiveBasicAddressValue:
+      allOf:
+        - $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValuePayload'
+        - type: object
+          properties:
+            inPinCode:
+              type: string
+              description: String representation of pin code. Max size is 6 digits. Supported countries India
+              maxLength: 6
+            sgPostCode:
+              type: string
+              description: String representation of pin code. Max size is 6 digits. Supported countries Singapore
+              maxLength: 6
+    WhatsAppInteractiveAddressValidationErrors:
+      description: Validations errors that will be thrown in order to validate address fields.
+      allOf:
+        - $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValuePayload'
+        - type: object
+          properties:
+            inPinCode:
+              type: string
+              description: Error message for validating pin code
+            sgPostCode:
+              type: string
+              description: Error message for validating pin code
+    WhatsAppInteractiveBasicAddressValuePayload:
+      type: object
+      description: |
+        A fields that represent address value. Some fields are available just for specific country.
+      properties:
+        name:
+          type: string
+          description: Supported countries India, Singapore
+        phoneNumber:
+          type: string
+          description: Supported countries India, Singapore
+        houseNumber:
+          type: string
+          description: Supported countries India, Singapore
+        floorNumber:
+          type: string
+          description: Supported countries India, Singapore
+        towerNumber:
+          type: string
+          description: Supported countries India, Singapore
+        buildingName:
+          type: string
+          description: Supported countries India, Singapore
+        address:
+          type: string
+          description: Supported countries India, Singapore
+        landmarkArea:
+          type: string
+          description: Supported countries India
+        unitNumber:
+          type: string
+          description: Supported countries Singapore
+        city:
+          type: string
+          description: Supported countries India, Singapore
+        state:
+          type: string
+          description: Supported countries India
     #
     # Profile
     #
