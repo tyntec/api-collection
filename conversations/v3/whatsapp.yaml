@@ -2894,6 +2894,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
+            - $ref: '#/components/schemas/CarouselTemplateRequest'
         messageSendTimeToLiveSeconds:
           type: integer
           required: false
@@ -2937,6 +2938,13 @@ components:
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateButtonComponentRequest'
       minItems: 1
+    CarouselTemplateRequest:
+      type: array
+      description: A carousel template definition. Must contain text body and carousel component
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateCarouselComponentRequest'
     WhatsAppTemplateHeaderComponentRequest:
       type: object
       description: A header component of a template
@@ -3394,6 +3402,71 @@ components:
           type: string
           description: Required if `flowAction is navigate`. The unique ID of the Screen in the Flow.
           example: details
+    WhatsAppTemplateCarouselComponentRequest:
+      type: object
+      description: A carousel component of a template
+      required:
+        - type
+        - cards
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - CAROUSEL
+        cards:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateCards'
+    WhatsAppTemplateCards:
+      type: array
+      description: Carousel cards definition. Must contain at least one card component, maximum 10.
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateCardComponent'
+      minItems: 1
+      maxItems: 10
+    WhatsAppTemplateCardComponent:
+      type: object
+      description: A template card object. Must have media header (image or video), text body, and buttons components. Footer component is not allowed. 
+                   Minimum one button, maximum two are allowed. Buttons can be the same or a mix of type quickly_reply, url or phone_numbers are allowed.
+                   Media header format and button types must be the same across all cards that make up a carousel template.
+      required:
+        - components
+      properties:
+        components:
+          description: Components defining the carousel card.
+          oneOf:
+            - $ref: '#/components/schemas/CarouselCardComponents'
+    CarouselCardComponents:
+      type: array
+      description: A carousel card components definition. Must have media header (image or video), text body, and buttons components. Footer component is not allowed.
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppCarouselTemplateButtonComponentRequest'
+      minItems: 3
+      maxItems: 3
+    WhatsAppCarouselTemplateButtonComponentRequest:
+      type: object
+      description: A button component of a carousel template. Allowed buttons are quick_reply, url or phone_numbers. 
+                  Must have at least one button, maximum two.
+      required:
+        - type
+        - buttons
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - BUTTONS
+        buttons:
+          anyOf:
+            - $ref: '#/components/schemas/WhatsAppQuickReplyButton'
+            - $ref: '#/components/schemas/WhatsAppURLButton'
+            - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
+          minItems: 1
+          maxItems: 2
     WhatsAppTemplates:
       type: array
       description: A list of WhatsApp templates
