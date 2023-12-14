@@ -1898,6 +1898,12 @@ components:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
             - $ref: '#/components/schemas/WhatsAppFlowButtons'
+        carousel:
+          description: List od carousel cards. Carousel must have at least one card, and maximum 10.
+          minItems: 1
+          maxItems: 10
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppCarouselComponent'
     WhatsAppTemplateTextHeaderComponent:
       type: object
       required:
@@ -2014,6 +2020,40 @@ components:
           example:
             - John Doe
             - Order ID 123
+    WhatsAppCarouselComponent:
+      type: object
+      description: Carousel card definition
+      required:
+        - cardIndex
+        - components
+      properties:
+        cardIndex:
+          type: integer
+          description: order in which card appears within the card carousel. 0 indicates first card, 1 indicates second...
+          example: 0
+        components:
+          $ref: '#/components/schemas/WhatsAppCarouselTemplateComponents'
+    WhatsAppCarouselTemplateComponents:
+      type: object
+      properties:
+        header:
+          type: array
+          required: true
+          maxItems: 1
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
+              - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
+        body:
+          type: array
+          minItems: 0
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+        button:
+          anyOf:
+            - $ref: '#/components/schemas/QuickReplyButtonComponent'
+            - $ref: '#/components/schemas/UrlButtonComponent'
     WhatsAppQuickReplyButtons:
       type: array
       minItems: 0
@@ -2945,6 +2985,76 @@ components:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateCarouselComponentRequest'
+      example:
+          [
+            {
+              type: "BODY",
+              text: "Some bubble text"
+            },
+            {
+              type: "CAROUSEL",
+              cards: [
+                {
+                  components: [
+                    {
+                      type: "HEADER",
+                      format: "IMAGE",
+                      example: {
+                        url: "image example url card1"
+                      }
+                    },
+                    {
+                      type: "BODY",
+                      text: "Some body card1 text"
+                    },
+                    {
+                      type: "BUTTONS",
+                      buttons: [
+                        {
+                          type: "QUICK_REPLY",
+                          text: "Send more like this card1"
+                        },
+                        {
+                          type: "URL",
+                          text: "Buy now card1",
+                          url: "some url"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  components: [
+                    {
+                      type: "HEADER",
+                      format: "IMAGE",
+                      example: {
+                        url: "image example url card2"
+                      }
+                    },
+                    {
+                      type: "BODY",
+                      text: "Some body card2 text"
+                    },
+                    {
+                      type: "BUTTONS",
+                      buttons: [
+                        {
+                          type: "QUICK_REPLY",
+                          text: "Send more like this card2"
+                        },
+                        {
+                          type: "URL",
+                          text: "Buy now card2",
+                          url: "some url"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
     WhatsAppTemplateHeaderComponentRequest:
       type: object
       description: A header component of a template
