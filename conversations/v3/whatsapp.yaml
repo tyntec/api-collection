@@ -1900,7 +1900,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
             - $ref: '#/components/schemas/WhatsAppFlowButtons'
         carousel:
-          description: List od carousel cards. Carousel must have at least one card, and maximum 10.
+          description: List of carousel cards. Carousel must have at least one card, and maximum 10.
           minItems: 1
           maxItems: 10
           oneOf:
