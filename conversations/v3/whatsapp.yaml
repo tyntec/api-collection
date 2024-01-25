@@ -1552,6 +1552,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
     WhatsAppInteractiveFooterContent:
       type: object
       description: The footer of an interactive message
@@ -1898,6 +1899,12 @@ components:
             - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
             - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
             - $ref: '#/components/schemas/WhatsAppFlowButtons'
+        carousel:
+          description: List of carousel cards. Carousel must have at least one card, and maximum 10.
+          minItems: 1
+          maxItems: 10
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppCarouselComponent'
     WhatsAppTemplateTextHeaderComponent:
       type: object
       required:
@@ -2014,6 +2021,40 @@ components:
           example:
             - John Doe
             - Order ID 123
+    WhatsAppCarouselComponent:
+      type: object
+      description: Carousel card definition
+      required:
+        - cardIndex
+        - components
+      properties:
+        cardIndex:
+          type: integer
+          description: order in which card appears within the card carousel. 0 indicates first card, 1 indicates second...
+          example: 0
+        components:
+          $ref: '#/components/schemas/WhatsAppCarouselTemplateComponents'
+    WhatsAppCarouselTemplateComponents:
+      type: object
+      properties:
+        header:
+          type: array
+          required: true
+          maxItems: 1
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/WhatsAppTemplateImageHeaderComponent'
+              - $ref: '#/components/schemas/WhatsAppTemplateVideoHeaderComponent'
+        body:
+          type: array
+          minItems: 0
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+        button:
+          anyOf:
+            - $ref: '#/components/schemas/QuickReplyButtonComponent'
+            - $ref: '#/components/schemas/UrlButtonComponent'
     WhatsAppQuickReplyButtons:
       type: array
       minItems: 0
@@ -2306,6 +2347,53 @@ components:
             flowActionPayload:
               screen: DETAILS
               data: { "product_name": "name", "product_description": "description", "product_price": 100 }
+    WhatsAppInteractiveAddressMessage:
+      type: object
+      description: |
+        Interactive Address Message. Only available in India and Singapore
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `address`
+          enum:
+            - address
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressComponents'
+      example:
+        subType: address
+        components:
+          header:
+            type: text
+            text: Address header component
+          body:
+            type: text
+            text: Address body component
+          footer:
+            type: text
+            text: Address footer component
+          address:
+            country: IN
+            values:
+              name: Test name
+              phoneNumber: +91012345678
+              inPinCode: 123456
+              houseNumber: 21
+              floorNumber: 3
+              address: Some address in India
+              city: Mumbai
+            savedAddresses:
+              id: 1234
+              value:
+                name: Customer name
+                phoneNumber: +91012345678
+                inPinCode: 123456
+                address: Some address in India
+                city: Mumbai
+            validationErrors:
+              inPinCode: We could not locate this pin code.
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -2596,6 +2684,113 @@ components:
               type: object
               description: Optional input data for the first Screen of the Flow.
               example:  { "product_name": "name", "product_price": 100 }
+    WhatsAppInteractiveAddressComponents:
+      type: object
+      description: |
+        A interactive address message components. It contains optional header and footer text component and mandatory body text and main address component.
+      required:
+        - body
+        - address
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        address:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressContent'
+    WhatsAppInteractiveAddressContent:
+      type: object
+      description: |
+        The definition of a WhatsApp Address content
+      required:
+        - country
+      properties:
+        country:
+          type: string
+          description: Only available in India (IN) and Singapore (SG)
+          example: IN
+        values:
+          $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValue'
+        savedAddresses:
+          type: object
+          required:
+            - id
+            - value
+          description: Saved addresses previously associated with the user.
+          properties:
+            id:
+              type: string
+              description: Id of saved address
+              example: 12345
+            value:
+              $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValue'
+        validationErrors:
+          $ref: '#/components/schemas/WhatsAppInteractiveAddressValidationErrors'
+    WhatsAppInteractiveBasicAddressValue:
+      allOf:
+        - $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValuePayload'
+        - type: object
+          properties:
+            inPinCode:
+              type: string
+              description: String representation of pin code. Max size is 6 digits. Supported countries India
+              maxLength: 6
+            sgPostCode:
+              type: string
+              description: String representation of pin code. Max size is 6 digits. Supported countries Singapore
+              maxLength: 6
+    WhatsAppInteractiveAddressValidationErrors:
+      description: Validations errors that will be thrown in order to validate address fields.
+      allOf:
+        - $ref: '#/components/schemas/WhatsAppInteractiveBasicAddressValuePayload'
+        - type: object
+          properties:
+            inPinCode:
+              type: string
+              description: Error message for validating pin code
+            sgPostCode:
+              type: string
+              description: Error message for validating pin code
+    WhatsAppInteractiveBasicAddressValuePayload:
+      type: object
+      description: |
+        A fields that represent address value. Some fields are available just for specific country.
+      properties:
+        name:
+          type: string
+          description: Supported countries India, Singapore
+        phoneNumber:
+          type: string
+          description: Supported countries India, Singapore
+        houseNumber:
+          type: string
+          description: Supported countries India, Singapore
+        floorNumber:
+          type: string
+          description: Supported countries India, Singapore
+        towerNumber:
+          type: string
+          description: Supported countries India, Singapore
+        buildingName:
+          type: string
+          description: Supported countries India, Singapore
+        address:
+          type: string
+          description: Supported countries India, Singapore
+        landmarkArea:
+          type: string
+          description: Supported countries India
+        unitNumber:
+          type: string
+          description: Supported countries Singapore
+        city:
+          type: string
+          description: Supported countries India, Singapore
+        state:
+          type: string
+          description: Supported countries India
     #
     # Profile
     #
@@ -2894,6 +3089,15 @@ components:
           oneOf:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
+            - $ref: '#/components/schemas/CarouselTemplateRequest'
+        messageSendTimeToLiveSeconds:
+          type: integer
+          required: false
+          description: If WhatsApp is unable to deliver a message to a user, we will continue attempting to deliver the message for a period of time known as a time-to-live. 
+                      Newly created authentication templates have a default time-to-live of 10 minutes. 
+                      To override the default time-to-live when creating an authentication template set this field to value between 60 and 600 seconds.
+                      Additionally, set -1 to set time-to-live to message default value. This will set time-to-live to 24 hours (or 30 days for On-Premises API).
+          example: 60
     NotificationTemplateRequest:
       type: array
       description: A request for a standard template (notification) without rich media components
@@ -2929,6 +3133,83 @@ components:
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateButtonComponentRequest'
       minItems: 1
+    CarouselTemplateRequest:
+      type: array
+      description: A carousel template definition. Must contain text body and carousel component
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateCarouselComponentRequest'
+      example:
+          [
+            {
+              type: "BODY",
+              text: "Some bubble text"
+            },
+            {
+              type: "CAROUSEL",
+              cards: [
+                {
+                  components: [
+                    {
+                      type: "HEADER",
+                      format: "IMAGE",
+                      example: {
+                        url: "image example url card1"
+                      }
+                    },
+                    {
+                      type: "BODY",
+                      text: "Some body card1 text"
+                    },
+                    {
+                      type: "BUTTONS",
+                      buttons: [
+                        {
+                          type: "QUICK_REPLY",
+                          text: "Send more like this card1"
+                        },
+                        {
+                          type: "URL",
+                          text: "Buy now card1",
+                          url: "some url"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  components: [
+                    {
+                      type: "HEADER",
+                      format: "IMAGE",
+                      example: {
+                        url: "image example url card2"
+                      }
+                    },
+                    {
+                      type: "BODY",
+                      text: "Some body card2 text"
+                    },
+                    {
+                      type: "BUTTONS",
+                      buttons: [
+                        {
+                          type: "QUICK_REPLY",
+                          text: "Send more like this card2"
+                        },
+                        {
+                          type: "URL",
+                          text: "Buy now card2",
+                          url: "some url"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
     WhatsAppTemplateHeaderComponentRequest:
       type: object
       description: A header component of a template
@@ -3158,6 +3439,7 @@ components:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppCopyCodeOtpButton'
           - $ref: '#/components/schemas/WhatsAppOneTapOtpButton'
+          - $ref: '#/components/schemas/WhatsAppZeroTapOtpButton'
       minItems: 1
       maxItems: 1
     WhatsAppCopyCodeOtpButton:
@@ -3225,6 +3507,49 @@ components:
         signatureHash:
           type: string
           description: Your app signing key hash.
+    WhatsAppZeroTapOtpButton:
+      type: object
+      description: A zero-tap otp button. Only works for android at the moment, see https://developers.facebook.com/docs/whatsapp/business-management-api/authentication-templates#handshake
+      required:
+        - type
+        - otpType
+        - packageName
+        - signatureHash
+        - zeroTapTermsAccepted
+      properties:
+        type:
+          type: string
+          description: The type of this button, 'OTP'
+          enum:
+            - OTP
+          example: OTP
+        otpType:
+          type: string
+          description: The subtype of this button, 'ZERO_TAP'
+          enum:
+            - ZERO_TAP
+        text:
+          type: string
+          description: The caption of the fallback copy code button, if zero-tap is not available.
+          maxLength: 25
+          minLength: 1
+          example: Copy code.
+        autofillText:
+          type: string
+          description: The caption of the autofill button.
+          maxLength: 25
+          minLength: 1
+          example: Autofill
+        packageName:
+          type: string
+          description: Your android app's package name.
+        signatureHash:
+          type: string
+          description: Your app signing key hash.
+        zeroTapTermsAccepted:
+          type: boolean
+          description: Set to true to indicate that you understand and accept zero-tap authentication policy. 
+                       If set to false, the template will not be created as you need to accept zero-tap terms before creating zero-tap enabled message templates.
     WhatsAppCallToActionButtonsRequest:
       type: array
       description: Call to action buttons. At most one of each button type can be used.
@@ -3342,6 +3667,71 @@ components:
           type: string
           description: Required if `flowAction is navigate`. The unique ID of the Screen in the Flow.
           example: details
+    WhatsAppTemplateCarouselComponentRequest:
+      type: object
+      description: A carousel component of a template
+      required:
+        - type
+        - cards
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - CAROUSEL
+        cards:
+          oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateCards'
+    WhatsAppTemplateCards:
+      type: array
+      description: Carousel cards definition. Must contain at least one card component, maximum 10.
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateCardComponent'
+      minItems: 1
+      maxItems: 10
+    WhatsAppTemplateCardComponent:
+      type: object
+      description: A template card object. Must have media header (image or video), text body, and buttons components. Footer component is not allowed. 
+                   Minimum one button, maximum two are allowed. Buttons can be the same or a mix of type quickly_reply, url or phone_numbers are allowed.
+                   Media header format and button types must be the same across all cards that make up a carousel template.
+      required:
+        - components
+      properties:
+        components:
+          description: Components defining the carousel card.
+          oneOf:
+            - $ref: '#/components/schemas/CarouselCardComponents'
+    CarouselCardComponents:
+      type: array
+      description: A carousel card components definition. Must have media header (image or video), text body, and buttons components. Footer component is not allowed.
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateMediaHeaderComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppCarouselTemplateButtonComponentRequest'
+      minItems: 3
+      maxItems: 3
+    WhatsAppCarouselTemplateButtonComponentRequest:
+      type: object
+      description: A button component of a carousel template. Allowed buttons are quick_reply, url or phone_numbers. 
+                  Must have at least one button, maximum two.
+      required:
+        - type
+        - buttons
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+            - BUTTONS
+        buttons:
+          anyOf:
+            - $ref: '#/components/schemas/WhatsAppQuickReplyButton'
+            - $ref: '#/components/schemas/WhatsAppURLButton'
+            - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
+          minItems: 1
+          maxItems: 2
     WhatsAppTemplates:
       type: array
       description: A list of WhatsApp templates
@@ -3377,6 +3767,7 @@ components:
             status: REJECTED
             rejectionReason: For this example
             language: en
+            messageSendTimeToLiveSeconds: 120
             components:
               - type: BODY
                 text: Hello {{1}}! How is going?
@@ -3457,6 +3848,13 @@ components:
           example: 2020-03-15T23:28:34.442Z
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
+        messageSendTimeToLiveSeconds:
+          type: integer
+          description: If WhatsApp is unable to deliver a message to a user, we will continue attempting to deliver the message for a period of time known as a time-to-live.
+                        Newly created authentication templates have a default time-to-live of 10 minutes.
+                        Possible values for an authentication template is value between 60 and 600 seconds.
+                        Additionally, -1 is set time-to-live for message default value (24 hours Cloud API or 30 days for On-Premises API).
+          example: 120
     WhatsAppTemplateHeaderComponentResponse:
       type: object
       description: A header component of a template

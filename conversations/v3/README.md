@@ -1,5 +1,13 @@
 # Release notes
 
+## 3.15
+
+### Changes
+
+#### Added support for new whatsapp features
+
+Added support for new whatsapp features: Zero tap authentication template, Authentication template time-to-live, Carousel template message, Interactive address message
+
 ## 3.14
 
 ### Changes
