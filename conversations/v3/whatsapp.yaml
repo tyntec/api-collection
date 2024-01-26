@@ -73,6 +73,10 @@ tags:
   - name: "Callback configuration"
     description: |
       In this section, we guide you on how to configure the callbacks on a per-channel basis.
+  - name: "Flows management"
+    description: |
+      Flows management enables you to interact with the flows defined for your WhatsApp account.
+      The Flows API enables you to perform a variety of operations with Flows, like create flows, update flows, get flows, publish...
 
 paths:
   /messages:
@@ -759,6 +763,257 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+    get:
+      operationId: listFlowsOfWhatsAppAccount
+      summary: List flows
+      tags:
+        - "Flows management"
+      description: Lists all flows of your WhatsApp account, including flows in draft and deprecated state
+      responses:
+        200:
+          description: Returned the flows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppFlows'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: createFlowMetadata
+      summary: Create basic flow data
+      tags:
+        - "Flows management"
+      requestBody:
+        description: The flow basic data you would like to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFlowRequest'
+      responses:
+        201:
+          $ref: '#/components/responses/CreateFlowResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows/{whatsapp-flow-id}:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/WhatsAppFlowId'
+    get:
+      operationId: flowDetails
+      summary: Flow details
+      tags:
+        - "Flows management"
+      description: This request will return a single Flow's details.
+      responses:
+        200:
+          description: Returned the flow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppFlowDetail'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateFlowMetadata
+      summary: Updating Flow's Metadata
+      tags:
+        - "Flows management"
+      requestBody:
+        description: After you have created your Flow, you can update the name or categories using the update request.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlowRequest'
+      responses:
+        200:
+          description: Successfully updated flow info
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: deleteFlow
+      summary: Delete flow
+      tags:
+        - "Flows management"
+      description: Flow can be deleted just when it is in draft state.
+      responses:
+        200:
+          description: Successfully deleted flow
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows/{whatsapp-flow-id}/assets:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/WhatsAppFlowId'
+    get:
+      operationId: getFlowAssetList
+      summary: Get assets of flow
+      tags:
+        - "Flows management"
+      description: This request will return list of assets (json) attached to the flow
+      responses:
+        200:
+          description: Returned the asset list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppFlowAssets'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: addFlowAsset
+      summary: To update Flow JSON for a specified Flow, use this request. Add file as application/json. Do not use form-data.
+      tags:
+        - "Flows management"
+      requestBody:
+        description: Add file as application/json. Do not use form-data.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: Successfully add json asset
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  validationErrors:
+                    type: array
+                    description: The list of asset validation errors. List is empty if the asset has no errors.
+                    items:
+                      $ref: '#/components/schemas/FlowValidationError'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows/{whatsapp-flow-id}/preview:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/WhatsAppFlowId'
+      - $ref: '#/components/parameters/WhatsAppFlowPreviewInvalidate'
+    get:
+      operationId: getFlowPreview
+      summary: Get preview link of the flow
+      tags:
+        - "Flows management"
+      description: In order to visualize the Flows created, you can generate a web preview URL with this request. The preview URL is public and can be shared with different stakeholders to visualize the Flow.
+      responses:
+        200:
+          description: Returned the preview link and expire date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppFlowPreview'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows/{whatsapp-flow-id}/publish:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/WhatsAppFlowId'
+    post:
+      operationId: publishFlow
+      summary: This request updates the status of the Flow to "PUBLISHED". This action is not reversible. The Flow and its assets become immutable once published.
+      tags:
+        - "Flows management"
+      responses:
+        200:
+          description: Successfully published flow
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/flows/{whatsapp-flow-id}/deprecate:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/WhatsAppFlowId'
+    post:
+      operationId: deprecateFlow
+      summary: Once a Flow is published, it cannot be modified or deleted, but can be marked as deprecated.
+      tags:
+        - "Flows management"
+      responses:
+        200:
+          description: Successfully deprecated flow
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -829,6 +1084,22 @@ components:
         type: string
         pattern: "[a-z_0-9]+"
       example: welcome_message
+    WhatsAppFlowId:
+      name: whatsapp-flow-id
+      in: path
+      required: true
+      description: WhatsApp flow ID
+      schema:
+        type: string
+      example: 12345678901234
+    WhatsAppFlowPreviewInvalidate:
+      name: invalidate
+      in: query
+      required: false
+      description: If invalidate is set to true, a new link will be generated, with new expire data. Otherwise, same one will be used. Default value is false.
+      schema:
+        type: boolean
+      example: ?invalidate=true
   responses:
     MessageResponse:
       description: The response after the server has accepted the request
@@ -935,6 +1206,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/WhatsAppChannelResponse'
+    CreateFlowResponse:
+      description: The WhatsApp phone number configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateFlow'
   examples:
     ## Messaging section
 
@@ -1381,6 +1658,37 @@ components:
             - $ref: '#/components/schemas/WhatsAppLocationContent'
             - $ref: '#/components/schemas/WhatsAppContactsContent'
             - $ref: '#/components/schemas/WhatsAppTemplateContent'
+    CreateFlowRequest:
+      type: object
+      description: The flow data you would like to create
+      required:
+        - name
+        - categories
+      properties:
+        name:
+          type: string
+          description: Flow name
+          example: Test flow
+        categories:
+          type: array
+          description: A list of Flow categories. Flow must have at least one category
+          items:
+            $ref: '#/components/schemas/FlowCategory'
+          example: ["OTHER"]
+    UpdateFlowRequest:
+      type: object
+      description: Flow data you would like to change
+      properties:
+        name:
+          type: string
+          description: Flow name
+          example: Test flow
+        categories:
+          type: array
+          description: A list of Flow categories. Flow must have at least one category
+          items:
+            $ref: '#/components/schemas/FlowCategory'
+          example: ["OTHER"]
     #
     # Content types
     #
@@ -4061,3 +4369,196 @@ components:
         score: RED
         reasons:
           - Users are choosing "didn't sign up" as a reason for blocking this phone number. Businesses must obtain opt-in before sending notifications. Please review your opt-in flow(s) and see our Business Policy for more detail.
+    WhatsAppFlows:
+      type: array
+      description: A list of WhatsApp flows
+      items:
+        $ref: '#/components/schemas/WhatsAppBasicFlow'
+    WhatsAppBasicFlow:
+      type: object
+      description: A WhatsApp basic flow info
+      properties:
+        id:
+          type: string
+          description: The ID of the WhatsApp Flow.
+          example: 1234567890123456
+        name:
+          type: string
+          description: The name of the flow
+          example: Test flow
+        status:
+          type: string
+          description: Status of the flow
+          enum:
+            - DRAFT
+            - DEPRECATED
+            - PUBLISHED
+          example: DRAFT
+        categories:
+          type: array
+          description: A list of Flow categories. Flow must have at least one category
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/FlowCategory'
+          example:
+            error: ["SIGN_UP", "OTHER"]
+        validationErrors:
+          type: array
+          description: The list of flow validation errors. List is empty if the flow has no errors.
+          items:
+            $ref: '#/components/schemas/FlowValidationError'
+          example:
+            error: INVALID_PROPERTY
+            errorType: JSON_SCHEMA_ERROR
+            message: The property 'initial-text' cannot be specified
+            lineStart: 46
+            lineEnd: 46
+            columnStart: 17
+            columnEnd: 30
+      example:
+        id: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
+        name: swagger_test
+        status: MARKETING
+        categories:
+          - OTHER
+        validationErrors: []
+    WhatsAppFlowDetail:
+      type: object
+      description: A WhatsApp flow detail info
+      properties:
+        id:
+          type: string
+          description: The ID of the WhatsApp Flow.
+          example: 1234567890123456
+        name:
+          type: string
+          description: The name of the flow
+          example: Test flow
+        status:
+          type: string
+          description: Status of the flow
+          enum:
+            - DRAFT
+            - DEPRECATED
+            - PUBLISHED
+          example: DRAFT
+        categories:
+          type: array
+          description: A list of Flow categories. Flow must have at least one category
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/FlowCategory'
+          example:
+            error: ["SIGN_UP", "OTHER"]
+        validationErrors:
+          type: array
+          description: The list of flow validation errors. List is empty if the flow has no errors.
+          items:
+            $ref: '#/components/schemas/FlowValidationError'
+          example:
+            error: INVALID_PROPERTY
+            errorType: JSON_SCHEMA_ERROR
+            message: The property 'initial-text' cannot be specified
+            lineStart: 46
+            lineEnd: 46
+            columnStart: 17
+            columnEnd: 30
+        jsonVersion:
+          type: string
+          description: The version specified by the developer in the Flow JSON asset uploaded.
+          example: 3.0
+        dataApiVersion:
+          type: string
+          description: The version of the Data API specified by the developer in the Flow JSON asset uploaded. Only for Flows with an Endpoint.
+          example: 3.0
+        endpointUri:
+          type: string
+          description: The URL of the WA Flow Endpoint specified by the developer via API or in the Builder UI.
+          example: Test flow
+        preview:
+          $ref: '#/components/schemas/WhatsAppFlowPreview'
+    FlowValidationError:
+      type: object
+      description: A validation error of a flow
+      properties:
+        error:
+          type: string
+          description: Error name of the flow
+          example: INVALID_PROPERTY
+        errorType:
+          type: string
+          description: Type of the error
+          example: JSON_SCHEMA_ERROR
+        message:
+          type: string
+          description: Error message
+          example: The property 'initial-text' cannot be specified
+        lineStart:
+          type: string
+          description: The line where error starts, in json flow
+          example: 46
+        lineEnd:
+          type: string
+          description: The line where error ends, in json flow
+          example: 46
+        columnStart:
+          type: string
+          description: The column where error starts, in json flow
+          example: 17
+        columnEnd:
+          type: string
+          description: The column where error ends, in json flow
+          example: 30
+    FlowCategory:
+      type: string
+      description: Flow's category
+      enum:
+        - SIGN_UP
+        - SIGN_IN
+        - APPOINTMENT_BOOKING
+        - LEAD_GENERATION
+        - CONTACT_US
+        - CUSTOMER_SUPPORT
+        - SURVEY
+        - OTHER
+    WhatsAppFlowPreview:
+      type: object
+      description: A WhatsApp flow preview link to visualize the flow and its expiry time.
+      properties:
+        previewUrl:
+          type: string
+          description: Link for the preview page. This link is public, but it will expire in 30 days, or if you call the API with invalidate=true which will generate a new link.
+          example: https://previewLink.com/flows/1234567890123/preview/?token=bf747eb7
+        expiresAt:
+          type: string
+          description: Time when the link will expire and the developer needs to call the API again to get a new link (30 days from link creation).
+          example: 2024-02-21T15:15:32+0000
+    CreateFlow:
+      type: object
+      description: Create flow response
+      properties:
+        flowId:
+          type: string
+          description: The ID of the WhatsApp Flow.
+          example: 1234567890123456
+    WhatsAppFlowAssets:
+      type: array
+      description: A list of Flow assets
+      items:
+        $ref: '#/components/schemas/WhatsFlowAsset'
+    WhatsFlowAsset:
+      type: object
+      description: A WhatsApp basic flow info
+      properties:
+        name:
+          type: string
+          description: Asset name
+          example: flow.json
+        assetType:
+          type: string
+          description: Asset type. Always FLOW_JSON
+          example: FLOW_JSON
+        downloadUrl:
+          type: string
+          description: The url to download json asset
+          example: https://scontent.xx.fbcdn.net/m1/v/test
