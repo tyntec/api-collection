@@ -887,7 +887,7 @@ paths:
       - $ref: '#/components/parameters/WhatsAppFlowId'
     get:
       operationId: getFlowAssetList
-      summary: Get assets of flow
+      summary: Get assets of the flow
       tags:
         - "Flows management"
       description: This request will return list of assets (json) attached to the flow
@@ -913,8 +913,11 @@ paths:
         content:
           application/json:
             schema:
-              type: string
-              format: binary
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
       responses:
         200:
           description: Successfully add json asset
@@ -1096,7 +1099,7 @@ components:
       name: invalidate
       in: query
       required: false
-      description: If invalidate is set to true, a new link will be generated, with new expire data. Otherwise, same one will be used. Default value is false.
+      description: If invalidate is set to true, a new link will be generated, with new expire date. Otherwise, same one will be used. Default value is false.
       schema:
         type: boolean
       example: ?invalidate=true
@@ -4416,9 +4419,9 @@ components:
             columnStart: 17
             columnEnd: 30
       example:
-        id: 5637b8a7-51e1-47be-ad0b-b242453dcc1b
-        name: swagger_test
-        status: MARKETING
+        id: 12345678901234
+        name: Flow test
+        status: DRAFT
         categories:
           - OTHER
         validationErrors: []
@@ -4448,8 +4451,7 @@ components:
           items:
             anyOf:
               - $ref: '#/components/schemas/FlowCategory'
-          example:
-            error: ["SIGN_UP", "OTHER"]
+          example: ["SIGN_UP", "OTHER"]
         validationErrors:
           type: array
           description: The list of flow validation errors. List is empty if the flow has no errors.
