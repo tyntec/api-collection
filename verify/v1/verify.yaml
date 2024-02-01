@@ -75,6 +75,7 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
+        - message (only in case of unverified response due to validNumberFormat default criterion (either number format is invalid (MOBILE, FIXED) or number format is not supported (VOIP, PREMIUM etc.))
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
@@ -268,6 +269,7 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
+        - message (only in case of unverified response due to validNumberFormat default criterion (either number format is invalid (MOBILE, FIXED) or number format is not supported (VOIP, PREMIUM etc.))
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
