@@ -1,5 +1,13 @@
 # Release notes
 
+## 3.16
+
+### Changes
+
+#### Added support for the Flows API
+
+The Flows API enables you to perform a variety of operations with Whatsapp Flows.
+
 ## 3.15
 
 ### Changes
