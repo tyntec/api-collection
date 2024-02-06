@@ -810,7 +810,7 @@ components:
           description: Not Found
         status:
           type: integer
-          example: 405
+          example: 404
           description: HTTP error code
     error500:
       type: object
