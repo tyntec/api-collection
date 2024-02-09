@@ -75,7 +75,6 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
-        - message (only in case of unverified response due to validNumberFormat default criterion (either number format is invalid (MOBILE, FIXED) or number format is not supported (VOIP, PREMIUM etc.))
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
@@ -269,7 +268,6 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
-        - message (only in case of unverified response due to validNumberFormat default criterion (either number format is invalid (MOBILE, FIXED) or number format is not supported (VOIP, PREMIUM etc.))
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
@@ -298,7 +296,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateCriteria'
+                $ref: '#/components/schemas/ReturnUpdatedCriteria'
         400:
           description: Bad request / Invalid request parameters
           content:
@@ -569,31 +567,20 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          type: array
-          items:
-            $ref: '#/components/schemas/CriteriaIsAndBefore'
+          $ref: '#/components/schemas/CriteriaIsAndBefore'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     ReturnCreatedCriteria:
       type: object
       properties:
-        id:
-          type: string
-          example: "4457068c-194d-4f72-9550-13b81ec054a9"
-          description: Unique id for each criteria
-        name:
+        template:
           type: string
           example: "verify-criteria"
           description: Unique criteria name
-        description:
+        message:
           type: string
-          example: "provide criteria description"
-        criteria:
-          type: array
-          items:
-            $ref: '#/components/schemas/CriteriaIsAndBefore'
-        response:
-          $ref: '#/components/schemas/CriteriaResponse'
+          example: "Created"
+          description: template creation status
     UpdateCriteria:
       type: object
       properties:
@@ -605,11 +592,20 @@ components:
           type: string
           example: "modified criteria description"
         criteria:
-          type: array
-          items:
-            $ref: '#/components/schemas/Criteria'
+          $ref: '#/components/schemas/Criteria'
         response:
           $ref: '#/components/schemas/Responses'
+    ReturnUpdatedCriteria:
+      type: object
+      properties:
+        template:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
+        message:
+          type: string
+          example: "Updated"
+          description: template update status
     RetrieveAllCriteria:
       type: object
       properties:
@@ -625,115 +621,113 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          type: array
-          items:
-            $ref: '#/components/schemas/CriteriaIsInAndAfter'
+          $ref: '#/components/schemas/CriteriaIsInAndAfter'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     DeleteCriteria:
       type: object
       properties:
+        template:
+          type: string
+          example: "verify-criteria"
+          description: Unique criteria name
         message:
           type: string
-          example: "Criteria has been deleted..."
+          example: "Deleted"
+          description: template delete status
     Criteria:
-      type: object
-      properties:
-        activeNumber:
-          $ref: '#/components/schemas/IsCriteriaItem'
-        numberType:
-          $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
-        operatorCountry:
-          $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
+          - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
     CriteriaIsAndBefore:
-      type: object
-      properties:
-        activeNumber:
-          $ref: '#/components/schemas/IsCriteriaItem'
-        numberType:
-          $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
-        operatorCountry:
-          $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
-        mccMnc:
-          $ref: '#/components/schemas/MccMncIsCriteriaItem'
-        disposableNumber:
-          $ref: '#/components/schemas/IsCriteriaItem'
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
+          - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
+          - $ref: '#/components/schemas/MccMncIsCriteriaItem'
     CriteriaIsInAndAfter:
-      type: object
-      properties:
-        activeNumber:
-          $ref: '#/components/schemas/IsCriteriaItem'
-        numberType:
-          $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
-        mccMnc:
-          $ref: '#/components/schemas/MccMncIsInCriteriaItem'
-        operatorCountry:
-          $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
-        disposableNumber:
-          $ref: '#/components/schemas/IsCriteriaItem'
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
+          - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+          - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
     IsCriteriaItem:
       type: object
       properties:
-        is:
-          type: boolean
-          example: true
-          description: criteria IS true
+        activeNumber:
+          type: object
+          properties:
+            is:
+              type: boolean
+              example: true
+              description: criteria IS true
     NumberTypeIsCriteriaItem:
       type: object
       properties:
-        is:
-          type: string
-          example: "mobile"
-          description: phone number type IS mobile.
+        numberType:
+          type: object
+          properties:
+            is:
+              type: string
+              example: "mobile"
+              description: phone number type IS mobile.
     NumberTypeIsInCriteriaItem:
       type: object
       properties:
-        is_in:
-          type: string
-          example: "mobile, fixed"
-          description: phone number type IS IN mobile or fixed.
+        numberType:
+          type: object
+          properties:
+            is_in:
+              type: string
+              example: "mobile, fixed"
+              description: phone number type IS IN mobile or fixed.
     OperatorCountryIsCriteriaItem:
       type: object
       properties:
-        is:
-          type: string
-          example: "DEU"
-          description: number IS in DEU.
+        operatorCountry:
+          type: object
+          properties:
+            is:
+              type: string
+              example: "DEU"
+              description: number IS in DEU.
     OperatorCountryIsInCriteriaItem:
       type: object
       properties:
-        is_in:
-          type: string
-          example: "NOR,SWE,FIN"
-          description: number IS IN these countries.
+        operatorCountry:
+          type: object
+          properties:
+            is_in:
+              type: string
+              example: "NOR,SWE,FIN"
+              description: number IS IN these countries.
     MccMncIsCriteriaItem:
       type: object
       properties:
-        is:
-          type: string
-          example: "23202"
-          description: MCC and MNC IS equal to this specific value.
+        mccMnc:
+          type: object
+          properties:
+            is:
+              type: string
+              example: "23202"
+              description: MCC and MNC IS equal to this specific value.
     MccMncIsInCriteriaItem:
       type: object
       properties:
-        is_in:
-          type: string
-          example: "32452, 34567, 56748, 45628"
-          description: MCC and MNC IS IN this list.
-    IsAfterCriteriaItem:
-      type: object
-      properties:
-        is_after:
-          type: string
-          example: "2022-01-21"
-          description: provide date
-    IsBeforeCriteriaItem:
-      type: object
-      properties:
-        is_before:
-          type: string
-          example: "2022-01-21"
-          description: provide date
+        mccMnc:
+          type: object
+          properties:
+            is_in:
+              type: string
+              example: "32452, 34567, 56748, 45628"
+              description: MCC and MNC IS IN this list.
     CriteriaResponse:
       type: "array"
       items:
@@ -771,7 +765,7 @@ components:
       properties:
         version:
           type: string
-          example: "v1"
+          example: "1.0.5"
     error400:
       type: object
       properties:
@@ -804,16 +798,32 @@ components:
     error404:
       type: object
       properties:
+        title:
+          type: string
+          example: "Not Found"
+          description: Error of bad request
         message:
           type: string
           example: "Request path '/...' does not exist"
           description: Not Found
+        status:
+          type: integer
+          example: 404
+          description: HTTP error code
     error409:
       type: object
       properties:
+        title:
+          type: string
+          example: "Conflict"
+          description: Error of conflict
+        status:
+          type: integer
+          example: 409
+          description: HTTP error code
         message:
           type: string
-          example: "Template with name <template_name> already exists"
+          example: "Template <template_name> already exists"
           description: Conflict
     error500:
       type: object
