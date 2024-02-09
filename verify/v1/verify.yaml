@@ -561,7 +561,7 @@ components:
       properties:
         name:
           type: string
-          example: "verification-criteria"
+          example: "verify-criteria"
           description: Unique criteria name
         description:
           type: string
@@ -575,8 +575,8 @@ components:
       properties:
         template:
           type: string
-          example: "verification-criteria"
-          description: template name
+          example: "verify-criteria"
+          description: Unique criteria name
         message:
           type: string
           example: "Created"
@@ -586,7 +586,7 @@ components:
       properties:
         name:
           type: string
-          example: "verification-criteria"
+          example: "verify-criteria"
           description: Unique criteria name
         description:
           type: string
@@ -600,8 +600,8 @@ components:
       properties:
         template:
           type: string
-          example: "verification-criteria"
-          description: template name
+          example: "verify-criteria"
+          description: Unique criteria name
         message:
           type: string
           example: "Updated"
@@ -615,7 +615,7 @@ components:
           description: Unique id for each criteria
         name:
           type: string
-          example: "verification-criteria"
+          example: "verify-criteria"
           description: Unique criteria name
         description:
           type: string
@@ -629,8 +629,8 @@ components:
       properties:
         template:
           type: string
-          example: "template1"
-          description: template name
+          example: "verify-criteria"
+          description: Unique criteria name
         message:
           type: string
           example: "Deleted"
@@ -810,6 +810,21 @@ components:
           type: integer
           example: 404
           description: HTTP error code
+    error409:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Conflict"
+          description: Error of conflict
+        status:
+          type: integer
+          example: 409
+          description: HTTP error code
+        message:
+          type: string
+          example: "Template <template_name> already exists"
+          description: Conflict
     error500:
       type: object
       properties:
