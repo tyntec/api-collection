@@ -54,6 +54,8 @@ paths:
         | operatorCountry     | is, is_in            | country in ISO Alpha-3 format e.g. DEU, GBR. In case of *is_in* operator multiple comma separated values can be provided |
         | disposableNumber    | is                   | true/false                                                                                                               |
         | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
+
+        From our side, we add "numberType" parameter by default if this parameter is not configured in a Template.
         
         The following parameters can be configured for the response:
         
@@ -75,6 +77,7 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
+        - reasonCode (only in case of unverified response)
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
@@ -248,6 +251,8 @@ paths:
         | disposableNumber    | is                   | true/false                                                                                                               |
         | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
         
+        From our side, we add "numberType" parameter by default if this parameter is not configured in a Template.
+        
         And similarly response are also following the criteria create configuration:
 
         Response Parameter:
@@ -268,6 +273,7 @@ paths:
         - requestId
         - verified
         - reason (only in case of unverified response)
+        - reasonCode (only in case of unverified response)
         
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
@@ -394,6 +400,34 @@ paths:
       summary: Verify criteria by name
       description: |
         Verify criteria by criteria name. Customers can view a specific response by setting up response parameter at the time of criteria creation.
+        
+        Unverified responses will always show the following four parameters:
+        - requestId
+        - verified
+        - reason
+        - reasonCode
+        
+        Depending on the reason that the request is unverified, the following error codes and reasons will be sent back:
+                
+        |   reasonCode   |              reason                       |     Criterion       |
+        |      ---       |      ---                                  |       ---           |
+        |      1001      |  "validNumberFormat is false."            | ValidNumberFormat   |
+        |      1101      |  "activeNumber is false ."                | activeNumber        |
+        |      1102      |  "activeNumber is true."                  | activeNumber        |
+        |      1201      |  "numberType is fixed ."                  | numberType          |
+        |      1202      |  "numberType is mobile."                  | numberType          |
+        |      1203      |  "numberType is voip."                    | numberType          |
+        |      1204      |  "numberType is premium_rate."            | numberType          |
+        |      1205      |  "numberType is toll_free."               | numberType          |
+        |      1206      |  "numberType is shared_cost."             | numberType          |
+        |      1207      |  "numberType is unknown."                 | numberType          |
+        |      1208      |  "numberType is [rest unsupported type]." | numberType          |
+        |      1301      |  "operatorCountry is [country-name]."     | operatorCountry     |
+        |      1401      |  "mccMnc is [mccMnc-value]."              | mccMnc              |
+        |      2001      |  "disposableNumber is false."             | disposableNumber    |
+        |      2002      |  "disposableNumber is true."              | disposableNumber    |
+
+      
       parameters:
         - name: number
           in: path
@@ -419,7 +453,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VerifyResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/VerifyResponse'
+                  - $ref: '#/components/schemas/ValidNumberFormatFalseResponse'
+                  - $ref: '#/components/schemas/ActiveNumberFalseResponse'
+                  - $ref: '#/components/schemas/ActiveNumberTrueResponse'
+                  - $ref: '#/components/schemas/NumberTypeFixedResponse'
+                  - $ref: '#/components/schemas/NumberTypeMobileResponse'
+                  - $ref: '#/components/schemas/NumberTypeVoipResponse'
+                  - $ref: '#/components/schemas/NumberTypePremiumRateResponse'
+                  - $ref: '#/components/schemas/NumberTypeTollFreeResponse'
+                  - $ref: '#/components/schemas/NumberTypeSharedCostResponse'
+                  - $ref: '#/components/schemas/NumberTypeUnknownResponse'
+                  - $ref: '#/components/schemas/RestUnsupportedNumberTypeResponse'
+                  - $ref: '#/components/schemas/OperatorCountryMismatchResponse'
+                  - $ref: '#/components/schemas/MccMncMismatchResponse'
+                  - $ref: '#/components/schemas/DisposableNumberFalseResponse'
+                  - $ref: '#/components/schemas/DisposableNumberTrueResponse'
         400:
           description: Bad request / Invalid request parameters
           content:
@@ -556,6 +606,291 @@ components:
           type: boolean
           example: true
           description: The final status of the number verify.
+    ValidNumberFormatFalseResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "validNumberFormat is false."
+          description: It is not a valid phone number.
+        reasonCode:
+          type: integer
+          example: 1001
+          description: reason code when validNumberFormat is false.
+    ActiveNumberFalseResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "activeNumber is false."
+          description: It is not an active phone number.
+        reasonCode:
+          type: integer
+          example: 1001
+          description: reason code when activeNumber = false but configured Template as activeNumber = true
+    ActiveNumberTrueResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "activeNumber is true."
+          description: This number is assigned to a subscriber.
+        reasonCode:
+          type: integer
+          example: 1102
+          description: reason code when activeNumber = true but configured Template Criterion is activeNumber = false.
+    NumberTypeFixedResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is fixed."
+          description: Type of the phone number (fixed)
+        reasonCode:
+          type: integer
+          example: 1201
+          description: reason code when numberType = "fixed" but configured Template Criterion is numberType = "mobile".
+    NumberTypeMobileResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is mobile."
+          description: Type of the phone number (mobile)
+        reasonCode:
+          type: integer
+          example: 1202
+          description: reason code when numberType = "mobile" but configured Template Criterion is numberType = "fixed".
+    NumberTypeVoipResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is voip."
+          description: Type of the phone number (voip)
+        reasonCode:
+          type: integer
+          example: 1203
+          description: reason code when given phone number type is "voip", which is a unsupported number type.
+    NumberTypePremiumRateResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is premium_rate."
+          description: Type of the phone number (premium_rate)
+        reasonCode:
+          type: integer
+          example: 1204
+          description: reason code when given phone number type is "premium_rate", which is a unsupported number type.
+    NumberTypeTollFreeResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is toll_free."
+          description: Type of the phone number (toll_free)
+        reasonCode:
+          type: integer
+          example: 1205
+          description: reason code when given phone number type is "toll_free", which is a unsupported number type.
+    NumberTypeSharedCostResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is shared_cost."
+          description: Type of the phone number (shared_cost)
+        reasonCode:
+          type: integer
+          example: 1206
+          description: reason code when given phone number type is "shared_cost", which is a unsupported number type.
+    NumberTypeUnknownResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is unknown."
+          description: Type of the phone number (unknown)
+        reasonCode:
+          type: integer
+          example: 1207
+          description: reason code when given phone number type is "unknown", which is a unsupported number type.
+    RestUnsupportedNumberTypeResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "numberType is [value]."
+          description: Type of the phone number (rest unsupported number type)
+        reasonCode:
+          type: integer
+          example: 1208
+          description: reason code for rest unsupported number type.
+    OperatorCountryMismatchResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "operatorCountry is [provided-number-country-name]."
+          description: The phone number's country of origin ISO3 code.
+        reasonCode:
+          type: integer
+          example: 1301
+          description: reason code when number operatorCountry and configured Template criterion operatorCountry is a mismatch. For example, number operatorCountry = "DEU" but configured Template criterion operatorCountry = "USA".
+    MccMncMismatchResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "mccMnc is [provided-number-mccMnc-value]."
+          description: MCC and MNC for given phone number
+        reasonCode:
+          type: integer
+          example: 1401
+          description: reason code when MCC and MNC for given phone number and configured Template criterion mccMnc is a mismatch. For example, number mccMnc = "26207" but configured Template criterion mccMnc = "21207".
+    DisposableNumberFalseResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "disposableNumber is false."
+          description: number is not disposable.
+        reasonCode:
+          type: integer
+          example: 2001
+          description: reason code when disposableNumber = false but configured Template Criterion is disposableNumber = true
+    DisposableNumberTrueResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "disposableNumber is true."
+          description: number is disposable.
+        reasonCode:
+          type: integer
+          example: 2002
+          description: reason code when disposableNumber = true but configured Template Criterion is disposableNumber = false
     CreateCriteria:
       type: object
       properties:
@@ -802,14 +1137,14 @@ components:
           type: string
           example: "Not Found"
           description: Error of bad request
-        message:
-          type: string
-          example: "Request path '/...' does not exist"
-          description: Not Found
         status:
           type: integer
           example: 404
           description: HTTP error code
+        message:
+          type: string
+          example: "Requested path '/...' could not be found"
+          description: Not Found
     error409:
       type: object
       properties:
