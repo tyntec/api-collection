@@ -55,9 +55,13 @@ paths:
          - UNDELIVERABLE
          - TIMED_OUT
 
+        More details regarding the 2FA service callbacks can be found in this link 
+        [Webhook](https://api.tyntec.com/reference/authentication/current.html?
+                  urls.primaryName=configurations#callback-events-webhooks)
+         
          For details on error handling, you can refer to the following documentation pages:
          
-         - **WhatsApp**
+         - WhatsApp
          
            - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
            - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
