@@ -401,42 +401,33 @@ paths:
       description: |
         Verify criteria by criteria name. Customers can view a specific response by setting up response parameter at the time of criteria creation.
         
-        Following Criterion can be cause of a unverified response:
-        - validNumberFormat (default parameter)
-        - numberType (default parameter if not specified)
-        - activeNumber
-        - operatorCountry
-        - mccMnc
-        - disposableNumber
-        
-        
-        Following 4 parameters will be always shown in case of unverified response:
+        Unverified responses will always show the following four parameters:
         - requestId
         - verified
         - reason
         - reasonCode
         
-        Example case of unverified response caused by following criterion: 
-        
-        |     Criterion       |   requestId  |  verified |              reason                       |   reasonCode   |      
-        |       ---           |     ---      |    ---    | 		 ---                                 |      ---       |       
-        | ValidNumberFormat   |   "8c194d"   |	false    |  "validNumberFormat is false."            |      1001      |     
-        | activeNumber        |   "8c294d"   |	false    |  "activeNumber is false ."       	     |      1101      |   
-        | activeNumber        |   "3c194d"   |	false    |  "activeNumber is true."         	     |      1102      |
-        | numberType          |   "4c194d"   |	false    |  "numberType is fixed ."         	     |      1201      | 
-        | numberType          |   "23c94d"   |	false    |  "numberType is mobile."         	     |      1202      |
-        | numberType          |   "1c194d"   |	false    |  "numberType is voip."           	     |      1203      |
-        | numberType          |   "frc194d"  |	false    |  "numberType is premium_rate."   	     |      1204      |
-        | numberType          |   "6c194d"   |	false    |  "numberType is toll_free."      	     |      1205      |
-        | numberType          |   "9gc194d"  |	false    |  "numberType is shared_cost."    	     |      1206      |
-        | numberType          |   "c4194d"   |	false    |  "numberType is unknown."       		     |      1207      |
-        | numberType          |   "u8c194d"  |	false    |  "numberType is [rest unsupported type]." |      1208      |
-        | operatorCountry     |   "hc194d"   |	false    |  "operatorCountry is [country-name]."     |      1301      |    
-        | mccMnc              |   "ewc194d"  |	false    |  "mccMnc is [mccMnc-value]."              |      1401  	  |
-        | disposableNumber    |   "w8c194d"  |	false    |  "disposableNumber is false."             |      2001      | 
-        | disposableNumber    |   "r8c194d"  |	false    |  "disposableNumber is true."              |      2002      |
-      
+        Depending on the reason that the request is unverified, the following error codes and reasons will be sent back:
+                
+        |   reasonCode   |              reason                       |     Criterion       |
+        |      ---       |      ---                                  |       ---           |
+        |      1001      |  "validNumberFormat is false."            | ValidNumberFormat   |
+        |      1101      |  "activeNumber is false ."                | activeNumber        |
+        |      1102      |  "activeNumber is true."                  | activeNumber        |
+        |      1201      |  "numberType is fixed ."                  | numberType          |
+        |      1202      |  "numberType is mobile."                  | numberType          |
+        |      1203      |  "numberType is voip."                    | numberType          |
+        |      1204      |  "numberType is premium_rate."            | numberType          |
+        |      1205      |  "numberType is toll_free."               | numberType          |
+        |      1206      |  "numberType is shared_cost."             | numberType          |
+        |      1207      |  "numberType is unknown."                 | numberType          |
+        |      1208      |  "numberType is [rest unsupported type]." | numberType          |
+        |      1301      |  "operatorCountry is [country-name]."     | operatorCountry     |
+        |      1401      |  "mccMnc is [mccMnc-value]."              | mccMnc              |
+        |      2001      |  "disposableNumber is false."             | disposableNumber    |
+        |      2002      |  "disposableNumber is true."              | disposableNumber    |
 
+      
       parameters:
         - name: number
           in: path
