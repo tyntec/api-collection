@@ -18,7 +18,7 @@ tags:
     
     For configuring a webhook/callback please see 
     [Webhook Configuration](https://api.tyntec.com/reference/authentication/current.html?
-                            urls.primaryName=configurations#configuration-management-api-Create%20Callback%20Configuration).
+                            urls.primaryName=configurations#configuration-management-api-Create%20Callback%20Configuration)
   name: Webhooks
 paths:
   /:
