@@ -642,7 +642,7 @@ components:
           description: It is not an active phone number.
         reasonCode:
           type: integer
-          example: 1001
+          example: 1101
           description: reason code when activeNumber = false but configured Template as activeNumber = true
     ActiveNumberTrueResponse:
       type: object
@@ -902,7 +902,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsAndBefore'
+          $ref: '#/components/schemas/CriteriaIsInAndAfter'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     ReturnCreatedCriteria:
@@ -956,7 +956,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsInAndAfter'
+          $ref: '#/components/schemas/CriteriaIsAndBefore'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     DeleteCriteria:
@@ -974,14 +974,14 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
+          - $ref: '#/components/schemas/IsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
     CriteriaIsAndBefore:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsCriteriaItem'
@@ -989,14 +989,24 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
-    IsCriteriaItem:
+    ActiveNumberIsCriteriaItem:
       type: object
       properties:
         activeNumber:
+          type: object
+          properties:
+            is:
+              type: boolean
+              example: true
+              description: criteria IS true
+    DisposableNumberIsCriteriaItem:
+      type: object
+      properties:
+        disposableNumber:
           type: object
           properties:
             is:
