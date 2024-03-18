@@ -981,7 +981,7 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsCriteriaItem'
@@ -991,11 +991,22 @@ components:
         anyOf:
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
-    IsCriteriaItem:
+    ActiveNumberIsCriteriaItem:
       type: object
       properties:
         activeNumber:
+          type: object
+          properties:
+            is:
+              type: boolean
+              example: true
+              description: criteria IS true
+    DisposableNumberIsCriteriaItem:
+      type: object
+      properties:
+        disposableNumber:
           type: object
           properties:
             is:
