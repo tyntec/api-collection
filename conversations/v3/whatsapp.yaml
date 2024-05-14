@@ -462,7 +462,7 @@ paths:
         - "Template management"
       requestBody:
         description: |
-          The localization to be submitted
+          The template patch request. Exactly one out of category and components must be present.
         required: true
         content:
           application/json:
