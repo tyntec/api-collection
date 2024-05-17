@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.16'
+  version: '3.17'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -443,6 +443,34 @@ paths:
       responses:
         201:
           $ref: '#/components/responses/ResourceCreated'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/templates/{template-id}/{template-language}:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+      - $ref: '#/components/parameters/TemplateId'
+      - $ref: '#/components/parameters/TemplateLanguage'
+    patch:
+      operationId: waEditTemplate
+      summary: Edit template
+      description: Edit a template in a specific language.
+      tags:
+        - "Template management"
+      requestBody:
+        description: |
+          The template patch request. Exactly one out of category and components must be present.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplatePatchRequest'
+      responses:
+        200:
+          description: OK.
         400:
           $ref: '#/components/responses/BadRequest'
         404:
@@ -1087,6 +1115,14 @@ components:
         type: string
         pattern: "[a-z_0-9]+"
       example: welcome_message
+    TemplateLanguage:
+      name: template-language
+      in: path
+      required: true
+      description: Template localizations language code
+      schema:
+        type: string
+      example: en
     WhatsAppFlowId:
       name: whatsapp-flow-id
       in: path
@@ -3409,6 +3445,18 @@ components:
                       To override the default time-to-live when creating an authentication template set this field to value between 60 and 600 seconds.
                       Additionally, set -1 to set time-to-live to message default value. This will set time-to-live to 24 hours (or 30 days for On-Premises API).
           example: 60
+    TemplatePatchRequest:
+      type: object
+      description: A request to edit an existing template
+      properties:
+        category:
+          $ref: '#/components/schemas/TemplateCategory'
+        components:
+          description: Components defining the desired change in templates definition
+          oneOf:
+            - $ref: '#/components/schemas/NotificationTemplateRequest'
+            - $ref: '#/components/schemas/RichMediaTemplateRequest'
+            - $ref: '#/components/schemas/CarouselTemplateRequest'
     NotificationTemplateRequest:
       type: array
       description: A request for a standard template (notification) without rich media components
