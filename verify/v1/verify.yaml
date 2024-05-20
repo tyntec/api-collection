@@ -14,25 +14,15 @@ info:
 servers:
   - url: https://api.tyntec.com/verify/v1
 tags:
-  - name: "Verify"
+  - name: "Verify with Criteria Templates"
     description: |
-      Verify service aims to provide information regarding the validity and trustworthyness 
-      of a phone number.
+      Verify service aims to provide information regarding phone numbers.
       
-      The service gathers and consolidates information regarding a phone number
-      and based on the collected information and customer's input is able to evaluate and suggest to the customer
-      if a phone number is verified.
+      Customers can define their own logic for verifying a number, by defining verify criteria templates. Customers can
+      also define the response parameters that they would like to receive back.
       
-      Furthermore the validation process can be fully pre-defined by the customer with the use of customized
-      verify criteria and customized responses. By using the customized criteria, customers can fully control
-      the verify process based on their business needs.
-  - name: "Verify Criteria"
-    description: |
-      Customers can define their own logic for verifying a number.
-      This means that customer can define the verify criteria but also the response parameters that 
-      they would like to  to receive back.
-      
-      This configuration provides customers with full control over tyntec's verify process.
+      This dynamic configuration, provides customers with full control over tyntec's verify service.
+
   - name: Metadata
     description: |
       Metadata provides non functional information about the Verify service
@@ -40,26 +30,47 @@ paths:
   /templates:
     post:
       tags:
-        - "Verify Criteria"
-      summary: Create criteria
+        - "Verify with Criteria Templates"
+      summary: Create criteria template
       description: |
-        Create criteria with desired verify rules and responses.
+        Create a Verify criteria template with desired verify rules and responses. Verify template creation is a crucial
+        step in the Verify process. Without this step Verify process cannot be done.
         
-        The following parameter can be configured:
+        There are two types of Verify criteria templates:
         
-        | Criterion           | Allowed Operations   | Allowed Values                                                                                                           |
-        | ---                 | ---                  | ---                                                                                                                    |
-        | activeNumber        | is                   | true/false                                                                                                               |
-        | numberType          | is, is_in            | fixed or mobile. In case of *is_in* operator multiple comma separated values can be provided                             |
-        | operatorCountry     | is, is_in            | country in ISO Alpha-3 format e.g. DEU, GBR. In case of *is_in* operator multiple comma separated values can be provided |
-        | disposableNumber    | is                   | true/false                                                                                                               |
-        | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
+         - Empty template or,
+         - Customized template
+        
+        **Empty Verify criteria template**
+        
+        Empty template means that the default verify and response parameters will be used. This practically means:
+        
+         - Verify criteria
+           - validNumberFormat: Verify that the phone number has a valid format
+           - numberType: Verify that the phone number type is fixed or mobile
 
-        From our side, we add "numberType" parameter by default if this parameter is not configured in a Template.
+         - Response parameters
+           - requestId: Unique request identifier
+           - verified: Verify outcome
+           - reason (only in case of unverified response)
+           - reasonCode (only in case of unverified response)
+
+        **Customized Verify criteria template**
+                
+        Customized templates are more complex to define but more powerful, since customers can define exactly how the
+        Verify service should verify phone numbers and how the response should look like.
         
+        The following verify parameter can be configured:
+        
+        | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
+        | ---              | ---           | ---                | ---                                                                                                                             |
+        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
+        | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
+        | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
+        | mccMnc           | string        | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
+
         The following parameters can be configured for the response:
-        
-        Response Parameter:
         
         - validNumberFormat
         - numberType
@@ -135,10 +146,10 @@ paths:
                 $ref: '#/components/schemas/error500'
     get:
       tags:
-        - "Verify Criteria"
-      summary: Retrieve all criteria
+        - "Verify with Criteria Templates"
+      summary: View all criteria templates
       description: |
-        Retrieve all verify criteria. Customers can list all criteria configured by them.
+        Retrieve all verify criteria templates created by the customer.
       security:
         - apiKey: [ ]
       responses:
@@ -181,16 +192,15 @@ paths:
   /templates/{name}:
     get:
       tags:
-        - "Verify Criteria"
-      summary: Retrieve criteria by name
+        - "Verify with Criteria Templates"
+      summary: View criteria template
       description: |
-        Retrieve criteria by criteria name. Customers can view a specific criteria by knowing the criteria name.
+        Customers can view a specific criteria by knowing the criteria name.
       parameters:
-        - name: criteria-name
+        - name: criteriaTemplateName
           in: path
           required: true
-          description: |
-            The name of the criteria to be Name
+          description: Criteria template name
           schema:
             type: string
             example: "verify-criteria"
@@ -235,27 +245,49 @@ paths:
                 $ref: '#/components/schemas/error500'
     put:
       tags:
-        - "Verify Criteria"
-      summary: Update the criteria
+        - "Verify with Criteria Templates"
+      summary: Update criteria template
       description: |
-        Modify the existing criteria. Customers can update name, description, criteria and response by providing 
+        Modify an existing criteria template. Customers can update name, description, criteria and response by providing 
         the whole json structure.
         
-        Criteria can be configured similarly with the criteria create:
+        Criteria can be modified similarly with the criteria template creation.
         
-        | Criterion           | Allowed Operations   | Allowed Values                                                                                                           |
-        | ---                 | ---                  | ---                                                                                                                    |
-        | activeNumber        | is                   | true/false                                                                                                               |
-        | numberType          | is, is_in            | fixed or mobile. In case of *is_in* operator multiple comma separated values can be provided                             |
-        | operatorCountry     | is, is_in            | country in ISO Alpha-3 format e.g. DEU, GBR. In case of *is_in* operator multiple comma separated values can be provided |
-        | disposableNumber    | is                   | true/false                                                                                                               |
-        | mccMnc              | is, is_in            | MCC and MNC of the operator e.g. 23202. In case of *is_in* operator multiple comma separated values can be provided      |
+        There are two types of Verify criteria templates:
         
-        From our side, we add "numberType" parameter by default if this parameter is not configured in a Template.
+         - Empty template or,
+         - Customized template
         
-        And similarly response are also following the criteria create configuration:
+        **Empty Verify criteria template**
+        
+        Empty template means that the default verify and response parameters will be used. This practically means:
+        
+         - Verify criteria
+           - validNumberFormat: Verify that the phone number has a valid format
+           - numberType: Verify that the phone number type is fixed or mobile
 
-        Response Parameter:
+         - Response parameters
+           - requestId: Unique request identifier
+           - verified: Verify outcome
+           - reason (only in case of unverified response)
+           - reasonCode (only in case of unverified response)
+
+        **Customized Verify criteria template**
+        
+        Customized templates are more complex to define but more powerful, since customers can define exactly how the
+        Verify service should verify phone numbers and how the response should look like.
+        
+        The following verify parameter can be configured:
+        
+        | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
+        | ---              | ---           | ---                | ---                                                                                                                             |
+        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
+        | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
+        | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
+        | mccMnc           | string        | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
+
+        The following parameters can be configured for the response:
         
         - validNumberFormat
         - numberType
@@ -268,7 +300,7 @@ paths:
 
         In the Response message, parameters will respect the template configuration order.
         
-        Moreover, following parameters will be always shown in the response:
+        Moreover, following parameters will be always shown in the response
         
         - requestId
         - verified
@@ -278,13 +310,11 @@ paths:
         However, customers can use those parameters in the response configuration just for manipulating 
         the order of the Response parameters. 
 
-
       parameters:
-        - name: criteriaName
+        - name: criteriaTemplateName
           in: path
           required: true
-          description: |
-            provide the criteria Name
+          description: Criteria template name
           schema:
             type: string
             example: "verify-criteria"
@@ -341,16 +371,15 @@ paths:
                 $ref: '#/components/schemas/error500'
     delete:
       tags:
-        - "Verify Criteria"
-      summary: Delete criteria by name
+        - "Verify with Criteria Templates"
+      summary: Delete criteria template
       description: |
-        Delete criteria by criteria name.
+        Delete criteria template by using the criteria name.
       parameters:
-        - name: name
+        - name: criteriaTemplateName
           in: path
           required: true
-          description: |
-            provide the criteria Name
+          description: Criteria template name
           schema:
             type: string
             example: "verify-criteria"
@@ -393,55 +422,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error500'
-  /phone/{number}?criteria={criteriaName}:
+  /phone/{number}?criteria={criteriaTemplateName}:
     get:
       tags:
-        - "Verify Criteria"
-      summary: Verify criteria by name
+        - "Verify with Criteria Templates"
+      summary: Verify by criteria template
       description: |
-        Verify criteria by criteria name. Customers can view a specific response by setting up response parameter at the time of criteria creation.
+        Verify a phone number based on a criteria.
         
-        Unverified responses will always show the following four parameters:
+        Each criteria has a defined verify and response parameters, set at the criteria creation api request. 
+        Verify request is based on the defined criteria for providing feedback regarding the requested phone number. 
+        
+        Example of a successful Verify response is shown at the code section at the right side of this page.
+        
+        Unverified requests do not respect the defined parameter set in the response of the criteria, but they are using
+        a default set of response parameters, aiming to explain to the customer the reason that the request was unverified.
+        The unverified request response will always show the following four parameters:
+        
         - requestId
         - verified
         - reason
         - reasonCode
         
-        Depending on the reason that the request is unverified, the following error codes and reasons will be sent back:
-                
-        |   reasonCode   |              reason                       |     Criterion       |
-        |      ---       |      ---                                  |       ---           |
-        |      1001      |  "validNumberFormat is false."            | ValidNumberFormat   |
-        |      1101      |  "activeNumber is false ."                | activeNumber        |
-        |      1102      |  "activeNumber is true."                  | activeNumber        |
-        |      1201      |  "numberType is fixed ."                  | numberType          |
-        |      1202      |  "numberType is mobile."                  | numberType          |
-        |      1203      |  "numberType is voip."                    | numberType          |
-        |      1204      |  "numberType is premium_rate."            | numberType          |
-        |      1205      |  "numberType is toll_free."               | numberType          |
-        |      1206      |  "numberType is shared_cost."             | numberType          |
-        |      1207      |  "numberType is unknown."                 | numberType          |
-        |      1208      |  "numberType is [rest unsupported type]." | numberType          |
-        |      1301      |  "operatorCountry is [country-name]."     | operatorCountry     |
-        |      1401      |  "mccMnc is [mccMnc-value]."              | mccMnc              |
-        |      2001      |  "disposableNumber is false."             | disposableNumber    |
-        |      2002      |  "disposableNumber is true."              | disposableNumber    |
+        When a phone number is evaluated as unverified, the following reason codes and reasons explanation will be included in the response:
+        
+        | reasonCode | Criterion         | reason                                                                                                        |
+        |    ---     | ---               | ---                                                                                                           |
+        |    1001    | ValidNumberFormat | The number format is incorrect, and it is not matching the defined verification criteria                      |
+        |    1101    | activeNumber      | The number is flagged as not active, indicating that it is not currently in use or accessible for communication, and it is not matching defined verification criteria | 
+        |    1102    | activeNumber      | The number is flagged as active, and it is not matching defined verification criteria                         |
+        |    1201    | numberType        | The number type is fixed, and it is not matching defined verification criteria                                |
+        |    1202    | numberType        | The number type is mobile, and it is not matching defined verification criteria                               |
+        |    1203    | numberType        | The number type is voip, and it is not matching defined verification criteria                                 |
+        |    1204    | numberType        | The number type is premium rate, and it is not matching defined verification criteria                         |
+        |    1205    | numberType        | The number type is toll free, and it is not matching defined verification criteria                            |
+        |    1206    | numberType        | The number type is shared cost, and it is not matching defined verification criteria                          |
+        |    1207    | numberType        | The number type is unknown, and it is not matching defined verification criteria                              |
+        |    1208    | numberType        | The number type is unsupported type, and it is not matching defined verification criteria                     |
+        |    1301    | operatorCountry   | Mobile number operator country is not matching defined verification criteria                                  |
+        |    1401    | mccMnc            | MCC – Mobile Country Code and MNC - Mobile Network Code are not matching defined verification criteria        |
+        |    2001    | disposableNumber  | The number is flagged as non-disposable, non-temporary, and it is not matching defined verification criteria  |
+        |    2002    | disposableNumber  | The number is flagged as disposable, temporary, and it is not matching defined verification criteria          |
 
-      
       parameters:
         - name: number
           in: path
           required: true
-          description: |
-            The phone number to be verified, given in the international format
+          description: The phone number to be verified, given in the international format
           schema:
             type: string
             example: +491621234567
-        - name: criteriaName
+        - name: criteriaTemplateName
           in: path
           required: true
-          description: |
-            The name of the criteria
+          description: Criteria template name
           schema:
             type: string
             example: "verify-criteria"
@@ -642,7 +676,7 @@ components:
           description: It is not an active phone number.
         reasonCode:
           type: integer
-          example: 1001
+          example: 1101
           description: reason code when activeNumber = false but configured Template as activeNumber = true
     ActiveNumberTrueResponse:
       type: object
@@ -902,7 +936,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsAndBefore'
+          $ref: '#/components/schemas/CriteriaIsInAndAfter'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     ReturnCreatedCriteria:
@@ -956,7 +990,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsInAndAfter'
+          $ref: '#/components/schemas/CriteriaIsAndBefore'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     DeleteCriteria:
@@ -974,14 +1008,14 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
     CriteriaIsAndBefore:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsCriteriaItem'
@@ -989,14 +1023,24 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
-    IsCriteriaItem:
+    ActiveNumberIsCriteriaItem:
       type: object
       properties:
         activeNumber:
+          type: object
+          properties:
+            is:
+              type: boolean
+              example: true
+              description: criteria IS true
+    DisposableNumberIsCriteriaItem:
+      type: object
+      properties:
+        disposableNumber:
           type: object
           properties:
             is:
