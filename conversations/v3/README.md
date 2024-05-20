@@ -1,5 +1,13 @@
 # Release notes
 
+## 3.17
+
+### Changes
+
+#### Added support for editing whatsapp templates
+
+Added support to edit existing whatsapp templates. Either the category or the templates components can be changed.
+
 ## 3.16
 
 ### Changes
