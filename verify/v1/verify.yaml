@@ -62,13 +62,13 @@ paths:
         
         The following verify parameter can be configured:
         
-        | Criterion        | Allowed Operations | Allowed Values                                                                                                                  |
-        | ---              | ---                | ---                                                                                                                             |
-        | activeNumber     | is                 | true/false                                                                                                                      |
-        | numberType       | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
-        | operatorCountry  | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
-        | disposableNumber | is                 | true/false                                                                                                                      |
-        | mccMnc           | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
+        | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
+        | ---              | ---           | ---                | ---                                                                                                                             |
+        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
+        | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
+        | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
+        | mccMnc           | string        | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
 
         The following parameters can be configured for the response:
         
@@ -193,7 +193,7 @@ paths:
     get:
       tags:
         - "Verify with Criteria Templates"
-      summary: View a criteria template
+      summary: View criteria template
       description: |
         Customers can view a specific criteria by knowing the criteria name.
       parameters:
@@ -279,13 +279,13 @@ paths:
         
         The following verify parameter can be configured:
         
-        | Criterion        | Allowed Operations | Allowed Values                                                                                                                  |
-        | ---              | ---                | ---                                                                                                                             |
-        | activeNumber     | is                 | true/false                                                                                                                      |
-        | numberType       | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
-        | operatorCountry  | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
-        | disposableNumber | is                 | true/false                                                                                                                      |
-        | mccMnc           | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
+        | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
+        | ---              | ---           | ---                | ---                                                                                                                             |
+        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
+        | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
+        | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
+        | mccMnc           | string        | is, is_in          | MCC and MNC of the operator e.g. 23202. <p>In case of *is_in* operator multiple comma separated values can be provided</p>      |
 
         The following parameters can be configured for the response:
         
@@ -444,7 +444,7 @@ paths:
         - reason
         - reasonCode
         
-        Depending on the reason that the request is unverified, the following error codes and reasons will be sent back:
+        When a phone number is evaluated as unverified, the following reason codes and reasons explanation will be included in the response:
         
         | reasonCode | Criterion         | reason                                                                                                        |
         |    ---     | ---               | ---                                                                                                           |
@@ -676,7 +676,7 @@ components:
           description: It is not an active phone number.
         reasonCode:
           type: integer
-          example: 1001
+          example: 1101
           description: reason code when activeNumber = false but configured Template as activeNumber = true
     ActiveNumberTrueResponse:
       type: object
@@ -936,7 +936,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsAndBefore'
+          $ref: '#/components/schemas/CriteriaIsInAndAfter'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     ReturnCreatedCriteria:
@@ -990,7 +990,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsInAndAfter'
+          $ref: '#/components/schemas/CriteriaIsAndBefore'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     DeleteCriteria:
@@ -1008,14 +1008,14 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
     CriteriaIsAndBefore:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsCriteriaItem'
@@ -1023,14 +1023,24 @@ components:
       type: array
       items:
         anyOf:
-          - $ref: '#/components/schemas/IsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
           - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
+          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
-    IsCriteriaItem:
+    ActiveNumberIsCriteriaItem:
       type: object
       properties:
         activeNumber:
+          type: object
+          properties:
+            is:
+              type: boolean
+              example: true
+              description: criteria IS true
+    DisposableNumberIsCriteriaItem:
+      type: object
+      properties:
+        disposableNumber:
           type: object
           properties:
             is:
