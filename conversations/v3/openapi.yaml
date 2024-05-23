@@ -111,7 +111,6 @@ components:
             enum:
               - sms
               - whatsapp
-              - wechat
               - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'

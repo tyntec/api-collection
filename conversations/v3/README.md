@@ -1,5 +1,13 @@
 # Release notes
 
+## 3.18
+
+### Changes
+
+#### Remove WeChat and Telegram support in Conversations API
+
+WeChat and Telegram is not supported anymore in the Conversations API.
+
 ## 3.17
 
 ### Changes
