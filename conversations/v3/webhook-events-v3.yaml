@@ -76,30 +76,6 @@ channels:
         http:
           type: request
           method: POST
-  "InboundMessage (Telegram)":
-    description: |
-      A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
-    publish:
-      tags:
-        - name: "Received messages"
-      message:
-        $ref: '#/components/messages/TelegramInboundMessage'
-      bindings:
-        http:
-          type: request
-          method: POST
-  "InboundMessage (WeChat)":
-    description: |
-      A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
-    publish:
-      tags:
-        - name: "Received messages"
-      message:
-        $ref: '#/components/messages/WeChatInboundMessage'
-      bindings:
-        http:
-          type: request
-          method: POST
   "InboundMessage (Viber)":
     description: |
       A message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
@@ -277,15 +253,9 @@ components:
     SMSInboundMessage:
       payload:
         $ref: '#/components/schemas/SMSInboundMessage'
-    TelegramInboundMessage:
-      payload:
-        $ref: '#/components/schemas/TelegramInboundMessage'
     ViberInboundMessage:
       payload:
         $ref: '#/components/schemas/ViberInboundMessage'
-    WeChatInboundMessage:
-      payload:
-        $ref: '#/components/schemas/WeChatInboundMessage'
     WhatsAppInboundMessage:
       payload:
         $ref: '#/components/schemas/WhatsAppInboundMessage'
@@ -336,8 +306,6 @@ components:
             - whatsapp
             - tyntecEcho
             - viber
-            - wechat
-            - telegram
         timestamp:
           type: string
           format: 'date-time'
@@ -401,8 +369,6 @@ components:
             - whatsapp
             - tyntecEcho
             - viber
-            - telegram
-            - wechat
         timestamp:
           type: string
           format: 'date-time'
@@ -827,117 +793,7 @@ components:
           type: string
           description: The caption of the button that was clicked
           example: Yes
-    TelegramInboundMessage:
-      type: object
-      description: |
-        Message received by us on the Telegram channel and delivered to your system via a webhook provided by your system.
-      required:
-        - messageId
-        - event
-        - channel
-        - from
-        - content
-      allOf:
-        - $ref: '#/components/schemas/InboundMessage'
-      properties:
-        channel:
-          type: string
-          description: The channel that triggered the event.
-          example: telegram
-          enum:
-            - telegram
-        content:
-          $ref: '#/components/schemas/MoContent'
-        context:
-          $ref: '#/components/schemas/MoContext'
-        telegram:
-          oneOf:
-            - $ref: '#/components/schemas/Telegram'
-            - $ref: '#/components/schemas/TelegramGroup'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: telegram
-        content:
-          contentType: text
-          text: 'Hi, thanks for your support message'
-        telegram:
-          senderName: Peter
-    Telegram:
-      type: object
-      description: Details specific to the WhatsApp channel
-      properties:
-        senderName:
-          type: string
-          description: The name of the sender, set in his or her profile
-          example: Peter
-      example:
-        senderName: Peter
-      additionalProperties: true
-    TelegramGroup:
-      type: object
-      description: Details specific to the WhatsApp channel
-      properties:
-        senderName:
-          type: string
-          description: The name of the sender, set in his or her profile
-          example: Peter
-        chatTitle:
-          type: String
-          description: Title of the chat from which the bot was contacted
-          example: tyntec Chat
-        chatType:
-          type: string
-          description: Type of the chat issued the message
-          enum:
-            - supergroup
-            - channel
-          example:
-            group
-        chatId:
-          type: string
-          description: Id of the channel the message origined from
-          example: -1001271529072
-      example:
-        senderName: Peter
-      additionalProperties: true
 
-    WeChatInboundMessage:
-      type: object
-      description: |
-        Message received by us on the Telegram channel and delivered to your system via a webhook provided by your system.
-      required:
-        - messageId
-        - event
-        - channel
-        - from
-        - content
-      allOf:
-        - $ref: '#/components/schemas/InboundMessage'
-      properties:
-        channel:
-          type: string
-          description: The channel that triggered the event.
-          example: telegram
-          enum:
-            - wechat
-        content:
-          $ref: '#/components/schemas/MoContent'
-        context:
-          $ref: '#/components/schemas/MoContext'
-      example:
-        messageId: 77185196-664a-43ec-b14a-fe97036c697e
-        event: InboundMessage
-        from: "49123512314"
-        to: "49123512315"
-        timestamp: 2019-06-26T11:41:00
-        channel: telegram
-        content:
-          contentType: text
-          text: 'Hi, thanks for your support message'
     MessageStatusDeleted:
       type: object
       description: |
@@ -1088,8 +944,6 @@ components:
             - sms
             - whatsapp
             - viber
-            - telegram
-            - wechat
         timestamp:
           type: string
           format: 'date-time'
@@ -1386,20 +1240,6 @@ components:
           phoneNumber: 12312323 
           oldPhoneNumber: TIER 1
           newPhoneNumber: TIER 2
-        WeChat::User::Following:
-          event: ChannelNotification
-          channel: WeChat
-          scope: User
-          type: Following
-          userId: 12312323
-          weChatId: 2143123
-        WeChat::User::Unfollowing:
-          event: ChannelNotification
-          channel: WeChat
-          scope: User
-          type: Unfollowing
-          userId: 12312323
-          weChatId: 2143123  
         WhatsApp::User::PhoneNumberChange_V2:
           event: ChannelNotification::WhatsApp::User::PhoneNumberChange
           phoneNumber: 12312323
@@ -1420,6 +1260,3 @@ components:
 #  - Conversation
 #    - user identity change
 #
-# WeChat
-#  - Following
-#  - Unfollowing

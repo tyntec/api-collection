@@ -12,7 +12,7 @@ info:
 
     ## Credentials
 
-    Some channels require you to provide tyntec with credentials, for example, telegram bots or WeChat applications.
+    Some channels require you to provide tyntec with credentials.
     The Conversations API allows you to configure these credentials via the API directly
 
     ## Signature
@@ -122,8 +122,6 @@ info:
     | `credentials:read` | Grants read access to the account level credentials, eg media credentials |
     | `credentials:write` | Grants write access to the account level credentials, eg media credentials |
     | `channels:read` | Grants read access to assigned channels |
-    | `channels.wechat:write` | Grants write access to WeChat channels |
-    | `channels.telegram:write` | Grants write access to Telegram channels |
     | `media:read` | Grants read access to media files (inbound/outbound) |
     | `media:write` | Grants write access to outbound media files |
 
@@ -133,12 +131,12 @@ info:
 
     | Scope | Description | Available on |
     | :--- | :--- | :--- |
-    | `callbacks:read` | Grants read access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `callbacks:write` | Grants write access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
-    | `credentials:read` | Grants read access to the channel's credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
-    | `credentials:write` | Grants write access to the channel's credentials | ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") |
+    | `callbacks:read` | Grants read access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `callbacks:write` | Grants write access to channel-level callbacks | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `credentials:read` | Grants read access to the channel's credentials | - |
+    | `credentials:write` | Grants write access to the channel's credentials | - |
     | `messages:read` | Grants read access to messages of a channel | - |
-    | `messages:write` | Grants access to send messages via a channel | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Telegram](../images/icon_telegram_18px_color_.svg "Telegram") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WeChat](../images/icon_wechat_18px_color_.svg "WeChat") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
+    | `messages:write` | Grants access to send messages via a channel | ![SMS](../images/icon_sms_18px_color_.svg "SMS") ![Viber](../images/icon_viber_business_18px_color_.svg "Viber Business") ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `profile:read` | Grants read access to a channel's profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `profile:write` | Grants write access to a channel's profile. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:read` | Grants read access to a channel's templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
@@ -247,16 +245,6 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllSMSChannelsResponse'
-  /configurations/channels/telegram:
-    get:
-      tags:
-        - "Channel Configurations"
-      summary: List all Telegram channels
-      operationId: listAllTelegramChannels
-      description: List all Telegram channels available to your API account
-      responses:
-        200:
-          $ref: '#/components/responses/ListAllTelegramChannelsResponse'
   /configurations/channels/mms:
     get:
       tags:
@@ -277,16 +265,6 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllViberChannelsResponse'
-  /configurations/channels/wechat:
-    get:
-      tags:
-        - "Channel Configurations"
-      summary: List all WeChat channels
-      operationId: listAllWeChatChannels
-      description: List all WeChat channels available to your API account
-      responses:
-        200:
-          $ref: '#/components/responses/ListAllWeChatChannelsResponse'
   /configurations/channels/whatsapp:
     get:
       tags:
@@ -340,12 +318,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SMSChannelResponses'
-    ListAllTelegramChannelsResponse:
-      description: A list of Telegram channel configurations
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TelegramChannelResponses'
     ListAllMmsChannelsResponse:
       description: A list of Mms channel configurations
       content:
@@ -358,12 +330,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ViberChannelResponses'
-    ListAllWeChatChannelsResponse:
-      description: A list of WeChat channel configurations
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WeChatChannelResponses'
     ListAllWhatsAppChannelsResponse:
       description: A list of Whatsapp channel configurations
       content:
@@ -388,8 +354,6 @@ components:
       description: Scopes available to your account.
       enum:
         - channels:read
-        - channels.telegram:write
-        - channels.wechat:write
         - callbacks:read
         - callbacks:write
         - credentials:read
@@ -536,10 +500,8 @@ components:
       items:
         anyOf:
           - $ref: '#/components/schemas/SMSChannelResponse'
-          - $ref: '#/components/schemas/TelegramChannelResponse'
           - $ref: '#/components/schemas/MmsChannelResponse'
           - $ref: '#/components/schemas/ViberChannelResponse'
-          - $ref: '#/components/schemas/WeChatChannelResponse'
           - $ref: '#/components/schemas/WhatsAppChannelResponse'
     ChannelResponse:
       type: object
@@ -561,8 +523,6 @@ components:
       description: Scopes available to a channel.
       enum:
         - channels:read
-        - channels.telegram:write
-        - channels.wechat:write
         - callbacks:read
         - callbacks:write
         - media:read
@@ -594,69 +554,6 @@ components:
             $ref: "#/components/schemas/EventTypes"
           minLength: 0
           default: []
-    WeChatChannelResponses:
-      type: array
-      items:
-        $ref: '#/components/schemas/WeChatChannelResponse'
-    WeChatChannelResponse:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/ChannelResponse'
-      properties:
-        id:
-          $ref: '#/components/schemas/WeChatId'
-        credentials:
-          $ref: '#/components/schemas/WeChatCredentials'
-      example:
-        channel: wechat
-        scopes:
-          - messages:read
-          - callbacks:write
-          - callbacks:read
-        id:
-          weChatId: "12341234"
-        name: your application
-        credentials:
-          appId: "12334"
-          appSecret: 98ujhkjnvjhb832rbnj
-        callback:
-          callbackVersion: "2.11"
-          inboundMessageUrl: https://your.server.com/inbound
-          messageStatusUrl: https://your.server.com/status
-          eventFilter:
-            - MessageStatus::accepted
-            - MessageStatus::dispatched
-    TelegramChannelResponses:
-      type: array
-      items:
-        $ref: '#/components/schemas/TelegramChannelResponse'
-    TelegramChannelResponse:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/ChannelResponse'
-      properties:
-        id:
-          $ref: '#/components/schemas/TelegramId'
-        credentials:
-          $ref: '#/components/schemas/TelegramCredentials'
-      example:
-        channel: telegram
-        scopes:
-          - messages:read
-          - callbacks:write
-          - callbacks:read
-        id:
-          botId: "12341234"
-        name: your bot!
-        credentials:
-          botToken: 987923hrbnhjfedf87z324:fsdhf8n2r543j4hgr
-        callback:
-          callbackVersion: "2.11"
-          inboundMessageUrl: https://your.server.com/inbound
-          messageStatusUrl: https://your.server.com/status
-          eventFilter:
-            - MessageStatus::accepted
-            - MessageStatus::dispatched
     MmsChannelResponses:
       type: array
       items:
@@ -781,29 +678,10 @@ components:
       properties:
         serviceId:
           type: string
-    WeChatId:
-      type: object
-      description: The definition of the WeChat id
-      properties:
-        weChatId:
-          type: string
 
     #
     # Channel Credential Spec
     #
-    WeChatCredentials:
-      type: object
-      properties:
-        appId:
-          type: string
-        appSecret:
-          type: string
-
-    TelegramCredentials:
-      type: object
-      properties:
-        botToken:
-          type: string
 
     ViberChannelConfigs:
       type: object

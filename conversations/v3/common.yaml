@@ -49,8 +49,6 @@ info:
     | ---: | :---: | :---: | :---: | :---: | :---: | :---: |
     | WhatsApp | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
     | Viber | ✔ | ✔ | ✔ | ✔ | ✔ | ❌ |
-    | Telegram | ✔ | ✔ | ❌ | ❌ | ✔ | ✔ |
-    | WeChat | ✔ | ✔ | ❌ | ❌ | ✔ | ❌ |
     | SMS | ✔ | ✔ | ✔ | ❌ | ✔ | ❌ |
 
 
@@ -80,8 +78,6 @@ info:
     - *WhatsApp:* retries via the WhatsApp mechanism with exponential decrease in frequency of attempts that continues
       up to 14 days (attempts repeat less and less often)
     - *Viber:* TODO
-    - *WeChat:* TODO
-    - *Telegram:* TODO
     - *SMS:* retries every 10 seconds. Retries are paused for 10 minutes after every 100 consecutive unsuccessful
       delivery attempts. tyntec's system will keep trying for a maximum of 48 hours.
 
@@ -376,7 +372,6 @@ components:
           enum:
             - sms
             - whatsapp
-            - wechat
             - viber
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
@@ -470,7 +465,6 @@ components:
           enum:
             - sms
             - whatsapp
-            - wechat
             - viber
           example: whatsapp
         details:

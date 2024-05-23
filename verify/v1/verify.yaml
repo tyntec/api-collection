@@ -189,7 +189,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error500'
-  /templates/{name}:
+  /templates/{criteriaTemplateName}:
     get:
       tags:
         - "Verify with Criteria Templates"
@@ -487,7 +487,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
+                oneOf:
                   - $ref: '#/components/schemas/VerifyResponse'
                   - $ref: '#/components/schemas/ValidNumberFormatFalseResponse'
                   - $ref: '#/components/schemas/ActiveNumberFalseResponse'
@@ -504,6 +504,27 @@ paths:
                   - $ref: '#/components/schemas/MccMncMismatchResponse'
                   - $ref: '#/components/schemas/DisposableNumberFalseResponse'
                   - $ref: '#/components/schemas/DisposableNumberTrueResponse'
+              examples:
+                success:
+                  summary: Example of a successfully validated response
+                  value:
+                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
+                    validNumberFormat: true
+                    activeNumber: true
+                    numberType: "mobile"
+                    operatorName: "T-Mobile Czech Republic a.s."
+                    operatorCountry: "CZE"
+                    mcc: "202"
+                    mnc: "01"
+                    disposableNumber: false
+                    verified: true
+                error:
+                  summary: Example of a unsuccessfully validated response
+                  value:
+                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
+                    verified: false
+                    reason: "validNumberFormat is false."
+                    reasonCode: 1001
         400:
           description: Bad request / Invalid request parameters
           content:
@@ -936,7 +957,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsInAndAfter'
+          $ref: '#/components/schemas/Criteria'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     ReturnCreatedCriteria:
@@ -963,7 +984,7 @@ components:
         criteria:
           $ref: '#/components/schemas/Criteria'
         response:
-          $ref: '#/components/schemas/Responses'
+          $ref: '#/components/schemas/CriteriaResponse'
     ReturnUpdatedCriteria:
       type: object
       properties:
@@ -990,7 +1011,7 @@ components:
           type: string
           example: "provide criteria description"
         criteria:
-          $ref: '#/components/schemas/CriteriaIsAndBefore'
+          $ref: '#/components/schemas/Criteria'
         response:
           $ref: '#/components/schemas/CriteriaResponse'
     DeleteCriteria:
@@ -1010,23 +1031,12 @@ components:
         anyOf:
           - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
-          - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
-    CriteriaIsAndBefore:
-      type: array
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
-          - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
-          - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
-          - $ref: '#/components/schemas/MccMncIsCriteriaItem'
-    CriteriaIsInAndAfter:
-      type: array
-      items:
-        anyOf:
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
-          - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
-          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
+          - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsInCriteriaItem'
+          - $ref: '#/components/schemas/DisposableNumberIsCriteriaItem'
+          - $ref: '#/components/schemas/MccMncIsCriteriaItem'
+          - $ref: '#/components/schemas/MccMncIsInCriteriaItem'
     ActiveNumberIsCriteriaItem:
       type: object
       properties:
@@ -1120,15 +1130,6 @@ components:
         - "mcc"
         - "mnc"
         - "disposableNumber"
-    Responses:
-      type: "array"
-      items:
-        type: "string"
-      example:
-        - "operatorName"
-        - "operatorCountry"
-        - "mcc"
-        - "mnc"
     healthResponse:
       type: object
       properties:
