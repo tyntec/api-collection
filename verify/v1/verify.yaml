@@ -506,7 +506,7 @@ paths:
                   - $ref: '#/components/schemas/DisposableNumberTrueResponse'
               examples:
                 success:
-                  summary: Example of a successful response
+                  summary: Example of a successfully validated response
                   value:
                     requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
                     validNumberFormat: true
@@ -519,7 +519,7 @@ paths:
                     disposableNumber: false
                     verified: true
                 error:
-                  summary: Example of an error response
+                  summary: Example of a unsuccessfully validated response
                   value:
                     requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
                     verified: false
