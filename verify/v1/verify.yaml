@@ -508,22 +508,22 @@ paths:
                 success:
                   summary: Example of a successful response
                   value:
-                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9",
-                    validNumberFormat: true,
-                    activeNumber: true,
-                    numberType: "mobile",
-                    operatorName: "T-Mobile Czech Republic a.s.",
-                    operatorCountry: "CZE",
-                    mcc: "202",
-                    mnc: "01",
-                    disposableNumber: false,
+                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
+                    validNumberFormat: true
+                    activeNumber: true
+                    numberType: "mobile"
+                    operatorName: "T-Mobile Czech Republic a.s."
+                    operatorCountry: "CZE"
+                    mcc: "202"
+                    mnc: "01"
+                    disposableNumber: false
                     verified: true
                 error:
                   summary: Example of an error response
                   value:
-                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9",
-                    verified: false,
-                    reason: "validNumberFormat is false.",
+                    requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
+                    verified: false
+                    reason: "validNumberFormat is false."
                     reasonCode: 1001
         400:
           description: Bad request / Invalid request parameters
