@@ -462,6 +462,42 @@ components:
           type: string
           description: The ID or SKU of the product
           example: 123-SKU-12432
+        metaProductId:
+          type: string
+          description: The ID for the product on Meta's side
+          example: 12345678
+        name:
+          type: string
+          description: The name of the product
+          example: product 123
+        description:
+          type: string
+          description: The description of the product
+          example: This is a short description for product 123
+        price:
+          type: string
+          description: The price of the product
+          example: €49.99
+        currency:
+          type: string
+          description: The currency of the price
+          example: EUR
+        salePrice:
+          type: string
+          description: The discounted price of the product
+          example: €24.99
+        inventory:
+          type: integer
+          description: The current stock for the product
+          example: 100
+        url:
+          type: string
+          description: The URL of the product
+          example: some-valid-url.com/product123
+        imageUrl:
+          type: string
+          description: The image URL of the product
+          example: some-valid-url.com/product123.png
     MoReaction:
       type: object
       description: An emoji reaction to a formely sent message
@@ -869,10 +905,14 @@ components:
           text: Please let me know where I can pick up the order.
           items:
             - productId: 24-2597234-sdfk
+              productName: product 1
+              description: short description
               quantity: 123
               itemPrice: 123.22
               currency: "EUR"
             - productId: 24-1111134-sdfk
+              productName: product 2
+              description: short description
               quantity: 1
               itemPrice: 1.22
               currency: "USD"
@@ -933,6 +973,14 @@ components:
           type: string
           description: The ID or SKU of the product selected
           example: test-sku-1234
+        productName:
+          type: string
+          description: Name of the product
+          example: product 123
+        description:
+          type: string
+          description: Description of the product
+          example: This is a short description for product 123
         quantity:
           type: string
           description: How many items are selected

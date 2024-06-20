@@ -249,7 +249,12 @@ components:
     #
     MmsImage:
       type: object
+      description: One of both properties _url_ or _id_ **must** be set
       properties:
+        id:
+          type: string
+          description: The media id of previously uploaded media
+          format: uuid
         url:
           type: string
           description: the url of the location where the media is stored

@@ -1,5 +1,21 @@
 # Release notes
 
+## 3.19
+
+## Changes
+
+### Small fixes
+
+Fix `mediaId` to `id` for WhatsApp media
+
+### Add extra Product fields
+
+Added new additional information for products in MoMessage and MoOrder messages.
+
+### Add image ID reference for MMS Images
+
+MMS now supports adding already uploaded images via image ID.
+
 ## 3.18
 
 ### Changes

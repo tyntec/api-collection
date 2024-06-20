@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.17'
+  version: '3.19'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -1940,12 +1940,12 @@ components:
       description: |
         A base object handling media definitions for sending.
 
-        One of both properties _url_ or _mediaId_ **must** be set
+        One of both properties _url_ or _id_ **must** be set
       properties:
         url:
           type: string
           description: The URL of the location where the media is stored
-        mediaId:
+        id:
           type: string
           description: The media id of previously uploaded media
           format: uuid
