@@ -16,8 +16,9 @@ tags:
     For example, Tyntec sends a webhook when an OTP is dispatched or when an OTP is delivered.
     You can use webhooks to trigger actions in your application or store data in your database.
     
-    For configuration of the webhook/callback please
-    see [Webhook Configuration](?urls.primaryName=configurations#/Callback%20Configuration%20Management/create).
+    For configuring a webhook/callback please see 
+    [Webhook Configuration](https://api.tyntec.com/reference/authentication/current.html?
+                            urls.primaryName=configurations#configuration-management-api-Create%20Callback%20Configuration)
   name: Webhooks
 paths:
   /:
