@@ -3,7 +3,7 @@ info:
   contact:
     email: support@tyntec.com
     name: tyntec Support
-    url: http://www.tyntec.com/support
+    url: https://www.tyntec.com/support
   title: Configuration Management API
   version: 4
 servers:
@@ -45,28 +45,41 @@ paths:
       tags:
       - Callback Configuration Management
     post:
-      description: |
-         Creates a new Callback Configuration.
-        
-         Sends OTP events to the callback URL registered.
-        
-         - DISPATCHED
-         - DELIVERED
-         - UNDELIVERABLE
-         - TIMED_OUT
+      callbacks:
+        Delivery Status Callback:
+          $request.body#/url:
+            post:
+              description: |
+                Sends OTP events to the callback URL registered.
+                
+                  - **DISPATCHED**
+                  - **DELIVERED**
+                  - **UNDELIVERABLE**
+                  - **TIMED_OUT**
 
-         For details on error handling, you can refer to the following documentation pages:
-         
-         - **WhatsApp**
-         
-           - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
-           - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
-      operationId: create_1
+                For details on error handling, you can refer to the following documentation pages:
+                
+                 - **WhatsApp**
+                
+                   - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
+                   - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      oneOf:
+                        - $ref: "#/components/schemas/WebhookStatusMessage"
+                        - $ref: "#/components/schemas/WebhookStatusWithError"
+              responses:
+                "200":
+                  description: OK
+      description: Creates a new Callback Configuration.
+      operationId: create_7
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CallbackConfigurationRequest'
+              $ref: '#/components/schemas/NewCallbackConfigurationDTO'
         required: true
       responses:
         "201":
@@ -81,12 +94,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConstraintViolationResponseSchema'
           description: Constraint violation
-        "409":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CallbackConflictResponseSchema'
-          description: Conflict
         "500":
           content:
             application/json:
@@ -99,10 +106,9 @@ paths:
   /2fa/v4/configurations/callbacks/{id}:
     delete:
       description: Deletes the Callback Configuration by specified ID
-      operationId: delete
+      operationId: delete_5
       parameters:
       - in: path
-        description: Id of callback configuration in UUID format
         name: id
         required: true
         schema:
@@ -110,6 +116,12 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstraintViolationResponseSchema"
+          description: Constraint violation
         "500":
           content:
             application/json:
@@ -119,10 +131,53 @@ paths:
       summary: Delete Callback Configuration
       tags:
       - Callback Configuration Management
+    patch:
+      description: Patches the Callback Configuration by specified ID
+      operationId: patch_5
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchCallbackConfigurationDTO"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallbackConfigurationDTO"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstraintViolationResponseSchema"
+          description: Constraint violation
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundSchema"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseSchema"
+          description: Internal Server Error
+      summary: Patch Callback Configuration
+      tags:
+      - Callback Configuration Management
   /2fa/v4/configurations/channels/whatsapp:
     get:
       description: Returns details of a WhatsApp Configuration.
-      operationId: findAllBy
+      operationId: findAllBy_2
       responses:
         "200":
           content:
@@ -147,7 +202,7 @@ paths:
       - WhatsApp Configuration Management
     post:
       description: Creates a new WhatsApp Configuration.
-      operationId: create
+      operationId: create_6
       requestBody:
         content:
           application/json:
@@ -184,7 +239,6 @@ components:
   schemas:
     CallbackConfigurationDTO:
       type: object
-      description: Callback configuration object
       properties:
         headers:
           type: object
@@ -200,45 +254,17 @@ components:
           description: ID of the Callback
           example: a4762c77-94cb-43d6-bbab-9f37e088ad11
           title: Callback ID
-        type:
+        profileId:
           type: string
-          description: Type of the Callback
-          enum:
-          - DELIVERY_STATUS
-          example: DELIVERY_STATUS
-          title: Callback Type
+          format: uuid
+          description: Id of the profile for which the callbacks will be filtered
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: Profile ID
         url:
           type: string
           description: Callback URL
           example: https://example.com/callback
           title: URL
-    CallbackConfigurationRequest:
-      type: object
-      description: Callback configuration Request body
-      properties:
-        headers:
-          type: object
-          additionalProperties:
-            type: string
-            description: Callback Request Headers
-            title: Headers
-          description: Callback Request Headers
-          title: Headers
-        type:
-          type: string
-          description: Type of the Callback
-          enum:
-          - DELIVERY_STATUS
-          example: DELIVERY_STATUS
-          title: Callback Type
-        url:
-          type: string
-          description: Callback URL
-          example: https://example.com/callback
-          title: URL
-      required:
-      - url
-      title: New Callback Configuration
     CallbackConfigurationResponse:
       type: object
       properties:
@@ -343,9 +369,32 @@ components:
           example: Internal Server Error
           title: Title of the error
       title: Internal Server Error
+    NewCallbackConfigurationDTO:
+      type: object
+      properties:
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+            description: Callback Request Headers
+            title: Headers
+          description: Callback Request Headers
+          title: Headers
+        profileId:
+          type: string
+          description: Id of the profile for which the callbacks will be filtered
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: Profile ID
+        url:
+          type: string
+          description: Callback URL
+          example: https://example.com/callback
+          title: URL
+      required:
+        - url
+      title: New Callback Configuration
     NewWhatsAppConfigRequest:
       type: object
-      description: WhatsApp configuration Request body
       properties:
         whatsAppAccountId:
           type: string
@@ -353,7 +402,7 @@ components:
           example: 289a1c20-06c5-4964-b32d-24d214a78ae5
           title: WhatsApp Account Id
       required:
-      - whatsAppAccountId
+        - whatsAppAccountId
       title: New WhatsApp Configuration
     NotFoundSchema:
       type: object
@@ -380,6 +429,30 @@ components:
           example: No Resource Found
           title: Title of the error
       title: Not Found
+    PatchCallbackConfigurationDTO:
+      type: object
+      properties:
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+            description: Callback Request Headers
+            title: Headers
+          description: Callback Request Headers
+          title: Headers
+        profileId:
+          type: string
+          description: Id of the profile for which the callbacks will be filtered
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: Profile ID
+        url:
+          type: string
+          description: Callback URL
+          example: https://example.com/callback
+          title: URL
+      required:
+        - url
+      title: Patch Callback Configuration
     ViolationResponseSchema:
       type: object
       description: List of violations
@@ -395,6 +468,75 @@ components:
           example: must not be blank
           title: Violation message
       title: Violations
+    WebhookStatusMessage:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: Channel of Delivery
+          enum:
+            - SMS
+            - VOICE
+            - VIBER
+            - WHATSAPP
+          example: SMS
+          title: Channel
+        otpId:
+          type: string
+          format: uuid
+          description: Unique identifier of the OTP
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: OTP ID
+        status:
+          type: string
+          description: Status of the OTP Delivery
+          enum:
+            - DISPATCHED
+            - TIMED_OUT
+            - DELIVERED
+            - UNDELIVERABLE
+          example: DISPATCHED
+          title: Status
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the OTP event
+          example: 2023-11-15T03:00:00Z
+          title: Timestamp
+    WebhookStatusWithError:
+      type: object
+      properties:
+        channel:
+          type: string
+          enum:
+            - SMS
+            - VOICE
+            - VIBER
+            - WHATSAPP
+        error:
+          $ref: "#/components/schemas/Error"
+        otpId:
+          type: string
+          format: uuid
+          description: Unique identifier of the OTP
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: OTP ID
+        status:
+          type: string
+          description: status of the OTP Delivery
+          enum:
+            - DISPATCHED
+            - TIMED_OUT
+            - DELIVERED
+            - UNDELIVERABLE
+          example: UNDELIVERABLE
+          title: status
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the OTP event
+          example: 2023-11-15T03:00:00Z
+          title: Timestamp
     WhatsAppConfigResponse:
       type: object
       properties:

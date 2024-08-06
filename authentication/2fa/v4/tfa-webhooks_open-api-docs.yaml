@@ -3,7 +3,7 @@ info:
   contact:
     email: support@tyntec.com
     name: tyntec Support
-    url: http://www.tyntec.com/support
+    url: https://www.tyntec.com/support
   title: Callback Events
   version: 4
 servers:
@@ -15,20 +15,33 @@ tags:
     Tyntec sends a webhook to your application to notify you when an event occurs in your account.
     For example, Tyntec sends a webhook when an OTP is dispatched or when an OTP is delivered.
     You can use webhooks to trigger actions in your application or store data in your database.
+    **For configuration of the webhook/callback please
+    see [Webhook Configuration](?urls.primaryName=configurations#/Callback%20Configuration%20Management/create).**
+
+    Sends OTP events to the callback URL registered.
     
-    For configuration of the webhook/callback please
-    see [Webhook Configuration](?urls.primaryName=configurations#/Callback%20Configuration%20Management/create).
+      - **DISPATCHED**
+      - **DELIVERED**
+      - **UNDELIVERABLE**
+      - **TIMED_OUT**
+
+      For details on error handling, you can refer to the following documentation pages:
+    
+       - **WhatsApp**
+    
+         - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
+         - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
   name: Webhooks
 paths:
-  /:
+  /webhooks:
     post:
       description: |
         Sends OTP events to the callback URL registered.
         
-        - DISPATCHED
-        - DELIVERED
-        - UNDELIVERABLE
-        - TIMED_OUT
+        - **DISPATCHED**
+        - **DELIVERED**
+        - **UNDELIVERABLE**
+        - **TIMED_OUT**
 
         For details on error handling, you can refer to the following documentation pages:
         
@@ -41,7 +54,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DeliveryStatus'
+              oneOf:
+                - $ref: "#/components/schemas/DeliveryStatus"
+                - $ref: "#/components/schemas/DeliveryStatusWithError"
         description: Status of the OTP
         required: true
       responses:
@@ -53,6 +68,47 @@ paths:
 components:
   schemas:
     DeliveryStatus:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: Channel of Delivery
+          enum:
+          - SMS
+          - VOICE
+          - VIBER
+          - WHATSAPP
+          example: SMS
+          title: Channel
+        otpId:
+          type: string
+          format: uuid
+          description: Unique identifier of the OTP
+          example: a4762c77-94cb-43d6-bbab-9f37e088ad11
+          title: OTP ID
+        profileId:
+          type: string
+          format: uuid
+          description: Unique identifier of the OTP
+          example: adbe6521-f5bd-4295-9fd9-776debdf7dc2
+          title: OTP ID
+        status:
+          type: string
+          description: Status of the OTP Delivery
+          enum:
+            - DISPATCHED
+            - TIMED_OUT
+            - DELIVERED
+            - UNDELIVERABLE
+          example: DELIVERED
+          title: Status
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the OTP event
+          example: 2023-11-15T03:00:00Z
+          title: Timestamp
+    DeliveryStatusWithError:
       type: object
       properties:
         channel:
@@ -70,15 +126,20 @@ components:
           description: Unique identifier of the OTP
           example: a4762c77-94cb-43d6-bbab-9f37e088ad11
           title: OTP ID
+        profileId:
+          type: string
+          format: uuid
+          description: Unique identifier of the OTP
+          example: adbe6521-f5bd-4295-9fd9-776debdf7dc2
+          title: OTP ID
         status:
           type: string
           description: status of the OTP Delivery
           enum:
-          - RECEIVED
-          - DISPATCHED
-          - TIMED_OUT
-          - DELIVERED
-          - UNDELIVERABLE
+            - DISPATCHED
+            - TIMED_OUT
+            - DELIVERED
+            - UNDELIVERABLE
           example: UNDELIVERABLE
           title: status
         timestamp:
