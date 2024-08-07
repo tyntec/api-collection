@@ -48,10 +48,10 @@ paths:
       description: |
          Sends OTP events to the callback URL registered.
         
-         - DISPATCHED
-         - DELIVERED
-         - UNDELIVERABLE
-         - TIMED_OUT
+         - **DISPATCHED**
+         - **DELIVERED**
+         - **UNDELIVERABLE**
+         - **TIMED_OUT**
 
          For details on error handling, you can refer to the following documentation pages:
          
