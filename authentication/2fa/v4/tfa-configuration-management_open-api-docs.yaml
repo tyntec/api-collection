@@ -45,35 +45,20 @@ paths:
       tags:
       - Callback Configuration Management
     post:
-      callbacks:
-        Delivery Status Callback:
-          $request.body#/url:
-            post:
-              description: |
-                Sends OTP events to the callback URL registered.
-                
-                  - **DISPATCHED**
-                  - **DELIVERED**
-                  - **UNDELIVERABLE**
-                  - **TIMED_OUT**
+      description: |
+         Sends OTP events to the callback URL registered.
+        
+         - DISPATCHED
+         - DELIVERED
+         - UNDELIVERABLE
+         - TIMED_OUT
 
-                For details on error handling, you can refer to the following documentation pages:
-                
-                 - **WhatsApp**
-                
-                   - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
-                   - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      oneOf:
-                        - $ref: "#/components/schemas/WebhookStatusMessage"
-                        - $ref: "#/components/schemas/WebhookStatusWithError"
-              responses:
-                "200":
-                  description: OK
-      description: Creates a new Callback Configuration.
+         For details on error handling, you can refer to the following documentation pages:
+         
+         - **WhatsApp**
+         
+           - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
+           - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
       operationId: createCallback
       requestBody:
         content:
