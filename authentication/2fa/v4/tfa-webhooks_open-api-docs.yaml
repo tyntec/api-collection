@@ -49,7 +49,7 @@ paths:
           
           - [On-Premises Errors](https://developers.facebook.com/docs/whatsapp/on-premises/errors)
           - [Cloud API Error Codes](https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes)
-      operationId: create
+      operationId: createWebhook
       requestBody:
         content:
           application/json:

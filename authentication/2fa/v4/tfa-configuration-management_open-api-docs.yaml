@@ -25,7 +25,7 @@ paths:
   /2fa/v4/configurations/callbacks:
     get:
       description: Lists all Callback Configurations.
-      operationId: get
+      operationId: getAllCallbacks
       responses:
         "200":
           content:
@@ -74,7 +74,7 @@ paths:
                 "200":
                   description: OK
       description: Creates a new Callback Configuration.
-      operationId: create_7
+      operationId: createCallback
       requestBody:
         content:
           application/json:
@@ -106,7 +106,7 @@ paths:
   /2fa/v4/configurations/callbacks/{id}:
     delete:
       description: Deletes the Callback Configuration by specified ID
-      operationId: delete_5
+      operationId: deleteCallback
       parameters:
       - in: path
         name: id
@@ -133,7 +133,7 @@ paths:
       - Callback Configuration Management
     patch:
       description: Patches the Callback Configuration by specified ID
-      operationId: patch_5
+      operationId: patchCallback
       parameters:
         - in: path
           name: id
@@ -177,7 +177,7 @@ paths:
   /2fa/v4/configurations/channels/whatsapp:
     get:
       description: Returns details of a WhatsApp Configuration.
-      operationId: findAllBy_2
+      operationId: findAllWhatsappConfig
       responses:
         "200":
           content:
@@ -202,7 +202,7 @@ paths:
       - WhatsApp Configuration Management
     post:
       description: Creates a new WhatsApp Configuration.
-      operationId: create_6
+      operationId: createWhatsappConfig
       requestBody:
         content:
           application/json:
