@@ -715,7 +715,7 @@ components:
         reason:
           type: String
           example: "activeNumber is true."
-          description: This number is assigned to a subscriber.
+          description: This number is assigned to a subscriber and it is active.
         reasonCode:
           type: integer
           example: 1102
@@ -734,7 +734,7 @@ components:
         reason:
           type: String
           example: "activeNumber is unknown."
-          description: This number is assigned to a subscriber.
+          description: This number status can currently not be identified.
         reasonCode:
           type: integer
           example: 1103
