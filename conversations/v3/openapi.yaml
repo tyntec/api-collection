@@ -5,7 +5,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.0'
+  version: '3.20'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-major-version: v3
   x-postman-collection: postman.zip
@@ -112,6 +112,8 @@ components:
               - sms
               - whatsapp
               - viber
+              - mms
+              - rcs
         overrides:
           $ref: '#/components/schemas/MessageRequestOverrides'
         context:
