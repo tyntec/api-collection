@@ -1,0 +1,263 @@
+openapi: '3.0.0'
+info:
+  title: RCS
+  description: |
+    The Conversations API allows you to easily reach out and communicate with your clients via RCS.
+
+  contact:
+    name: tyntec API Support
+    url: http://www.tyntec.com/support
+    email: support@tyntec.com
+  version: '3.0'
+  x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
+  x-specification-file: rcs.yaml
+  x-major-version: v3
+servers:
+  - url: https://api.tyntec.com/conversations/v3
+security:
+  - ApiKeyAuth: [ ]
+tags:
+  - name: "Messaging"
+    description: |
+      In this section we guide you on how to send messages, get information about the status and the events happening during the delivery.
+  - name: "RCS Phone Numbers"
+    description: |
+      List all RCS Phone Numbers configured for your API account.
+  - name: "Callback configuration"
+    description: |
+      In this section, we guide you on how to configure the callbacks on a per-channel basis.
+paths:
+  /messages:
+    post:
+      operationId: sendMessage
+      summary: Send a message
+      tags:
+        - "Messaging"
+      description: Send messages via this path.
+      requestBody:
+        description: The message you would like to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        202:
+          $ref: '#/components/responses/MessageResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/rcs:
+    get:
+      tags:
+        - "RCS Agents"
+      summary: List RCS Agents
+      operationId: listAllRcsChannels
+      description: List all RCS Agent configurations available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllRcsChannelsResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/rcs/agents/{rcs-agent-id}:
+    parameters:
+      - $ref: '#/components/parameters/RcsAgentId'
+    get:
+      tags:
+        - "RCS Agent Id"
+      summary: Read a configuration
+      operationId: getRcsChannelConfig
+      description: Returns the specific channel configuration
+      responses:
+        200:
+          $ref: '#/components/responses/RcsChannelResponse'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /configurations/channels/rcs/agents/{rcs-agent-id}/callbacks:
+    parameters:
+      - $ref: '#/components/parameters/RcsAgentId'
+    put:
+      tags:
+        - "Callback configuration"
+      summary: Update the callback
+      operationId: updateRcsChannelCallback
+      description: Update the callback settings of a specific Rcs Agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCallback'
+      responses:
+        200:
+          $ref: '#/components/responses/RcsChannelResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+  parameters:
+    RcsAgentId:
+      name: rcs-agent-id
+      in: path
+      required: true
+      description: RCS agent id
+      schema:
+        type: string
+        minLength: 1
+      example: foobar_agent
+  responses:
+    MessageResponse:
+      description: The response after the server has accepted the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+    Default:
+      description: The default response in case of any other error. Please check the error object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: The request does not match our expectations. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            violations: [
+              {
+                field: validate.request.content.contentType,
+                message: must not be empty
+              }
+            ]
+            title: Constraint Violation
+    Forbidden:
+      description: You attempting to use a number that is not assigned to your account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://httpstatuses.com/403
+            title: Forbidden
+            status: 403
+    ListAllRcsChannelsResponse:
+      description: A list of RCS channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RcsChannelResponses'
+    RcsChannelResponse:
+      description: A RCS agent configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RcsChannelResponse'
+  schemas:
+    Problem:
+      $ref: './common.yaml#/components/schemas/Problem'
+    MessageResponse:
+      $ref: './common.yaml#/components/schemas/MessageResponse'
+    MessageRequest:
+      type: object
+      description: The message you would like to send
+      required:
+        - to
+        - channel
+        - from
+      properties:
+        to:
+          type: string
+          description: |
+            The message's recipient phone number
+          example: "+49231987654"
+        from:
+          type: string
+          description: |
+            The agent id the message should be sent from.
+          example: "agent_id_1"
+        channel:
+          type: string
+          description: The channel selected for delivery.
+          example: rcs
+          enum:
+            - rcs
+        overrides:
+          $ref: 'common.yaml#/components/schemas/MessageRequestOverrides'
+        context:
+          type: string
+          description: The context for this particular message
+          maxLength: 125
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/RcsTextContent'
+            - $ref: '#/components/schemas/RcsMediaContent'
+      example:
+        to: "+49231987654"
+        from: "agent_id_1"
+        channel:  "rcs"
+        content:
+          contentType: media
+          media:
+            url: https://test.com/image.jpg
+    RcsTextContent:
+      type: object
+      description: A plain text message
+      required:
+        - contentType
+        - text
+      properties:
+        contentType:
+          type: string
+          description: Determines the type of the message. Always _text_.
+          enum:
+            - text
+        text:
+          type: string
+          description: Text to be sent
+          maxLength: 3072
+    RcsMediaContent:
+      type: object
+      properties:
+        contentType:
+          type: string
+          enum:
+            - media
+        media:
+          $ref: '#/components/schemas/RcsMedia'
+    #
+    # Media
+    #
+    RcsMedia:
+      type: object
+      description: One of both properties _url_ or _id_ **must** be set
+      properties:
+        id:
+          type: string
+          description: The media id of previously uploaded media
+          format: uuid
+        url:
+          type: string
+          description: the url of the location where the media is stored
+    RcsChannelResponse:
+      $ref: './configurations.yaml#/components/schemas/RcsChannelResponse'
+    RcsChannelResponses:
+      $ref: './configurations.yaml#/components/schemas/RcsChannelResponses'
+    ChannelCallback:
+      $ref: './configurations.yaml#/components/schemas/ChannelCallback'
