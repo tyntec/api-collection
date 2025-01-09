@@ -1,18 +1,23 @@
 # Release notes
 
+## 3.20
+### Changes
+#### Added RCS channel
+#### minor fixes
+
 ## 3.19
 
-## Changes
+### Changes
 
-### Small fixes
+#### Small fixes
 
 Fix `mediaId` to `id` for WhatsApp media
 
-### Add extra Product fields
+#### Add extra Product fields
 
 Added new additional information for products in MoMessage and MoOrder messages.
 
-### Add image ID reference for MMS Images
+#### Add image ID reference for MMS Images
 
 MMS now supports adding already uploaded images via image ID.
 

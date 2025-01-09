@@ -255,6 +255,16 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ListAllMmsChannelsResponse'
+  /configurations/channels/rcs:
+    get:
+      tags:
+        - "Channel Configurations"
+      summary: List all RCS channels
+      operationId: listAllRcsChannels
+      description: List all RCS channels available to your API account
+      responses:
+        200:
+          $ref: '#/components/responses/ListAllRcsChannelsResponse'
   /configurations/channels/viber:
     get:
       tags:
@@ -324,6 +334,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/MmsChannelResponses'
+    ListAllRcsChannelsResponse:
+      description: A list of RCS channel configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RcsChannelResponses'
     ListAllViberChannelsResponse:
       description: A list of Viber channel configurations
       content:
@@ -370,6 +386,7 @@ components:
           enum:
             - "2.11"
             - "2.12"
+            - "2.13"
           default: "2.12"
         signature:
           $ref: '#/components/schemas/Signature'
@@ -501,6 +518,7 @@ components:
         anyOf:
           - $ref: '#/components/schemas/SMSChannelResponse'
           - $ref: '#/components/schemas/MmsChannelResponse'
+          - $ref: '#/components/schemas/RcsChannelResponse'
           - $ref: '#/components/schemas/ViberChannelResponse'
           - $ref: '#/components/schemas/WhatsAppChannelResponse'
     ChannelResponse:
@@ -536,6 +554,8 @@ components:
           description: The event version to be used.
           enum:
             - "2.11"
+            - "2.12"
+            - "2.13"
         inboundMessageUrl:
           type: string
           description: A webhook for events related to inbound messages
@@ -576,6 +596,33 @@ components:
         name: your name
         callback:
           callbackVersion: "2.11"
+          inboundMessageUrl: https://your.server.com/inbound
+          messageStatusUrl: https://your.server.com/status
+          eventFilter:
+            - MessageStatus::accepted
+            - MessageStatus::dispatched
+    RcsChannelResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/RcsChannelResponse'
+    RcsChannelResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChannelResponse'
+      properties:
+        id:
+          $ref: '#/components/schemas/AgentId'
+      example:
+        channel: rcs
+        scopes:
+          - messages:read
+          - callbacks:write
+          - callbacks:read
+        id:
+          agentId: "agent_1"
+        name: your name
+        callback:
+          callbackVersion: "2.13"
           inboundMessageUrl: https://your.server.com/inbound
           messageStatusUrl: https://your.server.com/status
           eventFilter:
@@ -677,6 +724,12 @@ components:
       description: The definition of the Viber Service id
       properties:
         serviceId:
+          type: string
+    AgentId:
+      type: object
+      description: The definition of a RCS agent id
+      properties:
+        agentId:
           type: string
 
     #
