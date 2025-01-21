@@ -768,6 +768,29 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/identityKeyCheck:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    post:
+      operationId: enableIdentityKeyCheck
+      summary: Enable/disable identity key check
+      tags:
+        - "Profile management"
+      parameters:
+        - in: query
+          name: enable
+          required: true
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: identity key check successfully set
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
   /configurations/channels/whatsapp/phone-numbers/{phone-number}/callbacks:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -1751,6 +1774,9 @@ components:
           type: boolean
           description: In case a URL is present on the text should a preview be tried to be rendered
           default: false
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppImageContent:
       type: object
       description: Image message
@@ -1765,6 +1791,9 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppImage'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppDocumentContent:
       type: object
       description: A document message
@@ -1779,6 +1808,9 @@ components:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppDocument'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppVideoContent:
       type: object
       description: A video message
@@ -1793,6 +1825,9 @@ components:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppVideo'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppAudioContent:
       type: object
       description: An audio message
@@ -1807,6 +1842,9 @@ components:
             - audio
         audio:
           $ref: '#/components/schemas/WhatsAppAudio'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppStickerContent:
       type: object
       description: A sticker message
@@ -1821,6 +1859,9 @@ components:
             - sticker
         sticker:
           $ref: '#/components/schemas/WhatsAppSticker'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppLocationContent:
       type: object
       description: A location message
@@ -1835,6 +1876,9 @@ components:
             - location
         location:
           $ref: '#/components/schemas/WhatsAppLocation'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppReactionContent:
       type: object
       description: A reaction message
@@ -1849,6 +1893,9 @@ components:
             - reaction
         reaction:
           $ref: '#/components/schemas/WhatsAppReaction'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppContactsContent:
       type: object
       description: A message with contacts
@@ -1865,6 +1912,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Contact'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppTemplateContent:
       type: object
       description: Templated message
@@ -1879,6 +1929,9 @@ components:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppInteractiveContent:
       type: object
       description: Interactive message
@@ -1900,6 +1953,9 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
+        identityKeyHash:
+          type: string
+          description: The customer's hash ID
     WhatsAppInteractiveFooterContent:
       type: object
       description: The footer of an interactive message
