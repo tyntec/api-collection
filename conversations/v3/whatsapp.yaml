@@ -1774,6 +1774,9 @@ components:
           type: boolean
           description: In case a URL is present on the text should a preview be tried to be rendered
           default: false
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1791,6 +1794,9 @@ components:
             - image
         image:
           $ref: '#/components/schemas/WhatsAppImage'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1808,6 +1814,9 @@ components:
             - document
         document:
           $ref: '#/components/schemas/WhatsAppDocument'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1825,6 +1834,9 @@ components:
             - video
         video:
           $ref: '#/components/schemas/WhatsAppVideo'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1842,6 +1854,9 @@ components:
             - audio
         audio:
           $ref: '#/components/schemas/WhatsAppAudio'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1859,6 +1874,9 @@ components:
             - sticker
         sticker:
           $ref: '#/components/schemas/WhatsAppSticker'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1876,6 +1894,9 @@ components:
             - location
         location:
           $ref: '#/components/schemas/WhatsAppLocation'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1893,6 +1914,9 @@ components:
             - reaction
         reaction:
           $ref: '#/components/schemas/WhatsAppReaction'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1912,6 +1936,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Contact'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1929,6 +1956,9 @@ components:
             - template
         template:
           $ref: '#/components/schemas/WhatsAppTemplate'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
@@ -1953,6 +1983,9 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
+        replyTo:
+          type: string
+          description: The whatsapp message ID of the referenced message
         identityKeyHash:
           type: string
           description: The customer's hash ID
