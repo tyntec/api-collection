@@ -503,11 +503,11 @@ components:
       description: An emoji reaction to a formely sent message
       properties:
         messageId:
-          type: String
+          type: string
           description: The messageId of the message this reaction is belonging to.
           example: wamid.HBgMNDkxNzk3ODEwNTM1FQIAEhgUM0E5Mjg5NUVGMEJBMzcwMENERDEB
         emoji:
-          type: String
+          type: string
           description: The actual reaction consisting of exactly on emoji, or an empty string indicating deletion of a reaction.
           example: 😀
     MoMedia:
@@ -719,7 +719,7 @@ components:
           text: 'Hi, thanks for your support message'
         whatsapp:
           senderName: Peter
-          recipientIdentityKeyHash: DF2lS5v2W6x=
+          identityKeyHash: DF2lS5v2W6x=
     Whatsapp:
       type: object
       description: Details specific to the WhatsApp channel
@@ -728,13 +728,13 @@ components:
           type: string
           description: The name of the sender, set in his or her profile
           example: Peter
-        recipientIdentityKeyHash:
+        identityKeyHash:
           type: string
           description: The customer's hash ID
           example: DF2lS5v2W6x=
       example:
         senderName: Peter
-        recipientIdentityKeyHash: DF2lS5v2W6x=
+        identityKeyHash: DF2lS5v2W6x=
       additionalProperties: true
     MessageRequestContext:
       type: object
@@ -850,7 +850,7 @@ components:
           messageId: 77185196-664a-43ec-b14a-fe97036c697e
         whatsapp:
           senderName: open api sample
-          recipientIdentityKeyHash: DF2lS5v2W6x=
+          identityKeyHash: DF2lS5v2W6x=
           text: I liked the event
     MoMessageOrder:
       type: object
@@ -925,7 +925,7 @@ components:
               currency: "USD"
         whatsapp:
           senderName: Test User
-          recipientIdentityKeyHash: DF2lS5v2W6x=
+          identityKeyHash: DF2lS5v2W6x=
     PostBack:
       type: object
       properties:
