@@ -1,5 +1,15 @@
 # Release notes
 
+## 3.21
+
+### Changes
+
+#### Add WA hash ID
+Added support for the WhatsApp hash ID
+
+#### ReplyTo in WhatsApp messages
+Reply to specific messages with `replyTo` using the WhatsApp Message ID `wamid` of the referred message
+
 ## 3.20
 ### Changes
 #### Added RCS channel
