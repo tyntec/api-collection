@@ -1103,7 +1103,7 @@ components:
         maxLength: 15
       example: 4923147790717
     PhoneNumberQuery:
-      name: phone-number
+      name: phoneNumber
       in: query
       description: The phone number used for WhatsApp messaging
       schema:
