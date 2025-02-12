@@ -1,12 +1,12 @@
 asyncapi: '2.1.0'
 info:
   title: Web Hook Specifications
-  description: Web Hook Specifications
+  description: Webhook specifications
   version: 1.0.0
 servers:
   production:
     url: 78.110.226.11
-    description: Server address of tyntec, the events origin from
+    description: tyntec's server address - from where the events originate
     protocol: https
 channels:
   "Inbound Message (Basic)":
