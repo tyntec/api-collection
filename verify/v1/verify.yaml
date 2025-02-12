@@ -64,7 +64,7 @@ paths:
         
         | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
         | ---              | ---           | ---                | ---                                                                                                                             |
-        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | activeNumber     | string        | is, is_in          | true, false or unknown. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                      |                                                                                      
         | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
         | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
         | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
@@ -281,7 +281,7 @@ paths:
         
         | Criterion        | Variable Type | Allowed Operations | Allowed Values                                                                                                                  |
         | ---              | ---           | ---                | ---                                                                                                                             |
-        | activeNumber     | boolean       | is                 | true/false                                                                                                                      |
+        | activeNumber     | string        | is, is_in          | true, false or unknown. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                      |
         | numberType       | string        | is, is_in          | fixed or mobile. <p>In case of *is_in* operator multiple comma separated values can be provided</p>                             |
         | operatorCountry  | string        | is, is_in          | country in ISO Alpha-3 format e.g. DEU, GBR. <p>In case of *is_in* operator multiple comma separated values can be provided</p> |
         | disposableNumber | boolean       | is                 | true/false                                                                                                                      |
@@ -451,6 +451,7 @@ paths:
         |    1001    | ValidNumberFormat | The number format is incorrect, and it is not matching the defined verification criteria                      |
         |    1101    | activeNumber      | The number is flagged as not active, indicating that it is not currently in use or accessible for communication, and it is not matching defined verification criteria | 
         |    1102    | activeNumber      | The number is flagged as active, and it is not matching defined verification criteria                         |
+        |    1103    | activeNumber      | The number is flagged as no-coverage, and it is not matching defined verification criteria                    |
         |    1201    | numberType        | The number type is fixed, and it is not matching defined verification criteria                                |
         |    1202    | numberType        | The number type is mobile, and it is not matching defined verification criteria                               |
         |    1203    | numberType        | The number type is voip, and it is not matching defined verification criteria                                 |
@@ -492,6 +493,7 @@ paths:
                   - $ref: '#/components/schemas/ValidNumberFormatFalseResponse'
                   - $ref: '#/components/schemas/ActiveNumberFalseResponse'
                   - $ref: '#/components/schemas/ActiveNumberTrueResponse'
+                  - $ref: '#/components/schemas/ActiveNumberUnknownResponse'
                   - $ref: '#/components/schemas/NumberTypeFixedResponse'
                   - $ref: '#/components/schemas/NumberTypeMobileResponse'
                   - $ref: '#/components/schemas/NumberTypeVoipResponse'
@@ -510,7 +512,7 @@ paths:
                   value:
                     requestId: "4457068c-194d-4f72-9550-13b81ec054a9"
                     validNumberFormat: true
-                    activeNumber: true
+                    activeNumber: "true"
                     numberType: "mobile"
                     operatorName: "T-Mobile Czech Republic a.s."
                     operatorCountry: "CZE"
@@ -630,8 +632,8 @@ components:
           example: true
           description: Is it valid phone number?
         activeNumber:
-          type: boolean
-          example: true
+          type: string
+          example: "true"
           description: Is this number assigned to a subscriber?
         numberType:
           type: string
@@ -698,7 +700,7 @@ components:
         reasonCode:
           type: integer
           example: 1101
-          description: reason code when activeNumber = false but configured Template as activeNumber = true
+          description: reason code when activeNumber = "false" but configured Template as activeNumber = "true".
     ActiveNumberTrueResponse:
       type: object
       properties:
@@ -713,11 +715,30 @@ components:
         reason:
           type: String
           example: "activeNumber is true."
-          description: This number is assigned to a subscriber.
+          description: This number is assigned to a subscriber and it is active.
         reasonCode:
           type: integer
           example: 1102
-          description: reason code when activeNumber = true but configured Template Criterion is activeNumber = false.
+          description: reason code when activeNumber = "true" but configured Template Criterion is activeNumber = "false".
+    ActiveNumberUnknownResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: "4457068c-194d-4f72-9550-13b81ec054a9"
+          description: Unique ID of the request.
+        verified:
+          type: boolean
+          example: false
+          description: The final status of the number verify.
+        reason:
+          type: String
+          example: "activeNumber is unknown."
+          description: This number status can currently not be identified.
+        reasonCode:
+          type: integer
+          example: 1103
+          description: reason code when activeNumber = "unknown" but configured Template Criterion is activeNumber = "true".
     NumberTypeFixedResponse:
       type: object
       properties:
@@ -1030,6 +1051,7 @@ components:
       items:
         anyOf:
           - $ref: '#/components/schemas/ActiveNumberIsCriteriaItem'
+          - $ref: '#/components/schemas/ActiveNumberIsInCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsCriteriaItem'
           - $ref: '#/components/schemas/NumberTypeIsInCriteriaItem'
           - $ref: '#/components/schemas/OperatorCountryIsCriteriaItem'
@@ -1044,9 +1066,19 @@ components:
           type: object
           properties:
             is:
-              type: boolean
-              example: true
+              type: string
+              example: "true"
               description: criteria IS true
+    ActiveNumberIsInCriteriaItem:
+      type: object
+      properties:
+        activeNumber:
+          type: object
+          properties:
+            is_in:
+              type: string
+              example: "true, unknown"
+              description: criteria IS IN true or unknown.
     DisposableNumberIsCriteriaItem:
       type: object
       properties:
