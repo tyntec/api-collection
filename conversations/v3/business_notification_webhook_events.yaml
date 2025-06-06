@@ -102,3 +102,17 @@ components:
             reason:
               type: string
               description: "Reason for update"
+            restrictions:
+              type: array
+              description: "One or more restrictions with their expiration date"
+              items:
+                $ref: "#/components/schemas/businessRestriction"
+    businessRestriction:
+      type: object
+      properties:
+        restrictionType:
+          type: string
+          description: "The type of the restriction applied"
+        expiration:
+          type: string
+          description: "The datetime until when the restriction is applied"
