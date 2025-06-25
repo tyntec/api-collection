@@ -1163,6 +1163,32 @@ components:
           type: object
           description: WhatsApp related additional information. Since 2.12
           properties:
+            pricing:
+              description: Pricing Information (see https://developers.facebook.com/docs/whatsapp/pricing/updates-to-pricing/#per-message-pricing for detailed field description)
+              type: object
+              properties:
+                billable:
+                  type: boolean
+                  description: deprecated
+                pricingModel:
+                  type: string
+                  description: from 01.07.25 on, this is always 'PMP'
+                type:
+                  type: string
+                  enum:
+                    - regular
+                    - free_customer_service
+                    - free_entry_point
+                category:
+                  type: string
+                  enum:
+                    - authentication
+                    - authentication_international
+                    - marketing
+                    - marketing_lite
+                    - utility
+                    - service
+                    - referral_conversion
             conversation:
               description: Conversation Information
               type: object
