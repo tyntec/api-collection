@@ -3308,6 +3308,9 @@ components:
           description: WhatsApp message status
           enum:
             - read
+        isTyping:
+          type: boolean
+          description: Indicate if the "is typing..." message is shown to the end user
     WhatsAppProfileLogoLink:
       type: object
       description: A link to the profile logo
