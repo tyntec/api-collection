@@ -79,7 +79,7 @@ tags:
       The Flows API enables you to perform a variety of operations with Flows, like create flows, update flows, get flows, publish...
   - name: "Pricing analytics"
     description: |
-      Pricing analytics exposes billing information as applied by Meta. The underlying datasource is described here:
+      Pricing analytics exposes billing information as provided by Meta. The underlying datasource is described here:
       https://developers.facebook.com/docs/whatsapp/business-management-api/analytics#pricing-analytics
 
 paths:
