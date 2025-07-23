@@ -4551,10 +4551,12 @@ components:
       properties:
         start:
           type: string
+          format: date-time
           description: starting timestamp in ISO 8601 representation
           example: 2025-07-15T00:00:00Z
         end:
           type: string
+          format: date-time
           description: ending timestamp in ISO 8601 representation
           example: 2025-07-16T00:00:00Z
         granularity:
@@ -4631,10 +4633,12 @@ components:
         properties:
           start:
             type: string
+            format: date-time
             description: start timestamp of this datapoint in ISO 8601 representation
             example: 2025-07-15T00:00:00Z
           end:
             type: string
+            format: date-time
             description: end timestamp of this datapoint in ISO 8601 representation
             example: 2025-07-16T00:00:00Z
           phoneNumber:
@@ -4663,7 +4667,7 @@ components:
             example: 124
           cost:
             type: number
-              format: float
+            format: float
             description: cost of messages in this datapoint
             example: 12.77
     WhatsAppFlows:
