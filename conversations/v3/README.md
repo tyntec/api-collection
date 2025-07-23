@@ -1,5 +1,12 @@
 # Release notes
 
+## 3.22
+
+### Changes
+
+#### Add pricing analytics endpoint
+#### Add support for business initiated typing indication
+
 ## 3.21
 
 ### Changes
