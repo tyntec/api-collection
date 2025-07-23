@@ -80,7 +80,7 @@ tags:
   - name: "Pricing analytics"
     description: |
       Pricing analytics exposes billing information as provided by Meta. The underlying datasource is described here:
-      https://developers.facebook.com/docs/whatsapp/business-management-api/analytics#pricing-analytics
+      [Pricing Analytics](https://developers.facebook.com/docs/whatsapp/business-management-api/analytics#pricing-analytics)
 
 paths:
   /messages:
@@ -4552,16 +4552,16 @@ components:
         start:
           type: string
           format: date-time
-          description: starting timestamp in ISO 8601 representation
+          description: Starting timestamp in ISO 8601 representation
           example: 2025-07-15T00:00:00Z
         end:
           type: string
           format: date-time
-          description: ending timestamp in ISO 8601 representation
+          description: Ending timestamp in ISO 8601 representation
           example: 2025-07-16T00:00:00Z
         granularity:
           type: string
-          description: size of aggregated buckets in time dimension
+          description: Size of aggregated buckets in time dimension
           enum:
             - MONTHLY
             - DAILY
@@ -4571,7 +4571,7 @@ components:
           items: 
             type: string
           example: ["49123456789", "15559876543"]
-          description: list of phone numbers for which analytics should be retrieved (all numbers if not provided)
+          description: List of phone numbers for which analytics should be retrieved (all numbers if not provided)
         countryCodes:
           type: array
           items:
@@ -4579,49 +4579,49 @@ components:
             minLength: 2
             maxLength: 2
           example: ["DE", "US"]
-          description: list of destination countries for which analytics should be retrieved (all countries if not provided)
+          description: List of destination countries for which analytics should be retrieved (all countries if not provided)
         pricingCategories:
           type: array
           items:
             type: string
-            enum:
-              - AUTHENTICATION
-              - AUTHENTICATION_INTERATIONAL
-              - MARKETING
-              - MARKETING_LITE
-              - SERVICE
-              - UTILITY
+          enum:
+            - AUTHENTICATION
+            - AUTHENTICATION_INTERNATIONAL
+            - MARKETING
+            - MARKETING_LITE
+            - SERVICE
+            - UTILITY
           example: ["AUTHENTICATION", "SERVICE"]
           description: list of pricing categories for which analytics should be retrieved (all categories if not provided)
         pricingTypes:
           type: array
           items:
             type: string
-            enum:
-              - REGULAR
-              - FREE_CUSTOMER_SERVICE
-              - FREE_ENTRY_POINT
+          enum:
+            - REGULAR
+            - FREE_CUSTOMER_SERVICE
+            - FREE_ENTRY_POINT
           example: ["REGULAR"]
           description: list of pricing types for which analytics should be retrieved (all types if not provided)
         metricTypes:
           type: array
           items:
             type: string
-            enum:
-              - COST
-              - VOLUME
+          enum:
+            - COST
+            - VOLUME
           example: ["VOLUME"]
           description: list of metric types for which analytics should be retrieved (all types if not provided)
         dimensions:
           type: array
           items:
             type: string
-            enum:
-              - COUNTRY
-              - PHONE
-              - PRICING_CATEGORY
-              - PRICING_TYPE
-              - TIER
+          enum:
+            - COUNTRY
+            - PHONE
+            - PRICING_CATEGORY
+            - PRICING_TYPE
+            - TIER
           example: ["COUNTRY", "TIER"]
           description: list of breakdowns that should be applied (no breakdowns if not provided)
     AnalyticsDatapoints:
@@ -4634,41 +4634,41 @@ components:
           start:
             type: string
             format: date-time
-            description: start timestamp of this datapoint in ISO 8601 representation
+            description: Start timestamp of this datapoint in ISO 8601 representation
             example: 2025-07-15T00:00:00Z
           end:
             type: string
             format: date-time
-            description: end timestamp of this datapoint in ISO 8601 representation
+            description: End timestamp of this datapoint in ISO 8601 representation
             example: 2025-07-16T00:00:00Z
           phoneNumber:
             type: string
-            description: phone number this datapoint is referring to
+            description: Phone number this datapoint is referring to
             example: 4912349876543
           country:
             type: string
-            description: destination country this datapoint is referring to
+            description: Destination country this datapoint is referring to
             example: DE
           tier:
             type: string
-            description: pricing tier this datapoint is referring to
+            description: Pricing tier this datapoint is referring to
             example: "0:750000"
           pricingType:
             type: string
-            description: pricing type this datapoint is referring to
+            description: Pricing type this datapoint is referring to
             example: REGULAR
           pricingCategory:
             type: string
-            description: pricing category this datapoint is referring to
+            description: Pricing category this datapoint is referring to
             example: AUTHENTICATION
           volume:
             type: integer
-            description: count of messages in this datapoint
+            description: Count of messages in this datapoint
             example: 124
           cost:
             type: number
             format: float
-            description: cost of messages in this datapoint
+            description: Cost of messages in this datapoint
             example: 12.77
     WhatsAppFlows:
       type: array
