@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.19'
+  version: '3.22'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -77,6 +77,10 @@ tags:
     description: |
       Flows management enables you to interact with the flows defined for your WhatsApp account.
       The Flows API enables you to perform a variety of operations with Flows, like create flows, update flows, get flows, publish...
+  - name: "Pricing analytics"
+    description: |
+      Pricing analytics exposes billing information as provided by Meta. The underlying datasource is described here:
+      [Pricing Analytics](https://developers.facebook.com/docs/whatsapp/business-management-api/analytics#pricing-analytics)
 
 paths:
   /messages:
@@ -812,6 +816,31 @@ paths:
           $ref: '#/components/responses/BadRequest'
         403:
           $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/accounts/{whatsapp-account-id}/analytics/pricing:
+    parameters:
+      - $ref: '#/components/parameters/WhatsAppAccountId'
+    post:
+      operationId: getPricingAnalytics
+      summary: Get Pricing Analytics Datapoints
+      tags:
+        - "Pricing analytics"
+      description: Get list of analytics datapoints for specified parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsParameters'
+      responses:
+        200:
+          description: List of analytics datapoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsDatapoints'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
         default:
           $ref: '#/components/responses/Default'
   /channels/whatsapp/accounts/{whatsapp-account-id}/flows:
@@ -4512,6 +4541,135 @@ components:
         score: RED
         reasons:
           - Users are choosing "didn't sign up" as a reason for blocking this phone number. Businesses must obtain opt-in before sending notifications. Please review your opt-in flow(s) and see our Business Policy for more detail.
+    AnalyticsParameters:
+      type: object
+      description: Information about how the returned data should be filtered and/or grouped
+      required:
+        - start
+        - end
+        - granularity
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Starting timestamp in ISO 8601 representation
+          example: 2025-07-15T00:00:00Z
+        end:
+          type: string
+          format: date-time
+          description: Ending timestamp in ISO 8601 representation
+          example: 2025-07-16T00:00:00Z
+        granularity:
+          type: string
+          description: Size of aggregated buckets in time dimension
+          enum:
+            - MONTHLY
+            - DAILY
+            - HALF_HOUR
+        phoneNumbers:
+          type: array
+          items: 
+            type: string
+          example: ["49123456789", "15559876543"]
+          description: List of phone numbers for which analytics should be retrieved (all numbers if not provided)
+        countryCodes:
+          type: array
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+          example: ["DE", "US"]
+          description: List of destination countries for which analytics should be retrieved (all countries if not provided)
+        pricingCategories:
+          type: array
+          items:
+            type: string
+          enum:
+            - AUTHENTICATION
+            - AUTHENTICATION_INTERNATIONAL
+            - MARKETING
+            - MARKETING_LITE
+            - SERVICE
+            - UTILITY
+          example: ["AUTHENTICATION", "SERVICE"]
+          description: list of pricing categories for which analytics should be retrieved (all categories if not provided)
+        pricingTypes:
+          type: array
+          items:
+            type: string
+          enum:
+            - REGULAR
+            - FREE_CUSTOMER_SERVICE
+            - FREE_ENTRY_POINT
+          example: ["REGULAR"]
+          description: list of pricing types for which analytics should be retrieved (all types if not provided)
+        metricTypes:
+          type: array
+          items:
+            type: string
+          enum:
+            - COST
+            - VOLUME
+          example: ["VOLUME"]
+          description: list of metric types for which analytics should be retrieved (all types if not provided)
+        dimensions:
+          type: array
+          items:
+            type: string
+          enum:
+            - COUNTRY
+            - PHONE
+            - PRICING_CATEGORY
+            - PRICING_TYPE
+            - TIER
+          example: ["COUNTRY", "TIER"]
+          description: list of breakdowns that should be applied (no breakdowns if not provided)
+    AnalyticsDatapoints:
+      type: array
+      description: List of analytics datapoints
+      items:
+        type: object
+        description: A single analytics datapoint
+        properties:
+          start:
+            type: string
+            format: date-time
+            description: Start timestamp of this datapoint in ISO 8601 representation
+            example: 2025-07-15T00:00:00Z
+          end:
+            type: string
+            format: date-time
+            description: End timestamp of this datapoint in ISO 8601 representation
+            example: 2025-07-16T00:00:00Z
+          phoneNumber:
+            type: string
+            description: Phone number this datapoint is referring to
+            example: 4912349876543
+          country:
+            type: string
+            description: Destination country this datapoint is referring to
+            example: DE
+          tier:
+            type: string
+            description: Pricing tier this datapoint is referring to
+            example: "0:750000"
+          pricingType:
+            type: string
+            description: Pricing type this datapoint is referring to
+            example: REGULAR
+          pricingCategory:
+            type: string
+            description: Pricing category this datapoint is referring to
+            example: AUTHENTICATION
+          volume:
+            type: integer
+            description: Count of messages in this datapoint
+            example: 124
+          cost:
+            type: number
+            format: float
+            description: Cost of messages in this datapoint
+            example: 12.77
     WhatsAppFlows:
       type: array
       description: A list of WhatsApp flows
