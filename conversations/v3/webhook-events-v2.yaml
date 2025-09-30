@@ -244,6 +244,66 @@ channels:
         http:
           type: request
           method: POST
+  "Call Message":
+    description: |
+      A call message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Received messages"
+      message:
+        $ref: '#/components/messages/CallMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Call Status: Ringing":
+    description: |
+      This event is triggered after the call connect request was successful and it is currently ringing.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/CallStatusRinging'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Call Status: Accepted":
+    description: |
+      This event is triggered after the end user has accepted your call request.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/CallStatusAccepted'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Call Status: Rejected":
+    description: |
+      This event is triggered after the end user has rejected your call request.
+    publish:
+      tags:
+        - name: "Delivery updates"
+      message:
+        $ref: '#/components/messages/CallStatusRejected'
+      bindings:
+        http:
+          type: request
+          method: POST
 components:
   messages:
     MoMessage:
@@ -285,6 +345,18 @@ components:
     MessageStatusUnknown:
       payload:
         $ref: '#/components/schemas/MessageStatusUnknown'
+    CallMessage:
+      payload:
+        $ref: '#/components/schemas/WhatsAppCallMessage'
+    CallStatusRinging:
+      payload:
+        $ref: '#/components/schemas/WhatsAppCallRingingStatus'
+    CallStatusAccepted:
+      payload:
+        $ref: '#/components/schemas/WhatsAppCallAcceptedStatus'
+    CallStatusRejected:
+      payload:
+        $ref: '#/components/schemas/WhatsAppCallRejectedStatus'
   schemas:
     APIEvent:
       type: object
@@ -332,6 +404,11 @@ components:
         - MessageStatus::failed
         - MessageStatus::seen
         - MessageStatus::unknown
+        - Call::Connect
+        - Call::Terminate
+        - CallStatus::ringing
+        - CallStatus::accepted
+        - CallStatus::rejected
     MoMessage:
       type: object
       description: |
@@ -1001,6 +1078,289 @@ components:
           type: string
           description: The currency of the product's price
           example: EUR
+    WhatsAppCallMessage:
+      type: object
+      description: |
+        A call message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+      required:
+        - callId
+        - event
+        - channel
+        - from
+        - to
+        - timestamp
+        - direction
+      properties:
+        callId:
+          type: string
+          description: The unique identifier provided by Meta for each call.
+          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        event:
+          type: string
+          description: Determines which type of event is sent.
+          enum:
+            - Call::Connect
+            - Call::Terminate
+        channel:
+          type: string
+          description: The channel that triggered the event.
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The caller phone number of the call, including the country code
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver phone number of the call, including the country code
+          example: "49123512315"
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the call message was received
+          example: 2025-10-01T10:00:00Z
+        direction:
+          type: string
+          description: The direction of the call being made.
+          example: BUSINESS_INITIATED
+          enum:
+            - BUSINESS_INITIATED
+            - USER_INITIATED
+        session:
+          type: object
+          description: An object that contains the session description protocol (SDP) type and description language
+          properties:
+            sdpType:
+              type: string
+              description: The session description protocol type
+              enum:
+                - answer
+                - offer
+            sdp:
+              type: string
+              description: The SDP info of the device on the other end of the call. The SDP must be compliant with [RFC 8866](https://datatracker.ietf.org/doc/html/rfc8866?fbclid=IwZXh0bgNhZW0CMTEAAR4HJ3Q9N0zf9Gm6wQ9gAnFxJ1tHHQ3kkV63RqBvQO3MpEv5Wp4Cuto4-axx1g_aem_5UvSPiN3fDXy8cEcx-KzQQ).
+              example: <<RFC 8866 SDP>>
+        status:
+          type: string
+          description: The final status of the call
+          enum:
+            - COMPLETED
+            - FAILED
+          example: COMPLETED
+        startTime:
+          type: string
+          format: 'date-time'
+          description: The point in time when the call started
+          example: 2025-10-01T10:00:00Z
+        endTime:
+          type: string
+          format: 'date-time'
+          description: The point in time when the call ended
+          example: 2025-10-01T10:00:00Z
+        duration:
+          type: number
+          description: The duration of the call in seconds.
+          example: 20
+      examples:
+        - CallConnectMessage:
+            value:
+              event: Call::Connect
+              channel: whatsapp
+              from: 49123512314
+              to: 49123512314
+              callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+              timestamp: 2025-10-01T10:00:00Z
+              direction: BUSINESS_INITIATED
+              session:
+                type: answer
+                sdp: <<RFC 8866 SDP>>
+        - CallTerminateMessage:
+            value:
+              event: Call::Terminate
+              channel: whatsapp
+              from: 49123512314
+              to: 49123512314
+              callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+              timestamp: 2025-10-01T10:00:00Z
+              direction: BUSINESS_INITIATED
+              status: COMPLETED
+              startTime: 2025-10-01T10:00:00Z
+              endTime: 2025-10-01T10:00:20Z
+              duration: 20
+    WhatsAppCallRingingStatus:
+      type: object
+      description: |
+        Indicates the call is ringing
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - status
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which event type is sent. Always _CallStatus::ringing_
+          enum:
+            - CallStatus::ringing
+        messageId:
+          type: string
+          description: The call ID reference
+          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          example: whatsapp
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+          example:
+            2019-06-26T11:41:28Z
+        from:
+          type: string
+          description: The caller phone number of the call, including the country code
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver phone number of the call, including the country code
+          example: "49123512315"
+        status:
+          type: string
+          description: The current status of the call. Always _ringing_
+          example: ringing
+          enum:
+            - ringing
+      example:
+        event: CallStatus::ringing
+        messageId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel: whatsapp
+        from: 49123512314
+        to: 49123512314
+        status: ringing
+        timestamp: 2019-06-26T11:41:28Z
+    WhatsAppCallAcceptedStatus:
+      type: object
+      description: |
+        Indicates the call has been accepted by the end user
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - status
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which event type is sent. Always _CallStatus::accepted_
+          enum:
+            - CallStatus::accepted
+        messageId:
+          type: string
+          description: The call ID reference
+          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          example: whatsapp
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+          example:
+            2019-06-26T11:41:28Z
+        from:
+          type: string
+          description: The caller phone number of the call, including the country code
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver phone number of the call, including the country code
+          example: "49123512315"
+        status:
+          type: string
+          description: The current status of the call. Always _accepted_
+          example: accepted
+          enum:
+            - accepted
+      example:
+        event: CallStatus::accepted
+        messageId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel: whatsapp
+        from: 49123512314
+        to: 49123512314
+        status: accepted
+        timestamp: 2019-06-26T11:41:28Z
+    WhatsAppCallRejectedStatus:
+      type: object
+      description: |
+        Indicates the call has been rejected by the end user
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - status
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        event:
+          type: string
+          description: Determines which event type is sent. Always _CallStatus::rejected_
+          enum:
+            - CallStatus::rejected
+        messageId:
+          type: string
+          description: The call ID reference
+          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          example: whatsapp
+          enum:
+            - whatsapp
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+          example:
+            2019-06-26T11:41:28Z
+        from:
+          type: string
+          description: The caller phone number of the call, including the country code
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver phone number of the call, including the country code
+          example: "49123512315"
+        status:
+          type: string
+          description: The current status of the call. Always _rejected_
+          example: rejected
+          enum:
+            - rejected
+      example:
+        event: CallStatus::rejected
+        messageId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        channel: whatsapp
+        from: 49123512314
+        to: 49123512314
+        status: rejected
+        timestamp: 2019-06-26T11:41:28Z
     MessageStatusDeletedEvent:
       type: object
       description: |
