@@ -31,6 +31,8 @@ tags:
       Events emitted when the recipient of the message replies or deletes a previously sent message.
   - name: "Delivery updates"
     description: Events emitted on updates of message delivery.
+  - name: "Calling"
+    description: Events emitted when receiving messages or updates for WhatsApp Calling
 servers:
   production:
     url: 78.110.226.11
@@ -253,7 +255,7 @@ channels:
       - WhatsApp
     publish:
       tags:
-        - name: "Received messages"
+        - name: "Calling"
       message:
         $ref: '#/components/messages/CallMessage'
       bindings:
@@ -269,7 +271,7 @@ channels:
       - WhatsApp
     publish:
       tags:
-        - name: "Delivery updates"
+        - name: "Calling"
       message:
         $ref: '#/components/messages/CallStatusRinging'
       bindings:
@@ -285,7 +287,7 @@ channels:
       - WhatsApp
     publish:
       tags:
-        - name: "Delivery updates"
+        - name: "Calling"
       message:
         $ref: '#/components/messages/CallStatusAccepted'
       bindings:
@@ -297,7 +299,7 @@ channels:
       This event is triggered after the end user has rejected your call request.
     publish:
       tags:
-        - name: "Delivery updates"
+        - name: "Calling"
       message:
         $ref: '#/components/messages/CallStatusRejected'
       bindings:
@@ -411,8 +413,7 @@ components:
         - CallStatus::rejected
     MoMessage:
       type: object
-      description: |
-        A message received by us and delivered to your system via a webhook provided by your system.
+      description: A message received by us and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -615,8 +616,7 @@ components:
           example: This is a picture of my cat!
     SMSMoMessage:
       type: object
-      description: |
-        A message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
+      description: A message received by us on the SMS channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -761,8 +761,7 @@ components:
           example: 1
     WhatsAppMoMessage:
       type: object
-      description: |
-        A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+      description: A message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -826,8 +825,7 @@ components:
             my-message-reference
     ViberMoMessage:
       type: object
-      description: |
-        A message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
+      description: A message received by us on the Viber channel and delivered to your system via a webhook provided by your system.
       required:
         - messageId
         - event
@@ -859,8 +857,7 @@ components:
           text: 'Hi, thanks for your support message'
     MoMessagePostBack:
       type: object
-      description: |
-        Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
+      description: Postbacks are triggered when a user clicks on a button or interacts with any element that supports this.
 
         For WhatsApp only Quick Reply buttons trigger this event.
       required:
@@ -931,8 +928,7 @@ components:
           text: I liked the event
     MoMessageOrder:
       type: object
-      description: |
-        Orders are triggered when a user places an order from a shopping cart.
+      description: Orders are triggered when a user places an order from a shopping cart.
       required:
         - messageId
         - event
@@ -1080,8 +1076,7 @@ components:
           example: EUR
     WhatsAppCallMessage:
       type: object
-      description: |
-        A call message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
+      description: A call message received by us on the WhatsApp channel and delivered to your system via a webhook provided by your system.
       required:
         - callId
         - event
@@ -1094,7 +1089,6 @@ components:
         callId:
           type: string
           description: The unique identifier provided by Meta for each call.
-          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
         event:
           type: string
           description: Determines which type of event is sent.
@@ -1109,20 +1103,16 @@ components:
         from:
           type: string
           description: The caller phone number of the call, including the country code
-          example: "49123512314"
         to:
           type: string
           description: The receiver phone number of the call, including the country code
-          example: "49123512315"
         timestamp:
           type: string
           format: 'date-time'
           description: The point in time when the call message was received
-          example: 2025-10-01T10:00:00Z
         direction:
           type: string
           description: The direction of the call being made.
-          example: BUSINESS_INITIATED
           enum:
             - BUSINESS_INITIATED
             - USER_INITIATED
@@ -1139,58 +1129,37 @@ components:
             sdp:
               type: string
               description: The SDP info of the device on the other end of the call. The SDP must be compliant with [RFC 8866](https://datatracker.ietf.org/doc/html/rfc8866?fbclid=IwZXh0bgNhZW0CMTEAAR4HJ3Q9N0zf9Gm6wQ9gAnFxJ1tHHQ3kkV63RqBvQO3MpEv5Wp4Cuto4-axx1g_aem_5UvSPiN3fDXy8cEcx-KzQQ).
-              example: <<RFC 8866 SDP>>
         status:
           type: string
           description: The final status of the call
           enum:
             - COMPLETED
             - FAILED
-          example: COMPLETED
         startTime:
           type: string
           format: 'date-time'
           description: The point in time when the call started
-          example: 2025-10-01T10:00:00Z
         endTime:
           type: string
           format: 'date-time'
           description: The point in time when the call ended
-          example: 2025-10-01T10:00:00Z
         duration:
           type: number
-          description: The duration of the call in seconds.
-          example: 20
-      examples:
-        - CallConnectMessage:
-            value:
-              event: Call::Connect
-              channel: whatsapp
-              from: 49123512314
-              to: 49123512314
-              callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
-              timestamp: 2025-10-01T10:00:00Z
-              direction: BUSINESS_INITIATED
-              session:
-                type: answer
-                sdp: <<RFC 8866 SDP>>
-        - CallTerminateMessage:
-            value:
-              event: Call::Terminate
-              channel: whatsapp
-              from: 49123512314
-              to: 49123512314
-              callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
-              timestamp: 2025-10-01T10:00:00Z
-              direction: BUSINESS_INITIATED
-              status: COMPLETED
-              startTime: 2025-10-01T10:00:00Z
-              endTime: 2025-10-01T10:00:20Z
-              duration: 20
+          description: The duration of the call in seconds
+      example:
+        event: Call::Connect
+        channel: whatsapp
+        from: 49123512314
+        to: 49123512314
+        callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
+        timestamp: 2025-10-01T11:11:11Z
+        direction: BUSINESS_INITIATED
+        session:
+          type: answer
+          sdp: <<RFC 8866 SDP>>
     WhatsAppCallRingingStatus:
       type: object
-      description: |
-        Indicates the call is ringing
+      description: Indicates the call is ringing
       required:
         - messageId
         - event
@@ -1210,31 +1179,24 @@ components:
         messageId:
           type: string
           description: The call ID reference
-          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
         channel:
           type: string
           description: The channel that triggered the event. Always _whatsapp_
-          example: whatsapp
           enum:
             - whatsapp
         timestamp:
           type: string
           format: 'date-time'
           description: The point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
         from:
           type: string
           description: The caller phone number of the call, including the country code
-          example: "49123512314"
         to:
           type: string
           description: The receiver phone number of the call, including the country code
-          example: "49123512315"
         status:
           type: string
           description: The current status of the call. Always _ringing_
-          example: ringing
           enum:
             - ringing
       example:
@@ -1244,11 +1206,10 @@ components:
         from: 49123512314
         to: 49123512314
         status: ringing
-        timestamp: 2019-06-26T11:41:28Z
+        timestamp: 2025-10-01T11:11:11Z
     WhatsAppCallAcceptedStatus:
       type: object
-      description: |
-        Indicates the call has been accepted by the end user
+      description: Indicates the call has been accepted by the end user
       required:
         - messageId
         - event
@@ -1268,31 +1229,24 @@ components:
         messageId:
           type: string
           description: The call ID reference
-          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
         channel:
           type: string
           description: The channel that triggered the event. Always _whatsapp_
-          example: whatsapp
           enum:
             - whatsapp
         timestamp:
           type: string
           format: 'date-time'
           description: The point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
         from:
           type: string
           description: The caller phone number of the call, including the country code
-          example: "49123512314"
         to:
           type: string
           description: The receiver phone number of the call, including the country code
-          example: "49123512315"
         status:
           type: string
           description: The current status of the call. Always _accepted_
-          example: accepted
           enum:
             - accepted
       example:
@@ -1302,11 +1256,10 @@ components:
         from: 49123512314
         to: 49123512314
         status: accepted
-        timestamp: 2019-06-26T11:41:28Z
+        timestamp: 2025-10-01T11:11:11Z
     WhatsAppCallRejectedStatus:
       type: object
-      description: |
-        Indicates the call has been rejected by the end user
+      description: Indicates the call has been rejected by the end user
       required:
         - messageId
         - event
@@ -1326,31 +1279,24 @@ components:
         messageId:
           type: string
           description: The call ID reference
-          example: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
         channel:
           type: string
           description: The channel that triggered the event. Always _whatsapp_
-          example: whatsapp
           enum:
             - whatsapp
         timestamp:
           type: string
           format: 'date-time'
           description: The point in time when the event happened
-          example:
-            2019-06-26T11:41:28Z
         from:
           type: string
           description: The caller phone number of the call, including the country code
-          example: "49123512314"
         to:
           type: string
           description: The receiver phone number of the call, including the country code
-          example: "49123512315"
         status:
           type: string
           description: The current status of the call. Always _rejected_
-          example: rejected
           enum:
             - rejected
       example:
@@ -1360,11 +1306,10 @@ components:
         from: 49123512314
         to: 49123512314
         status: rejected
-        timestamp: 2019-06-26T11:41:28Z
+        timestamp: 2025-10-01T11:11:11Z
     MessageStatusDeletedEvent:
       type: object
-      description: |
-        Indicates that a previously sent inbound MoMessage was deleted by the user.
+      description: Indicates that a previously sent inbound MoMessage was deleted by the user.
       required:
         - messageId
         - event
@@ -1435,8 +1380,7 @@ components:
         to: "4923147790813"
     MessageStatusAccepted:
       type: object
-      description: |
-        Indicates the acceptance of the message by the Conversations API
+      description: Indicates the acceptance of the message by the Conversations API
       required:
         - messageId
         - event
@@ -1481,8 +1425,7 @@ components:
         timestamp: 2019-06-26T11:41:28Z
     MessageStatusDelivered:
       type: object
-      description: |
-        Indicates the delivery of the message to the recipient
+      description: Indicates the delivery of the message to the recipient
       required:
         - messageId
         - event
@@ -1574,8 +1517,7 @@ components:
         timestamp: 2019-06-26T11:41:28Z
     MessageStatusSeen:
       type: object
-      description: |
-        Indicates that the message was seen by the recipient
+      description: Indicates that the message was seen by the recipient
       required:
         - messageId
         - event
@@ -1620,8 +1562,7 @@ components:
         timestamp: 2019-06-26T11:41:28Z
     MessageStatusChannelFailed:
       type: object
-      description: |
-        Indicates that the message failed on the particular channel
+      description: Indicates that the message failed on the particular channel
       required:
         - messageId
         - event
@@ -1658,16 +1599,30 @@ components:
           description: Contextual information set on the message request
           example:
             my-message-reference
+        details:
+          type: object
+          description: Contains the details, i.e. error code and error message, when encountering an error
+          properties:
+            code:
+              type: string
+              description: The error code of the particular error
+              example: whatsapp::error::131049
+            message:
+              type: string
+              description: The detailed message returned for the particular error
+              example: This message was not delivered to maintain healthy ecosystem engagement. - In order to maintain a healthy ecosystem engagement, the message failed to be delivered.
       example:
         event: MessageStatus::channelFailed
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
+        details:
+          code: whatsapp::error::131049
+          message: This message was not delivered to maintain healthy ecosystem engagement. - In order to maintain a healthy ecosystem engagement, the message failed to be delivered.
     MessageStatusFailed:
       type: object
-      description: |
-        Indicates that all channels failed.
+      description: Indicates that all channels failed.
       required:
         - messageId
         - event
@@ -1704,16 +1659,30 @@ components:
           description: Contextual information set on the message request
           example:
             my-message-reference
+        details:
+          type: object
+          description: Contains the details, i.e. error code and error message, when encountering an error
+          properties:
+            code:
+              type: string
+              description: The error code of the particular error
+              example: whatsapp::error::131049
+            message:
+              type: string
+              description: The detailed message returned for the particular error
+              example: This message was not delivered to maintain healthy ecosystem engagement. - In order to maintain a healthy ecosystem engagement, the message failed to be delivered.
       example:
         event: MessageStatus::failed
         messageId: 77185196-664a-43ec-b14a-fe97036c697f
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
+        details:
+          code: whatsapp::error::131049
+          message: This message was not delivered to maintain healthy ecosystem engagement. - In order to maintain a healthy ecosystem engagement, the message failed to be delivered.
     MessageStatusUnknown:
       type: object
-      description: |
-        Indicates an unforseen message status.
+      description: Indicates an unforseen message status.
       required:
         - messageId
         - event

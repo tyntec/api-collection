@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.23'
+  version: '3.24'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -835,7 +835,7 @@ paths:
               $ref: '#/components/schemas/CallActionRequest'
       responses:
         200:
-          $ref: '#/components/schemas/CallActionResponse'
+          $ref: '#/components/responses/CallActionResponse'
         400:
           $ref: '#/components/schemas/Problem'
 
@@ -1364,7 +1364,7 @@ components:
           schema:
             $ref: '#/components/schemas/CreateFlow'    
     CallActionResponse:
-      description: The response retured to a call 'connect' action request
+      description: The response returned to a call 'connect' action request
       content:
         application/json:
           schema:
@@ -5046,6 +5046,8 @@ components:
     CallActionRequest:
       type: object
       description: A call action sent by the business
+      required:
+        - action
       properties:
         callId:
           type: string
@@ -5084,7 +5086,7 @@ components:
               example: <<RFC 8866 SDP>>
     CallActionResponse:
       type: object
-      description: A response the the call request
+      description: A response to a call request
       properties:
         callId:
           type: string
