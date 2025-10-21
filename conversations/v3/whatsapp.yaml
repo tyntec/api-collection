@@ -466,7 +466,7 @@ paths:
         - "Template management"
       requestBody:
         description: |
-          The template patch request. Exactly one out of category and components must be present.
+          The template patch request. Exactly one out of category, components and userContext must be present.
         required: true
         content:
           application/json:
@@ -3575,6 +3575,9 @@ components:
                       To override the default time-to-live when creating an authentication template set this field to value between 60 and 600 seconds.
                       Additionally, set -1 to set time-to-live to message default value. This will set time-to-live to 24 hours (or 30 days for On-Premises API).
           example: 60
+        userContext:
+          type: string
+          description: Text field to tag/label this template. If set, will be returned by API on template requests
     TemplatePatchRequest:
       type: object
       description: A request to edit an existing template
@@ -3587,6 +3590,9 @@ components:
             - $ref: '#/components/schemas/NotificationTemplateRequest'
             - $ref: '#/components/schemas/RichMediaTemplateRequest'
             - $ref: '#/components/schemas/CarouselTemplateRequest'
+        userContext:
+          type: string
+          description: The desired changed of the userContext property. Empty string will delete userContext
     NotificationTemplateRequest:
       type: array
       description: A request for a standard template (notification) without rich media components
@@ -4307,6 +4313,9 @@ components:
             not yet
         language:
           $ref: '#/components/schemas/LanguageCode'
+        userContext:
+          type: string
+          description: String originally set by user when template was submitted
         components:
           type: array
           description: A set of components defining a template
