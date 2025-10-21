@@ -3,8 +3,8 @@
 ## 3.23
 ### Changes
 #### Add 'businessMessagingLimit' to whatsapp phone number model
-Meta has changed their messaging limit model to be business based, see https://developers.facebook.com/docs/whatsapp/messaging-limits/upcoming-changes
-The new schema are reflected in this field, 'messagingTier' is now deprecated for the same reason.
+Meta has changed the messaging limit model to be business based, see https://developers.facebook.com/docs/whatsapp/messaging-limits/upcoming-changes
+The new schema is reflected in this field, 'messagingTier' is now deprecated for the same reason.
 
 #### Add 'userContext' to whatsapp template model
 This field can be used to label/tag/correlate templates. The value can be set on template submission and will be returned as-is on all GET template endpoints
