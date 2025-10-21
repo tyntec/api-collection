@@ -3481,7 +3481,7 @@ components:
             - $ref: '#/components/schemas/CPaaSAccount'
         messagingTier:
           type: string
-          description: Which [messaging tier](https://developers.facebook.com/docs/whatsapp/api/rate-limits#messaging) the number is currently on
+          description: deprecated, see businessMessagingLimit
           enum:
             - TIER_NOT_SET
             - TIER_50
@@ -3490,6 +3490,15 @@ components:
             - TIER_10K
             - TIER_100K
             - UNLIMITED
+        businessMessagingLimit:
+          type: string
+          description: Current business level messaging limit of the number (https://developers.facebook.com/docs/whatsapp/messaging-limits)
+          enum:
+            - TIER_250
+            - TIER_2K
+            - TIER_10K
+            - TIER_100K
+            - TIER_UNLIMITED
         qualityScore:
           $ref: '#/components/schemas/QualityScore'
         nameStatus:
