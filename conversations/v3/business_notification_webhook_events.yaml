@@ -1,7 +1,7 @@
 asyncapi: '2.6.0'
 info:
   title: Business Notification API Events
-  version: '1.0'
+  version: '3.24'
   description: |
     The API allows you to automatically receive business notifications and updates about your account that you are using
     to send messages via channels.

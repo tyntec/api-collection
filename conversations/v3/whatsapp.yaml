@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.23'
+  version: '3.24'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -81,7 +81,10 @@ tags:
     description: |
       Pricing analytics exposes billing information as provided by Meta. The underlying datasource is described here:
       [Pricing Analytics](https://developers.facebook.com/docs/whatsapp/business-management-api/analytics#pricing-analytics)
-
+  - name: "Calling"
+    description: |
+      The Calling API enables businesses to initiate and receive calls with users on WhatsApp using voice-over-internet protocol (VoIP).
+      More detailed information on the underlying WhatsApp Calling API is here: [Calling API](https://developers.facebook.com/docs/whatsapp/cloud-api/calling/)
 paths:
   /messages:
     post:
@@ -818,6 +821,63 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Default'
+  /channels/whatsapp/calls:
+    post:
+      operationId: sendWACallingAction
+      summary: Send Calling Action
+      tags:
+        - "Calling"
+      description: Send an 'pre-accept', 'accept', 'connect', 'terminate' or 'reject' call action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallActionRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/CallActionResponse'
+        400:
+          $ref: '#/components/schemas/Problem'
+
+
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/calling:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWACallingSettings
+      summary: Get Calling settings
+      tags:
+        - "Calling"
+      description: Get calling settings of the business phone number
+      responses:
+        200:
+          description: A list of settings for the specified phone number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppCallingSettings'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateWACallingSettings
+      summary: Update Calling settings
+      description: Update the calling settings of the particular phone number
+      tags:
+        - "Calling"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppCallingSettings'
+      responses:
+        204:
+          description: Settings updated
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
   /channels/whatsapp/accounts/{whatsapp-account-id}/analytics/pricing:
     parameters:
       - $ref: '#/components/parameters/WhatsAppAccountId'
@@ -1302,7 +1362,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateFlow'
+            $ref: '#/components/schemas/CreateFlow'    
+    CallActionResponse:
+      description: The response returned to a call 'connect' action request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CallActionResponse'
   examples:
     ## Messaging section
 
@@ -2010,6 +2076,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveProductMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveCallPermissionRequestMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
         replyTo:
@@ -2777,6 +2844,27 @@ components:
           body:
             type: text
             text: Hi, please share your location with us by clicking the button below
+    WhatsAppInteractiveCallPermissionRequestMessage:
+      type: object
+      description: |
+        Interactive Call Permission Request Message
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `callPermissionRequest`
+          enum:
+            - callPermissionRequest
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveCallPermissionRequestComponents'
+      example:
+        subType: callPermissionRequest
+        components:
+          body:
+            type: text
+            text: We would like to call you.
     WhatsAppInteractiveFlowMessage:
       type: object
       description: |
@@ -3083,6 +3171,15 @@ components:
       type: object
       description: |
         A Location message component. It contains only body text. Send location button that users can tap is automatically added.
+      required:
+        - body
+      properties:
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+    WhatsAppInteractiveCallPermissionRequestComponents:
+      type: object
+      description: |
+        A call permission request component. It contains only body text. A footer with a link to the Business calling permission setting is automatically generated.
       required:
         - body
       properties:
@@ -4688,6 +4785,72 @@ components:
             format: float
             description: Cost of messages in this datapoint
             example: 12.77
+    WhatsAppCallingSettings:
+      type: object
+      description: The WhatsApp Calling settings
+      properties:
+        status:
+          type: string
+          description: The enabled or disabled state of the Calling API for the given business phone number
+          example: ENABLED
+        callIconVisibility:
+          type: string
+          description: Display state (shown or hidden) of the WhatsApp call button icon for users when chatting with the business
+          example: DEFAULT
+        callHours:
+          type: object
+          description: The configuration specifying the timezone, business hours and holiday schedules applied to all user-initiated calls
+          properties:
+            status:
+              type: string
+              description: The enabled or disabled state of the call hours for the given business phone number
+              example: ENABLED
+            timezoneId:
+              type: string
+              description: The timezone that the business is operating
+              example: Asia/Singapore
+            weeklyOperatingHours:
+              type: array
+              description: The operating hours schedule for each day of the week
+              items:
+                type: object
+                description: A single day and its operating hours
+                properties:
+                  dayOfWeek:
+                    type: string
+                    description: The day of the week
+                    example: TUESDAY
+                  openTime:
+                    type: string
+                    description: Opening time
+                    example: "0000"
+                  closeTime:
+                    type: string
+                    description: Closing time
+                    example: "2359"
+            holidaySchedule:
+              type: array
+              description: An optional override to the weekly schedule.
+              items:
+                type: object
+                description: A particular date and its operating hours
+                properties:
+                  date:
+                    type: string
+                    description: The date when the operating hours will be overriden
+                    example: 2026-01-01
+                  startTime:
+                    type: string
+                    description: Starting time
+                    example: "0000"
+                  endTime:
+                    type: string
+                    description: Ending time
+                    example: "2359"
+        callbackPermissionStatus:
+          type: string
+          description: Status of whether a user is prompted with a call permission request after calling the business
+          example: ENABLED
     WhatsAppFlows:
       type: array
       description: A list of WhatsApp flows
@@ -4880,3 +5043,57 @@ components:
           type: string
           description: The url to download json asset
           example: https://scontent.xx.fbcdn.net/m1/v/test
+    CallActionRequest:
+      type: object
+      description: A call action sent by the business
+      required:
+        - action
+      properties:
+        callId:
+          type: string
+          description: The callId provided by Meta
+          example: wacid.HBgMNDkxNzk3ODEwNTM1FQIA
+        from:
+          type: string
+          description: The caller of the particular call
+          example: 4912345678900
+        to:
+          type: string
+          description: The receiver of the particular call
+          example: 4909876543211
+        action:
+          type: string
+          description: The action being taken on the particular call
+          enum:
+            - pre_accept
+            - accept
+            - connect
+            - reject
+            - terminate
+        session:
+          type: object
+          description: An object that contains the session description protocol (SDP) type and description language
+          properties:
+            sdpType:
+              type: string
+              description: The session description protocol type
+              enum:
+                - answer
+                - offer
+            sdp:
+              type: string
+              description: The SDP info of the device on the other end of the call. The SDP must be compliant with [RFC 8866](https://datatracker.ietf.org/doc/html/rfc8866?fbclid=IwZXh0bgNhZW0CMTEAAR4HJ3Q9N0zf9Gm6wQ9gAnFxJ1tHHQ3kkV63RqBvQO3MpEv5Wp4Cuto4-axx1g_aem_5UvSPiN3fDXy8cEcx-KzQQ). 
+              example: <<RFC 8866 SDP>>
+    CallActionResponse:
+      type: object
+      description: A response to a call request
+      properties:
+        callId:
+          type: string
+          description: The callId is returned by Meta when the 'connect' Call action is requested
+          example: wacid.HBgMNDkxNzk3ODEwNTM1FQIA
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the call 'connect' action was successfully sent to Meta in ISO 8601 representation
+          example: 2025-10-01T10:20:30

@@ -74,15 +74,15 @@ info:
 
     <pre class="inline-code">
     callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound
-    messageStatus: http://my.server.com/status
+    inboundMessage: https://my.server.com/inbound
+    messageStatus: https://my.server.com/status
     eventFilter: []
     </pre>
 
     and the Viber Service ID 123:
 
     <pre class="inline-code">
-    inboundMessage: http://my.server.com/inbound-viber
+    inboundMessage: https://my.server.com/inbound-viber
     eventFilter:
      - MessageStatus::accepted
      - MessageStatus::channelFailed
@@ -92,8 +92,8 @@ info:
 
     <pre class="inline-code">
     callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound-viber
-    messageStatus: http://my.server.com/status
+    inboundMessage: https://my.server.com/inbound-viber
+    messageStatus: https://my.server.com/status
     eventFilter:
      - MessageStatus::accepted
      - MessageStatus::channelFailed
@@ -103,8 +103,8 @@ info:
 
     <pre class="inline-code">
     callbackVersion: 2.11
-    inboundMessage: http://my.server.com/inbound
-    messageStatus: http://my.server.com/status
+    inboundMessage: https://my.server.com/inbound
+    messageStatus: https://my.server.com/status
     eventFilter: []
     </pre>
 
@@ -142,7 +142,7 @@ info:
     | `templates:read` | Grants read access to a channel's templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
     | `templates:write` | Grants write access to a channel's templates. eg WhatsApp | ![WhatsApp](../images/icon_whatsapp_business_18px_color_.svg "WhatsApp") |
 
-  version: '3.4'
+  version: '3.24'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: configurations.yaml
   x-major-version: v3
@@ -400,6 +400,16 @@ components:
         messageStatusUrl:
           type: string
           description: A webhook for events related to message status changes
+          pattern: "^https://.*"
+          maxLength: 2000
+        businessNotificationUrl:
+          type: string
+          description: A webhook for events related business notifications and account updates
+          pattern: "^https://.*"
+          maxLength: 2000
+        callingNotificationUrl:
+          type: string
+          description: A webhook for events related to calling message and status changes
           pattern: "^https://.*"
           maxLength: 2000
         eventFilter:

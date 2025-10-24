@@ -1,5 +1,18 @@
 # Release notes
 
+## 3.24
+### Changes
+#### Added WhatsApp Calling API
+Added support for WhatsApp Calling API which enables a business to initiate and receive calls on their phone number
+
+#### Added list & carousel messages for Viber
+Viber messages now include:
+* list messages, where users are presented with a question and 2-5 answers from which they can select one, and 
+* carousel messages, where there is a single message featuring text and multiple customizable sections (items)
+
+#### Small fixes
+Fixes which include account business URL configurations, message error statuses, etc.
+
 ## 3.23
 ### Changes
 #### Add 'businessMessagingLimit' to whatsapp phone number model
