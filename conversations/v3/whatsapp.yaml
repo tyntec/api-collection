@@ -2374,11 +2374,15 @@ components:
         phone:
           type: string
           description: The phone number
-          example: +49 231 477 90 813
+          example: +49 178 999 99 999
         type:
           type: string
           description: The type of phone number
           example: WORK
+        waId:
+          type: string
+          description: The whatsapp user id of the phone number
+          example: 4917899999999
     ContactUrl:
       type: object
       description: An URL of a contact
