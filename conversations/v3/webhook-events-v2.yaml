@@ -33,6 +33,9 @@ tags:
     description: Events emitted on updates of message delivery.
   - name: "Calling"
     description: Events emitted when receiving messages or updates for WhatsApp Calling
+  - name: "Coexistence"
+    description: Events emitted when a WhatsApp Business app user has been onboarded (Coexistence). 
+      It includes sync events and echoes of messages sent from the WhatsApp Business app.
 servers:
   production:
     url: 78.110.226.11
@@ -306,6 +309,45 @@ channels:
         http:
           type: request
           method: POST
+  "Coexistence Contact (WhatsApp)":
+    description: |
+      A WhatsApp contact received by us on the WhatsApp channel when triggering the Coexistence sync
+      and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Coexistence"
+      message:
+        $ref: '#/components/messages/CoexistenceContact'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Coexistence History Message (WhatsApp)":
+    description: |
+      A WhatsApp message received by us on the WhatsApp channel when triggering the Coexistence sync
+      and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Coexistence"
+      message:
+        $ref: '#/components/messages/CoexistenceHistoryMessage'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Coexistence Message Echo (WhatsApp)":
+    description: |
+      A WhatsApp message received by us on the WhatsApp channel, an echo of a WhatsApp business app message from 
+      your business, and delivered to your system via a webhook provided by your system.
+    publish:
+      tags:
+        - name: "Coexistence"
+      message:
+        $ref: '#/components/messages/CoexistenceMessageEcho'
+      bindings:
+        http:
+          type: request
+          method: POST
 components:
   messages:
     MoMessage:
@@ -359,6 +401,15 @@ components:
     CallStatusRejected:
       payload:
         $ref: '#/components/schemas/WhatsAppCallRejectedStatus'
+    CoexistenceContact:
+      payload:
+        $ref: '#/components/schemas/CoexistenceContact'
+    CoexistenceHistoryMessage:
+      payload:
+        $ref: '#/components/schemas/CoexistenceHistoryMessage'
+    CoexistenceMessageEcho:
+      payload:
+        $ref: '#/components/schemas/CoexistenceMessageEcho'
   schemas:
     APIEvent:
       type: object
@@ -388,10 +439,16 @@ components:
           description: Who triggered this event. Usually a phone number or WhatsApp account ID
           example:
             "491672634678"
+        to:
+          type: string
+          description: Who is the recepient of the event. Usually a phone number or WhatsApp account ID
+          example:
+            "491234567890"
       example:
         event: MessageStatus::accepted
         channel: sms
         from: "491672634678"
+        to: "491234567890"
         timestamp: 2019-06-26T11:41:00
     EventTypes:
       type: string
@@ -411,6 +468,10 @@ components:
         - CallStatus::ringing
         - CallStatus::accepted
         - CallStatus::rejected
+        - Coexistence::Contact
+        - Coexistence::MessageEcho
+        - Coexistence::HistoryMessage
+        - Coexistence::HistoryMessage::Postback
     MoMessage:
       type: object
       description: A message received by us and delivered to your system via a webhook provided by your system.
@@ -490,6 +551,7 @@ components:
           enum:
             - text
             - media
+            - media_placeholder
             - location
             - contacts
             - reaction
@@ -1725,3 +1787,195 @@ components:
         channel: whatsapp
         userContext: my-message-reference
         timestamp: 2019-06-26T11:41:28Z
+    CoexistenceContact:
+      type: object
+      description: A WhatsApp contact received by us on the WhatsApp channel when triggering the Coexistence sync
+      required:
+        - event
+        - channel
+        - from
+        - to
+        - action
+        - fullName
+        - phoneNumber
+        - timestamp
+      properties:
+        event:
+          type: string
+          description: Determines which type of event is sent. Always _Coexistence::Contact_
+          enum:
+            - Coexistence::Contact
+        channel:
+          type: string
+          description: The channel that triggered the event.
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The WhatsApp user phone number
+          example: "49123512314"
+        to:
+          type: string
+          description: The business phone number
+          example: "49123512315"
+        action:
+          type: string
+          description: The action on the phone number
+          example: "add"
+        fullName:
+          type: string
+          description: The full name of the WhatsApp user contact
+          example: "John Smith"
+        firstName:
+          type: string
+          description: The first name of the WhatsApp user contact
+          example: "John"
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the message was received
+          example:
+            2025-12-01T12:00:00
+    CoexistenceHistoryMessage:
+      type: object
+      description: A WhatsApp message that had been exchanged in the WhatsApp Business app and was received by us on 
+        the WhatsApp channel when triggering the Coexistence sync
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - to
+        - content
+        - status
+      properties:
+        channel:
+          type: string
+          description: The channel that triggered the event.
+          example: whatsapp
+          enum:
+            - whatsapp
+        event:
+          type: string
+          description: Determines the event types emitted by the API
+          enum:
+            - Coexistence::HistoryMessage
+            - Coexistence::HistoryMessage::Postback
+        receivedAt:
+          deprecated: true
+          type: string
+          format: 'date-time'
+          description: The point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
+          example:
+            2019-06-26T11:41:00
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: A message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: The sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver. The format is channel-specific
+          example: "49123512315"
+        status:
+          type: string
+          description: The status of the message
+          example: "read"
+        postback:
+          $ref: '#/components/schemas/PostBack'
+        content:
+          $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/Whatsapp'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: Coexistence::HistoryMessage::Postback
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        postback:
+          data: "payload"
+        whatsapp:
+          text: "Button pressed"
+          senderName: Peter
+          identityKeyHash: DF2lS5v2W6x=
+        status: "pending"
+    CoexistenceMessageEcho:
+      type: object
+      description: A WhatsApp message that had been sent from the business in the WhatsApp Business app and was received by us on
+        the WhatsApp channel
+      required:
+        - messageId
+        - event
+        - channel
+        - from
+        - to
+        - content
+      properties:
+        channel:
+          type: string
+          description: The channel that triggered the event.
+          example: whatsapp
+          enum:
+            - whatsapp
+        event:
+          type: string
+          description: Determines which type of event is sent. Always _Coexistence::MessageEcho_
+          enum:
+            - Coexistence::MessageEcho
+        receivedAt:
+          deprecated: true
+          type: string
+          format: 'date-time'
+          description: The point in time when the message was received. **Note** This property will be replaced in the future by the _timestamp_ property from the APIEvent
+          example:
+            2019-06-26T11:41:00
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the message was received
+          example:
+            2019-06-26T11:41:00
+        messageId:
+          type: string
+          description: A message ID reference
+          example: 77185196-664a-43ec-b14a-fe97036c697f
+        from:
+          type: string
+          description: The sender of the message
+          example: "49123512314"
+        to:
+          type: string
+          description: The receiver. The format is channel-specific
+          example: "49123512315"
+        content:
+          $ref: '#/components/schemas/MoContent'
+        context:
+          $ref: '#/components/schemas/MoContext'
+        whatsapp:
+          $ref: '#/components/schemas/Whatsapp'
+      example:
+        messageId: 77185196-664a-43ec-b14a-fe97036c697e
+        event: Coexistence::MessageEcho
+        from: "49123512314"
+        to: "49123512315"
+        timestamp: 2019-06-26T11:41:00
+        channel: whatsapp
+        content:
+          contentType: text
+          text: 'Hi!'
+        whatsapp:
+          senderName: Peter
+          identityKeyHash: DF2lS5v2W6x=
