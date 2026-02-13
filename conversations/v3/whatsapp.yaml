@@ -2419,7 +2419,7 @@ components:
           example: WORK
         waId:
           type: string
-          description: The whatsapp user id of the phone number
+          description: The WhatsApp user id of the phone number
           example: 4917899999999
     ContactUrl:
       type: object
@@ -4906,18 +4906,15 @@ components:
             - DISABLED
           description: The current status of SIP calling
         hostname:
-          type: string
-          nullable: true
-          description: The hostname of the customers SIP server
+          description: The hostname of the customer's SIP server
           example: "sip.example.com"
         port:
           type: integer
           nullable: true
-          description: The port number of the customers SIP server
+          description: The port number of the customer's SIP server
           example: 5060
         password:
           type: string
-          nullable: true
           readOnly: true
           description: The password for SIP authentication (read-only)
     WhatsAppFlows:
