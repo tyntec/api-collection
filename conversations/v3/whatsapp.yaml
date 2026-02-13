@@ -878,6 +878,44 @@ paths:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/calling/sip:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWASipCallingSettings
+      summary: Get SIP Calling settings
+      tags:
+        - "Calling"
+      description: Retrieves the current SIP calling settings for a specific phone number
+      responses:
+        200:
+          description: Successfully retrieved SIP calling settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppSipCallingSettings'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateWASipCallingSettings
+      summary: Update SIP Calling settings
+      description: Updates the SIP calling settings for a specific phone number
+      tags:
+        - "Calling"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppSipCallingSettings'
+      responses:
+        200:
+          description: Successfully updated SIP calling settings
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
   /channels/whatsapp/accounts/{whatsapp-account-id}/analytics/pricing:
     parameters:
       - $ref: '#/components/parameters/WhatsAppAccountId'
@@ -4855,6 +4893,33 @@ components:
           type: string
           description: Status of whether a user is prompted with a call permission request after calling the business
           example: ENABLED
+    WhatsAppSipCallingSettings:
+      type: object
+      description: SIP calling settings for a phone number
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ENABLED
+            - DISABLED
+          description: The current status of SIP calling
+        hostname:
+          type: string
+          nullable: true
+          description: The hostname of the customers SIP server
+          example: "sip.example.com"
+        port:
+          type: integer
+          nullable: true
+          description: The port number of the customers SIP server
+          example: 5060
+        password:
+          type: string
+          nullable: true
+          readOnly: true
+          description: The password for SIP authentication (read-only)
     WhatsAppFlows:
       type: array
       description: A list of WhatsApp flows
