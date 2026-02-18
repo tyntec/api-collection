@@ -1,5 +1,16 @@
 # Release notes
 
+## 3.25
+### Changes
+#### Added SIP Calling settings management
+Added endpoints to manage SIP calling settings for WhatsApp phone numbers and enabling/disabling SIP calling functionality
+
+#### Added Calling permission status endpoint
+Added endpoint to check the current calling permission status for WhatsApp business phone numbers
+
+#### Fixed missing waId property in WhatsApp contact messages
+Fixed the missing `waId` property in WhatsApp contact phone number objects, which provides the WhatsApp user ID for phone numbers in contact messages.
+
 ## 3.24
 ### Changes
 #### Added WhatsApp Calling API
