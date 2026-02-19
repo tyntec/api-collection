@@ -857,8 +857,22 @@ paths:
           $ref: '#/components/responses/CallActionResponse'
         400:
           $ref: '#/components/schemas/Problem'
-
-
+  /channels/whatsapp/calls/permissionStatus:
+    get:
+      operationId: getCallingPermissionStatus
+      summary: Get Calling permission status
+      tags:
+        - "Calling"
+      description: Get the current status of a call permission request to a single WhatsApp user phone number
+      responses:
+        200:
+          description: The call permission state for a business phone number with a WhatsApp phone number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppCallPermissionStatus'
+        400:
+          $ref: '#/components/schemas/Problem'
   /channels/whatsapp/phone-numbers/{phone-number}/settings/calling:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -893,6 +907,48 @@ paths:
       responses:
         204:
           description: Settings updated
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/calling/sip:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWASipCallingSettings
+      summary: Get SIP Calling settings
+      tags:
+        - "Calling"
+      description: Retrieves the current SIP calling settings for a specific phone number
+      responses:
+        200:
+          description: Successfully retrieved SIP calling settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppSipCallingSettings'
+        404:
+          $ref: '#/components/responses/WhatsAppAccountUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateWASipCallingSettings
+      summary: Update SIP Calling settings
+      description: Updates the SIP calling settings for a specific phone number
+      tags:
+        - "Calling"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppSipCallingSettings'
+      responses:
+        200:
+          description: Successfully updated SIP calling settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppSipCallingSettings'
         403:
           $ref: '#/components/responses/Forbidden'
         404:
@@ -2393,11 +2449,15 @@ components:
         phone:
           type: string
           description: The phone number
-          example: +49 231 477 90 813
+          example: +49 178 999 99 999
         type:
           type: string
           description: The type of phone number
           example: WORK
+        waId:
+          type: string
+          description: The WhatsApp user id of the phone number
+          example: 4917899999999
     ContactUrl:
       type: object
       description: An URL of a contact
@@ -4870,6 +4930,95 @@ components:
           type: string
           description: Status of whether a user is prompted with a call permission request after calling the business
           example: ENABLED
+    WhatsAppSipCallingSettings:
+      type: object
+      description: SIP calling settings for a phone number
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ENABLED
+            - DISABLED
+          description: The current status of SIP calling
+        hostname:
+          description: The hostname of the customer's SIP server
+          example: "sip.example.com"
+        port:
+          type: integer
+          nullable: true
+          description: The port number of the customer's SIP server
+          example: 5060
+        password:
+          type: string
+          readOnly: true
+          description: The password for SIP authentication (read-only)
+    WhatsAppCallPermissionStatus:
+      type: object
+      description: The current permission status a business phone number has regarding calling actions with a WhatsApp phone number
+      properties:
+        messagingProduct:
+          type: string
+          description: Always set to "whatsapp"
+          example: whatsapp
+        permission:
+          type: object
+          description: The current permission status for the business phone number
+          properties:
+            status:
+              type: string
+              description: The current status of the permission
+              enum:
+                - temporary
+                - permanent
+                - no_permission
+            expiration:
+              type: string
+              format: date-time
+              description: The timestamp when the permission will expire. If the permission is permanent, this field won’t be present.
+              example: 2026-01-01T00:00:00Z
+        actions:
+          type: array
+          description: A list of actions a business phone number may undertake to facilitate a call permission or a business initiated call
+          items:
+            type: object
+            description: A single action a business phone number can perform
+            properties:
+              actionName:
+                type: string
+                description: The particular action the business phone number can perform. Available actions are sending new call permission request and establishing new calls
+                enum:
+                  - send_call_permission_request
+                  - start_call
+              canPerformAction:
+                type: boolean
+                description: A flag indicating whether the action can be performed now based on current limits
+                example: false
+              limits:
+                type: array
+                description: A list of time-bound restrictions for the given action
+                items:
+                  type: object
+                  description: A single restriction for the given action
+                  properties:
+                    timePeriod:
+                      type: string
+                      description: The span of time in which the limit applies in ISO 8601
+                      example: PT24H
+                    maxAllowed:
+                      type: integer
+                      description: The maximum number of actions allowed within the specified time period
+                      example: 1
+                    currentUsage:
+                      type: integer
+                      description: The current number of actions the business has taken within the specified time period
+                      example: 1
+                    limitExpirationTime:
+                      type: string
+                      format: date-time
+                      description: The timestamp when the limit will expire. If currentUsage is under the max allowed for the limit, this field won’t be present.
+                      example: 2026-01-07T00:00:00Z
     WhatsAppFlows:
       type: array
       description: A list of WhatsApp flows
