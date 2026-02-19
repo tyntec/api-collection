@@ -4958,10 +4958,6 @@ components:
       type: object
       description: The current permission status a business phone number has regarding calling actions with a WhatsApp phone number
       properties:
-        messagingProduct:
-          type: string
-          description: Always set to "whatsapp"
-          example: whatsapp
         permission:
           type: object
           description: The current permission status for the business phone number
