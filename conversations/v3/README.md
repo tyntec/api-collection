@@ -1,5 +1,24 @@
 # Release notes
 
+## 3.25
+### Changes
+#### Added Coexistence API
+Added support for WhatsApp coexistence functionality, where the WhatsApp Business API and the WhatsApp Business App are synchronized and used simultaneously.
+* New endpoint to trigger coexistence sync for WhatsApp phone numbers
+* Three new webhook event types for handling coexistence data:
+  * `Coexistence::Contact` - for synced contact information
+  * `Coexistence::HistoryMessage` - for historical messages exchanged in the WhatsApp Business App
+  * `Coexistence::MessageEcho` - for messages sent from the WhatsApp Business App
+
+#### Added SIP Calling settings management
+Added endpoints to manage SIP calling settings for WhatsApp phone numbers and enabling/disabling SIP calling functionality
+
+#### Added Calling permission status endpoint
+Added endpoint to check the current calling permission status for WhatsApp business phone numbers
+
+#### Fixed missing waId property in WhatsApp contact messages
+Fixed the missing `waId` property in WhatsApp contact phone number objects, which provides the WhatsApp user ID for phone numbers in contact messages.
+
 ## 3.24
 ### Changes
 #### Added WhatsApp Calling API
