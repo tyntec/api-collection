@@ -85,6 +85,9 @@ tags:
     description: |
       The Calling API enables businesses to initiate and receive calls with users on WhatsApp using voice-over-internet protocol (VoIP).
       More detailed information on the underlying WhatsApp Calling API is here: [Calling API](https://developers.facebook.com/docs/whatsapp/cloud-api/calling/)
+  - name: "Coexistence"
+    description: |
+      The coexistence API allows you to keep the WhatsApp Business API and the WhatsApp Business App in sync when using both at the same time.
 paths:
   /messages:
     post:
@@ -583,6 +586,22 @@ paths:
                 properties:
                   rel:
                     $ref: '#/components/schemas/PaginationLinkRelation'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/coexistence:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    post:
+      operationId: triggetCoexistenceSync
+      summary: Trigger Coexistence sync
+      tags:
+        - "Coexistence"
+      description: Triggers a coexistence sync for the given phone number which is required to keep in sync with the WhatsApp Business App.
+      responses:
+        200:
+          description: Successfully triggered the sync
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
