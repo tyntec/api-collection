@@ -590,11 +590,11 @@ paths:
           $ref: '#/components/responses/PhoneNumberUnknown'
         default:
           $ref: '#/components/responses/Default'
-  /channels/whatsapp/phone-numbers/{phone-number}/coexistence:
+  /channels/whatsapp/phone-numbers/{phone-number}/coexistence/trigger-syncs:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
     post:
-      operationId: triggetCoexistenceSync
+      operationId: triggerCoexistenceSync
       summary: Trigger Coexistence sync
       tags:
         - "Coexistence"
