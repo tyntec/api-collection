@@ -858,6 +858,21 @@ paths:
         400:
           $ref: '#/components/schemas/Problem'
   /channels/whatsapp/calls/permissionStatus:
+    parameters:
+      - in: query
+        name: from
+        description: The business phone number for which the call permission status should be retrieved
+        required: true
+        schema:
+          type: string
+        example: +4923147790717
+      - in: query
+        name: to
+        description: The WhatsApp user phone number upon which the call permission status should be retrieved
+        required: true
+        schema:
+          type: string
+        example: +491234567890
     get:
       operationId: getCallingPermissionStatus
       summary: Get Calling permission status
