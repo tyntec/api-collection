@@ -1,0 +1,417 @@
+openapi: 3.0.3
+info:
+  title: "Silent Authentication API"
+  description: |
+    Silent Authentication API provides OAuth2-based authentication that verifies whether an authentication
+    request originates from the same subscriber by resolving network session information.
+
+    Typical flow:
+    1. Client initiates OAuth2 authorization with `/oauth2/authorize` using login_hint containing the MSISDN.
+    2. The service extracts MSISDN, client IP/port and timestamp, then resolves network session data via RADIUS/CGNAT.
+    3. If the resolved MSISDN matches the provided one, an authorization code is generated.
+    4. Client exchanges the code for access/ID tokens via `/oauth2/token`.
+    5. The ID token contains a `mobile_id` claim when verification succeeds.
+  version: '1.0.0'
+  contact:
+    name: tyntec API Support
+    url: https://www.tyntec.com/support
+    email: support@tyntec.com
+  x-repository: https://github.com/tyntec/api-collection/blob/master/silent-authentication
+  x-specification-file: silent-authentication.yaml
+  x-major-version: v1
+servers:
+  - url: https://api.tyntec.com/silent-auth/v1
+tags:
+  - name: "OAuth2"
+    description: |
+      OAuth2 endpoints for silent authentication flow. Supports authorization code grant type with
+      network-based subscriber verification.
+paths:
+  /oauth2/authorize:
+    get:
+      tags:
+        - "OAuth2"
+      summary: OAuth2 authorization endpoint
+      description: |
+        Initiates the OAuth2 authorization code flow with silent authentication. The client provides
+        the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
+        and verifies the MSISDN, then returns an authorization code if verification succeeds.
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [code]
+          description: OAuth2 response type (must be 'code')
+          example: "code"
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Client identifier
+          example: "client"
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Opaque value used by the client to maintain state between request and callback
+          example: "xyz12345"
+        - name: scope
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Space-delimited scope values (e.g., 'openid tt:phone_verify')
+          example: "openid tt:phone_verify"
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: Client callback URI where the authorization code will be sent
+          example: "https://client.example.com/callback"
+        - name: login_hint
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Subscriber MSISDN (without leading plus, e.g., 301234567890)
+          example: "301234567890"
+      responses:
+        302:
+          description: Redirect to client callback URI with authorization code and state
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+              description: Redirect URI with code and state parameters
+              example: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-BhjDROHmado6v7E9K64JPXo3RdqgEaP9NE3lk9AXBgpzRV2HLXvgfnh4YKDdC55_fwiRxT91kwrtn8vSR9DoEPAmtYi2LFXs5IN-I&state=xyz12345"
+        400:
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidArgumentError'
+        401:
+          description: Unauthorized - Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedError'
+        403:
+          description: Forbidden - Client not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDeniedError'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        429:
+          description: Rate limited / quota exceeded
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/QuotaExceededError'
+                  - $ref: '#/components/schemas/TooManyRequestsError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /oauth2/token:
+    post:
+      tags:
+        - "OAuth2"
+      summary: OAuth2 token endpoint
+      description: |
+        Exchange an authorization code for access token, ID token, and refresh token. The ID token
+        includes a `mobile_id` claim when silent authentication verification succeeded.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+                - code
+                - redirect_uri
+                - client_id
+                - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum: [authorization_code]
+                  description: OAuth2 grant type (must be 'authorization_code')
+                  example: "authorization_code"
+                code:
+                  type: string
+                  description: Authorization code received from /oauth2/authorize
+                  example: "kgoV1pFxi1EIlocesrMcia6AhNyw6JecTyMNqP3ppfkuFz9xR8BRR6uuuYxEgU2WApa4PHdsXBchwWJcIFE3xmbO8jKTAtFb3epqH4cUFngDTjR_z-iHtFrK6MXpHIbm"
+                redirect_uri:
+                  type: string
+                  format: uri
+                  description: Redirect URI that was used in the authorization request
+                  example: "https://client.example.com/callback"
+                client_id:
+                  type: string
+                  description: Client identifier
+                  example: "client"
+                client_secret:
+                  type: string
+                  description: Client secret
+                  example: "12345"
+      responses:
+        200:
+          description: Successful token response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              examples:
+                successfulAuth:
+                  summary: Successful authentication with mobile_id
+                  value:
+                    access_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NGQ4YTA2Mi0xM2M2LTQ4OTktYTdjZC1jYmU3ZDE5NmU0ZDgiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE3NzM2NTIxODYsInNjb3BlIjpbInR0Om1vYmlsZV9pZCIsIm9wZW5pZCJdLCJpc3MiOiJodHRwOi8vYXV0aC5sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTc3MzczODU4NiwiaWF0IjoxNzczNjUyMTg2LCJqdGkiOiI3MGI0YTRlYS03MGEyLTRiNjUtODZmNi1kNWFhNWY1ZjUxYmMiLCJtb2JpbGVfaWQiOiIyNDdlMzEzMi1lMWJmLTQ2YmMtOGZhMC00YjU2OTAxMWMxYzIifQ.fd32EUmj2tyug97deWlmgHnQhVq3TtH73HvcNHamnKXU1LusUhhPd8LrAFPMjGLbB1f8n32YsfKUiLmh-nlBXA3aCldXPFpVMgSTHjiwqdij_VmE-wxinyRMZDOPYA0fcLson6xBRDmy__NH4-0pCrqx0WFoefmYwiNV-xyfMx8GFKjy-0sFhPGW33rgj8M7VATyBKP7KF8pH8vxzxpIgti9ImIIWf8woACmzLSoiNoHoDGPxsZHim84eLmq2_jgkFm4ML-IzoFxftTxkSvjKBDDJns8FL6fTJc5f7ND2-UeRVLetM8sUSyPbpRRZHqm3J8nCM8cB8gvnrHgpCQvzQ"
+                    refresh_token: "DawkDPIXqUDqyjHfzcifAsc8gvL1jBysWTe4vgXy1PbJGk51Ec6mRIZnCJh7nzRBG1MnE7C-pZI11QX2moXKPxuAreegUemW7SGaxcgOw_xnHu8nv0q5mOyVwP3o7MWN"
+                    scope: "tt:mobile_id openid"
+                    id_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NGQ4YTA2Mi0xM2M2LTQ4OTktYTdjZC1jYmU3ZDE5NmU0ZDgiLCJhdWQiOiJjbGllbnQiLCJhenAiOiJjbGllbnQiLCJhdXRoX3RpbWUiOjE3NzM2NTIxODYsImlzcyI6Imh0dHA6Ly9hdXRoLmxvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzczNjUzOTg3LCJpYXQiOjE3NzM2NTIxODcsImp0aSI6IjQ4MTc4OTE4LTI1MjItNDY3MS04N2VlLTdiOWQxOWE0NzljMCIsInNpZCI6ImNGTkhLcWtISnJxcjJZSHEwNmxFcHN1RXU4NFduZFNaOGJSLWZYRmFQZTgifQ.BcnzyHjVpGJzaHdhiNpYV_dPUYdnk2ZnJ-XgcyCBWsM-OncQGR00Id2K_fQdFEaUoT0GUnHsj2Mtt8ERTPiHeR_U3suf-KmilEgGFVDNQdeMthX2nv5nb66GkNe-xyoiFMKCpOv1LJKDRxO9XlHI-v3asTXLVYVlOqh6BF4XNoNLLrnBdEzs5TV8tfulWmUNfmAWYsxB0Tn2eyoPdqfmiTjFyAQODczxt-DSzchjucCsD_-l2IYMHNAsymmbmoSKXmYjLRkchiFoEIlO5p6Kxk6OdpbQF52Nru0v5ZYzM2NSYR2zpw1LFC7o0vgUYxxo2LaVy8KTVyyqQfJJiTJTrQ"
+                    token_type: "Bearer"
+                    expires_in: 86399
+        400:
+          description: Bad Request - Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidArgumentError'
+        401:
+          description: Unauthorized - Invalid client credentials or authorization code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedError'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDeniedError'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        429:
+          description: Rate limited / quota exceeded
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/QuotaExceededError'
+                  - $ref: '#/components/schemas/TooManyRequestsError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+components:
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: OAuth2 access token (JWT format)
+          example: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9..."
+        refresh_token:
+          type: string
+          description: OAuth2 refresh token
+          example: "DawkDPIXqUDqyjHfzcifAsc8gvL1jBysWTe4vgXy1PbJGk51Ec6mRIZnCJh7nzRBG1MnE7C..."
+        scope:
+          type: string
+          description: Space-delimited scope values granted
+          example: "tt:mobile_id openid"
+        id_token:
+          type: string
+          description: OpenID Connect ID token (JWT format) containing mobile_id claim when verification succeeded
+          example: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9..."
+        token_type:
+          type: string
+          description: Token type (always 'Bearer')
+          example: "Bearer"
+        expires_in:
+          type: integer
+          description: Access token lifetime in seconds
+          example: 86399
+    InvalidArgumentError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 400
+          description: HTTP status code
+        code:
+          type: string
+          example: "INVALID_ARGUMENT"
+          description: Error code
+        message:
+          type: string
+          example: "Client specified an invalid argument, request body or query param."
+          description: Error message
+    OutOfRangeError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 400
+          description: HTTP status code
+        code:
+          type: string
+          example: "OUT_OF_RANGE"
+          description: Error code
+        message:
+          type: string
+          example: "Client specified an invalid range."
+          description: Error message
+    UnauthenticatedError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 401
+          description: HTTP status code
+        code:
+          type: string
+          example: "UNAUTHENTICATED"
+          description: Error code
+        message:
+          type: string
+          example: "Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required."
+          description: Error message
+    PermissionDeniedError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 403
+          description: HTTP status code
+        code:
+          type: string
+          example: "PERMISSION_DENIED"
+          description: Error code
+        message:
+          type: string
+          example: "Client does not have sufficient permissions to perform this action."
+          description: Error message
+    NotFoundError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 404
+          description: HTTP status code
+        code:
+          type: string
+          example: "NOT_FOUND"
+          description: Error code
+        message:
+          type: string
+          example: "The specified resource is not found."
+          description: Error message
+    QuotaExceededError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 429
+          description: HTTP status code
+        code:
+          type: string
+          example: "QUOTA_EXCEEDED"
+          description: Error code
+        message:
+          type: string
+          example: "Rejected due to exceeding a business quota limit."
+          description: Error message
+    TooManyRequestsError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 429
+          description: HTTP status code
+        code:
+          type: string
+          example: "TOO_MANY_REQUESTS"
+          description: Error code
+        message:
+          type: string
+          example: "Rejected due to request rate limit overpassed."
+          description: Error message
+    InternalServerError:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          example: 500
+          description: HTTP status code
+        code:
+          type: string
+          example: "INTERNAL_SERVER_ERROR"
+          description: Error code
+        message:
+          type: string
+          example: "Request could not be processed"
+          description: Error message
+  securitySchemes:
+    clientCredentials:
+      type: http
+      scheme: basic
+      description: Client ID and secret for OAuth2 token endpoint (Basic Auth)
+
+
