@@ -7,8 +7,10 @@ info:
 
     Typical flow:
     1. Client initiates OAuth2 authorization with `/oauth2/authorize` using login_hint containing the MSISDN.
-    2. The service extracts MSISDN, client IP/port and timestamp, then resolves network session data via RADIUS/CGNAT.
-    3. If the resolved MSISDN matches the provided one, an authorization code is generated.
+    2. The service extracts MSISDN, client IP/port and timestamp, then resolves network session data.
+    3. If the resolved MSISDN:
+       * matches the provided one, an authorization code is generated and the `sub` claim is the user ID
+       * does not match, an authorization code is generated and the `sub` claim is set to `anonymous`
     4. Client exchanges the code for access/ID tokens via `/oauth2/token`.
     5. The ID token contains a `mobile_id` claim when verification succeeds.
   version: '1.0.0'
@@ -90,7 +92,7 @@ paths:
                 type: string
                 format: uri
               description: Redirect URI with code and state parameters
-              example: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-BhjDROHmado6v7E9K64JPXo3RdqgEaP9NE3lk9AXBgpzRV2HLXvgfnh4YKDdC55_fwiRxT91kwrtn8vSR9DoEPAmtYi2LFXs5IN-I&state=xyz12345"
+              example: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&state=xyz12345"
         400:
           description: Bad Request - Invalid parameters
           content:
@@ -137,6 +139,8 @@ paths:
       description: |
         Exchange an authorization code for access token, ID token, and refresh token. The ID token
         includes a `mobile_id` claim when silent authentication verification succeeded.
+      security:
+        - apiKey: []
       requestBody:
         required: true
         content:
@@ -158,7 +162,7 @@ paths:
                 code:
                   type: string
                   description: Authorization code received from /oauth2/authorize
-                  example: "kgoV1pFxi1EIlocesrMcia6AhNyw6JecTyMNqP3ppfkuFz9xR8BRR6uuuYxEgU2WApa4PHdsXBchwWJcIFE3xmbO8jKTAtFb3epqH4cUFngDTjR_z-iHtFrK6MXpHIbm"
+                  example: "kgoV1pFxi1EIlocesrMcia6AhNyw6..."
                 redirect_uri:
                   type: string
                   format: uri
@@ -183,10 +187,10 @@ paths:
                 successfulAuth:
                   summary: Successful authentication with mobile_id
                   value:
-                    access_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NGQ4YTA2Mi0xM2M2LTQ4OTktYTdjZC1jYmU3ZDE5NmU0ZDgiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE3NzM2NTIxODYsInNjb3BlIjpbInR0Om1vYmlsZV9pZCIsIm9wZW5pZCJdLCJpc3MiOiJodHRwOi8vYXV0aC5sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTc3MzczODU4NiwiaWF0IjoxNzczNjUyMTg2LCJqdGkiOiI3MGI0YTRlYS03MGEyLTRiNjUtODZmNi1kNWFhNWY1ZjUxYmMiLCJtb2JpbGVfaWQiOiIyNDdlMzEzMi1lMWJmLTQ2YmMtOGZhMC00YjU2OTAxMWMxYzIifQ.fd32EUmj2tyug97deWlmgHnQhVq3TtH73HvcNHamnKXU1LusUhhPd8LrAFPMjGLbB1f8n32YsfKUiLmh-nlBXA3aCldXPFpVMgSTHjiwqdij_VmE-wxinyRMZDOPYA0fcLson6xBRDmy__NH4-0pCrqx0WFoefmYwiNV-xyfMx8GFKjy-0sFhPGW33rgj8M7VATyBKP7KF8pH8vxzxpIgti9ImIIWf8woACmzLSoiNoHoDGPxsZHim84eLmq2_jgkFm4ML-IzoFxftTxkSvjKBDDJns8FL6fTJc5f7ND2-UeRVLetM8sUSyPbpRRZHqm3J8nCM8cB8gvnrHgpCQvzQ"
-                    refresh_token: "DawkDPIXqUDqyjHfzcifAsc8gvL1jBysWTe4vgXy1PbJGk51Ec6mRIZnCJh7nzRBG1MnE7C-pZI11QX2moXKPxuAreegUemW7SGaxcgOw_xnHu8nv0q5mOyVwP3o7MWN"
+                    access_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5..."
+                    refresh_token: "DawkDPIXqUDqyjHfzcifAsc8gvL1jBys..."
                     scope: "tt:mobile_id openid"
-                    id_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NGQ4YTA2Mi0xM2M2LTQ4OTktYTdjZC1jYmU3ZDE5NmU0ZDgiLCJhdWQiOiJjbGllbnQiLCJhenAiOiJjbGllbnQiLCJhdXRoX3RpbWUiOjE3NzM2NTIxODYsImlzcyI6Imh0dHA6Ly9hdXRoLmxvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzczNjUzOTg3LCJpYXQiOjE3NzM2NTIxODcsImp0aSI6IjQ4MTc4OTE4LTI1MjItNDY3MS04N2VlLTdiOWQxOWE0NzljMCIsInNpZCI6ImNGTkhLcWtISnJxcjJZSHEwNmxFcHN1RXU4NFduZFNaOGJSLWZYRmFQZTgifQ.BcnzyHjVpGJzaHdhiNpYV_dPUYdnk2ZnJ-XgcyCBWsM-OncQGR00Id2K_fQdFEaUoT0GUnHsj2Mtt8ERTPiHeR_U3suf-KmilEgGFVDNQdeMthX2nv5nb66GkNe-xyoiFMKCpOv1LJKDRxO9XlHI-v3asTXLVYVlOqh6BF4XNoNLLrnBdEzs5TV8tfulWmUNfmAWYsxB0Tn2eyoPdqfmiTjFyAQODczxt-DSzchjucCsD_-l2IYMHNAsymmbmoSKXmYjLRkchiFoEIlO5p6Kxk6OdpbQF52Nru0v5ZYzM2NSYR2zpw1LFC7o0vgUYxxo2LaVy8KTVyyqQfJJiTJTrQ"
+                    id_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtO..."
                     token_type: "Bearer"
                     expires_in: 86399
         400:
