@@ -6,13 +6,13 @@ info:
     request originates from the same subscriber by resolving network session information.
 
     Typical flow:
+    
     1. Client initiates OAuth2 authorization with `/oauth2/authorize` using login_hint containing the MSISDN.
     2. The service extracts MSISDN, client IP/port and timestamp, then resolves network session data.
-    3. If the resolved MSISDN:
-       * matches the provided one, an authorization code is generated and the `sub` claim is the user ID
-       * does not match, an authorization code is generated and the `sub` claim is set to `anonymous`
+    3. Check if the provided MSISDN matches the one associated with the resolved network session.
     4. Client exchanges the code for access/ID tokens via `/oauth2/token`.
     5. The ID token contains a `mobile_id` claim when verification succeeds.
+
   version: '1.0.0'
   contact:
     name: tyntec API Support
@@ -37,7 +37,11 @@ paths:
       description: |
         Initiates the OAuth2 authorization code flow with silent authentication. The client provides
         the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
-        and verifies the MSISDN, then returns an authorization code if verification succeeds.
+        and verifies the MSISDN, then returns:
+          
+           * an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
+           * an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
+
       parameters:
         - name: response_type
           in: query
