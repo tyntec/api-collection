@@ -33,7 +33,7 @@ paths:
     get:
       tags:
         - "OAuth2"
-      summary: OAuth2 authorization endpoint
+      summary: OAuth2 authorization
       description: |
         Initiates the OAuth2 authorization code flow with silent authentication. The client provides
         the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
@@ -88,58 +88,13 @@ paths:
           description: Subscriber MSISDN (without leading plus, e.g., 301234567890)
           example: "301234567890"
       responses:
-        302:
-          description: Redirect to client callback URI with authorization code and state
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: Redirect URI with code and state parameters
-              example: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&state=xyz12345"
-        400:
-          description: Bad Request - Invalid parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidArgumentError'
-        401:
-          description: Unauthorized - Authentication failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
-        403:
-          description: Forbidden - Client not authorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PermissionDeniedError'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Rate limited / quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
-        500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerError'
+        '302':
+          $ref: '#/components/responses/OAuth2AuthorizeRedirect'
   /oauth2/token:
     post:
       tags:
         - "OAuth2"
-      summary: OAuth2 token endpoint
+      summary: OAuth2 token
       description: |
         Exchange an authorization code for access token, ID token, and refresh token. The ID token
         includes a `mobile_id` claim when silent authentication verification succeeded.
@@ -221,14 +176,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Rate limited / quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -236,6 +183,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 components:
+  responses:
+    OAuth2AuthorizeRedirect:
+      description: |
+        Redirects the user-agent to the client-provided callback URI with OAuth 2.0 parameters.
+        
+        **Success case:** Returns authorization code and state in query parameters.
+        
+        **Error cases:** Returns error, error_description, and state in query parameters.
+        Query parameter values are URL-encoded (spaces may appear as "+" in application/x-www-form-urlencoded encoding).
+        
+        Error parameter names follow OAuth 2.0 specification:
+        - `error`: Error code (e.g., invalid_request, invalid_scope, no_data_session)
+        - `error_description`: Human-readable error explanation
+        - `state`: Opaque value from the authorization request
+      headers:
+        Location:
+          description: |
+            Redirect URI with query parameters. For success: code and state.
+            For errors: error, error_description, and state.
+          schema:
+            type: string
+            format: uri
+          examples:
+            success:
+              summary: Successful authorization
+              value: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&state=xyz12345"
+            invalid_client_id:
+              summary: Missing or invalid client_id
+              value: "https://client.example.com/callback?error=invalid_request&error_description=OAuth+2.0+Parameter:+client_id&state=xyz12345"
+            missing_scope:
+              summary: Scope parameter is missing
+              value: "https://client.example.com/callback?error=invalid_scope&error_description='openid'+scope+is+required&state=xyz12345"
+            insufficient_scope:
+              summary: Only openid scope requested (custom scope required)
+              value: "https://client.example.com/callback?error=insufficient_scope&error_description=At+least+one+custom+scope+must+be+requested&state=xyz12345"
+            unsupported_scope:
+              summary: Unsupported scope requested
+              value: "https://client.example.com/callback?error=invalid_scope&error_description=OAuth+2.0+Parameter:+scope&state=xyz12345"
+            missing_login_hint:
+              summary: Scope requires login_hint but not provided
+              value: "https://client.example.com/callback?error=invalid_request&error_description=one+or+more+scopes+require+'login_hint'+parameter&state=xyz12345"
+            invalid_login_hint:
+              summary: Malformed login_hint parameter
+              value: "https://client.example.com/callback?error=invalid_request&error_description=Invalid+login_hint+format&state=xyz12345"
+            no_data_session:
+              summary: No active data session found
+              value: "https://client.example.com/callback?error=no_data_session&error_description=No+active+data+session+found+for+the+provided+phone+number&state=xyz12345"
+            resolution_error:
+              summary: Unable to resolve subscriber data
+              value: "https://client.example.com/callback?error=resolution_error&error_description=Unable+to+resolve+subscriber&state=xyz12345"
+            server_error:
+              summary: Unexpected server error
+              value: "https://client.example.com/callback?error=server_error&error_description=An+unexpected+error+occurred&state=xyz12345"
+      content: {}
   schemas:
     TokenResponse:
       type: object
@@ -358,44 +359,6 @@ components:
         message:
           type: string
           example: "The specified resource is not found."
-          description: Error message
-    QuotaExceededError:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 429
-          description: HTTP status code
-        code:
-          type: string
-          example: "QUOTA_EXCEEDED"
-          description: Error code
-        message:
-          type: string
-          example: "Rejected due to exceeding a business quota limit."
-          description: Error message
-    TooManyRequestsError:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 429
-          description: HTTP status code
-        code:
-          type: string
-          example: "TOO_MANY_REQUESTS"
-          description: Error code
-        message:
-          type: string
-          example: "Rejected due to request rate limit overpassed."
           description: Error message
     InternalServerError:
       type: object
