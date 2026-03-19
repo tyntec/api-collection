@@ -387,5 +387,3 @@ components:
       type: http
       scheme: basic
       description: Client ID and secret for OAuth2 token endpoint (Basic Auth)
-
-
