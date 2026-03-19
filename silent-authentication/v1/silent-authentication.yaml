@@ -236,7 +236,6 @@ components:
             server_error:
               summary: Unexpected server error
               value: "https://client.example.com/callback?error=server_error&error_description=An+unexpected+error+occurred&state=xyz12345"
-      content: {}
   schemas:
     TokenResponse:
       type: object
@@ -380,6 +379,10 @@ components:
           example: "Request could not be processed"
           description: Error message
   securitySchemes:
+    apiKey:
+      type: http
+      scheme: basic
+      description: API key for authentication (Basic Auth)
     clientCredentials:
       type: http
       scheme: basic
