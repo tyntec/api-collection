@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: "Identity API"
+  title: "Network Signal API"
   description: |
-    This is the OpenAPI specification for the Identity product.
+    This is the OpenAPI specification for the Network Signal product.
     
-    The Identity API provides services to verify and check information about phone numbers, including:
+    The Network Signal API provides services to verify and check information about phone numbers, including:
     - SIM swap detection and date retrieval
     - Device swap detection and date retrieval
     - Call forwarding status check
@@ -13,11 +13,11 @@ info:
     name: tyntec API Support
     url: https://www.tyntec.com/support
     email: support@tyntec.com
-  x-repository: https://github.com/tyntec/api-collection/blob/master/identity
-  x-specification-file: silent-authentication.yaml
+  x-repository: https://github.com/tyntec/api-collection/blob/master/network-signal
+  x-specification-file: network-signal.yaml
   x-major-version: v1
 servers:
-  - url: https://api.tyntec.com/identity/v1
+  - url: https://api.tyntec.com/network-signal/v1
 tags:
   - name: "SIM Swap"
     description: |
@@ -81,14 +81,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Too Many Requests - Rate limit or quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -143,14 +135,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Too Many Requests - Rate limit or quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -208,14 +192,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Too Many Requests - Rate limit or quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -270,14 +246,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Too Many Requests - Rate limit or quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -334,14 +302,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
-        429:
-          description: Too Many Requests - Rate limit or quota exceeded
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/QuotaExceededError'
-                  - $ref: '#/components/schemas/TooManyRequestsError'
         500:
           description: Internal Server Error
           content:
@@ -524,44 +484,6 @@ components:
         message:
           type: string
           example: "The specified resource is not found."
-          description: Error message
-    QuotaExceededError:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 429
-          description: HTTP status code
-        code:
-          type: string
-          example: "QUOTA_EXCEEDED"
-          description: Error code
-        message:
-          type: string
-          example: "Rejected due to exceeding a business quota limit."
-          description: Error message
-    TooManyRequestsError:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 429
-          description: HTTP status code
-        code:
-          type: string
-          example: "TOO_MANY_REQUESTS"
-          description: Error code
-        message:
-          type: string
-          example: "Rejected due to request rate limit overpassed."
           description: Error message
     InternalServerError:
       type: object
