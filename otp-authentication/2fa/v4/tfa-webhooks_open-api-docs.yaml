@@ -5,7 +5,7 @@ info:
     name: tyntec Support
     url: https://www.tyntec.com/support
   title: Callback Events
-  version: 4
+  version: '4'
 servers:
 - description: Tyntec Server
   url: "Customer defined URL for receiving information events"

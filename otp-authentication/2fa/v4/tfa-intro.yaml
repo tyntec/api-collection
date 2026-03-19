@@ -9,7 +9,7 @@ info:
     This intuitive interface allows users to select a specific profile and priority, ensuring optimal delivery of time-sensitive codes.
     By leveraging this endpoint, users can efficiently trigger OTP messages, harmonizing profile personalization and priority-based distribution for an enhanced and secure user experience.
   title: Introduction
-  version: 4
+  version: '4'
   x-repository: https://github.com/tyntec/api-collection/blob/master/authentication/2fa
   x-major-version: v4
   x-master-file: true
@@ -18,3 +18,4 @@ servers:
     url: https://api.tyntec.com
 security:
   - apiKey: []
+paths: {}

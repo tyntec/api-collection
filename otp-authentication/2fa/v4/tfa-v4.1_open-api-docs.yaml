@@ -12,7 +12,7 @@ info:
   license:
     name: Apache 2.0
     url: http://springdoc.org
-  version: 4.1
+  version: '4.1'
   x-repository: https://github.com/tyntec/api-collection/blob/master/authentication/2fa
   x-specification-file: tfa-v4.1_open-api-docs.yaml
   x-major-version: v4
