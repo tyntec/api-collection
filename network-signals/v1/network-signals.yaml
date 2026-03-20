@@ -18,7 +18,7 @@ info:
   x-specification-file: network-signals.yaml
   x-major-version: v1
 servers:
-  - url: https://api.tyntec.com/network-signals/v1
+  - url: https://api.tyntec.com/network-signal/v1
 tags:
   - name: "SIM Swap"
     description: |
