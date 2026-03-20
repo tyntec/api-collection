@@ -5,6 +5,7 @@ info:
     This is the OpenAPI specification for the Network Signals product.
     
     The Network Signals API provides services to verify and check information about phone numbers, including:
+    
     - SIM swap detection and date retrieval
     - Device swap detection and date retrieval
     - Call forwarding status check

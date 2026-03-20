@@ -39,8 +39,8 @@ paths:
         the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
         and verifies the MSISDN, then returns:
           
-           * an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
-           * an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
+            * an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
+            * an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
 
       parameters:
         - name: response_type
