@@ -4,9 +4,9 @@
 
 ### Features
 
-#### Network signal
+#### Network signals
 
-Network Signal services provide checks and signals around ownership and routing of phone numbers. The
+Network Signals services provide checks and signals around ownership and routing of phone numbers. The
 features below help brands detect phone number or device changes and check call routing behaviour.
 
 - SIM swap check: Detect whether a subscriber's SIM card was swapped within a configurable time window.
@@ -18,7 +18,7 @@ features below help brands detect phone number or device changes and check call 
 
 Spec
 
-- OpenAPI 3.0 specification: `v1/network-signal.yaml`
+- OpenAPI 3.0 specification: `v1/network-signals.yaml`
 
 Usage
 
