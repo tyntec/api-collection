@@ -1,5 +1,24 @@
 # Release notes
 
+## 3.26
+### Changes
+#### WhatsApp Templates
+#### Added Limited Time Offer component
+Added support for limited time offers in WhatsApp templates, allowing businesses to set expiration timestamps (in milliseconds) for time-sensitive promotions
+
+##### Enhanced button support
+Expanded support for WhatsApp template buttons with additional button types:
+  * Copy Code button - allows users to copy coupon codes (up to 15 characters) to clipboard
+  * Catalog button - displays products from a Facebook catalog with customizable thumbnail
+  * Multi Product Message (MPM) button - showcases multiple product sections (up to 10 sections with 30 products each)
+  * Call button - initiates voice calls with customizable time-to-live and payload tracking
+Additionally, minor updates have been introduced for Quick reply, flow and URL buttons.
+
+#### Added WhatsApp interactive URL and call button messages
+Added new interactive message types:
+* Interactive URL button messages - send messages with clickable URL buttons containing customizable text, header, footer, and URL
+* Interactive call button messages - send messages with call-to-action buttons that initiate voice calls with time-to-live and payload tracking
+
 ## 3.25
 ### Changes
 #### Added Coexistence API

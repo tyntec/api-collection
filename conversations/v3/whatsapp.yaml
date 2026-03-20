@@ -2169,6 +2169,8 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveCallPermissionRequestMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveUrlButtonMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveCallButtonMessage'
         replyTo:
           type: string
           description: The whatsapp message ID of the referenced message
@@ -2505,6 +2507,7 @@ components:
       properties:
         header:
           type: array
+          description: List of header components. Header can have maximum 1 component.
           minItems: 0
           maxItems: 1
           items:
@@ -2516,21 +2519,34 @@ components:
             - $ref: '#/components/schemas/WhatsAppTemplateLocationHeaderComponent'
         body:
           type: array
+          description: List of body components. Body can have maximum 1 component.
           minItems: 0
           maxItems: 1
           items:
             $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
         button:
-          oneOf:
-            - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
-            - $ref: '#/components/schemas/WhatsAppCallToActionButtons'
-            - $ref: '#/components/schemas/WhatsAppFlowButtons'
+          type: array
+          description: List of button components. Button can have maximum 10 components.
+          minItems: 0
+          maxItems: 10
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/WhatsAppQuickReplyButtons'
+              - $ref: '#/components/schemas/WhatsAppUrlButtons'
+              - $ref: '#/components/schemas/WhatsAppFlowButtons'
+              - $ref: '#/components/schemas/CopyCodeButtonComponent'
+              - $ref: '#/components/schemas/CatalogButtonComponent'
+              - $ref: '#/components/schemas/MPMButtonComponent'
+              - $ref: '#/components/schemas/CallButtonComponent'
         carousel:
+          type: array
           description: List of carousel cards. Carousel must have at least one card, and maximum 10.
           minItems: 1
           maxItems: 10
-          oneOf:
-            - $ref: '#/components/schemas/WhatsAppCarouselComponent'
+          items:
+            $ref: '#/components/schemas/WhatsAppCarouselComponent'
+        limitedTimeOffer:
+          $ref: '#/components/schemas/WhatsAppLimitedTimeOfferComponent'
     WhatsAppTemplateTextHeaderComponent:
       type: object
       required:
@@ -2681,16 +2697,28 @@ components:
           anyOf:
             - $ref: '#/components/schemas/QuickReplyButtonComponent'
             - $ref: '#/components/schemas/UrlButtonComponent'
+    WhatsAppLimitedTimeOfferComponent:
+      type: object
+      description: A limited time offer component that can be added to a template. It contains an expiration time, after which the offer will no longer be valid.
+      required:
+        - expirationTimeMs
+      properties:
+        expirationTimeMs:
+          type: integer
+          description: Expiration time of the offer UNIX timestamp in milliseconds.
+          example: 1767225600
     WhatsAppQuickReplyButtons:
       type: array
+      description: A list of quick reply buttons, up to 10 in total. If using quick reply buttons with other buttons, buttons must be organized into two groups of quick reply buttons and non-quick reply buttons.
       minItems: 0
-      maxItems: 3
+      maxItems: 10
       items:
         $ref: '#/components/schemas/QuickReplyButtonComponent'
-    WhatsAppCallToActionButtons:
+    WhatsAppUrlButtons:
       type: array
+      description: A list of URL buttons, up to 2 in total.
       minItems: 0
-      maxItems: 1
+      maxItems: 2
       items:
         $ref: '#/components/schemas/UrlButtonComponent'
     WhatsAppFlowButtons:
@@ -2701,7 +2729,7 @@ components:
         $ref: '#/components/schemas/FlowButtonComponent'
     QuickReplyButtonComponent:
       type: object
-      description: This type can be used up to three times
+      description: A quick reply button definition, which can be used up to 10 times in a template.
       required:
         - type
         - index
@@ -2716,14 +2744,17 @@ components:
           type: number
           description: Determines the index of the button that should be enhanced with the payload.
           minimum: 0
-          maximum: 2
+          maximum: 9
         payload:
           type: string
           maxLength: 128
           description: A payload for this quick reply button. Sent back on the `MoMessage::PostBack` event
+          example: qrb_123_click
     UrlButtonComponent:
       type: object
-      description: This type can be used up to one time
+      description: A url button definition, which can be used up to 2 times in a template.
+      minimum: 0
+      maximum: 2
       required:
         - type
         - index
@@ -2738,14 +2769,15 @@ components:
           type: number
           description: Determines the index of the button that should be enhanced with a custom parameter
           minimum: 0
-          maximum: 1
+          maximum: 9
         text:
           type: string
           maxLength: 2000
           description: Which text should be appended to a dynamic URL. **Note** the requested templates url button must end with {{1}}.
+          example: https://www.tyntec.com/shop
     FlowButtonComponent:
       type: object
-      description: This type can be used up to one time
+      description: A flow button definition, which can be used once in a template.
       required:
         - type
         - index
@@ -2760,6 +2792,152 @@ components:
           description: Determines the index of the button that should be enhanced with a custom parameter
           minimum: 0
           maximum: 1
+        action:
+          type: object
+          description: An object describing the action to be taken once the flow button is clicked
+          properties:
+            flowToken:
+              type: string
+              description: The token of the flow
+              example: some_token
+            flowActionData:
+              type: object
+              description: An object containing custom data to be passed to the flow once triggered by this button in the form of a Json.
+              example: {"key": "value"}
+    CopyCodeButtonComponent:
+      type: object
+      description: A coupon code button definition, which can be used once in a template.
+      required:
+        - type
+        - index
+        - couponCode
+      properties:
+        type:
+          type: string
+          description: Determines the type of the button. Always _copy_code_.
+          enum:
+          - copy_code
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 9
+        couponCode:
+          type: string
+          maxLength: 15
+          description: Copies text to clipboard when tapped. Limited to one button per template.
+          example: 25%OFF
+    CatalogButtonComponent:
+      type: object
+      description: A catalog button definition, which can be used once in a template.
+      required:
+        - type
+        - index
+      properties:
+        type:
+          type: string
+          description: Determines the type of the button. Always _catalog_.
+          enum:
+          - catalog
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 9
+        action:
+          type: object
+          description: An object containing the thumbnail product ID to be displayed for the specific catalog
+          properties:
+            thumbnailProductId:
+              type: string
+              description: The thumbnail product ID which will be used as the message’s header image.
+              example: 2lc20305pt
+    MPMButtonComponent:
+      type: object
+      description: A multi product message button definition, which can be used once in a template.
+      required:
+        - type
+        - index
+        - action
+      properties:
+        type:
+          type: string
+          description: Determines the type of the button. Always _mpm_.
+          enum:
+          - mpm
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 9
+        action:
+          $ref: '#/components/schemas/MPMButtonComponentAction'
+    MPMButtonComponentAction:
+      type: object
+      description: An object defining sections and their titles that will appear when the customer taps the View items button, and to designate which products appear in each of those sections
+      properties:
+        thumbnailProductId:
+          type: string
+          description: The thumbnail product ID which will be used as the message’s header image.
+          example: 2lc20305pt
+        sections:
+          type: array
+          description: The sections shown when the MPM button is clicked, up to 10
+          minimum: 0
+          maximum: 10
+          items:
+            type: object
+            description: An object defining a section of the list
+            required:
+              - title
+            properties:
+              title:
+                type: string
+                description: The title of the section
+                maxLength: 24
+                example: Popular Bundles
+              items:
+                type: array
+                description: A list of products that will be shown when the MPM button is clicked, limited to 30 products per section.
+                minimum: 1
+                maximum: 30
+                items:
+                  type: object
+                  description: An object defining a product that will be shown when the MPM button is clicked
+                  required:
+                    - productId
+                  properties:
+                    productId:
+                      type: string
+                      description: The product ID of the item from the catalog
+                      example: 2lc20305pt
+    CallButtonComponent:
+      type: object
+      description: A call button definition, which can be used once in a template.
+      required:
+        - type
+        - index
+      properties:
+        type:
+          type: string
+          description: Determines the type of the button. Always _call_.
+          enum:
+          - call
+        index:
+          type: number
+          description: Determines the index of the button that should be enhanced with a custom parameter
+          minimum: 0
+          maximum: 9
+        timeToLiveMinutes:
+          type: integer
+          description: The time to live of the call button in minutes. After this time, the button will no longer be visible or clickable.
+          minimum: 1
+          maximum: 43200
+          example: 15
+        payload:
+          type: string
+          description: Custom payload sent back in `connect` and `terminate` webhook events under the cta_payload field
+          example: payload data
 
     #
     # Interactive messages
@@ -3041,6 +3219,67 @@ components:
                 city: Mumbai
             validationErrors:
               inPinCode: We could not locate this pin code.
+    WhatsAppInteractiveUrlButtonMessage:
+      type: object
+      description: |
+        Interactive URL Button Message
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+        type: string
+        description: Determines the type of interactive message. **Always** `urlButton`
+        enum:
+          - urlButton
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveUrlButtonComponents'
+      example:
+        subType: urlButton
+        components:
+          header:
+            type: text
+            text: Header
+          body:
+            type: text
+            text: This is a URL Button interactive message
+          footer:
+            type: text
+            text: Footer
+          urlButton:
+            displayText: Click to visit our website
+            url: https://tyntec.com
+    WhatsAppInteractiveCallButtonMessage:
+      type: object
+      description: |
+        Interactive Call Button Message
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `callButton`
+          enum:
+            - callButton
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveCallButtonComponents'
+      example:
+        subType: callButton
+        components:
+            header:
+              type: text
+              text: Header
+            body:
+              type: text
+              text: This is a Call Button interactive message
+            footer:
+              type: text
+              text: Footer
+            callButton:
+              displayText: Click to call our support
+              timeToLiveMinutes: 5
+              payload: call-support-1234567890
     WhatsAppInteractiveButtonComponents:
       type: object
       required:
@@ -3447,6 +3686,79 @@ components:
         state:
           type: string
           description: Supported countries India
+    WhatsAppInteractiveUrlButtonComponents:
+      type: object
+      description: |
+        A interactive URL button message components. It contains optional header and footer text component, mandatory body text and mandatory URL button component.
+      required:
+        - body
+        - urlButton
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        urlButton:
+          $ref: '#/components/schemas/WhatsAppInteractiveUrlButtonComponent'
+    WhatsAppInteractiveUrlButtonComponent:
+      type: object
+      description: |
+        A interactive URL button component. It contains the text to be displayed on the button and the URL to be opened when the button is clicked.
+      required:
+        - displayText
+        - url
+      properties:
+        displayText:
+          type: string
+          description: The text to be displayed on the button
+          example: Click here
+        url:
+          type: string
+          description: The URL to be opened when the button is clicked. Must start with http:// or https://
+          pattern: ^https?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$
+          maxLength: 2048
+          example: https://tyntec.com
+    WhatsAppInteractiveCallButtonComponents:
+      type: object
+      description: |
+        A interactive Call button message components. It contains optional header and footer text component, mandatory body text and mandatory call button component.
+      required:
+        - body
+        - callButton
+      properties:
+        header:
+          $ref: '#/components/schemas/WhatsAppTemplateTextHeaderComponent'
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+        footer:
+          $ref: '#/components/schemas/WhatsAppInteractiveFooterContent'
+        callButton:
+          $ref: '#/components/schemas/WhatsAppInteractiveCallButtonComponent'
+    WhatsAppInteractiveCallButtonComponent:
+      type: object
+      description: |
+        A interactive Call button component. It contains the text to be displayed on the button, a payload to be sent back when the button is clicked and a time to live for the button.
+      required:
+        - displayText
+      properties:
+        displayText:
+          type: string
+          description: The text to be displayed on the button
+          minLength: 1
+          maxLength: 20
+          example: Get support
+        payload:
+          type: string
+          description: The payload to be sent back when the button is clicked. Must be unique within the same messaging request.
+          minLength: 1
+          maxLength: 512
+        timeToLiveMinutes:
+          type: integer
+          description: Time to live for the button in minutes. After this time, the button will no longer be clickable. Default value is 1440 (24 hours).
+          minimum: 1
+          maximum: 43200
     #
     # Profile
     #
@@ -4243,6 +4555,7 @@ components:
         anyOf:
           - $ref: '#/components/schemas/WhatsAppURLButton'
           - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
+          - $ref: '#/components/schemas/WhatsAppVoiceCallButton'
       minItems: 1
       maxItems: 2
     WhatsAppURLButton:
@@ -4312,6 +4625,31 @@ components:
           description: The phone number that will be called when clicking on the button.
           pattern: ^\+\d{4,23}$
           example: "+4923147790813"
+    WhatsAppVoiceCallButton:
+        type: object
+        description: A call to action button that initiates a voice call to that particular WhatsApp Business Account.
+        required:
+          - type
+          - text
+        properties:
+            type:
+              type: string
+              description: The type of this button
+              enum:
+                - VOICE_CALL
+              example: VOICE_CALL
+            text:
+              type: string
+              description: The caption for this button
+              maxLength: 20
+              minLength: 1
+              example: Call us
+            timeToLiveMinutes:
+              type: integer
+              description: The time to live for the voice call button. If the button is not clicked within this time frame, it will disappear from the message. Must be between 1440 and 43200 minutes. Default is 1440 minutes (24 hours).
+              minimum: 1440
+              maximum: 43200
+              example: 1440
     WhatsAppFlowButtonsRequest:
       type: array
       description: Flows buttons
