@@ -1,10 +1,11 @@
 openapi: 3.0.3
 info:
-  title: "Network Signal API"
+  title: "Network Signals API"
   description: |
-    This is the OpenAPI specification for the Network Signal product.
+    This is the OpenAPI specification for the Network Signals product.
     
-    The Network Signal API provides services to verify and check information about phone numbers, including:
+    The Network Signals API provides services to verify and check information about phone numbers, including:
+    
     - SIM swap detection and date retrieval
     - Device swap detection and date retrieval
     - Call forwarding status check
@@ -13,8 +14,8 @@ info:
     name: tyntec API Support
     url: https://www.tyntec.com/support
     email: support@tyntec.com
-  x-repository: https://github.com/tyntec/api-collection/blob/master/network-signal
-  x-specification-file: network-signal.yaml
+  x-repository: https://github.com/tyntec/api-collection/blob/master/network-signals
+  x-specification-file: network-signals.yaml
   x-major-version: v1
 servers:
   - url: https://api.tyntec.com/network-signal/v1

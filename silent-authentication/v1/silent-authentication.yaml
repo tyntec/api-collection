@@ -39,8 +39,8 @@ paths:
         the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
         and verifies the MSISDN, then returns:
           
-           * an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
-           * an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
+        - an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
+        - an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
 
       parameters:
         - name: response_type
@@ -194,9 +194,11 @@ components:
         Query parameter values are URL-encoded (spaces may appear as "+" in application/x-www-form-urlencoded encoding).
         
         Error parameter names follow OAuth 2.0 specification:
+        
         - `error`: Error code (e.g., invalid_request, invalid_scope, no_data_session)
         - `error_description`: Human-readable error explanation
         - `state`: Opaque value from the authorization request
+
       headers:
         Location:
           description: |
