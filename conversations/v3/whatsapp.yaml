@@ -2936,7 +2936,7 @@ components:
           example: 15
         payload:
           type: string
-          description: Custom payload sent back in `connect` and `terminate` webhook events under the cta_payload field
+          description: Custom payload sent back in `connect` and `terminate` webhook events under the `ctaPayload` field
           example: payload data
 
     #

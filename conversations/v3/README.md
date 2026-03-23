@@ -19,6 +19,9 @@ Added new interactive message types:
 * Interactive URL button messages - send messages with clickable URL buttons containing customizable text, header, footer, and URL
 * Interactive call button messages - send messages with call-to-action buttons that initiate voice calls with time-to-live and payload tracking
 
+#### Added Calling webhook "payload" fields
+Added new `ctaPayload` and `deeplinkPayload` fields to WhatsApp Calling webhook events, allowing businesses to receive custom data associated with call events for better tracking and analytics.
+
 ## 3.25
 ### Changes
 #### Added Coexistence API

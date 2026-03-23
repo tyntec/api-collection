@@ -1197,6 +1197,12 @@ components:
           enum:
             - COMPLETED
             - FAILED
+        ctaPayload:
+          type: string
+          description: The `payload` field on a call button, which will only be returned if call was initiated from a call button with payload.
+        deeplinkPayload:
+          type: string
+          description: The `biz_payload` query param on a call deeplink, which will only be returned if call was initiated from a deeplink with such param.
         startTime:
           type: string
           format: 'date-time'
@@ -1216,6 +1222,7 @@ components:
         callId: wacid.HBgMMzA2OTMyODc0NDk3FQIAERgg
         timestamp: 2025-10-01T11:11:11Z
         direction: BUSINESS_INITIATED
+        ctaPayload: cta_payload
         session:
           type: answer
           sdp: <<RFC 8866 SDP>>
