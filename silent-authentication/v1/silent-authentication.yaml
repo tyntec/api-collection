@@ -2,16 +2,17 @@ openapi: 3.0.3
 info:
   title: "Silent Authentication API"
   description: |
-    Silent Authentication API provides OAuth2-based authentication that verifies whether an authentication
+    Silent Authentication API provides OAuth2-based authentication service that verifies whether an authentication
     request originates from the same subscriber by resolving network session information.
 
     Typical flow:
     
-    1. Client initiates OAuth2 authorization with `/oauth2/authorize` using login_hint containing the MSISDN.
+    1. Client initiates OAuth2 authorization with `/oauth2/authorize` using `login_hint` containing the MSISDN.
     2. The service extracts MSISDN, client IP/port and timestamp, then resolves network session data.
-    3. Check if the provided MSISDN matches the one associated with the resolved network session.
-    4. Client exchanges the code for access/ID tokens via `/oauth2/token`.
-    5. The ID token contains a `mobile_id` claim when verification succeeds.
+    3. The service checks if the provided MSISDN matches the one associated with the resolved network session.
+    4. Client exchanges the code for access token via `/oauth2/token`.
+    5. The access token contains a `mobile_id` claim when verification succeeds.
+    6. Optionally, client can call `/oauth2/userinfo` with the access token to retrieve verification results without decoding the JWT.
 
   version: '1.0.0'
   contact:
@@ -26,8 +27,7 @@ servers:
 tags:
   - name: "OAuth2"
     description: |
-      OAuth2 endpoints for silent authentication flow. Supports authorization code grant type with
-      network-based subscriber verification.
+      OAuth2 endpoints for silent authentication flow.
 paths:
   /oauth2/authorize:
     get:
@@ -35,12 +35,9 @@ paths:
         - "OAuth2"
       summary: OAuth2 authorization
       description: |
-        Initiates the OAuth2 authorization code flow with silent authentication. The client provides
+        Initiates the OAuth2 authorization flow with silent authentication. The client provides
         the subscriber's MSISDN in the `login_hint` parameter. The service resolves the network session
-        and verifies the MSISDN, then returns:
-          
-        - an authorization code and the user ID as a `sub` claim, if the MSISDN matches the one associated with the network session, or
-        - an authorization code and `anonymous` `sub` claim, if the MSISDN does not match.
+        and verifies the MSISDN, then redirects to the callback URI with an authorization code.
 
       parameters:
         - name: response_type
@@ -56,7 +53,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Client identifier
+          description: Client identifier, provided during the onboarding process
           example: "client"
         - name: state
           in: query
@@ -70,7 +67,13 @@ paths:
           required: true
           schema:
             type: string
-          description: Space-delimited scope values (e.g., 'openid tt:phone_verify')
+          description: |
+            Space-delimited scope values.
+            
+            Possible values:
+            
+            - tt:phone_verify
+            - tt:mobile_id
           example: "openid tt:phone_verify"
         - name: redirect_uri
           in: query
@@ -82,10 +85,14 @@ paths:
           example: "https://client.example.com/callback"
         - name: login_hint
           in: query
-          required: true
+          required: false
           schema:
             type: string
-          description: Subscriber MSISDN (without leading plus, e.g., 301234567890)
+          description: |
+            Subscriber MSISDN (without leading plus, e.g., 301234567890).
+            
+            Client should provide the `login_hint` for higher security and better user experience, but it is not mandatory.
+            If the `login_hint` is not provided, a pop-up window will be shown to the user to input their MSISDN.
           example: "301234567890"
       responses:
         '302':
@@ -96,8 +103,201 @@ paths:
         - "OAuth2"
       summary: OAuth2 token
       description: |
-        Exchange an authorization code for access token, ID token, and refresh token. The ID token
-        includes a `mobile_id` claim when silent authentication verification succeeded.
+        Exchange an authorization code for access token and refresh token. The access token
+        contains a `mobile_id` claim when silent authentication verification succeeded.
+      x-code-samples:
+        - lang: shell
+          source: |
+            curl -X POST "https://api.tyntec.com/silent-auth/v1/oauth2/token" \
+              -H "Content-Type: application/x-www-form-urlencoded" \
+              -H "apiKey: <apiKey>" \
+              --data-urlencode "grant_type=authorization_code" \
+              --data-urlencode "code=9oubNbRC9el6-KoSda3NvBQlf3-Bh..." \
+              --data-urlencode "redirect_uri=https://client.example.com/callback" \
+              --data-urlencode "client_id=client" \
+              --data-urlencode "client_secret=12345"
+        - lang: python
+          source: |
+            import requests
+
+            url = "https://api.tyntec.com/silent-auth/v1/oauth2/token"
+            headers = {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "apiKey": "<apiKey>"
+            }
+            data = {
+                "grant_type": "authorization_code",
+                "code": "9oubNbRC9el6-KoSda3NvBQlf3-Bh...",
+                "redirect_uri": "https://client.example.com/callback",
+                "client_id": "client",
+                "client_secret": "12345"
+            }
+
+            response = requests.post(url, headers=headers, data=data)
+            print(response.json())
+        - lang: javascript
+          source: |
+            const data = new URLSearchParams({
+              grant_type: 'authorization_code',
+              code: '9oubNbRC9el6-KoSda3NvBQlf3-Bh...',
+              redirect_uri: 'https://client.example.com/callback',
+              client_id: 'client',
+              client_secret: '12345'
+            });
+
+            fetch('https://api.tyntec.com/silent-auth/v1/oauth2/token', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'apiKey': '<apiKey>'
+              },
+              body: data
+            })
+            .then(response => response.json())
+            .then(data => console.log(data));
+        - lang: java
+          source: |
+            import java.io.*;
+            import java.net.*;
+            import java.nio.charset.StandardCharsets;
+
+            URL url = new URL("https://api.tyntec.com/silent-auth/v1/oauth2/token");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("apiKey", "<apiKey>");
+            conn.setDoOutput(true);
+
+            String data = "grant_type=authorization_code" +
+                "&code=9oubNbRC9el6-KoSda3NvBQlf3-Bh..." +
+                "&redirect_uri=https://client.example.com/callback" +
+                "&client_id=client" +
+                "&client_secret=12345";
+
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = data.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response.toString());
+            }
+        - lang: http
+          source: |
+            POST /silent-auth/v1/oauth2/token HTTP/1.1
+            Host: api.tyntec.com
+            Content-Type: application/x-www-form-urlencoded
+            apiKey: <apiKey>
+
+            grant_type=authorization_code&code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&redirect_uri=https://client.example.com/callback&client_id=client&client_secret=12345
+        - lang: ruby
+          source: |
+            require 'net/http'
+            require 'uri'
+            require 'json'
+
+            uri = URI.parse("https://api.tyntec.com/silent-auth/v1/oauth2/token")
+            request = Net::HTTP::Post.new(uri)
+            request.content_type = "application/x-www-form-urlencoded"
+            request["apiKey"] = "<apiKey>"
+
+            request.set_form_data(
+              "grant_type" => "authorization_code",
+              "code" => "9oubNbRC9el6-KoSda3NvBQlf3-Bh...",
+              "redirect_uri" => "https://client.example.com/callback",
+              "client_id" => "client",
+              "client_secret" => "12345"
+            )
+
+            response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+              http.request(request)
+            end
+
+            puts JSON.parse(response.body)
+        - lang: go
+          source: |
+            package main
+
+            import (
+                "fmt"
+                "io"
+                "net/http"
+                "net/url"
+                "strings"
+            )
+
+            func main() {
+                apiUrl := "https://api.tyntec.com/silent-auth/v1/oauth2/token"
+
+                data := url.Values{}
+                data.Set("grant_type", "authorization_code")
+                data.Set("code", "9oubNbRC9el6-KoSda3NvBQlf3-Bh...")
+                data.Set("redirect_uri", "https://client.example.com/callback")
+                data.Set("client_id", "client")
+                data.Set("client_secret", "12345")
+
+                req, err := http.NewRequest("POST", apiUrl, strings.NewReader(data.Encode()))
+                if err != nil {
+                    panic(err)
+                }
+
+                req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+                req.Header.Set("apiKey", "<apiKey>")
+
+                client := &http.Client{}
+                resp, err := client.Do(req)
+                if err != nil {
+                    panic(err)
+                }
+                defer resp.Body.Close()
+
+                body, err := io.ReadAll(resp.Body)
+                if err != nil {
+                    panic(err)
+                }
+
+                fmt.Println(string(body))
+            }
+        - lang: php
+          source: |
+            <?php
+
+            $url = "https://api.tyntec.com/silent-auth/v1/oauth2/token";
+
+            $data = array(
+                'grant_type' => 'authorization_code',
+                'code' => '9oubNbRC9el6-KoSda3NvBQlf3-Bh...',
+                'redirect_uri' => 'https://client.example.com/callback',
+                'client_id' => 'client',
+                'client_secret' => '12345'
+            );
+
+            $options = array(
+                'http' => array(
+                    'header'  => "Content-Type: application/x-www-form-urlencoded\r\n" .
+                                 "apiKey: <apiKey>\r\n",
+                    'method'  => 'POST',
+                    'content' => http_build_query($data)
+                )
+            );
+
+            $context  = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+
+            if ($result === FALSE) {
+                die('Error');
+            }
+
+            $response = json_decode($result, true);
+            print_r($response);
+
+            ?>
       security:
         - apiKey: []
       requestBody:
@@ -115,7 +315,6 @@ paths:
               properties:
                 grant_type:
                   type: string
-                  enum: [authorization_code]
                   description: OAuth2 grant type (must be 'authorization_code')
                   example: "authorization_code"
                 code:
@@ -148,8 +347,7 @@ paths:
                   value:
                     access_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5..."
                     refresh_token: "DawkDPIXqUDqyjHfzcifAsc8gvL1jBys..."
-                    scope: "tt:mobile_id openid"
-                    id_token: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtO..."
+                    scope: "openid tt:mobile_id"
                     token_type: "Bearer"
                     expires_in: 86399
         400:
@@ -157,25 +355,73 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidArgumentError'
+                $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Invalid client credentials or authorization code
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PermissionDeniedError'
-        404:
-          description: Not Found
+        500:
+          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundError'
+                $ref: '#/components/schemas/InternalServerError'
+  /oauth2/userinfo:
+    get:
+      tags:
+        - "OAuth2"
+      summary: OAuth2 UserInfo
+      description: |
+        Retrieve authentication results using the access token from the token endpoint.
+        This standard OpenID Connect UserInfo endpoint returns the mobile_id, phone number 
+        verification status, and user identifier.
+        
+        Clients can call this endpoint with Bearer token authentication instead of manually 
+        decoding the access_token JWT.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful userinfo response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+              examples:
+                successfulVerification:
+                  summary: Successful phone number verification
+                  value:
+                    sub: "99dd91d1-c949-433c-bd9e-0682eb6d6d26"
+                    mobile_id: "2d83f2c1f618313f4b24516913d4e45e00ee289af2bc428d897b175adc5775e643e52bc7286eeca02353e4eb99fccacbe263ec922dbfdde6ed64be90f0e2f780"
+                    login_hint: "381123456789"
+                    phone_number_verified: "true"
+                failedVerification:
+                  summary: Failed phone number verification
+                  value:
+                    sub: "anonymous"
+                    mobile_id: "2d83f2c1f618313f4b24516913d4e45e00ee289af2bc428d897b175adc5775e643e52bc7286eeca02353e4eb99fccacbe263ec922dbfdde6ed64be90f0e2f780"
+                    login_hint: "381123456789"
+                    phone_number_verified: "false"
+        401:
+          description: Unauthorized - Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDeniedError'
         500:
           description: Internal Server Error
           content:
@@ -198,12 +444,10 @@ components:
         - `error`: Error code (e.g., invalid_request, invalid_scope, no_data_session)
         - `error_description`: Human-readable error explanation
         - `state`: Opaque value from the authorization request
-
       headers:
         Location:
           description: |
-            Redirect URI with query parameters. For success: code and state.
-            For errors: error, error_description, and state.
+            Redirect URI with query parameters. For success: code and state. For errors: error, error_description, and state.
           schema:
             type: string
             format: uri
@@ -244,7 +488,7 @@ components:
       properties:
         access_token:
           type: string
-          description: OAuth2 access token (JWT format)
+          description: OAuth2 access token (JWT format) containing the mobile_id claim when verification succeeded
           example: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9..."
         refresh_token:
           type: string
@@ -253,11 +497,7 @@ components:
         scope:
           type: string
           description: Space-delimited scope values granted
-          example: "tt:mobile_id openid"
-        id_token:
-          type: string
-          description: OpenID Connect ID token (JWT format) containing mobile_id claim when verification succeeded
-          example: "eyJraWQiOiIyYzc5NDNmMy00YzIyLTQ5MzUtOTBmZi1kOWVkNTVmYTYxN2QiLCJhbGciOiJSUzI1NiJ9..."
+          example: "openid tt:mobile_id tt:phone_verify"
         token_type:
           type: string
           description: Token type (always 'Bearer')
@@ -266,117 +506,97 @@ components:
           type: integer
           description: Access token lifetime in seconds
           example: 86399
-    InvalidArgumentError:
+    UserInfoResponse:
       type: object
       required:
-        - status
-        - code
+        - sub
+        - mobile_id
+        - login_hint
+        - phone_number_verified
+      properties:
+        sub:
+          type: string
+          description: |
+            Subject identifier is a UUID of the request. Returns 'anonymous' when verification fails (provided MSISDN does not match the resolved MSISDN).
+          example: "99dd91d1-c949-433c-bd9e-0682eb6d6d26"
+        mobile_id:
+          type: string
+          description: |
+            Mobile ID can be used as a network identifier of a user.
+          example: "2d83f2c1f618313f4b24516913d4e45e00ee289af2bc428d897b175adc5775e643e52bc7286eeca02353e4eb99fccacbe263ec922dbfdde6ed64be90f0e2f780"
+        login_hint:
+          type: string
+          description: |
+            MSISDN value that was submitted in the authorization request.
+          example: "381123456789"
+        phone_number_verified:
+          type: string
+          enum: ["true", "false"]
+          description: |
+            Boolean value indicating whether the submitted phone number matches the resolved network MSISDN.
+          example: "true"
+    BadRequestError:
+      type: object
+      required:
         - message
       properties:
-        status:
-          type: integer
-          example: 400
-          description: HTTP status code
-        code:
+        error:
           type: string
-          example: "INVALID_ARGUMENT"
+          example: "invalid_request"
           description: Error code
-        message:
+        error_description:
           type: string
           example: "Client specified an invalid argument, request body or query param."
           description: Error message
-    OutOfRangeError:
+    UnauthorizedError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
-        status:
-          type: integer
-          example: 400
-          description: HTTP status code
-        code:
+        error:
           type: string
-          example: "OUT_OF_RANGE"
+          example: "invalid_client"
           description: Error code
-        message:
-          type: string
-          example: "Client specified an invalid range."
-          description: Error message
-    UnauthenticatedError:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 401
-          description: HTTP status code
-        code:
-          type: string
-          example: "UNAUTHENTICATED"
-          description: Error code
-        message:
+        error_description:
           type: string
           example: "Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required."
           description: Error message
     PermissionDeniedError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
-        status:
-          type: integer
-          example: 403
-          description: HTTP status code
-        code:
+        error:
           type: string
-          example: "PERMISSION_DENIED"
+          example: "permission_denied"
           description: Error code
-        message:
+        error_description:
           type: string
           example: "Client does not have sufficient permissions to perform this action."
           description: Error message
     NotFoundError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
-        status:
-          type: integer
-          example: 404
-          description: HTTP status code
-        code:
+        error:
           type: string
-          example: "NOT_FOUND"
+          example: "not_found"
           description: Error code
-        message:
+        error_description:
           type: string
           example: "The specified resource is not found."
           description: Error message
     InternalServerError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
-        status:
-          type: integer
-          example: 500
-          description: HTTP status code
-        code:
+        error:
           type: string
-          example: "INTERNAL_SERVER_ERROR"
+          example: "internal_server_error"
           description: Error code
-        message:
+        error_description:
           type: string
           example: "Request could not be processed"
           description: Error message
@@ -389,3 +609,8 @@ components:
       type: http
       scheme: basic
       description: Client ID and secret for OAuth2 token endpoint (Basic Auth)
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token authentication using the access token obtained from the token endpoint
