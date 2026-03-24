@@ -444,6 +444,7 @@ components:
         - `error`: Error code (e.g., invalid_request, invalid_scope, no_data_session)
         - `error_description`: Human-readable error explanation
         - `state`: Opaque value from the authorization request
+
       headers:
         Location:
           description: |
