@@ -57,19 +57,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/SimSwapResponse'
         400:
-          description: Bad Request - Invalid argument or out of range
+          description: Bad Request - Invalid argument
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/InvalidArgumentError'
-                  - $ref: '#/components/schemas/OutOfRangeError'
+                  - $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Missing, invalid, or expired credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden - Insufficient permissions
           content:
@@ -117,13 +116,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidArgumentError'
+                $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Missing, invalid, or expired credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden - Insufficient permissions
           content:
@@ -168,19 +167,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeviceSwapResponse'
         400:
-          description: Bad Request - Invalid argument or out of range
+          description: Bad Request - Invalid argument
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/InvalidArgumentError'
-                  - $ref: '#/components/schemas/OutOfRangeError'
+                  - $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Missing, invalid, or expired credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden - Insufficient permissions
           content:
@@ -228,13 +226,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidArgumentError'
+                $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Missing, invalid, or expired credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden - Insufficient permissions
           content:
@@ -278,19 +276,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/CallForwardingResponse'
         400:
-          description: Bad Request - Invalid argument or out of range
+          description: Bad Request - Invalid argument
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/InvalidArgumentError'
-                  - $ref: '#/components/schemas/OutOfRangeError'
+                  - $ref: '#/components/schemas/BadRequestError'
         401:
           description: Unauthorized - Missing, invalid, or expired credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthenticatedError'
+                $ref: '#/components/schemas/UnauthorizedError'
         403:
           description: Forbidden - Insufficient permissions
           content:
@@ -378,7 +375,7 @@ components:
     LatestDeviceChangeResponse:
       type: object
       properties:
-        latestSimChange:
+        latestDeviceChange:
           type: string
           format: date-time
           nullable: true
@@ -391,11 +388,9 @@ components:
           type: boolean
           description: Indicates whether unconditional call forwarding is currently active
           example: true
-    InvalidArgumentError:
+    BadRequestError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
         status:
@@ -410,30 +405,9 @@ components:
           type: string
           example: "Client specified an invalid argument, request body or query param."
           description: Error message
-    OutOfRangeError:
+    UnauthorizedError:
       type: object
       required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          example: 400
-          description: HTTP status code
-        code:
-          type: string
-          example: "OUT_OF_RANGE"
-          description: Error code
-        message:
-          type: string
-          example: "Client specified an invalid range."
-          description: Error message
-    UnauthenticatedError:
-      type: object
-      required:
-        - status
-        - code
         - message
       properties:
         status:
@@ -451,8 +425,6 @@ components:
     PermissionDeniedError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
         status:
@@ -470,8 +442,6 @@ components:
     NotFoundError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
         status:
@@ -489,8 +459,6 @@ components:
     InternalServerError:
       type: object
       required:
-        - status
-        - code
         - message
       properties:
         status:
