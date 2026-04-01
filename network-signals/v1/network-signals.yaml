@@ -251,7 +251,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
-  /call-forwarding/check:
+  /call-forwarding/unconditional/check:
     post:
       tags:
         - "Call Forwarding"
@@ -315,7 +315,7 @@ components:
       properties:
         phoneNumber:
           type: string
-          description: The phone number of the subscriber, according to E.164 standard
+          description: Phone number in the international format with or without the leading “+” or “00” prefix
           example: "+491234567890"
     SimSwapCheckRequest:
       type: object
@@ -324,7 +324,7 @@ components:
       properties:
         phoneNumber:
           type: string
-          description: The phone number of the subscriber, according to E.164 standard
+          description: Phone number in the international format with or without the leading “+” or “00” prefix
           example: "+491234567890"
         maxAge:
           type: integer
@@ -340,7 +340,7 @@ components:
       properties:
         phoneNumber:
           type: string
-          description: The phone number of the subscriber, according to E.164 standard
+          description: Phone number in the international format with or without the leading “+” or “00” prefix
           example: "+491234567890"
         maxAge:
           type: integer
