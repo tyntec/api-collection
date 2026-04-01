@@ -89,11 +89,13 @@ paths:
           schema:
             type: string
           description: |
-            Subscriber MSISDN (without leading plus, e.g., 301234567890).
+            Phone number in the international format with or without the leading “+” or “00” prefix
+            
+            Examples: `+491234567890`, `00491234567890` or `491234567890`.
             
             Client should provide the `login_hint` for higher security and better user experience, but it is not mandatory.
             If the `login_hint` is not provided, a pop-up window will be shown to the user to input their MSISDN.
-          example: "301234567890"
+          example: "+491234567890"
       responses:
         '302':
           $ref: '#/components/responses/OAuth2AuthorizeRedirect'
@@ -401,14 +403,14 @@ paths:
                   value:
                     sub: "99dd91d1-c949-433c-bd9e-0682eb6d6d26"
                     mobile_id: "2d83f2c1f618313f4b24516913d4e45e00ee289af2bc428d897b175adc5775e643e52bc7286eeca02353e4eb99fccacbe263ec922dbfdde6ed64be90f0e2f780"
-                    login_hint: "381123456789"
+                    login_hint: "+491123456789"
                     phone_number_verified: "true"
                 failedVerification:
                   summary: Failed phone number verification
                   value:
                     sub: "anonymous"
                     mobile_id: "2d83f2c1f618313f4b24516913d4e45e00ee289af2bc428d897b175adc5775e643e52bc7286eeca02353e4eb99fccacbe263ec922dbfdde6ed64be90f0e2f780"
-                    login_hint: "381123456789"
+                    login_hint: "+491123456789"
                     phone_number_verified: "false"
         401:
           description: Unauthorized - Invalid or expired access token
@@ -434,9 +436,15 @@ components:
       description: |
         Redirects the user-agent to the client-provided callback URI with OAuth 2.0 parameters.
         
-        **Success case:** Returns authorization code and state in query parameters.
+        **Success case:** 
         
-        **Error cases:** Returns error, error_description, and state in query parameters.
+        Returns authorization code and state in query parameters.
+        
+        Example: `https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&state=xyz12345`
+        
+        **Error cases:**
+        
+        Returns error, error_description, and state in query parameters.
         Query parameter values are URL-encoded (spaces may appear as "+" in application/x-www-form-urlencoded encoding).
         
         Error parameter names follow OAuth 2.0 specification:
@@ -444,14 +452,14 @@ components:
         - `error`: Error code (e.g., invalid_request, invalid_scope, no_data_session)
         - `error_description`: Human-readable error explanation
         - `state`: Opaque value from the authorization request
-
+        
+        Example: `https://client.example.com/callback?error=invalid_request&error_description=OAuth+2.0+Parameter:+client_id&state=xyz12345`
       headers:
         Location:
           description: |
             Redirect URI with query parameters. For success: code and state. For errors: error, error_description, and state.
           schema:
-            type: string
-            format: uri
+            $ref: '#/components/schemas/CallbackUri'
           examples:
             success:
               summary: Successful authorization
@@ -474,16 +482,15 @@ components:
             invalid_login_hint:
               summary: Malformed login_hint parameter
               value: "https://client.example.com/callback?error=invalid_request&error_description=Invalid+login_hint+format&state=xyz12345"
-            no_data_session:
-              summary: No active data session found
-              value: "https://client.example.com/callback?error=no_data_session&error_description=No+active+data+session+found+for+the+provided+phone+number&state=xyz12345"
-            resolution_error:
-              summary: Unable to resolve subscriber data
-              value: "https://client.example.com/callback?error=resolution_error&error_description=Unable+to+resolve+subscriber&state=xyz12345"
             server_error:
               summary: Unexpected server error
               value: "https://client.example.com/callback?error=server_error&error_description=An+unexpected+error+occurred&state=xyz12345"
   schemas:
+    CallbackUri:
+      type: string
+      format: uri
+      description: Client callback URI where the authorization code will be sent
+      example: "https://client.example.com/callback?code=9oubNbRC9el6-KoSda3NvBQlf3-Bh...&state=xyz12345"
     TokenResponse:
       type: object
       properties:
@@ -528,8 +535,8 @@ components:
         login_hint:
           type: string
           description: |
-            MSISDN value that was submitted in the authorization request.
-          example: "381123456789"
+            Phone number  value that was submitted in the authorization request.
+          example: "+491123456789"
         phone_number_verified:
           type: string
           enum: ["true", "false"]
