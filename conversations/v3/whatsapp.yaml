@@ -5229,6 +5229,18 @@ components:
           type: string
           description: Display state (shown or hidden) of the WhatsApp call button icon for users when chatting with the business
           example: DEFAULT
+        callIcons:
+          type: object
+          description: The configuration specifying the countries where the call icons should show up
+          properties:
+            restrictToUserCountries:
+              type: array
+              description: The list of country codes (in ISO 3166-1 alpha-2 format) where the call icons should be visible. If empty, the call icons will be visible in all countries.
+              items:
+                type: string
+                minLength: 2
+                maxLength: 2
+                example: DE
         callHours:
           type: object
           description: The configuration specifying the timezone, business hours and holiday schedules applied to all user-initiated calls
@@ -5283,6 +5295,16 @@ components:
           type: string
           description: Status of whether a user is prompted with a call permission request after calling the business
           example: ENABLED
+        audio:
+          type: object
+          description: The configuration specifying the audio settings for WhatsApp Calling
+          properties:
+            additionalCodecs:
+              type: array
+              description: The list of additional audio codecs that can be used for WhatsApp Calling. Opus is always enabled by default and cannot be removed.
+              items:
+                type: string
+                example: PCMU
     WhatsAppSipCallingSettings:
       type: object
       description: SIP calling settings for a phone number

@@ -1,5 +1,12 @@
 # Release notes
 
+## 3.27
+### Changes
+#### Enhanced WhatsApp Calling settings
+Added new configuration options for WhatsApp Calling settings:
+* Call Icons - configure country-specific visibility for call icons
+* Audio Codecs - add additional audio codecs for WhatsApp Calling
+
 ## 3.26
 ### Changes
 #### WhatsApp Templates
