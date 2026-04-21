@@ -18,7 +18,7 @@ info:
     name: tyntec API Support
     url: http://www.tyntec.com/support
     email: support@tyntec.com
-  version: '3.24'
+  version: '3.28'
   x-repository: https://github.com/tyntec/api-collection/blob/master/conversations
   x-specification-file: whatsapp.yaml
   x-major-version: v3
@@ -4130,6 +4130,7 @@ components:
           - $ref: '#/components/schemas/WhatsAppTemplateBodyComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateFooterComponentRequest'
           - $ref: '#/components/schemas/WhatsAppTemplateButtonComponentRequest'
+          - $ref: '#/components/schemas/WhatsAppTemplateCallPermissionRequestComponentRequest'
       minItems: 1
     CarouselTemplateRequest:
       type: array
@@ -4691,6 +4692,17 @@ components:
           type: string
           description: Required if `flowAction is navigate`. The unique ID of the Screen in the Flow.
           example: details
+    WhatsAppTemplateCallPermissionRequestComponentRequest:
+      type: object
+      description: A call permission request component only used for marketing and utility templates. When sent, the user will be prompted to allow the business to call them.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: Determines the type of the component
+          enum:
+              - CALL_PERMISSION_REQUEST
     WhatsAppTemplateCarouselComponentRequest:
       type: object
       description: A carousel component of a template
