@@ -840,9 +840,9 @@ components:
           enum:
             - whatsapp
         from:
-            type: string
-            description: The sender of the message. This is the phone number if available, or the sender bsuid.
-            example: "49123512314"
+          type: string
+          description: The sender of the message. This is the phone number if available, or the sender bsuid.
+          example: "49123512314"
         content:
           $ref: '#/components/schemas/MoContent'
         context:
@@ -863,7 +863,7 @@ components:
           senderName: Peter
           bsuid: DE.1234567890
           parentBsuid: DE.0987654321
-          username: @peter.123
+          username: "@peter.123"
           identityKeyHash: DF2lS5v2W6x=
     Whatsapp:
       type: object
@@ -884,7 +884,7 @@ components:
         username:
           type: string
           description: The WhatsApp username of the sender, if set.
-          example: @peter.123
+          example: "@peter.123"
         identityKeyHash:
           type: string
           description: The sender's hash ID
@@ -893,7 +893,7 @@ components:
         senderName: Peter
         bsuid: DE.1234567890
         parentBsuid: DE.0987654321
-        username: @peter.123
+        username: "@peter.123"
         identityKeyHash: DF2lS5v2W6x=
       additionalProperties: true
     MessageRequestContext:
@@ -1568,7 +1568,7 @@ components:
             username:
               type: string
               description: The WhatsApp username of the end-user, if set.
-              example: @peter.123
+              example: "@peter.123"
             userPhoneNumber:
               type: string
               description: The phone number of the end-user, if available.
@@ -1606,7 +1606,7 @@ components:
         whatsapp:
           bsuid: DE.1234567890
           parentBsuid: DE.0987654321
-          username: @peter.123
+          username: "@peter.123"
           userPhoneNumber: "491672634678"
           pricing:
             pricingModel: PMP
