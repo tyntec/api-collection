@@ -1,5 +1,16 @@
 # Release notes
 
+## 3.29
+### Changes
+#### Added new WhatsApp bsuid identifiers to inbound call message webhook events
+The `whatsapp` property in inbound call message webhook events now includes new identifiers related to the username feature of whatsapp. The new fields are:
+* `bsuid` - the WhatsApp Business Scoped User ID of the end-user.
+* `parentBsuid` - the parent BSUID if enabled by the business
+* `username` - the WhatsApp username of the end-user, if feature is enabled by the end-user
+
+#### Added new WhatsApp contact request
+Added support for a new WhatsApp contact request interactive message, which allows businesses to receive contact information from end users who initiate contact through WhatsApp. This can also be added as a button to WhatsApp templates.
+
 ## 3.28
 ### Changes
 #### Added new whatsapp bsuid identifiers to inbound message and status webhook events

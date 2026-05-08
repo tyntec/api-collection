@@ -2167,6 +2167,7 @@ components:
             - $ref: '#/components/schemas/WhatsAppInteractiveProductListMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveLocationMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveCallPermissionRequestMessage'
+            - $ref: '#/components/schemas/WhatsAppInteractiveContactRequestMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveFlowMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveAddressMessage'
             - $ref: '#/components/schemas/WhatsAppInteractiveUrlButtonMessage'
@@ -3137,6 +3138,21 @@ components:
           body:
             type: text
             text: We would like to call you.
+    WhatsAppInteractiveContactRequestMessage:
+      type: object
+      description: |
+        Interactive Contact Request Message
+      required:
+        - subType
+        - components
+      properties:
+        subType:
+          type: string
+          description: Determines the type of interactive message. **Always** `contactRequest`
+          enum:
+            - contactRequest
+        components:
+          $ref: '#/components/schemas/WhatsAppInteractiveContactRequestComponents'
     WhatsAppInteractiveFlowMessage:
       type: object
       description: |
@@ -3513,6 +3529,15 @@ components:
       type: object
       description: |
         A call permission request component. It contains only body text. A footer with a link to the Business calling permission setting is automatically generated.
+      required:
+        - body
+      properties:
+        body:
+          $ref: '#/components/schemas/WhatsAppInteractiveTextContent'
+    WhatsAppInteractiveContactRequestComponents:
+      type: object
+      description: |
+        A contact request component. It contains only body text. Create a contact request where users can share their contact information with the business.
       required:
         - body
       properties:
@@ -4557,6 +4582,7 @@ components:
           - $ref: '#/components/schemas/WhatsAppURLButton'
           - $ref: '#/components/schemas/WhatsAppPhoneNumberButton'
           - $ref: '#/components/schemas/WhatsAppVoiceCallButton'
+          - $ref: '#/components/schemas/WhatsAppRequestContactInfoButton'
       minItems: 1
       maxItems: 2
     WhatsAppURLButton:
@@ -4627,30 +4653,42 @@ components:
           pattern: ^\+\d{4,23}$
           example: "+4923147790813"
     WhatsAppVoiceCallButton:
-        type: object
-        description: A call to action button that initiates a voice call to that particular WhatsApp Business Account.
-        required:
-          - type
-          - text
-        properties:
-            type:
-              type: string
-              description: The type of this button
-              enum:
-                - VOICE_CALL
-              example: VOICE_CALL
-            text:
-              type: string
-              description: The caption for this button
-              maxLength: 20
-              minLength: 1
-              example: Call us
-            timeToLiveMinutes:
-              type: integer
-              description: The time to live for the voice call button. If the button is not clicked within this time frame, it will disappear from the message. Must be between 1440 and 43200 minutes. Default is 1440 minutes (24 hours).
-              minimum: 1440
-              maximum: 43200
-              example: 1440
+      type: object
+      description: A call to action button that initiates a voice call to that particular WhatsApp Business Account.
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          description: The type of this button
+          enum:
+            - VOICE_CALL
+          example: VOICE_CALL
+        text:
+          type: string
+          description: The caption for this button
+          maxLength: 20
+          minLength: 1
+          example: Call us
+        timeToLiveMinutes:
+          type: integer
+          description: The time to live for the voice call button. If the button is not clicked within this time frame, it will disappear from the message. Must be between 1440 and 43200 minutes. Default is 1440 minutes (24 hours).
+          minimum: 1440
+          maximum: 43200
+          example: 1440
+    WhatsAppRequestContactInfoButton:
+      type: object
+      description: A call to action button that requests contact information from the end user.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The type of this button
+          enum:
+          - REQUEST_CONTACT_INFO
+          example: REQUEST_CONTACT_INFO
     WhatsAppFlowButtonsRequest:
       type: array
       description: Flows buttons

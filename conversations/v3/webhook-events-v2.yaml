@@ -1186,10 +1186,10 @@ components:
             - whatsapp
         from:
           type: string
-          description: The caller phone number of the call, including the country code
+          description: The caller of the call. This is the phone number (with the country code) if available, or the caller bsuid
         to:
           type: string
-          description: The receiver phone number of the call, including the country code
+          description: The receiver of the call. This is the phone number (with the country code) if available, or the receiver bsuid
         timestamp:
           type: string
           format: 'date-time'
@@ -1236,6 +1236,22 @@ components:
         duration:
           type: number
           description: The duration of the call in seconds
+        whatsapp:
+          type: object
+          description: Details specific to the WhatsApp channel
+          properties:
+            senderName:
+              type: string
+              description: The name of the end user, set in their profile
+            bsuid:
+              type: string
+              description: The WhatsApp Business scoped user ID (BSUID) of the end user.
+            parentBsuid:
+              type: string
+              description: If enabled for your business, this is the parent bsuid of the end user.
+            username:
+              type: string
+              description: The WhatsApp username of the end user, if set.
       example:
         event: Call::Connect
         channel: whatsapp
@@ -1248,6 +1264,11 @@ components:
         session:
           type: answer
           sdp: <<RFC 8866 SDP>>
+        whatsapp:
+          senderName: Peter
+          bsuid: DE.1234567890
+          parentBsuid: DE.0987654321
+          username: "@peter.123"
     WhatsAppCallRingingStatus:
       type: object
       description: Indicates the call is ringing
