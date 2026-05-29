@@ -300,6 +300,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
+        422:
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ServiceNotApplicableError'
+                  - $ref: '#/components/schemas/MissingIdentifierError'
         500:
           description: Internal Server Error
           content:
@@ -472,6 +480,40 @@ components:
         message:
           type: string
           example: "Request could not be processed"
+          description: Error message
+    ServiceNotApplicableError:
+      type: object
+      required:
+        - message
+      properties:
+        status:
+          type: integer
+          example: 422
+          description: HTTP status code
+        code:
+          type: string
+          example: "SERVICE_NOT_APPLICABLE"
+          description: Error code
+        message:
+          type: string
+          example: "The service is not available for the provided identifier."
+          description: Error message
+    MissingIdentifierError:
+      type: object
+      required:
+        - message
+      properties:
+        status:
+          type: integer
+          example: 422
+          description: HTTP status code
+        code:
+          type: string
+          example: "MISSING_IDENTIFIER"
+          description: Error code
+        message:
+          type: string
+          example: "The phone number cannot be identified."
           description: Error message
   securitySchemes:
     apiKey:
