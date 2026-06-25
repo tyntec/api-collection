@@ -2835,7 +2835,9 @@ components:
           minItems: 0
           maxItems: 1
           items:
-            $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+            oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateGroupIdBodyComponent'
         button:
           type: array
           description: List of button components. Button can have maximum 10 components.
@@ -2963,6 +2965,21 @@ components:
           type: string
         example:
           $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponentExample'
+    WhatsAppTemplateGroupIdBodyComponent:
+      type: object
+      description: Body parameter replacement of a template for group id
+      required:
+        - type
+        - groupId
+      properties:
+        type:
+          type: string
+          enum:
+            - groupId
+        groupId:
+          type: string
+          description: The group id to be used as body parameter replacement.
+          example: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
     WhatsAppTemplateTextBodyComponentExample:
       type: object
       description: Examples of the body parameters.
