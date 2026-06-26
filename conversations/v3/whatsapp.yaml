@@ -70,7 +70,7 @@ tags:
   - name: "Phone Number Configurations"
     description: |
       List all phone numbers configured as Inbound (aka 2-way) Phone Numbers.
-  - name: "Callback configuration"
+  - name: "Callback configurations"
     description: |
       In this section, we guide you on how to configure the callbacks on a per-channel basis.
   - name: "Flows management"
@@ -88,6 +88,9 @@ tags:
   - name: "Coexistence"
     description: |
       The coexistence API allows you to keep the WhatsApp Business API and the WhatsApp Business App in sync when using both at the same time.
+  - name: "Groups"
+    description: |
+      The Groups API allows you to manage groups on WhatsApp, e.g. create a group, add or remove participants, etc. Groups are only available for OBA (Official Business Account) accounts. More detailed information on the underlying WhatsApp Groups API is here: [Groups API](https://developers.facebook.com/documentation/business-messaging/whatsapp/groups)
 paths:
   /messages:
     post:
@@ -968,6 +971,296 @@ paths:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWAActiveGroups
+      summary: Get active groups
+      description: Returns a list of active groups for the specified business phone number.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Successfully retrieved the list of active groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppActiveGroups'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: createWAGroup
+      summary: Create new group
+      description: Submits a request to create a new WhatsApp group with the specified name and description. The group will be created with the phone number as an admin. The results of the request will be sent to the notification callback URL.
+      tags:
+        - "Groups"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupCreationRequest'
+      responses:
+        200:
+          description: Group creation request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRequestSubmitted'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups/{group-id}:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getWAGroupInfo
+      summary: Get group info
+      description: Returns the details of a specific WhatsApp group.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Successfully retrieved the details of the specified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupInfo'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateWAGroupInfo
+      summary: Update group info
+      description: Submits a request to update the name, description and/or the logo of a specific WhatsApp group. The results of the request will be sent to the notification callback URL.
+      tags:
+        - "Groups"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupUpdateRequest'
+      responses:
+        200:
+          description: Group update request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupUpdateResponse'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+    delete:
+      operationId: deleteWAGroup
+      summary: Delete group
+      description: Submits a request to delete a specific WhatsApp group. The results of the request will be sent to the notification callback URL.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Group deletion request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRequestSubmitted'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups/{group-id}/logo:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    post:
+      operationId: updateWAGroupLogo
+      summary: Update group logo
+      description: Submits a request to update the logo of a specific WhatsApp group. THe image must be a square jpeg with a minimum size of 192x192 and a maximum file size of 5MB. The results of the request will be sent to the notification callback URL.
+      tags:
+        - "Groups"
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: Group logo update request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRequestSubmitted'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups/{group-id}/inviteLink:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getWAGroupInviteLink
+      summary: Get group invite link
+      description: Returns the invite link of a specific WhatsApp group.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Successfully retrieved the invite link of the specified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+    post:
+      operationId: resetWAGroupInviteLink
+      summary: Reset group invite link
+      description: Resets the invite link of a specific WhatsApp group.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Successfully reset and retrieved the invite link of the specified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupInviteLink'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups/{group-id}/joinRequests:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    get:
+      operationId: getWAGroupJoinRequests
+      summary: Get group join requests
+      description: Returns a list of join requests for a specific WhatsApp group.
+      tags:
+        - "Groups"
+      responses:
+        200:
+          description: Successfully retrieved the join requests for the specified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupJoinRequests'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+    post:
+      operationId: approveWAGroupJoinRequests
+      summary: Approve group join request(s)
+      description: Submit a list of join requests for approval for a specific WhatsApp group.
+      tags:
+        - "Groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupJoinRequestRequest'
+      responses:
+        200:
+          description: Successfully submitted the join request(s) for the specified group and
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupJoinRequestApprovalResponse'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+    delete:
+      operationId: rejectWAGroupJoinRequests
+      summary: Reject group join request(s)
+      description: Submit a list of join requests for rejection for a specific WhatsApp group.
+      tags:
+        - "Groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupJoinRequestRequest'
+      responses:
+        200:
+          description: Successfully submitted the join request(s) for the specified group and
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppGroupJoinRequestRejectionResponse'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/settings/groups/{group-id}/participants:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+      - $ref: '#/components/parameters/GroupId'
+    delete:
+      operationId: removeWAGroupParticipants
+      summary: Remove group participant(s)
+      description: Submit a list of participants to be removed from a specific WhatsApp group. The results of the request will be sent to the notification callback URL.
+      tags:
+        - "Groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppGroupParticipantsRemovalRequest'
+      responses:
+        200:
+          description: Successfully submitted the participant(s) removal request for the specified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRequestSubmitted'
+        400:
+          $ref: '#/components/responses/GroupBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
   /channels/whatsapp/accounts/{whatsapp-account-id}/analytics/pricing:
     parameters:
       - $ref: '#/components/parameters/WhatsAppAccountId'
@@ -1341,6 +1634,14 @@ components:
       schema:
         type: boolean
       example: ?invalidate=true
+    GroupId:
+      name: group-id
+      in: path
+      required: true
+      description: WhatsApp group ID
+      schema:
+        type: string
+      example: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
   responses:
     MessageResponse:
       description: The response after the server has accepted the request
@@ -1459,6 +1760,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CallActionResponse'
+    GroupBadRequest:
+      description: Something went wrong with the group request. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            title: Bad Request
+            detail: (#100) Invalid parameter
   examples:
     ## Messaging section
 
@@ -2524,7 +2835,9 @@ components:
           minItems: 0
           maxItems: 1
           items:
-            $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+            oneOf:
+            - $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponent'
+            - $ref: '#/components/schemas/WhatsAppTemplateGroupIdBodyComponent'
         button:
           type: array
           description: List of button components. Button can have maximum 10 components.
@@ -2652,6 +2965,21 @@ components:
           type: string
         example:
           $ref: '#/components/schemas/WhatsAppTemplateTextBodyComponentExample'
+    WhatsAppTemplateGroupIdBodyComponent:
+      type: object
+      description: Body parameter replacement of a template for group id
+      required:
+        - type
+        - groupId
+      properties:
+        type:
+          type: string
+          enum:
+            - groupId
+        groupId:
+          type: string
+          description: The group id to be used as body parameter replacement.
+          example: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
     WhatsAppTemplateTextBodyComponentExample:
       type: object
       description: Examples of the body parameters.
@@ -3244,10 +3572,10 @@ components:
         - components
       properties:
         subType:
-        type: string
-        description: Determines the type of interactive message. **Always** `urlButton`
-        enum:
-          - urlButton
+          type: string
+          description: Determines the type of interactive message. **Always** `urlButton`
+          enum:
+            - urlButton
         components:
           $ref: '#/components/schemas/WhatsAppInteractiveUrlButtonComponents'
       example:
@@ -5686,3 +6014,265 @@ components:
           format: date-time
           description: Timestamp when the call 'connect' action was successfully sent to Meta in ISO 8601 representation
           example: 2025-10-01T10:20:30
+
+    #
+    # Groups
+    #
+    GroupRequestSubmitted:
+      type: object
+      description: A response indicating that a request associated with a particular WhatsApp group has been submitted
+      properties:
+        requestId:
+          type: string
+          description: The ID of the request that was submitted
+          example: MTY0NjcwNDM1
+    WhatsAppGroupCreationRequest:
+      type: object
+      description: A request to create a WhatsApp group
+      required:
+        - subject
+      properties:
+        subject:
+          type: string
+          description: The name of the group, maximum 128 characters.
+          example: Group
+        description:
+          type: string
+          description: The description of the group, maximum 2048 characters.
+          example: This is a group for testing purposes
+        joinApprovalMode:
+          type: string
+          description: Indicates if WhatsApp users who click the invitation link can join the group with or without being approved first. Default is AUTO_APPROVE.
+          enum:
+            - AUTO_APPROVE
+            - APPROVAL_REQUIRED
+          example: APPROVAL_REQUIRED
+    WhatsAppActiveGroups:
+      type: array
+      description: A list of active WhatsApp groups. It includes the basic info of a WhatsApp group
+      items:
+        $ref: '#/components/schemas/WhatsAppGroupBasicInfo'
+    WhatsAppGroupBasicInfo:
+      type: object
+      description: An object including the basic information of a WhatsApp Group
+      properties:
+        groupId:
+          type: string
+          description: The ID of the WhatsApp group.
+          example: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        subject:
+          type: string
+          description: The name of the group.
+          example: Group
+        creationTimestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the group was created in ISO 8601 representation.
+          example: 2025-10-01T10:20:30
+    WhatsAppGroupInfo:
+      type: object
+      description: An object including all the information of a WhatsApp Group
+      properties:
+        groupId:
+          type: string
+          description: The ID of the WhatsApp group.
+          example: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        subject:
+          type: string
+          description: The name of the group.
+          example: Group
+        description:
+          type: string
+          description: The description of the group.
+          example: This is a group for testing purposes
+        joinApprovalMode:
+          type: string
+          description: Indicates if WhatsApp users who click the invitation link can join the group with or without being approved first.
+          enum:
+            - auto_approve
+            - approval_required
+          example: approval_required
+        creationTimestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the group was created in ISO 8601 representation.
+          example: 2025-10-01T10:20:30
+        suspended:
+          type: boolean
+          description: Indicates if the group is suspended or not.
+          example: false
+        totalParticipantCount:
+          type: integer
+          description: The total number of participants in the group.
+          example: 10
+        participants:
+          type: array
+          description: A list of the group participants
+          items:
+            $ref: '#/components/schemas/WhatsAppGroupParticipant'
+    WhatsAppGroupParticipant:
+      type: object
+      description: An object including the information of a participant in a WhatsApp Group
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number of the participant.
+          example: 49123456789
+        bsuid:
+          type: string
+          description: The WhatsApp Business scoped user ID (BSUID) of the sender.
+          example: DE.1234567890
+        parentBsuid:
+          type: string
+          description: If enabled for your business, this is the parent bsuid of the sender.
+          example: DE.0987654321
+        username:
+          type: string
+          description: The WhatsApp username of the sender, if set.
+          example: "@peter.123"
+    WhatsAppGroupUpdateRequest:
+      type: object
+      description: A request to update specific information for a WhatsApp group
+      properties: 
+        subject:
+          type: string
+          description: The name of the group, maximum 128 characters.
+          example: Group
+        description:
+          type: string
+          description: The description of the group, maximum 2048 characters.
+          example: This is a group for testing purposes
+        url:
+          type: string
+          description: The url to download the logo asset. Image must be a square jpeg with a minimum size of 192x192 and a maximum file size of 5MB.
+          example: https://scontent.xx.fbcdn.net/m1/v/test.jpeg
+    WhatsAppGroupUpdateResponse:
+      type: object
+      description: A response to a request to update specific information for a WhatsApp group
+      properties:
+        requestId:
+          type: string
+          description: The ID of the request that was submitted
+          example: MTY0NjcwNDM1
+        logoRequestId:
+          type: string
+          description: The ID of the request that was submitted for the logo update
+          example: AHF3dDHtSF01
+    WhatsAppGroupInviteLink:
+      type: object
+      description: An object including the invite link information of a WhatsApp Group
+      properties:
+        inviteLink:
+          type: string
+          description: The invite link of the group.
+          example: https://chat.whatsapp.com/MjAdOTY0MTUZD
+    WhatsAppGroupJoinRequests:
+      type: object
+      description: An object including the information of a group join request
+      properties:
+        joinRequestId:
+          type: string
+          description: The join request ID
+          example: MTY0NjcwNDM1OTU6MTIwMzYzNDA0Njk0MjMzODIw
+        creationTimestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the group was created in ISO 8601 representation.
+          example: 2025-10-01T10:20:30
+        phoneNumber:
+          type: string
+          description: The phone number of the participant.
+          example: 49123456789
+        bsuid:
+          type: string
+          description: The WhatsApp Business scoped user ID (BSUID) of the sender.
+          example: DE.1234567890
+        parentBsuid:
+          type: string
+          description: If enabled for your business, this is the parent bsuid of the sender.
+          example: DE.0987654321
+        username:
+          type: string
+          description: The WhatsApp username of the sender, if set.
+          example: "@peter.123"
+    WhatsAppGroupJoinRequestRequest:
+        type: object
+        description: A request to approve/reject one or more group join requests
+        properties:
+          joinRequests:
+            type: array
+            description: A list of join request IDs to approve.
+            items:
+              type: string
+              example: MTY0NjcwNDM1OTU6MTIwMzYzNDA0Njk0MjMzODIw
+    WhatsAppGroupJoinRequestApprovalResponse:
+      type: object
+      description: A response to a request of approval for one or more group join requests
+      properties:
+        approvedJoinRequests:
+          type: array
+          description: A list of approved join request IDs.
+          items:
+            type: string
+            example: MTY0NjcwNDM1OTU6MTIwMzYzNDA0Njk0MjMzODIw
+        failedJoinRequests:
+          type: array
+          description: A list of failed join request and their corresponding error messages.
+          items:
+            $ref: '#/components/schemas/WhatsAppGroupJoinRequestError'
+    WhatsAppGroupJoinRequestError:
+      type: object
+      description: An object including the information of a failed group join request and its corresponding error message
+      properties:
+        joinRequestId:
+          type: string
+          description: The join request ID
+          example: XXkm1qt9nz10xWyWW1Cjvm6v
+        title:
+          type: string
+          description: The title of the error message
+          example: "(#131203) Recipient has not accepted our new Terms of Service and Privacy Policy."
+        code:
+          type: integer
+          description: The error code of the error message
+          example: 131203
+        details:
+          type: string
+          description: The details of the error message
+          example: Recipient has not accepted our new Terms of Service and Privacy Policy.
+    WhatsAppGroupJoinRequestRejectionResponse:
+      type: object
+      description: A response to a request of rejection for one or more group join requests
+      properties:
+        rejectedJoinRequests:
+          type: array
+          description: A list of rejected join request IDs.
+          items:
+            type: string
+            example: MTY0NjcwNDM1OTU6MTIwMzYzNDA0Njk0MjMzODIw
+        failedJoinRequests:
+          type: array
+          description: A list of failed join request and their corresponding error messages.
+          items:
+            $ref: '#/components/schemas/WhatsAppGroupJoinRequestError'
+    WhatsAppGroupParticipantsRemovalRequest:
+      type: object
+      description: A request to remove one or more participants from a WhatsApp group
+      properties:
+        participants:
+          type: array
+          description: A list of participants to add/remove from the group.
+          items:
+            $ref: '#/components/schemas/WhatsAppGroupParticipantToRemove'
+    WhatsAppGroupParticipantToRemove:
+      type: object
+      description: An object including the information of a participant to remove from a WhatsApp Group. Either the phone number or the bsuid must be provided.
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number of the participant.
+          example: 49123456789
+        bsuid:
+          type: string
+          description: The WhatsApp Business scoped user ID (BSUID) of the sender.
+          example: DE.1234567890

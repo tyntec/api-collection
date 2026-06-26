@@ -1,5 +1,31 @@
 # Release notes
 
+## 3.30
+### Changes
+#### Added WhatsApp Groups API
+Added comprehensive support for managing WhatsApp groups through the Groups API. This feature is only available for OBA (Official Business Account) accounts and includes the following capabilities:
+* Get list of active groups
+* Create/delete groups
+* Retrieve group information
+* Update group information (name, description, logo)
+* Manage group invite links (get/reset)
+* Handle group join requests (get/approve/reject)
+* Remove group participants
+
+#### Added WhatsApp Groups webhook events
+Added six new webhook event types for group activities: 
+* `WhatsAppGroupCreatedEvent`
+* `WhatsAppGroupSettingsUpdatedEvent`
+* `WhatsAppGroupJoinRequestEvent`
+* `WhatsAppGroupParticipantsAddedEvent`
+* `WhatsAppGroupParticipantsRemovedEvent` and 
+* `WhatsAppGroupDeletedEvent`.
+
+Added the `groupId` field to inbound message and status webhook events to identify group-originated messages.
+
+#### Added group ID support in WhatsApp templates
+Templates now support a `groupId` type in body components to send group invite links through template messages.
+
 ## 3.29
 ### Changes
 #### Added new WhatsApp bsuid identifiers to inbound call message webhook events

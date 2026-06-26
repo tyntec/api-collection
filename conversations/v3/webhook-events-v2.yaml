@@ -34,8 +34,10 @@ tags:
   - name: "Calling"
     description: Events emitted when receiving messages or updates for WhatsApp Calling
   - name: "Coexistence"
-    description: Events emitted when a WhatsApp Business app user has been onboarded (Coexistence). 
+    description: Events emitted when a WhatsApp Business app user has been onboarded (Coexistence).
       It includes sync events and echoes of messages sent from the WhatsApp Business app.
+  - name: "Groups"
+    description: Events emitted when receiving messages from or about Groups API
 servers:
   production:
     url: 78.110.226.11
@@ -348,6 +350,118 @@ channels:
         http:
           type: request
           method: POST
+  "Group Status: Created":
+    description: |
+      This event is triggered when a group is created.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusCreated'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Settings Updated":
+    description: |
+      This event is triggered when a group settings are updated.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusSettingsUpdated'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Join Request Created":
+    description: |
+      This event is triggered when a group join request is created.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusJoinRequestCreated'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Join Request Revoked":
+    description: |
+      This event is triggered when a group join request is revoked.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusJoinRequestRevoked'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Participants Added":
+    description: |
+      This event is triggered when participants are added to a group.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusParticipantsAdded'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Participants Removed":
+    description: |
+      This event is triggered when participants are removed from a group.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusParticipantsRemoved'
+      bindings:
+        http:
+          type: request
+          method: POST
+  "Group Status: Deleted":
+    description: |
+      This event is triggered when a group is deleted.
+
+      **Supporting channels**
+
+      - WhatsApp
+    publish:
+      tags:
+        - name: "Groups"
+      message:
+        $ref: '#/components/messages/GroupStatusDeleted'
+      bindings:
+        http:
+          type: request
+          method: POST
 components:
   messages:
     MoMessage:
@@ -410,6 +524,27 @@ components:
     CoexistenceMessageEcho:
       payload:
         $ref: '#/components/schemas/CoexistenceMessageEcho'
+    GroupStatusCreated:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupCreatedEvent'
+    GroupStatusSettingsUpdated:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupSettingsUpdatedEvent'
+    GroupStatusJoinRequestCreated:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupJoinRequestCreatedEvent'
+    GroupStatusJoinRequestRevoked:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupJoinRequestRevokedEvent'
+    GroupStatusParticipantsAdded:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupParticipantsAddedEvent'
+    GroupStatusParticipantsRemoved:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupParticipantsRemovedEvent'
+    GroupStatusDeleted:
+      payload:
+        $ref: '#/components/schemas/WhatsAppGroupDeletedEvent'
   schemas:
     APIEvent:
       type: object
@@ -436,12 +571,12 @@ components:
             2019-06-26T11:41:00
         from:
           type: string
-          description: Who triggered this event. Usually a phone number or WhatsApp account ID
+          description: Who triggered this event. Usually a phone number, WhatsApp account ID or a groupd ID
           example:
             "491672634678"
         to:
           type: string
-          description: Who is the recepient of the event. Usually a phone number or WhatsApp account ID
+          description: Who is the recipient of the event. Usually a phone number or WhatsApp account ID
           example:
             "491234567890"
       example:
@@ -849,6 +984,9 @@ components:
           $ref: '#/components/schemas/MoContext'
         whatsapp:
           $ref: '#/components/schemas/Whatsapp'
+        groupId:
+          type: string
+          description: The group ID from which the event originates. Only present if the message was sent into a group.
       example:
         messageId: 77185196-664a-43ec-b14a-fe97036c697e
         event: MoMessage
@@ -865,6 +1003,7 @@ components:
           parentBsuid: DE.0987654321
           username: "@peter.123"
           identityKeyHash: DF2lS5v2W6x=
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
     Whatsapp:
       type: object
       description: Details specific to the WhatsApp channel
@@ -1896,7 +2035,7 @@ components:
             2025-12-01T12:00:00
     CoexistenceHistoryMessage:
       type: object
-      description: A WhatsApp message that had been exchanged in the WhatsApp Business app and was received by us on 
+      description: A WhatsApp message that had been exchanged in the WhatsApp Business app and was received by us on
         the WhatsApp channel when triggering the Coexistence sync
       required:
         - messageId
@@ -2037,3 +2176,612 @@ components:
         whatsapp:
           senderName: Peter
           identityKeyHash: DF2lS5v2W6x=
+    WhatsAppGroupCreatedEvent:
+      type: object
+      description: Indicates that a new group was created on WhatsApp and the business was added to it.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::Created_
+          enum:
+            - GroupEvent::Created
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that was created
+        to:
+          type: string
+          description: The business phone number that created the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group that was created
+          $ref: '#/components/schemas/GroupDetails'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::Created
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          subject: My Group
+          description: This is a group for discussing important topics
+          inviteLink: https://chat.whatsapp.com/abc123def456ghi789jkl012
+          joinApprovalMode: approval_required
+    WhatsAppGroupSettingsUpdatedEvent:
+      type: object
+      description: Indicates that the settings of a group were updated on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::SettingsUpdated_
+          enum:
+            - GroupEvent::SettingsUpdated
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group whose settings were updated
+        to:
+          type: string
+          description: The business phone number that owns the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group whose settings were updated
+          $ref: '#/components/schemas/GroupUpdatedDetails'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::SettingsUpdated
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          requestId: vngy1f7ej7f0kem0kdfu3vug
+          groupSubject:
+            text: New Group Subject
+            success: true
+          groupDescription:
+            text: New Group Description
+            success: true
+          profilePicture:
+            mimeType: image/jpeg
+            success: true
+    WhatsAppGroupJoinRequestCreatedEvent:
+      type: object
+      description: Indicates that a user has requested to join or revoke their request to join a group on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::JoinRequestCreated_
+          enum:
+            - GroupEvent::JoinRequestCreated
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that the user created the join request for
+        to:
+          type: string
+          description: The business phone number that owns the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group and the user who created the join request
+          $ref: '#/components/schemas/GroupJoinRequest'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::JoinRequestCreated
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          joinRequestId: vngy1f7ej7f0kem0kdfu3vug
+          reason: I would like to join this group
+          joinRequestParticipant:
+            endUserPhoneNumber: 491234567890
+            bsuid: DE.1234567890
+            parentBsuid: DE.0987654321
+            username: "@peter.123"
+    WhatsAppGroupJoinRequestRevokedEvent:
+      type: object
+      description: Indicates that a user has revoked their request to join a group on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::JoinRequestRevoked_
+          enum:
+            - GroupEvent::JoinRequestRevoked
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that the user revoked the join request for
+        to:
+          type: string
+          description: The business phone number that owns the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group and the user who revoked the join request
+          $ref: '#/components/schemas/GroupJoinRequest'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::JoinRequestRevoked
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          joinRequestId: vngy1f7ej7f0kem0kdfu3vug
+          joinRequestParticipant:
+            endUserPhoneNumber: 491234567890
+            bsuid: DE.1234567890
+            parentBsuid: DE.0987654321
+            username: "@peter.123"
+    WhatsAppGroupParticipantsAddedEvent:
+      type: object
+      description: Indicates that one or more users have been added to a group on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::ParticipantsAdded_
+          enum:
+            - GroupEvent::ParticipantsAdded
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that the participants were added to
+        to:
+          type: string
+          description: The business phone number that owns the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group and the participants who were added
+          $ref: '#/components/schemas/GroupParticipantsAddedInfo'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::ParticipantsAdded
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          reason: invite_link
+          addedParticipants:
+            - endUserPhoneNumber: 491234567890
+              bsuid: DE.1234567890
+              parentBsuid: DE.0987654321
+              username: "@peter.123"
+    WhatsAppGroupParticipantsRemovedEvent:
+      type: object
+      description: Indicates that one or more users have been removed from a group on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::ParticipantsRemoved_
+          enum:
+            - GroupEvent::ParticipantsRemoved
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that the participants were removed from
+        to:
+          type: string
+          description: The business phone number that owns the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group and the participants who were removed
+          $ref: '#/components/schemas/GroupParticipantsRemovedInfo'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::ParticipantsRemoved
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+          initiatedBy: participant
+          removedParticipants:
+            - endUserPhoneNumber: 491234567890
+              bsuid: DE.1234567890
+              parentBsuid: DE.0987654321
+              username: "@peter.123"
+    WhatsAppGroupDeletedEvent:
+      type: object
+      description: Indicates that a group was deleted on WhatsApp.
+      required:
+        - messageId
+        - event
+        - channel
+        - timestamp
+        - from
+        - to
+        - group
+      allOf:
+        - $ref: '#/components/schemas/APIEvent'
+      properties:
+        messageId:
+          type: string
+          description: A message ID reference
+        event:
+          type: string
+          description: Determines which event type is sent. Always _GroupEvent::Deleted_
+          enum:
+            - GroupEvent::Deleted
+        channel:
+          type: string
+          description: The channel that triggered the event. Always _whatsapp_
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The group ID of the group that was deleted
+        to:
+          type: string
+          description: The business phone number that owned the group, including the country code
+        timestamp:
+          type: string
+          format: 'date-time'
+          description: The point in time when the event happened
+        group:
+          type: object
+          description: Details about the group that was deleted
+          $ref: '#/components/schemas/GroupDeletedDetails'
+      example:
+        messageId: 7fa8c71b-29a3-4888-82be-aa79e6d4ff18
+        channel: whatsapp
+        event: GroupEvent::Deleted
+        timestamp: 2025-10-01T11:11:11Z
+        from: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        to: 49123512314
+        group:
+          groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+    GroupDetails:
+      type: object
+      description: Details about a WhatsApp group
+      required:
+        - groupId
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        subject:
+          type: string
+          description: The subject of the group
+        description:
+          type: string
+          description: The description of the group
+        inviteLink:
+          type: string
+          description: The invite link of the group
+        joinApprovalMode:
+          type: string
+          description: The join approval mode of the group. Can be either _approval_required_ or _auto_approve_.
+          enum:
+            - auto_approve
+            - approval_required
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        subject: My Group
+        description: This is a group for discussing important topics
+        inviteLink: https://chat.whatsapp.com/abc123def456ghi789jkl012
+        joinApprovalMode: approval_required
+    GroupUpdatedDetails:
+      type: object
+      description: Details about a WhatsApp group whose settings were updated
+      required:
+        - groupId
+        - requestId
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        requestId:
+          type: string
+          description: The unique identifier of the request that triggered the update
+        groupSubject:
+          type: object
+          description: Details about the updated subject of the group
+          properties:
+            text:
+              type: string
+              description: The updated subject of the group
+            success:
+              type: boolean
+              description: Indicates whether the subject update was successful
+        groupDescription:
+          type: object
+          description: Details about the updated description of the group
+          properties:
+            text:
+              type: string
+              description: The updated description of the group
+            success:
+              type: boolean
+              description: Indicates whether the description update was successful
+        profilePicture:
+          type: object
+          description: Details about the updated profile picture of the group
+          properties:
+            mimeType:
+              type: string
+              description: The MIME type of the updated profile picture
+            success:
+              type: boolean
+              description: Indicates whether the profile picture update was successful
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        requestId: vngy1f7ej7f0kem0kdfu3vug
+        groupSubject:
+          text: New Group Subject
+          success: true
+        groupDescription:
+          text: New Group Description
+          success: true
+        profilePicture:
+          mimeType: image/jpeg
+          success: true
+    GroupDeletedDetails:
+      type: object
+      description: Details about a WhatsApp group that was deleted
+      required:
+        - groupId
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        error:
+          type: object
+          description: Details about an error that caused the request to delete the group to fail, if applicable
+          properties:
+            code:
+              type: string
+              description: The error code of the particular error
+            title:
+              type: string
+              description: The title for the particular error
+            details:
+              type: string
+              description: The detailed message returned for the particular error
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        error:
+          code: whatsapp::error::131049
+          title: Group deletion failed
+          details: This group could not be deleted due to an internal error.
+    GroupJoinRequest:
+      type: object
+      description: Details about a WhatsApp group join request
+      required:
+        - groupId
+        - joinRequestId
+        - joinRequestParticipant
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        joinRequestId:
+          type: string
+          description: The unique identifier of the join request
+        reason:
+          type: string
+          description: The reason provided by the participant for requesting / revoking their request to join the group
+        joinRequestParticipant:
+          type: object
+          description: Details about the participant who created/revoked the join request
+          $ref: '#/components/schemas/GroupParticipant'
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        joinRequestId: vngy1f7ej7f0kem0kdfu3vug
+        reason: I would like to join this group
+        joinRequestParticipant:
+          endUserPhoneNumber: 491234567890
+          bsuid: DE.1234567890
+          parentBsuid: DE.0987654321
+          username: "@peter.123"
+    GroupParticipant:
+      type: object
+      description: Details about a participant who is part of or created/revoked a join request for a WhatsApp group
+      properties:
+        endUserPhoneNumber:
+          type: string
+          description: The phone number of the participant, including the country code
+        bsuid:
+          type: string
+          description: The WhatsApp Business Scoped User ID (BSUID) of the participant
+        parentBsuid:
+          type: string
+          description: The parent BSUID of the participant, if enabled
+        username:
+          type: string
+          description: The WhatsApp username of the participant, if enabled
+      example:
+        endUserPhoneNumber: 491234567890
+        bsuid: DE.1234567890
+        parentBsuid: DE.0987654321
+        username: "@peter.123"
+    GroupParticipantsAddedInfo:
+      type: object
+      description: Details about a group and the participant(s) who were added to that group
+      required:
+        - groupId
+        - participant
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        reason:
+          type: string
+          description: The reasoning why the participant(s) were added to the group.
+        addedParticipants:
+          type: array
+          description: Details about the participant(s) who were added to the group
+          items:
+            $ref: '#/components/schemas/GroupParticipant'
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        reason: invite_link
+        addedParticipants:
+          endUserPhoneNumber: 491234567890
+          bsuid: DE.1234567890
+          parentBsuid: DE.0987654321
+          username: "@peter.123"
+    GroupParticipantsRemovedInfo:
+      type: object
+      description: Details about a group and the participant(s) who were removed from that group
+      required:
+        - groupId
+        - participant
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the group.
+        requestId:
+          type: string
+          description: The unique identifier of the request that triggered the removal of the participant(s) from the group, if the removal was initiated by the business. This field is not present if the removal was initiated by a participant.
+        initiatedBy:
+          type: string
+          description: Who initiated the removal of the participant(s) from the group.
+        removedParticipants:
+          type: array
+          description: Details about the participant(s) who were removed from the group
+          items:
+            $ref: '#/components/schemas/GroupParticipant'
+      example:
+        groupId: Y2FwaV9ncm91cDoxNzA1NTU1MDEzOToxMjAzNjM0MDQ2OTQyMzM4MjAZD
+        requestId: vngy1f7ej7f0kem0kdfu3vug
+        initiatedBy: business
+        removedParticipants:
+          endUserPhoneNumber: 491234567890
+          bsuid: DE.1234567890
+          parentBsuid: DE.0987654321
+          username: "@peter.123"
