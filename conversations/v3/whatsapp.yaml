@@ -91,6 +91,9 @@ tags:
   - name: "Groups"
     description: |
       The Groups API allows you to manage groups on WhatsApp, e.g. create a group, add or remove participants, etc. Groups are only available for OBA (Official Business Account) accounts. More detailed information on the underlying WhatsApp Groups API is here: [Groups API](https://developers.facebook.com/documentation/business-messaging/whatsapp/groups)
+  - name: "Business username"
+    description: |
+      The Business username API allows you to manage the business username of your WhatsApp Business Account. More detailed information on the underlying WhatsApp Business username API is here: [Business username API](https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids/#business-usernames)
 paths:
   /messages:
     post:
@@ -971,6 +974,97 @@ paths:
           $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/PhoneNumberUnknown'
+  /channels/whatsapp/phone-numbers/{phone-number}/username:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWABusinessUsername
+      summary: Get current business username
+      description: Returns the business username of a WhatsApp phone number.
+      tags:
+        - "Business username"
+      responses:
+        200:
+          description: Successfully retrieved the business username
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessUsername'
+        400:
+          $ref: '#/components/responses/BusinessUsernameBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    post:
+      operationId: updateWABusinessUsername
+      summary: Update business username
+      description: Updates the business username of a WhatsApp phone number.
+      tags:
+        - "Business username"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppBusinessUsernameUpdateRequest'
+      responses:
+        200:
+          description: Successfully updated the business username
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessUsernameUpdateResponse'
+        400:
+          $ref: '#/components/responses/BusinessUsernameBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+    delete:
+      operationId: deleteWABusinessUsername
+      summary: Delete business username
+      description: Deletes the business username of a WhatsApp phone number.
+      tags:
+        - "Business username"
+      responses:
+        204:
+          description: Successfully deleted the business username
+        400:
+          $ref: '#/components/responses/BusinessUsernameBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
+  /channels/whatsapp/phone-numbers/{phone-number}/username/usernameSuggestions:
+    parameters:
+      - $ref: '#/components/parameters/PhoneNumber'
+    get:
+      operationId: getWABusinessUsernameSuggestions
+      summary: Get business username suggestions
+      description: Returns a list of suggested business usernames reserved for your business portfolio.
+      tags:
+        - "Business username"
+      responses:
+        200:
+          description: Successfully retrieved the list of suggested business usernames
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessUsernameSuggestions'
+        400:
+          $ref: '#/components/responses/BusinessUsernameBadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/PhoneNumberUnknown'
+        default:
+          $ref: '#/components/responses/Default'
   /channels/whatsapp/phone-numbers/{phone-number}/settings/groups:
     parameters:
       - $ref: '#/components/parameters/PhoneNumber'
@@ -1760,6 +1854,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CallActionResponse'
+    BusinessUsernameBadRequest:
+      description: Something went wrong with the business username request. Please check the Problems object for details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            status: 400
+            title: Bad Request
+            detail: Username not available
     GroupBadRequest:
       description: Something went wrong with the group request. Please check the Problems object for details
       content:
@@ -6015,6 +6119,56 @@ components:
           description: Timestamp when the call 'connect' action was successfully sent to Meta in ISO 8601 representation
           example: 2025-10-01T10:20:30
 
+    # Business username
+    WhatsAppBusinessUsername:
+      type: object
+      description: A WhatsApp business username and its current status
+      properties:
+        username:
+          type: string
+          description: The WhatsApp business username
+          example: testbusiness
+        status:
+          type: string
+          description: The status of the WhatsApp business username
+          enum:
+            - approved
+            - reserved
+          example: reserved
+    WhatsAppBusinessUsernameUpdateRequest:
+      type: object
+      description: A request to update the WhatsApp business username
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          description: The new WhatsApp business username to be set. It must be unique and comply with WhatsApp's username policies.
+          example: newbusinessusername
+        transferAction:
+          type: string
+          description: The action to be taken regarding the transfer of the username. It can be either 'FORCE_TRANSFER' to transfer the username from another business within the same business portfolio or 'NONE'. Default is 'NONE'.
+          enum:
+            - FORCE_TRANSFER
+            - NONE
+          example: FORCE_TRANSFER
+    WhatsAppBusinessUsernameUpdateResponse:
+      type: object
+      description: The response to a request to update the WhatsApp business username
+      properties:
+        status:
+          type: string
+          description: The status of the updated username
+          example: reserved
+    WhatsAppBusinessUsernameSuggestions:
+      type: array
+      description: A list of suggested WhatsApp business usernames based on the current username and availability
+      items:
+        type: string
+      example:
+        - testbusiness
+        - businessname
+        - someusername
     #
     # Groups
     #

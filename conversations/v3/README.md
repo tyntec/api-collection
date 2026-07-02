@@ -1,5 +1,14 @@
 # Release notes
 
+## 3.31
+### Changes
+#### Added WhatsApp Business Username API
+Added support for managing business usernames on WhatsApp phone numbers. This feature allows businesses to create, update, and manage their WhatsApp Business usernames, which provide a memorable way for customers to find and connect with businesses. The following capabilities are included:
+* Get current business username
+* Update business username (with optional force transfer from another business in the same portfolio)
+* Delete business username
+* Get suggested usernames reserved for the business portfolio
+
 ## 3.30
 ### Changes
 #### Added WhatsApp Groups API
