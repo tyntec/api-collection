@@ -33,7 +33,7 @@ tags:
       | State | Description |
       | :--- | :--- |
       | ACCEPTED | The message was accepted for delivery by Tyntec's platform and will be scheduled for delivery. |
-      | DELIVERED | Message is delivered to destination. The message has been delivered to the destination. No further deliveries will occur. |
+      | DELIVERED | The message has been delivered to the destination. No further deliveries will occur. |
       | BUFFERED | The message is in buffered state. This is a general state used to describe a message as being active within the tyntec's platform. The message may be in retry or dispatched to a mobile network for delivery to the mobile. |
       | EXPIRED | Message validity period has expired. The message has failed to be delivered within its validity period and/or retry period. No further delivery attempts will be made. |
       | REJECTED | Message was rejected by the tyntec platform or destination network. Reasons for rejections can be insufficient funds, illegal content/senderId. More specific reasons are given on the `errorCode`. |
@@ -69,8 +69,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RestMessageResponse"
-        "201":
-          description: Created
         "400":
           description: Invalid request
           content:
@@ -187,8 +185,8 @@ paths:
           in: query
           description: Validity in minutes for this message
           schema:
-            type: string
-            default: "2880"
+            type: number
+            default: 2880
         - name: reference
           in: query
           description: A custom reference that will mark the Delivery Report
@@ -204,6 +202,10 @@ paths:
           description: Your prefered HTTP method for the Delivery Report callback; possible values POST/GET
           schema:
             type: string
+            enum:
+              - POST
+              - GET
+            default: POST
         - name: partLimit
           in: query
           description: Up to how many parts you allow this message to be concatenated
@@ -261,8 +263,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RestMessageResponse"
-        "201":
-          description: Created
         "400":
           description: Invalid request
           content:
@@ -388,10 +388,7 @@ paths:
         "2XX":
           description: Message was accepted by your system.
         "default":
-          description: |
-            Message was not accepted by your system.
-
-            The tyntec's inbound system will retry the delivery.
+          description: Message was not accepted by your system. The tyntec's inbound system will retry the delivery.
 
   /byon/phonebook/v1/numbers:
     get:
@@ -401,6 +398,8 @@ paths:
       description:
         Returns all phone numbers created with your API key; you can specify
         attributes to filter the results. The size limit is 3000.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllPhoneNumbersForAccountUsingGET
       parameters:
         - name: requestId
@@ -436,27 +435,29 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+                $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not Found
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   "/byon/phonebook/v1/numbers/{phoneNumber}":
@@ -465,6 +466,8 @@ paths:
         - BYON Phone Book Service
       summary: Read a phone number
       description: Returns details of the specific phone number entity created with your API key.
+      security:
+        - ApiKeyHeader: []
       operationId: getPhoneNumberForAccountUsingGET
       parameters:
         - name: phoneNumber
@@ -479,27 +482,29 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
+                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not Found
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   /byon/contacts/v1:
@@ -511,6 +516,8 @@ paths:
         Returns all contacts created with your API key; you can get the contact ID
         from the list for editing or deleting the contact. You can specify
         `friendlyName` to filter the results.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllContactsWithFriendlyNameUsingGET
       parameters:
         - name: friendlyName
@@ -525,40 +532,31 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ContactArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ContactArrayResponse"
+                $ref: "#/components/schemas/ContactArrayResponse"
         "204":
           description: Empty list; no contacts were found for this friendly name.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ContactArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ContactArrayResponse"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not Found
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
@@ -566,45 +564,46 @@ paths:
         - BYON Contact Service
       summary: Create a contact
       description: Creates a new contact.
+      security:
+        - ApiKeyHeader: []
       operationId: createContactUsingPOST
       requestBody:
         $ref: "#/components/requestBodies/ContactEntity"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
         "201":
           description: Created
-        "202":
-          description: The contact was created.
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/ContactEntity"
         "400":
           description: The provided contact is not valid.
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Contact was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contact was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   "/byon/contacts/v1/{contactId}":
@@ -613,6 +612,8 @@ paths:
         - BYON Contact Service
       summary: Read a contact
       description: Returns the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: getContactUsingGET
       parameters:
         - name: contactId
@@ -628,22 +629,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Contact was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contact was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
@@ -651,6 +658,8 @@ paths:
         - BYON Contact Service
       summary: Edit a contact
       description: Edits the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: editContactUsingPOST
       parameters:
         - name: contactId
@@ -668,26 +677,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-        "201":
-          description: Created
         "400":
           description: Contact can not be edited.
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Contact was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contact was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     delete:
@@ -695,6 +712,8 @@ paths:
         - BYON Contact Service
       summary: Delete a contact
       description: Deletes the contact for the provided contactId.
+      security:
+        - ApiKeyHeader: []
       operationId: deleteContactUsingDELETE
       parameters:
         - name: contactId
@@ -710,26 +729,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContactEntity"
-        "204":
-          description: No Content
         "400":
           description: Contact can not be deleted.
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Contact was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contact was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   /byon/provisioning/v1:
@@ -740,6 +767,8 @@ paths:
       description: |
         Returns all phone numbers for which provisioning requests were created.
         You can specify _friendlyName_ or _contactId_ for filtering the results.
+      security:
+        - ApiKeyHeader: []
       operationId: getAllProvisioningPhoneNumbersForAccountUsingGET
       parameters:
         - name: friendlyName
@@ -763,37 +792,30 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "204":
           description: Empty list; no phone provisioning requests were found.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PhoneProvisioningArrayResponse"
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not Found
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
@@ -801,6 +823,8 @@ paths:
         - BYON Number Service
       summary: Register phones
       description: New phone batch registration service for registering multiple numbers
+      security:
+        - ApiKeyHeader: []
       operationId: createPhoneProvisioningRequestUsingPOST
       parameters:
         - name: friendlyName
@@ -829,41 +853,40 @@ paths:
             - country (only optional if the phone number already has included the country code)
         required: true
       responses:
-        "200":
-          description: List of applications
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "201":
           description: Created
-        "204":
-          description: Empty list; no applications were found for your account.
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
           description: Your request was not valid.
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: The contact was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: The contact was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   "/byon/provisioning/v1/{requestId}":
@@ -874,6 +897,8 @@ paths:
       description:
         Returns the details of the provisioning request for the provided
         requestId.
+      security:
+        - ApiKeyHeader: []
       operationId: getProvisioningRequestUsingGET
       parameters:
         - name: requestId
@@ -889,24 +914,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PhoneProvisioningEntity"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/PhoneProvisioningEntity"
         "400":
           description: Your request was not valid.
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: The provisioning request was not found.
-        "500":
-          description: Something went wrong. :-(
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-            "*/*":
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: The provisioning request was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Something went wrong. :-(
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   '/messaging/v1/conversion':
@@ -915,7 +950,7 @@ paths:
         - SMS Conversion
       summary: Conversion report
       security:
-        - APIKeyHeader: []
+        - ApiKeyHeader: []
       operationId: conversionReportPOST
       description: |
         Report either successful or un-successful conversion event for a message.
@@ -990,7 +1025,7 @@ components:
           description: Requestor's title
           type: string
         friendlyName:
-          description: List filter based on the friendlyName field
+          description: Friendly name
           type: string
     ConversionEvent:
       type: object
@@ -1051,15 +1086,15 @@ components:
         originMCC:
           type: string
           description: Representative MCC (Mobile Country Code) of the originating network
-          example: 260
+          example: "260"
         originMNC:
           type: string
           description: Representative MNC (Mobile Network Code) of the originating network
-          example: 09
+          example: "09"
         originTtId:
           type: string
           description: Operator's tyntec ID
-          example: 77292
+          example: "77292"
         totalPrice:
           type: number
           description: Sum of prices for each message part listed in “contentList”
@@ -1237,8 +1272,8 @@ components:
           type: string
         validity:
           description: Message validity in minutes
-          type: string
-          default: "2880"
+          type: number
+          default: 2880
         reference:
           description: Customer reference attached to the Delivery Reports
           type: string
@@ -1465,4 +1500,4 @@ components:
         ttid:
           type: string
           description: The tyntec operator's ID
-          example: 77292
+          example: "77292"
